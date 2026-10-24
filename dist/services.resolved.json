@@ -1946,11 +1946,13 @@
       "tier": 1,
       "tier_label": "Core",
       "category": "Networking",
-      "purpose": "The private network resources live in; it also hands out IP addresses (DHCP).",
+      "purpose": "Your private network in Azure: resources communicate with each other, the internet and on-premises networks.",
       "facts": [
         "Subnets are child resources of the virtual network.",
         "DHCP is built in: you choose address ranges and Azure assigns private IPs to NICs.",
-        "DNS is Azure-provided by default, or custom servers, or private zones linked to the VNet."
+        "DNS is Azure-provided by default, or custom servers, or private zones linked to the VNet.",
+        "Filter traffic between subnets with network security groups and application security groups; override Azure's default routes with route tables.",
+        "Virtual networks and subnets span all availability zones in a region. Peering connects virtual networks, and service endpoints extend the network's private address space and identity to Azure services."
       ],
       "cloud_native": {
         "level": "unrated",
@@ -1963,10 +1965,10 @@
       ],
       "review": {
         "status": "unconfirmed",
-        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+        "note": "Verified against Learn on 2026-10-24 (virtual-networks-overview): purpose (reworded: DHCP is not mentioned), traffic filtering, zones, peering, three edges. Not verified: 'subnets are child resources', 'DHCP is built in', DNS defaults, and the Private Endpoint, VPN, Bastion, Firewall, ExpressRoute, PostgreSQL and MySQL edges."
       },
       "freshness": {
-        "status": "unreviewed",
+        "status": "current",
         "changed_at": "2026-10-24"
       },
       "terraform": {
@@ -2014,9 +2016,9 @@
       "tier": 1,
       "tier_label": "Core",
       "category": "Networking",
-      "purpose": "Connects a VM to a subnet.",
+      "purpose": "Lets a VM communicate with the internet, Azure and on-premises resources.",
       "facts": [
-        "Always in exactly one subnet.",
+        "Always in exactly one subnet. You pick the subnet when you create it and can change it afterwards.",
         "Holds the private IP; can also hold a public IP, an NSG and load balancer membership."
       ],
       "cloud_native": {
@@ -2030,10 +2032,10 @@
       ],
       "review": {
         "status": "unconfirmed",
-        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+        "note": "Verified against Learn on 2026-10-24 (virtual-network-network-interface): purpose, subnet fact, the VNet and Public IP edges. Not verified: the NSG and Load Balancer edges, and that the NIC holds the private IP."
       },
       "freshness": {
-        "status": "unreviewed",
+        "status": "current",
         "changed_at": "2026-10-24"
       },
       "terraform": {
@@ -2081,8 +2083,11 @@
       "tier": 1,
       "tier_label": "Core",
       "category": "Networking",
-      "purpose": "Allow and deny rules for traffic to subnets and NICs.",
-      "facts": [],
+      "purpose": "Allow and deny rules that filter network traffic between Azure resources in a virtual network.",
+      "facts": [
+        "Rules have a priority from 100 to 4096; lower numbers run first and processing stops at the first match. Azure's default rules have the lowest priority, so your rules always run first.",
+        "A rule matches on source, destination, port, protocol and direction. Sources and destinations can be an IP, a CIDR block, a service tag or an application security group."
+      ],
       "cloud_native": {
         "level": "unrated",
         "note": ""
@@ -2094,10 +2099,10 @@
       ],
       "review": {
         "status": "unconfirmed",
-        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+        "note": "Verified against Learn on 2026-10-24 (network-security-groups-overview): purpose, priority and rule facts, the VNet edge. Not verified: the NIC-level association edge."
       },
       "freshness": {
-        "status": "unreviewed",
+        "status": "current",
         "changed_at": "2026-10-24"
       },
       "terraform": {
@@ -2153,8 +2158,11 @@
       "tier": 1,
       "tier_label": "Core",
       "category": "Networking",
-      "purpose": "An internet-facing address for a resource.",
-      "facts": [],
+      "purpose": "An internet-facing address that lets resources communicate with the internet.",
+      "facts": [
+        "A resource without a public IP can still go outbound: Azure assigns an available dynamic address that isn't dedicated to you.",
+        "Basic SKU public IPs were retired on September 30, 2025; use Standard SKU. For scale sets, use public IP prefixes."
+      ],
       "cloud_native": {
         "level": "unrated",
         "note": ""
@@ -2166,10 +2174,10 @@
       ],
       "review": {
         "status": "unconfirmed",
-        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+        "note": "Verified against Learn on 2026-10-24 (ip-services/public-ip-addresses): purpose, outbound behaviour, Basic SKU retirement, all seven edges (the page lists NICs, load balancers, gateways, NAT, Application Gateway, Firewall and Bastion). Not verified: nothing known."
       },
       "freshness": {
-        "status": "unreviewed",
+        "status": "current",
         "changed_at": "2026-10-24"
       },
       "terraform": {
@@ -2217,8 +2225,11 @@
       "tier": 1,
       "tier_label": "Core",
       "category": "Networking",
-      "purpose": "Layer 4 traffic distribution across VMs.",
-      "facts": [],
+      "purpose": "Layer 4 (TCP and UDP) traffic distribution across VMs and scale sets.",
+      "facts": [
+        "Public load balancers handle internet-facing inbound and outbound traffic; internal ones balance private traffic inside a virtual network.",
+        "Current SKUs are Standard and Gateway. Basic Load Balancer was retired on September 30, 2025."
+      ],
       "cloud_native": {
         "level": "unrated",
         "note": ""
@@ -2230,10 +2241,10 @@
       ],
       "review": {
         "status": "unconfirmed",
-        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+        "note": "Verified against Learn on 2026-10-24 (load-balancer/load-balancer-overview): purpose, facts, Basic retirement, the Public IP edge (via the Public IP page). Not verified: the NIC backend pool edge."
       },
       "freshness": {
-        "status": "unreviewed",
+        "status": "current",
         "changed_at": "2026-10-24"
       },
       "terraform": {
@@ -2297,8 +2308,11 @@
       "tier": 1,
       "tier_label": "Core",
       "category": "Networking",
-      "purpose": "Layer 7 routing; Front Door is global.",
-      "facts": [],
+      "purpose": "Layer 7 web traffic routing. Application Gateway is regional; Front Door is a global content delivery network.",
+      "facts": [
+        "Application Gateway works at OSI layer 7: TLS termination, autoscaling, zone redundancy and an optional Web Application Firewall. Use v2; the v1 SKUs retired on April 28, 2026.",
+        "Front Door is a global CDN for fast, secure access to web content and APIs. Traffic Manager is the DNS-based alternative when you don't need layer 7 processing."
+      ],
       "cloud_native": {
         "level": "unrated",
         "note": ""
@@ -2313,10 +2327,10 @@
       ],
       "review": {
         "status": "unconfirmed",
-        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+        "note": "Verified against Learn on 2026-10-24 (application-gateway/overview, frontdoor/front-door-overview): purpose, facts, v1 retirement (as stated on the page), the AKS edge. Not verified: the Key Vault, App Service and Virtual Machines edges."
       },
       "freshness": {
-        "status": "unreviewed",
+        "status": "current",
         "changed_at": "2026-10-24"
       },
       "terraform": {
@@ -2385,8 +2399,11 @@
       "tier": 1,
       "tier_label": "Core",
       "category": "Networking",
-      "purpose": "Name resolution for public and private zones.",
-      "facts": [],
+      "purpose": "DNS hosting and name resolution for public domains and private virtual networks.",
+      "facts": [
+        "Public DNS hosts internet-facing domains. Private DNS resolves names inside virtual networks without a custom DNS server.",
+        "DNS Private Resolver lets on-premises and Azure query each other's private zones without VM-based DNS servers. Traffic Manager is a separate DNS-based load balancer."
+      ],
       "cloud_native": {
         "level": "unrated",
         "note": ""
@@ -2401,10 +2418,10 @@
       ],
       "review": {
         "status": "unconfirmed",
-        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+        "note": "Verified against Learn on 2026-10-24 (dns-overview, private-dns-overview): purpose, facts, the VNet edge. Not verified: the Private Endpoint edge (zone resolves to the private IP)."
       },
       "freshness": {
-        "status": "unreviewed",
+        "status": "current",
         "changed_at": "2026-10-24"
       },
       "terraform": {
@@ -2473,10 +2490,11 @@
       "tier": 1,
       "tier_label": "Core",
       "category": "Networking",
-      "purpose": "A private IP in your network for a PaaS service.",
+      "purpose": "A network interface with a private IP in your virtual network that connects privately to a service powered by Private Link.",
       "facts": [
         "Creates a NIC with a private IP in your subnet.",
-        "Needs a private DNS zone so the service name resolves to that IP."
+        "Needs a private DNS zone so the service name resolves to that IP.",
+        "Connections are approved automatically or manually depending on your RBAC permissions on the target; a manual one stays Pending until the resource owner approves."
       ],
       "cloud_native": {
         "level": "unrated",
@@ -2489,10 +2507,10 @@
       ],
       "review": {
         "status": "unconfirmed",
-        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+        "note": "Verified against Learn on 2026-10-24 (private-link/private-endpoint-overview): purpose, approval, the subnet and Private Link edges, and all eight service edges (each appears in the page's supported-services table). Not verified: 'needs a private DNS zone' as stated, and the DNS edge."
       },
       "freshness": {
-        "status": "unreviewed",
+        "status": "current",
         "changed_at": "2026-10-24"
       },
       "terraform": {
@@ -4351,9 +4369,9 @@
       "from": "network-interface-nic",
       "type": "requires",
       "to": "virtual-network-and-subnets",
-      "note": "A NIC always sits in one subnet",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "note": "You select a subnet when you create the NIC",
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "network-interface-nic",
@@ -4367,9 +4385,9 @@
       "from": "network-interface-nic",
       "type": "optional",
       "to": "public-ip-address",
-      "note": "Gives the NIC an internet-facing address",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "note": "A public IP can be created and associated with the NIC",
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "network-interface-nic",
@@ -4383,49 +4401,49 @@
       "from": "virtual-network-and-subnets",
       "type": "optional",
       "to": "network-security-group",
-      "note": "Can be associated at subnet level",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "note": "Filters traffic between subnets",
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "virtual-network-and-subnets",
       "type": "optional",
       "to": "nat-gateway",
-      "note": "Outbound addresses for a subnet",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "note": "A NAT gateway manages outbound connections",
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "virtual-network-and-subnets",
       "type": "network",
       "to": "azure-dns-and-private-dns",
-      "note": "Azure-provided DNS by default; private zones link to the VNet",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "note": "Azure Private DNS manages and resolves names in a virtual network",
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "virtual-network-peering",
       "type": "requires",
       "to": "virtual-network-and-subnets",
-      "note": "Connects two VNets",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "note": "Connects two virtual networks",
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "load-balancer",
       "type": "optional",
       "to": "public-ip-address",
       "note": "Frontend IP (or an internal one)",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "application-gateway-front-door",
       "type": "optional",
       "to": "public-ip-address",
       "note": "Application Gateway frontend",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "application-gateway-front-door",
@@ -4439,9 +4457,9 @@
       "from": "application-gateway-front-door",
       "type": "network",
       "to": "azure-kubernetes-service-aks",
-      "note": "Ingress",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "note": "Application Gateway Ingress Controller (AGIC)",
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "application-gateway-front-door",
@@ -4464,80 +4482,80 @@
       "type": "requires",
       "to": "virtual-network-and-subnets",
       "note": "Creates a NIC with a private IP in your subnet",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "private-endpoint",
       "type": "requires",
       "to": "private-link",
-      "note": "The underlying service",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "note": "A private endpoint connects to a service powered by Private Link",
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "private-endpoint",
       "type": "network",
       "to": "key-vault",
       "note": "Puts the service behind a private IP",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "private-endpoint",
       "type": "network",
       "to": "storage-account",
       "note": "Puts the service behind a private IP",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "private-endpoint",
       "type": "network",
       "to": "azure-sql",
       "note": "Puts the service behind a private IP",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "private-endpoint",
       "type": "network",
       "to": "azure-database-for-postgresql",
       "note": "Puts the service behind a private IP",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "private-endpoint",
       "type": "network",
       "to": "cosmos-db",
       "note": "Puts the service behind a private IP",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "private-endpoint",
       "type": "network",
       "to": "service-bus",
       "note": "Puts the service behind a private IP",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "private-endpoint",
       "type": "network",
       "to": "container-registry-acr",
       "note": "Puts the service behind a private IP",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "private-endpoint",
       "type": "network",
       "to": "app-service",
       "note": "Puts the service behind a private IP",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "azure-dns-and-private-dns",
@@ -4560,8 +4578,8 @@
       "type": "requires",
       "to": "public-ip-address",
       "note": "",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "bastion",
@@ -4584,8 +4602,8 @@
       "type": "requires",
       "to": "public-ip-address",
       "note": "",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "vpn-gateway",
@@ -4600,8 +4618,8 @@
       "type": "requires",
       "to": "public-ip-address",
       "note": "",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "expressroute",
@@ -4616,8 +4634,8 @@
       "type": "requires",
       "to": "public-ip-address",
       "note": "Outbound address",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "storage-account",
