@@ -2835,21 +2835,23 @@
             }
           ],
           "changed_at": "2026-10-24"
-        }
+        },
+        "purpose": "Blob, Files, Queue and Table storage under one account."
       },
       "manual": {
-        "purpose": "Blob, Files, Queue and Table storage under one account.",
         "facts": [
           "Contains blob containers, file shares, queues and tables.",
-          "Common uses: Terraform state, boot diagnostics, Functions state, logs."
+          "Common uses: Terraform state, boot diagnostics, Functions state, logs.",
+          "Standard general-purpose v2 is the recommended type for most scenarios (blobs, files, queues, tables). Premium types exist for block blobs, file shares and page blobs, for high transaction rates or low latency.",
+          "Redundancy options include locally redundant (LRS), zone-redundant (ZRS), geo-redundant (GRS, RA-GRS) and geo-zone-redundant (GZRS, RA-GZRS); the options available depend on the account type."
         ]
       },
       "review": {
         "status": "unconfirmed",
-        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+        "note": "Verified against Learn on 2026-10-24 (storage-account-overview): purpose, account types, redundancy, the Azure Files and Data Lake edges. Not verified: 'common uses' (Terraform state, boot diagnostics, Functions state, logs), the hierarchical-namespace detail, and the RBAC, managed identity, Key Vault, VM, Functions, Event Grid, Log Analytics, Data Factory and Azure DevOps edges."
       },
       "freshness": {
-        "status": "unreviewed",
+        "status": "current",
         "changed_at": "2026-10-24",
         "sources": {
           "https://learn.microsoft.com/azure/storage/common/storage-account-overview": {
@@ -2857,7 +2859,8 @@
             "http_status": 200,
             "ms_date": "2026-07-16T00:00:00Z",
             "updated_at": "2026-10-16T22:20:00Z",
-            "latest_hash": "sha256:fb6f5f9b266a8432891f36bbf4b3aba087b892f241823625e833ccf20d2a7529"
+            "latest_hash": "sha256:fb6f5f9b266a8432891f36bbf4b3aba087b892f241823625e833ccf20d2a7529",
+            "reviewed_hash": "sha256:fb6f5f9b266a8432891f36bbf4b3aba087b892f241823625e833ccf20d2a7529"
           }
         }
       }
@@ -2933,18 +2936,21 @@
             }
           ],
           "changed_at": "2026-10-24"
-        }
+        },
+        "purpose": "Fully managed SQL Server databases (Azure SQL Database), including a serverless compute tier.",
+        "facts": [
+          "Fully managed: built-in high availability and backups, and no patching or upgrading. The newest SQL Server capabilities often arrive in Azure SQL Database first.",
+          "Two purchasing models: vCore (choose vCores, memory and storage) and DTU (bundled compute, memory and I/O). Hyperscale is the recommended vCore service tier, scaling to 128 TB.",
+          "Serverless compute (vCore model) scales compute automatically with workload and bills per second. A free tier is available."
+        ]
       },
-      "manual": {
-        "purpose": "Managed SQL Server databases, including serverless.",
-        "facts": []
-      },
+      "manual": {},
       "review": {
         "status": "unconfirmed",
-        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+        "note": "Verified against Learn on 2026-10-24 (azure-sql/database/sql-database-paas-overview): purpose (this entry covers Azure SQL Database; SQL Managed Instance is a separate tier 2 service), facts. Not verified: the managed identity, Key Vault, Log Analytics, Entra ID and Data Factory edges."
       },
       "freshness": {
-        "status": "unreviewed",
+        "status": "current",
         "changed_at": "2026-10-24",
         "sources": {
           "https://learn.microsoft.com/azure/azure-sql/database/sql-database-paas-overview": {
@@ -2952,7 +2958,8 @@
             "http_status": 200,
             "ms_date": "2026-10-13T00:00:00Z",
             "updated_at": "2026-10-21T17:40:00Z",
-            "latest_hash": "sha256:83126e049e49721a7e056aea48fd81cd2e4ba028a1fd19c4798c80ad136daf38"
+            "latest_hash": "sha256:83126e049e49721a7e056aea48fd81cd2e4ba028a1fd19c4798c80ad136daf38",
+            "reviewed_hash": "sha256:83126e049e49721a7e056aea48fd81cd2e4ba028a1fd19c4798c80ad136daf38"
           }
         }
       }
@@ -3023,18 +3030,21 @@
             }
           ],
           "changed_at": "2026-10-24"
-        }
-      },
-      "manual": {
+        },
         "purpose": "Managed PostgreSQL (flexible server).",
-        "facts": []
+        "facts": [
+          "Fully managed PostgreSQL with granular control over configuration. Compute and storage are separated.",
+          "High availability within one availability zone or zone-redundant across zones: a warm standby with synchronous replication. Zone-redundant HA is not available in every region.",
+          "Private access: inside an Azure virtual network the server is reachable only through private IP addresses."
+        ]
       },
+      "manual": {},
       "review": {
         "status": "unconfirmed",
-        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+        "note": "Verified against Learn on 2026-10-24 (postgresql/flexible-server/overview): purpose, facts, the VNet edge. Not verified: the delegated-subnet detail and the Log Analytics edge."
       },
       "freshness": {
-        "status": "unreviewed",
+        "status": "current",
         "changed_at": "2026-10-24",
         "sources": {
           "https://learn.microsoft.com/azure/postgresql/flexible-server/overview": {
@@ -3042,7 +3052,8 @@
             "http_status": 200,
             "ms_date": "2026-01-09T00:00:00Z",
             "updated_at": "2026-09-05T06:06:00Z",
-            "latest_hash": "sha256:844e50c5f134168ca048bc2c2c056dc853c3d405c60d2f219c382c7fac2532ed"
+            "latest_hash": "sha256:844e50c5f134168ca048bc2c2c056dc853c3d405c60d2f219c382c7fac2532ed",
+            "reviewed_hash": "sha256:844e50c5f134168ca048bc2c2c056dc853c3d405c60d2f219c382c7fac2532ed"
           }
         }
       }
@@ -3103,18 +3114,21 @@
             }
           ],
           "changed_at": "2026-10-24"
-        }
+        },
+        "purpose": "Fully managed, globally distributed NoSQL and vector database with autoscale and serverless throughput.",
+        "facts": [
+          "Turnkey global distribution with multi-region writes (99.999% SLA) and automatic failover. APIs: NoSQL, MongoDB, Apache Cassandra, Apache Gremlin and Table.",
+          "Throughput models include provisioned, autoscale and serverless. A lifetime free tier gives 1000 RU/s and 25 GB.",
+          "Integrated vector and hybrid search stores embeddings next to operational data."
+        ]
       },
-      "manual": {
-        "purpose": "Globally distributed NoSQL, with a serverless mode.",
-        "facts": []
-      },
+      "manual": {},
       "review": {
         "status": "unconfirmed",
-        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+        "note": "Verified against Learn on 2026-10-24 (cosmos-db/introduction): purpose (vector database added), facts. Not verified: the Log Analytics edge."
       },
       "freshness": {
-        "status": "unreviewed",
+        "status": "current",
         "changed_at": "2026-10-24",
         "sources": {
           "https://learn.microsoft.com/azure/cosmos-db/introduction": {
@@ -3122,7 +3136,8 @@
             "http_status": 200,
             "ms_date": "2026-06-08T00:00:00Z",
             "updated_at": "2026-06-15T22:16:00Z",
-            "latest_hash": "sha256:a3591170c564b26138fcf1e9476dee30e40342c7e581474accecd71d504f2bb3"
+            "latest_hash": "sha256:a3591170c564b26138fcf1e9476dee30e40342c7e581474accecd71d504f2bb3",
+            "reviewed_hash": "sha256:a3591170c564b26138fcf1e9476dee30e40342c7e581474accecd71d504f2bb3"
           }
         }
       }
@@ -3193,18 +3208,20 @@
             }
           ],
           "changed_at": "2026-10-24"
-        }
+        },
+        "purpose": "A fully managed enterprise message broker with queues and publish-subscribe topics.",
+        "facts": [
+          "Decouples applications and services. Features: load balancing with competing consumers, topics and subscriptions, atomic transactions and message sessions for strict ordering.",
+          "Transactions allow once-only processing semantics: results become visible downstream only after the input message is settled."
+        ]
       },
-      "manual": {
-        "purpose": "Queues and topics for reliable messaging.",
-        "facts": []
-      },
+      "manual": {},
       "review": {
         "status": "unconfirmed",
-        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+        "note": "Verified against Learn on 2026-10-24 (service-bus-messaging/service-bus-messaging-overview): purpose, facts. Not verified: all edges: RBAC and managed identity roles, Event Grid, Functions, Logic Apps."
       },
       "freshness": {
-        "status": "unreviewed",
+        "status": "current",
         "changed_at": "2026-10-24",
         "sources": {
           "https://learn.microsoft.com/azure/service-bus-messaging/service-bus-messaging-overview": {
@@ -3212,7 +3229,8 @@
             "http_status": 200,
             "ms_date": "2026-03-13T00:00:00Z",
             "updated_at": "2026-08-31T17:13:00Z",
-            "latest_hash": "sha256:2e7ca9fc8fb30b9109a8eb5214e7913a7ff355559393c529ff648498779dc999"
+            "latest_hash": "sha256:2e7ca9fc8fb30b9109a8eb5214e7913a7ff355559393c529ff648498779dc999",
+            "reviewed_hash": "sha256:2e7ca9fc8fb30b9109a8eb5214e7913a7ff355559393c529ff648498779dc999"
           }
         }
       }
@@ -3288,18 +3306,20 @@
             }
           ],
           "changed_at": "2026-10-24"
-        }
+        },
+        "purpose": "A fully managed publish-subscribe service for event and message distribution, including MQTT.",
+        "facts": [
+          "Two core features: MQTT messaging (v3.1.1 and v5) for IoT clients, and data distribution over HTTP with push and pull delivery.",
+          "Push delivery sends events to webhooks and Azure services; an event subscription defines the handler or destination."
+        ]
       },
-      "manual": {
-        "purpose": "Route events between services.",
-        "facts": []
-      },
+      "manual": {},
       "review": {
         "status": "unconfirmed",
-        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+        "note": "Verified against Learn on 2026-10-24 (event-grid/overview): purpose (reworded: it is a publish-subscribe service), facts. Not verified: all edges: Storage blob events, and Functions, Service Bus and Event Hubs as handlers (the page only mentions Functions and Event Hubs in tutorial links)."
       },
       "freshness": {
-        "status": "unreviewed",
+        "status": "current",
         "changed_at": "2026-10-24",
         "sources": {
           "https://learn.microsoft.com/azure/event-grid/overview": {
@@ -3307,7 +3327,8 @@
             "http_status": 200,
             "ms_date": "2026-07-23T00:00:00Z",
             "updated_at": "2026-07-23T22:13:00Z",
-            "latest_hash": "sha256:a2e3316ee3b89936e4718d0fa2eee0b0548586ab447a7f9044600fe25619e3a9"
+            "latest_hash": "sha256:a2e3316ee3b89936e4718d0fa2eee0b0548586ab447a7f9044600fe25619e3a9",
+            "reviewed_hash": "sha256:a2e3316ee3b89936e4718d0fa2eee0b0548586ab447a7f9044600fe25619e3a9"
           }
         }
       }
@@ -4955,16 +4976,16 @@
       "type": "contains",
       "to": "azure-files",
       "note": "File shares live in a storage account",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "data-lake-storage-gen2",
       "type": "requires",
       "to": "storage-account",
-      "note": "A storage account with hierarchical namespace enabled",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "note": "Data Lake Storage is part of Blob Storage in a storage account",
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "storage-account",
@@ -5010,9 +5031,9 @@
       "from": "azure-database-for-postgresql",
       "type": "optional",
       "to": "virtual-network-and-subnets",
-      "note": "Private access through a delegated subnet",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "note": "Full private access through an Azure virtual network",
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "azure-database-for-postgresql",
