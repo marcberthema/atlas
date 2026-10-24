@@ -603,7 +603,10 @@
       "tier_label": "Always there",
       "category": "Identity and security",
       "purpose": "Users, groups, applications and sign-in.",
-      "facts": [],
+      "facts": [
+        "Entra ID is the foundational product of the wider Microsoft Entra family. Every tenant is automatically an Entra tenant, so Microsoft 365, Azure and Dynamics 365 subscribers already use it.",
+        "It is a cloud identity and access management service: authentication, policy enforcement and protection for users, devices, apps and resources."
+      ],
       "cloud_native": {
         "level": "unrated",
         "note": ""
@@ -615,10 +618,10 @@
       ],
       "review": {
         "status": "unconfirmed",
-        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+        "note": "Verified against Learn on 2026-10-24 (entra/fundamentals/whatis): purpose, facts, the tenant edge. Not verified: the diagnostic-logs, Conditional Access, PIM, Azure SQL and Azure DevOps edges, and 'every object lives in a tenant'."
       },
       "freshness": {
-        "status": "unreviewed",
+        "status": "current",
         "changed_at": "2026-10-24"
       },
       "terraform": {
@@ -675,8 +678,9 @@
       "facts": [
         "Three parts: who (principal), what (role), where (scope). Scopes inherit downward.",
         "Contributor manages resources but is not a data role. Use data roles such as Key Vault Secrets User for secrets.",
-        "RBAC answers 'who may do what?'. Azure Policy answers 'what is allowed to exist, and how must it be configured?'. Full access does not bypass policy.",
-        "A role assignment is its own ARM resource, stored at a scope, so one group assignment can cover many resources. That is why RBAC scales better than per-resource lists."
+        "RBAC answers 'who may do what?'. Azure Policy mainly answers 'what is allowed to exist, and how must it be configured?', though policy rules can also look at who makes a request. Full RBAC access does not bypass policy.",
+        "A role assignment is its own ARM resource, stored at a scope, so one group assignment can cover many resources. That is why RBAC scales better than per-resource lists.",
+        "RBAC is additive: effective permissions are the sum of all assignments that apply. If a deny assignment applies, access is blocked before role assignments are considered."
       ],
       "cloud_native": {
         "level": "unrated",
@@ -689,10 +693,10 @@
       ],
       "review": {
         "status": "unconfirmed",
-        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+        "note": "Verified against Learn on 2026-10-24 (role-based-access-control/overview, arm/overview, key-vault rbac pages): purpose, three-part model, scopes and inheritance, role assignment as an ARM resource, additive evaluation, the Key Vault edge. Not verified: 'full access does not bypass policy', the Entra ID edge, and the Storage, ACR, Service Bus, AKS and PIM edges."
       },
       "freshness": {
-        "status": "unreviewed",
+        "status": "current",
         "changed_at": "2026-10-24"
       },
       "terraform": {
@@ -745,11 +749,11 @@
       "tier": 1,
       "tier_label": "Core",
       "category": "Identity and security",
-      "purpose": "Secretless identities for Azure resources, rotated by Azure.",
+      "purpose": "Identities for Azure resources whose credentials Azure manages for you.",
       "facts": [
-        "System-assigned: tied to one resource's lifecycle. User-assigned: a standalone resource reusable by many.",
-        "No stored secret; short-lived tokens come from the platform.",
-        "Useless until it has a role assignment."
+        "System-assigned: created with one resource and deleted with it. User-assigned: a standalone resource that can be assigned to many resources. Microsoft recommends user-assigned for Microsoft services.",
+        "You don't manage credentials, and they aren't accessible to you; code gets a token from Entra ID through MSAL or the Azure.Identity SDK.",
+        "Each managed identity is a special service principal in Entra ID. It has no access until you grant permissions, for example with Azure RBAC role assignments."
       ],
       "cloud_native": {
         "level": "unrated",
@@ -762,10 +766,10 @@
       ],
       "review": {
         "status": "unconfirmed",
-        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+        "note": "Verified against Learn on 2026-10-24 (managed-identities-azure-resources/overview, key-vault rbac pages): purpose (reworded: 'rotated by Azure' is not stated), facts, the Entra ID and Key Vault edges. Not verified: the Storage, ACR, Service Bus, SQL, AKS, Automation, Logic Apps, Data Factory and Azure DevOps edges."
       },
       "freshness": {
-        "status": "unreviewed",
+        "status": "current",
         "changed_at": "2026-10-24"
       },
       "terraform": {
@@ -906,8 +910,12 @@
       "tier": 1,
       "tier_label": "Core",
       "category": "Identity and security",
-      "purpose": "Security posture and threat protection.",
-      "facts": [],
+      "purpose": "Security posture management and threat protection for cloud workloads.",
+      "facts": [
+        "A Cloud Native Application Protection Platform (CNAPP): posture management (CSPM), workload protection (CWPP) and DevSecOps in one service.",
+        "Workload protection is enabled as separate plans per resource type, such as Defender for Storage, SQL, Key Vault and containers.",
+        "Parts of Defender for Cloud are moving into the Defender portal; check which portal an article applies to."
+      ],
       "cloud_native": {
         "level": "unrated",
         "note": ""
@@ -919,10 +927,10 @@
       ],
       "review": {
         "status": "unconfirmed",
-        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+        "note": "Verified against Learn on 2026-10-24 (defender-for-cloud-introduction): purpose, facts, five protects edges. Not verified: the Container Registry edge (not found on the page)."
       },
       "freshness": {
-        "status": "unreviewed",
+        "status": "current",
         "changed_at": "2026-10-24"
       },
       "terraform": {
@@ -979,7 +987,10 @@
       "tier_label": "Always there",
       "category": "Governance and management",
       "purpose": "Track, budget and analyze spend.",
-      "facts": [],
+      "facts": [
+        "Available to anyone with access to a billing account, subscription, resource group or management group.",
+        "Supports budgets, anomaly and scheduled alerts, tag inheritance, cost allocation rules and scheduled exports to a storage account."
+      ],
       "cloud_native": {
         "level": "unrated",
         "note": ""
@@ -991,10 +1002,10 @@
       ],
       "review": {
         "status": "unconfirmed",
-        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+        "note": "Verified against Learn on 2026-10-24 (cost-management-billing/costs/overview-cost-management): purpose, scopes, features. Not verified: nothing known; Management groups are not supported for some Microsoft Customer Agreement subscriptions (per the management groups page), worth a fact later."
       },
       "freshness": {
-        "status": "unreviewed",
+        "status": "current",
         "changed_at": "2026-10-24"
       },
       "terraform": {
@@ -1055,7 +1066,7 @@
       "tier": 0,
       "tier_label": "Always there",
       "category": "Governance and management",
-      "purpose": "Recommendations on cost, reliability and security.",
+      "purpose": "Recommendations on cost, performance, reliability and security.",
       "facts": [],
       "cloud_native": {
         "level": "unrated",
@@ -1068,10 +1079,10 @@
       ],
       "review": {
         "status": "unconfirmed",
-        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+        "note": "Verified against Learn on 2026-10-24 (advisor/advisor-overview): purpose (performance added). Not verified: its relationships; none are mapped yet."
       },
       "freshness": {
-        "status": "unreviewed",
+        "status": "current",
         "changed_at": "2026-10-24"
       },
       "terraform": {
@@ -1112,7 +1123,10 @@
       "tier_label": "Always there",
       "category": "Governance and management",
       "purpose": "Query resources across subscriptions.",
-      "facts": [],
+      "facts": [
+        "Queries use a language based on Kusto Query Language (KQL). You get results only for resources you have at least read permission on.",
+        "Typical uses: filter, group and sort resources by property, explore resources for governance, assess the effect of policies, and query changes to resource properties."
+      ],
       "cloud_native": {
         "level": "unrated",
         "note": ""
@@ -1124,10 +1138,10 @@
       ],
       "review": {
         "status": "unconfirmed",
-        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+        "note": "Verified against Learn on 2026-10-24 (governance/resource-graph/overview): purpose, facts, the Subscriptions edge. Not verified: Terraform coverage (no resource for running queries)."
       },
       "freshness": {
-        "status": "unreviewed",
+        "status": "current",
         "changed_at": "2026-10-24"
       },
       "terraform": {
@@ -1149,9 +1163,9 @@
       "category": "Governance and management",
       "purpose": "Enforce and audit rules on resources.",
       "facts": [
-        "Rules about resource configuration, not about who may act. Examples: allowed regions, required tags, no public IPs, storage must disable public access.",
-        "Assigned at a management group, subscription or resource group and inherited downward; specific scopes can be excluded. It only applies to the resource types and properties its rule matches.",
-        "Effects: Deny, Audit, Modify, Append, DeployIfNotExists, AuditIfNotExists, Disabled. Evaluated on create and update, plus a periodic compliance scan. Existing resources are not deleted.",
+        "Rules about resource properties and actions. Examples: allowed regions, required tags, diagnostic logs sent to Log Analytics. Rules can also check who makes the request, so policy is not only about configuration.",
+        "Assigned at a management group, subscription, resource group or individual resource, and inherited downward; specific scopes can be excluded. It only applies to the resource types and properties its rule matches.",
+        "Evaluated when a resource is created or updated, when a policy is newly assigned or changed at a scope, and on a compliance cycle every 24 hours. Effects set the response: deny, log, alter the resource before or after the change, deploy related resources, or block actions. Existing non-compliant resources are not deleted; remediation can fix them.",
         "If a Terraform apply fails with RequestDisallowedByPolicy, read the policy name in the error before debugging the code."
       ],
       "cloud_native": {
@@ -1165,10 +1179,10 @@
       ],
       "review": {
         "status": "unconfirmed",
-        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+        "note": "Verified against Learn on 2026-10-24 (policy/overview): purpose, identity-aware rules (the old fact said policy is not about who acts), assignment scopes, evaluation triggers, effects and remediation. Not verified: scope exclusions, the exact effect names, and the RequestDisallowedByPolicy tip."
       },
       "freshness": {
-        "status": "unreviewed",
+        "status": "current",
         "changed_at": "2026-10-24"
       },
       "terraform": {
@@ -1245,7 +1259,7 @@
       "tier": 1,
       "tier_label": "Core",
       "category": "Governance and management",
-      "purpose": "Back up VMs, disks, files and databases.",
+      "purpose": "Back up VMs, disks, files, blobs and databases.",
       "facts": [],
       "cloud_native": {
         "level": "unrated",
@@ -1258,10 +1272,10 @@
       ],
       "review": {
         "status": "unconfirmed",
-        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+        "note": "Verified against Learn on 2026-10-24 (backup/backup-overview): purpose (blobs added), four protects edges. Not verified: the Azure Files edge (the page lists Azure Files, but not as an edge to the Azure Files service, which is tier 2) and the Recovery Services vault versus Backup vault distinction."
       },
       "freshness": {
-        "status": "unreviewed",
+        "status": "current",
         "changed_at": "2026-10-24"
       },
       "terraform": {
@@ -3731,8 +3745,8 @@
       "type": "enforces",
       "to": "azure-policy",
       "note": "Evaluated on each create or update; can deny or modify the request",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "azure-resource-manager",
@@ -3754,9 +3768,9 @@
       "from": "entra-id",
       "type": "requires",
       "to": "entra-tenant",
-      "note": "Every Entra ID object lives in a tenant",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "note": "Every tenant is automatically an Entra tenant",
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "azure-rbac-role-assignments",
@@ -3794,9 +3808,9 @@
       "from": "azure-rbac-role-assignments",
       "type": "access",
       "to": "key-vault",
-      "note": "Data roles such as Key Vault Secrets User",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "note": "Data roles such as Key Vault Secrets User; RBAC is the default and recommended permission model",
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "azure-rbac-role-assignments",
@@ -3835,16 +3849,16 @@
       "type": "requires",
       "to": "entra-id",
       "note": "Each one is a service principal in the tenant",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "managed-identities",
       "type": "access",
       "to": "key-vault",
       "note": "Needs a role assignment, e.g. Key Vault Secrets User",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "managed-identities",
@@ -3963,16 +3977,16 @@
       "type": "protects",
       "to": "virtual-machines",
       "note": "",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "defender-for-cloud",
       "type": "protects",
       "to": "azure-kubernetes-service-aks",
       "note": "",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "defender-for-cloud",
@@ -3987,24 +4001,24 @@
       "type": "protects",
       "to": "storage-account",
       "note": "",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "defender-for-cloud",
       "type": "protects",
       "to": "azure-sql",
       "note": "",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "defender-for-cloud",
       "type": "protects",
       "to": "key-vault",
       "note": "",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "microsoft-sentinel",
@@ -4075,16 +4089,16 @@
       "type": "protects",
       "to": "virtual-machines",
       "note": "",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "azure-backup-recovery-services-vault",
       "type": "protects",
       "to": "managed-disks",
       "note": "",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "azure-backup-recovery-services-vault",
@@ -4099,16 +4113,16 @@
       "type": "protects",
       "to": "storage-account",
       "note": "Blob backup",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "azure-backup-recovery-services-vault",
       "type": "protects",
       "to": "azure-database-for-postgresql",
       "note": "",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "site-recovery",
@@ -4138,17 +4152,17 @@
       "from": "cost-management",
       "type": "access",
       "to": "subscriptions",
-      "note": "Reads cost data at subscription, resource group or management-group scope",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "note": "Available at billing account, subscription, resource group or management group scope",
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "resource-graph",
       "type": "access",
       "to": "subscriptions",
-      "note": "Queries resources across subscriptions you can read",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "note": "Queries a chosen set of subscriptions; results are limited to what you can read",
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "lighthouse",
