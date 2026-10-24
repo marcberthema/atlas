@@ -293,7 +293,9 @@
       "category": "Organization",
       "purpose": "The identity boundary that everything in Azure hangs from.",
       "facts": [
-        "The root of identity. A subscription trusts exactly one tenant."
+        "A tenant is the directory that holds the identities used to sign in and get access. Every Azure subscription trusts exactly one tenant and relies on it to authenticate and authorize users, services and devices.",
+        "The person who creates a tenant becomes Global Administrator. A subscription owner who joins their subscription to an existing tenant does not.",
+        "Moving a subscription to another tenant breaks role assignments, so AKS clusters lose functionality, and key vault tenant IDs must be changed."
       ],
       "cloud_native": {
         "level": "unrated",
@@ -302,14 +304,17 @@
       "docs": [
         {
           "url": "https://learn.microsoft.com/entra/fundamentals/how-to-find-tenant"
+        },
+        {
+          "url": "https://learn.microsoft.com/entra/fundamentals/how-subscriptions-associated-directory"
         }
       ],
       "review": {
         "status": "unconfirmed",
-        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+        "note": "Verified against Learn on 2026-10-24 (find-tenant-id, how-subscriptions-associated-directory): purpose, trust relationship, facts, three edges. Not verified: the Entra ID edge ('every object lives in a tenant')."
       },
       "freshness": {
-        "status": "unreviewed",
+        "status": "current",
         "changed_at": "2026-10-24"
       },
       "terraform": {
@@ -347,7 +352,12 @@
       "tier_label": "Always there",
       "category": "Organization",
       "purpose": "Group subscriptions so policy and access apply to all of them.",
-      "facts": [],
+      "facts": [
+        "Governance conditions applied to a management group cascade to all nested management groups, subscriptions and resources. All subscriptions in one management group must trust the same tenant.",
+        "Each directory has one root management group, named 'Tenant root group' by default, with an ID equal to the tenant ID. It can't be moved or deleted, and new subscriptions land in it by default.",
+        "No one has access to the root management group by default; a Global Administrator must elevate access first.",
+        "A directory supports 10,000 management groups and a tree up to six levels deep (not counting the root or the subscription level)."
+      ],
       "cloud_native": {
         "level": "unrated",
         "note": ""
@@ -359,10 +369,10 @@
       ],
       "review": {
         "status": "unconfirmed",
-        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+        "note": "Verified against Learn on 2026-10-24 (management-groups/overview): purpose, facts, four edges. Not verified: nothing known; limits can change, recheck on the next stale flag."
       },
       "freshness": {
-        "status": "unreviewed",
+        "status": "current",
         "changed_at": "2026-10-24"
       },
       "terraform": {
@@ -414,7 +424,7 @@
       "facts": [
         "Every create, update or delete goes through ARM, whichever tool you use. You don't enable it; it is part of the platform.",
         "ARM checks RBAC on every request and evaluates Azure Policy when one is assigned. Role and policy assignments are themselves ARM resources.",
-        "Resource providers (Microsoft.Compute, Microsoft.Network, ...) must be registered per subscription before you can create that type of resource.",
+        "Resource providers (Microsoft.Compute, Microsoft.Network, ...) must be registered on a subscription before you use them. Some are registered by default, and the portal and template or Bicep deployments often register them for you. Registering needs the /register/action permission, which Contributor and Owner have.",
         "Terraform's azurerm provider calls ARM's REST API resource by resource and keeps its own state file. It does not generate ARM templates.",
         "Bicep is an Azure-only language that compiles to an ARM template (JSON), which ARM's deployment engine applies. No state file: Azure itself is the record. Preview changes with what-if.",
         "Both describe desired state, but a deployment is one-shot: nothing keeps reconciling afterward (unlike a Kubernetes controller). Drift is found by re-running plan or what-if, or corrected by Azure Policy effects such as DeployIfNotExists."
@@ -430,10 +440,10 @@
       ],
       "review": {
         "status": "unconfirmed",
-        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+        "note": "Verified against Learn on 2026-10-24 (arm/overview, resource-providers-and-types): purpose, request flow, role assignments as extension resources, resource provider registration, the RBAC edge. Not verified: the Terraform and Bicep facts, 'evaluates Azure Policy', and the Policy and Azure DevOps edges."
       },
       "freshness": {
-        "status": "unreviewed",
+        "status": "current",
         "changed_at": "2026-10-24"
       },
       "terraform": {
@@ -464,7 +474,9 @@
       "category": "Organization",
       "purpose": "The billing, quota and access boundary for resources.",
       "facts": [
-        "The billing and quota boundary. Trusts exactly one tenant."
+        "A unit of management, billing and scale, and a boundary for quota, governance, security and identity controls.",
+        "Trusts exactly one tenant.",
+        "Not tied to a region: one subscription can hold resources from many regions, and resource groups can organise them by region."
       ],
       "cloud_native": {
         "level": "unrated",
@@ -477,10 +489,10 @@
       ],
       "review": {
         "status": "unconfirmed",
-        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+        "note": "Verified against Learn on 2026-10-24 (cloud-adoption-framework subscriptions, arm/overview, how-subscriptions-associated-directory): purpose, facts, five edges. Not verified: the Cost Management, Resource Graph, Lighthouse and Azure DevOps edges."
       },
       "freshness": {
-        "status": "unreviewed",
+        "status": "current",
         "changed_at": "2026-10-24"
       },
       "terraform": {
@@ -532,7 +544,9 @@
       "facts": [
         "A resource belongs to exactly one resource group.",
         "Deleting a resource group deletes everything in it.",
-        "Resources can reference others in different resource groups."
+        "Resources can reference others in different resource groups.",
+        "A resource group stores metadata about its resources. Its location is only where that metadata is stored; resources inside can be in other regions.",
+        "Locks (read-only or delete) can protect a resource group from accidental deletion or change."
       ],
       "cloud_native": {
         "level": "unrated",
@@ -545,10 +559,10 @@
       ],
       "review": {
         "status": "unconfirmed",
-        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+        "note": "Verified against Learn on 2026-10-24 (manage-resource-groups-portal, arm/overview): purpose, 27 'contains' edges (every one is an ARM resource that lives in a group), scope edges. Not verified: the three older facts (exactly one group, delete removes everything, cross-group references) and the Azure DevOps edge."
       },
       "freshness": {
-        "status": "unreviewed",
+        "status": "current",
         "changed_at": "2026-10-24"
       },
       "terraform": {
@@ -3469,248 +3483,248 @@
       "type": "contains",
       "to": "virtual-machines",
       "note": "",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "resource-groups",
       "type": "contains",
       "to": "managed-disks",
       "note": "",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "resource-groups",
       "type": "contains",
       "to": "virtual-machine-scale-sets",
       "note": "",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "resource-groups",
       "type": "contains",
       "to": "app-service",
       "note": "",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "resource-groups",
       "type": "contains",
       "to": "azure-functions",
       "note": "",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "resource-groups",
       "type": "contains",
       "to": "container-apps",
       "note": "",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "resource-groups",
       "type": "contains",
       "to": "azure-kubernetes-service-aks",
       "note": "",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "resource-groups",
       "type": "contains",
       "to": "container-registry-acr",
       "note": "",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "resource-groups",
       "type": "contains",
       "to": "virtual-network-and-subnets",
       "note": "",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "resource-groups",
       "type": "contains",
       "to": "network-interface-nic",
       "note": "",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "resource-groups",
       "type": "contains",
       "to": "network-security-group",
       "note": "",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "resource-groups",
       "type": "contains",
       "to": "public-ip-address",
       "note": "",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "resource-groups",
       "type": "contains",
       "to": "load-balancer",
       "note": "",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "resource-groups",
       "type": "contains",
       "to": "application-gateway-front-door",
       "note": "",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "resource-groups",
       "type": "contains",
       "to": "azure-dns-and-private-dns",
       "note": "",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "resource-groups",
       "type": "contains",
       "to": "private-endpoint",
       "note": "",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "resource-groups",
       "type": "contains",
       "to": "storage-account",
       "note": "",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "resource-groups",
       "type": "contains",
       "to": "azure-sql",
       "note": "",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "resource-groups",
       "type": "contains",
       "to": "azure-database-for-postgresql",
       "note": "",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "resource-groups",
       "type": "contains",
       "to": "cosmos-db",
       "note": "",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "resource-groups",
       "type": "contains",
       "to": "service-bus",
       "note": "",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "resource-groups",
       "type": "contains",
       "to": "event-grid",
       "note": "",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "resource-groups",
       "type": "contains",
       "to": "key-vault",
       "note": "",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "resource-groups",
       "type": "contains",
       "to": "managed-identities",
       "note": "",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "resource-groups",
       "type": "contains",
       "to": "log-analytics",
       "note": "",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "resource-groups",
       "type": "contains",
       "to": "application-insights",
       "note": "",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "resource-groups",
       "type": "contains",
       "to": "azure-backup-recovery-services-vault",
       "note": "",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "entra-tenant",
       "type": "contains",
       "to": "management-groups",
       "note": "The root management group is created per tenant",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "management-groups",
       "type": "contains",
       "to": "subscriptions",
       "note": "",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "subscriptions",
       "type": "contains",
       "to": "resource-groups",
       "note": "",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "subscriptions",
       "type": "requires",
       "to": "entra-tenant",
       "note": "Each subscription trusts exactly one tenant",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "azure-resource-manager",
@@ -3724,9 +3738,9 @@
       "from": "azure-resource-manager",
       "type": "enforces",
       "to": "azure-rbac-role-assignments",
-      "note": "Checked on every request: may this identity do this at this scope?",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "note": "Every request is authenticated and authorized; Azure RBAC is built into the management layer",
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "azure-devops",
@@ -3757,24 +3771,24 @@
       "type": "access",
       "to": "management-groups",
       "note": "Can be assigned at this scope",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "azure-rbac-role-assignments",
       "type": "access",
       "to": "subscriptions",
       "note": "Can be assigned at this scope",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "azure-rbac-role-assignments",
       "type": "access",
       "to": "resource-groups",
       "note": "Can be assigned at this scope",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "azure-rbac-role-assignments",
@@ -3876,9 +3890,9 @@
       "from": "key-vault",
       "type": "requires",
       "to": "entra-tenant",
-      "note": "A vault is tied to one tenant",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "note": "A vault has a tenant ID; moving its subscription to another tenant means changing it",
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "key-vault",
@@ -4037,24 +4051,24 @@
       "type": "protects",
       "to": "management-groups",
       "note": "Assigned at this scope",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "azure-policy",
       "type": "protects",
       "to": "subscriptions",
       "note": "Assigned at this scope",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "azure-policy",
       "type": "protects",
       "to": "resource-groups",
       "note": "Assigned at this scope",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "azure-backup-recovery-services-vault",
