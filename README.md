@@ -44,7 +44,7 @@ claude "$(cat review/PROMPT.md)"  # the prompt written by make stale
 ```
 
 The prompt gives the agent, per service, the current entry and a diff of the Learn page against the text last
-reviewed (`data/snapshots/`). The agent asks you for decisions, edits `data/services.json`, runs `make ack`,
+reviewed (`data/snapshots/`, kept locally and git-ignored; run `make check` first in a fresh clone). The agent asks you for decisions, edits `data/services.json`, runs `make ack`,
 commits per service on a `review/<date>` branch, and opens a PR to `main` once you confirm. The first pass over
 never-reviewed services is `make stale ALL=1 LIMIT=5`.
 

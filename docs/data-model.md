@@ -61,6 +61,10 @@ Dates called `changed_at` move only when the recorded values change, so an uncha
 `data/snapshots/<service-id>/<page>.latest.txt` is the page text the pipeline last saw; `.reviewed.txt` is the text
 at the last `make ack`. `make stale` diffs the two to show what changed.
 
+Snapshots are **local only** (git-ignored): they are verbatim Microsoft Learn text, which this repo doesn't redistribute. The
+daily job still detects changes by hash. In a fresh clone run `make check` first to create the `latest` files; a service
+without a local `reviewed` snapshot is reported as having no baseline, and the agent reads the whole current page instead.
+
 ### Terraform status (derived)
 
 Versions are **provider** versions (azurerm, azuread, azuredevops, azapi), not Terraform core.
