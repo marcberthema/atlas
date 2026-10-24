@@ -801,10 +801,10 @@
       "category": "Identity and security",
       "purpose": "Store secrets, keys and certificates with access control.",
       "facts": [
-        "Prefer RBAC with a data role such as Key Vault Secrets User for reading secrets.",
-        "Contributor is a management role, not a secrets role.",
-        "Permission model: either vault access policies or Azure RBAC, one at a time. Access policies are a property stored inside the vault, not a separate service.",
-        "Switching to RBAC ignores existing access policies, so create the equivalent role assignments first and test before switching."
+        "Each vault uses one permission model: Azure RBAC (the default and recommended model, and the default for new vaults from API version 2026-02-01) or vault access policies (legacy).",
+        "Access policies exist only at the vault level. RBAC roles can be assigned at management group, subscription, resource group, vault, or an individual key, secret or certificate. One vault per application per environment, with roles at vault scope, is recommended over per-object assignments.",
+        "Contributor is a management role, but in access-policy mode Contributor and Key Vault Contributor can grant themselves data access by editing an access policy. Read secrets with an RBAC data role such as Key Vault Secrets User, and limit who holds Contributor.",
+        "Setting the RBAC permission model invalidates all access policies and can cause outages if equivalent roles are not assigned. Create the role assignments first, then switch and test."
       ],
       "cloud_native": {
         "level": "unrated",
@@ -817,10 +817,10 @@
       ],
       "review": {
         "status": "unconfirmed",
-        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+        "note": "Purpose and the permission-model facts verified against Learn on 2026-10-24 (key-vault overview, rbac-guide, rbac-migration, rbac-access-policy). Relationships, Terraform coverage and cloud native rating are not verified."
       },
       "freshness": {
-        "status": "unreviewed",
+        "status": "current",
         "changed_at": "2026-10-24"
       },
       "terraform": {
@@ -882,7 +882,7 @@
             }
           ]
         },
-        "note": "",
+        "note": "Registry confirms azurerm resources for vaults, secrets, keys, certificates, certificate contacts and issuers, managed storage accounts and Managed HSM, and typed azapi pages for vaults, access policies, keys, secrets and managed HSMs. One-off operations such as backup, restore, purge and rotate-now are actions rather than resources; azapi_resource_action may cover them (unconfirmed for Key Vault).",
         "changed_at": "2026-10-24"
       }
     },
