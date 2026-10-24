@@ -1618,7 +1618,12 @@
           "Works with Azure Load Balancer for layer 4 and Application Gateway for layer 7 traffic."
         ]
       },
-      "manual": {},
+      "manual": {
+        "cloud_native": {
+          "level": "not",
+          "note": "Groups of VMs: you still manage the operating system and instances, even though they scale automatically."
+        }
+      },
       "review": {
         "status": "unconfirmed",
         "note": "Verified against Learn on 2026-10-24 (virtual-machine-scale-sets/overview): purpose (reworded: 'identical' is not stated), facts, the Load Balancer edge. Not verified: the subnet edge and 'each AKS node pool is a scale set'."
@@ -1716,7 +1721,12 @@
           "Virtual Network integration secures ingress and egress; App Service environments give full isolation with dedicated networking and VMs."
         ]
       },
-      "manual": {},
+      "manual": {
+        "cloud_native": {
+          "level": "partly",
+          "note": "Managed platform for web apps that runs classic and containerised apps; no servers to manage but not built around containers or events."
+        }
+      },
       "review": {
         "status": "unconfirmed",
         "note": "Verified against Learn on 2026-10-24 (app-service/overview): purpose, facts, the VNet edge. Not verified: the Key Vault references, Application Insights, App Configuration, Application Gateway, Traffic Manager, Private Endpoint and API Management edges, and the delegated-subnet detail."
@@ -1789,7 +1799,12 @@
           "Durable Functions chain functions into event-driven workflows."
         ]
       },
-      "manual": {},
+      "manual": {
+        "cloud_native": {
+          "level": "native",
+          "note": "Serverless and event-driven: no servers to manage, triggers and bindings, scales with events."
+        }
+      },
       "review": {
         "status": "unconfirmed",
         "note": "Verified against Learn on 2026-10-24 (azure-functions/functions-overview): purpose, facts. Not verified: all edges: the Storage requirement, Application Insights, Event Grid, Service Bus and API Management."
@@ -1877,7 +1892,12 @@
           "Runs containers from any registry, public or private. Dapr is built in for microservices, and you can provide an existing virtual network when creating the environment."
         ]
       },
-      "manual": {},
+      "manual": {
+        "cloud_native": {
+          "level": "native",
+          "note": "Serverless containers with KEDA autoscaling, Dapr and scale to zero."
+        }
+      },
       "review": {
         "status": "unconfirmed",
         "note": "Verified against Learn on 2026-10-24 (container-apps/overview): purpose, facts, the ACR and VNet edges. Not verified: the Log Analytics edge."
@@ -1951,7 +1971,12 @@
           "In Automatic, Managed Prometheus, Container Insights and Azure Monitor dashboards with Grafana are on by default."
         ]
       },
-      "manual": {},
+      "manual": {
+        "cloud_native": {
+          "level": "native",
+          "note": "Managed, CNCF-certified Kubernetes for containerised microservices."
+        }
+      },
       "review": {
         "status": "unconfirmed",
         "note": "Verified against Learn on 2026-10-24 (aks/what-is-aks, container-registry-intro): purpose (now covers Automatic mode), facts, the ACR and Managed Prometheus edges. The old fact 'node pools are scale sets' was dropped as unverified. Not verified: the managed identity, Key Vault, subnet, scale set, Log Analytics and Application Gateway edges."
