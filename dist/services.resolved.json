@@ -66,14 +66,14 @@
       "title": "Observability",
       "question": "Which monitoring service fits my workload?",
       "status": "unconfirmed",
-      "note": "Drafted from the earlier hand-built page and the edges already in the model; not yet checked against Microsoft Learn.",
+      "note": "Reviewed against Learn on 2026-10-24. Application Insights is OpenTelemetry-based and Azure Monitor also collects Prometheus metrics, so the audience labels are a simplification: the options overlap.",
       "members": [
         {
           "services": [
             "azure-monitor"
           ],
           "audience": "Every organisation",
-          "choose_when": "The platform every subscription already has: metrics, alerts and diagnostic settings. Start here; the two options below sit under it."
+          "choose_when": "The unified service every subscription already has for logs, metrics and alerts across Azure resources. The two options below are parts of it."
         },
         {
           "services": [
@@ -81,14 +81,14 @@
             "application-insights"
           ],
           "audience": "Workloads that are not cloud native",
-          "choose_when": "VMs, App Service, Functions and classic apps. Agents or SDKs send logs and telemetry to a workspace and you query it with KQL."
+          "choose_when": "Logs and application telemetry in Azure Monitor: KQL queries over workspaces, and Application Insights for application performance monitoring, instrumented with OpenTelemetry. Suits any workload, including VMs and App Service."
         },
         {
           "services": [
             "managed-prometheus-and-grafana"
           ],
           "audience": "Cloud-native workloads",
-          "choose_when": "Kubernetes and containerised apps that already expose Prometheus metrics. PromQL queries and Grafana dashboards."
+          "choose_when": "Kubernetes metrics: Prometheus for AKS and Azure Arc-enabled clusters with PromQL and Grafana dashboards, when your tooling already speaks Prometheus."
         }
       ]
     },
@@ -3071,8 +3071,11 @@
       "tier": 0,
       "tier_label": "Always there",
       "category": "Observability",
-      "purpose": "Metrics, alerts and the umbrella for monitoring.",
-      "facts": [],
+      "purpose": "Unified observability service for collecting, analyzing and acting on telemetry from cloud and hybrid environments.",
+      "facts": [
+        "Collects logs and metrics from Azure resources (including Entra ID audit logs) plus OpenTelemetry and Prometheus metrics for VMs and Kubernetes. The same data platform also serves Defender for Cloud and Microsoft Sentinel.",
+        "Application Insights is its application performance monitoring feature, built on OpenTelemetry."
+      ],
       "cloud_native": {
         "level": "unrated",
         "note": ""
@@ -3084,10 +3087,10 @@
       ],
       "review": {
         "status": "unconfirmed",
-        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+        "note": "Verified against Learn on 2026-10-24 (azure-monitor/fundamentals/overview): purpose (reworded), facts, three containment edges. Not verified: the Event Hubs edge."
       },
       "freshness": {
-        "status": "unreviewed",
+        "status": "current",
         "changed_at": "2026-10-24"
       },
       "terraform": {
@@ -3161,14 +3164,14 @@
       "tier": 1,
       "tier_label": "Core",
       "category": "Observability",
-      "purpose": "Log store queried with KQL.",
+      "purpose": "The tool for querying logs in the Azure Monitor Logs store; data lives in Log Analytics workspaces.",
       "facts": [
-        "A workspace stores logs; query them with KQL.",
+        "A workspace stores logs. Log Analytics queries them in simple mode (point and click) or KQL mode (full Kusto Query Language).",
         "Many resources send logs through diagnostic settings."
       ],
       "cloud_native": {
-        "level": "unrated",
-        "note": ""
+        "level": "partly",
+        "note": "Managed log store and KQL query tool that serves any kind of workload."
       },
       "docs": [
         {
@@ -3177,10 +3180,10 @@
       ],
       "review": {
         "status": "unconfirmed",
-        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+        "note": "Verified against Learn on 2026-10-24 (logs/log-analytics-overview): purpose (now the query tool plus workspace), the query modes, the Azure Monitor edge. Not verified: 'many resources send logs through diagnostic settings' and all sends edges (Key Vault, Entra ID, VMs, AKS, Container Apps, Storage, SQL, Cosmos DB, PostgreSQL), Sentinel and Grafana."
       },
       "freshness": {
-        "status": "unreviewed",
+        "status": "current",
         "changed_at": "2026-10-24"
       },
       "terraform": {
@@ -3220,11 +3223,14 @@
       "tier": 1,
       "tier_label": "Core",
       "category": "Observability",
-      "purpose": "Application telemetry: requests, traces, failures.",
-      "facts": [],
+      "purpose": "Application performance monitoring (APM) for live applications, built on OpenTelemetry.",
+      "facts": [
+        "A feature of Azure Monitor. OpenTelemetry (a vendor-neutral standard) is the way to instrument supported apps, with distros for .NET, Node.js, Python and Java.",
+        "Views include failures, to identify and analyze failures and minimize downtime."
+      ],
       "cloud_native": {
-        "level": "unrated",
-        "note": ""
+        "level": "partly",
+        "note": "OpenTelemetry-based APM that works for classic and cloud-native apps alike."
       },
       "docs": [
         {
@@ -3233,10 +3239,10 @@
       ],
       "review": {
         "status": "unconfirmed",
-        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+        "note": "Verified against Learn on 2026-10-24 (app/app-insights-overview): purpose, facts, the Azure Monitor edge. Not verified: the App Service and Functions telemetry edges, 'requires Log Analytics', and the Grafana data source edge."
       },
       "freshness": {
-        "status": "unreviewed",
+        "status": "current",
         "changed_at": "2026-10-24"
       },
       "terraform": {
@@ -3276,8 +3282,11 @@
       "tier": 1,
       "tier_label": "Core",
       "category": "Observability",
-      "purpose": "Azure-hosted Prometheus metrics and Grafana dashboards.",
-      "facts": [],
+      "purpose": "Azure Monitor's fully managed Prometheus for AKS and Azure Arc-enabled Kubernetes, with Grafana for dashboards.",
+      "facts": [
+        "Fully supports PromQL and comes with preconfigured alerts, rules and dashboards. Native integration with AKS and with Azure Managed Grafana or Azure Monitor dashboards with Grafana.",
+        "The only requirement is an Azure Monitor workspace, which stores the Prometheus metrics. There is no direct cost for the service or the workspace; pricing is on ingestion and query."
+      ],
       "cloud_native": {
         "level": "native",
         "note": "Managed versions of the Prometheus and Grafana open-source projects, aimed at Kubernetes metrics."
@@ -3292,10 +3301,10 @@
       ],
       "review": {
         "status": "unconfirmed",
-        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+        "note": "Verified against Learn on 2026-10-24 (metrics/prometheus-metrics-overview): purpose, Prometheus facts, the AKS and Azure Monitor edges. Not verified: Managed Grafana (its page was not read for this review) and the Log Analytics and Application Insights data source edges."
       },
       "freshness": {
-        "status": "unreviewed",
+        "status": "current",
         "changed_at": "2026-10-24"
       },
       "terraform": {
@@ -3356,8 +3365,11 @@
       "tier": 0,
       "tier_label": "Always there",
       "category": "Developer tools and delivery",
-      "purpose": "Repos, pipelines, boards and artifacts (a separate service from the Azure resource model).",
-      "facts": [],
+      "purpose": "Repos, pipelines, boards, test plans and artifacts for planning, building and delivering software.",
+      "facts": [
+        "A separate service from the Azure resource model (unconfirmed).",
+        "Five services: Boards (work tracking), Repos (Git or TFVC), Pipelines (CI/CD to any cloud or on-premises), Test Plans and Artifacts (NuGet, npm, Maven, Python and Universal packages)."
+      ],
       "cloud_native": {
         "level": "unrated",
         "note": ""
@@ -3369,10 +3381,10 @@
       ],
       "review": {
         "status": "unconfirmed",
-        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+        "note": "Verified against Learn on 2026-10-24 (devops/user-guide/what-is-azure-devops): purpose and the five services. Not verified: 'separate from the Azure resource model' and every edge (service connections, Key Vault, ARM, Entra ID, ACR, Storage)."
       },
       "freshness": {
-        "status": "unreviewed",
+        "status": "current",
         "changed_at": "2026-10-24"
       },
       "terraform": {
@@ -4837,25 +4849,25 @@
       "from": "azure-monitor",
       "type": "contains",
       "to": "log-analytics",
-      "note": "The log store and query side",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "note": "Log Analytics is the tool for querying the Azure Monitor Logs store",
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "azure-monitor",
       "type": "contains",
       "to": "application-insights",
-      "note": "Application monitoring",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "note": "Application performance monitoring, built on OpenTelemetry",
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "azure-monitor",
       "type": "contains",
       "to": "managed-prometheus-and-grafana",
-      "note": "Metrics and dashboards",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "note": "Azure Monitor managed service for Prometheus",
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "azure-monitor",
