@@ -197,7 +197,8 @@
       "category": "Organization",
       "tracking": {
         "learn_urls": [
-          "https://learn.microsoft.com/entra/fundamentals/how-to-find-tenant"
+          "https://learn.microsoft.com/entra/fundamentals/how-to-find-tenant",
+          "https://learn.microsoft.com/entra/fundamentals/how-subscriptions-associated-directory"
         ],
         "terraform": [
           {
@@ -228,20 +229,21 @@
             }
           ],
           "changed_at": "2026-10-24"
-        }
-      },
-      "manual": {
+        },
         "purpose": "The identity boundary that everything in Azure hangs from.",
         "facts": [
-          "The root of identity. A subscription trusts exactly one tenant."
+          "A tenant is the directory that holds the identities used to sign in and get access. Every Azure subscription trusts exactly one tenant and relies on it to authenticate and authorize users, services and devices.",
+          "The person who creates a tenant becomes Global Administrator. A subscription owner who joins their subscription to an existing tenant does not.",
+          "Moving a subscription to another tenant breaks role assignments, so AKS clusters lose functionality, and key vault tenant IDs must be changed."
         ]
       },
+      "manual": {},
       "review": {
         "status": "unconfirmed",
-        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+        "note": "Verified against Learn on 2026-10-24 (find-tenant-id, how-subscriptions-associated-directory): purpose, trust relationship, facts, three edges. Not verified: the Entra ID edge ('every object lives in a tenant')."
       },
       "freshness": {
-        "status": "unreviewed",
+        "status": "current",
         "changed_at": "2026-10-24",
         "sources": {
           "https://learn.microsoft.com/entra/fundamentals/how-to-find-tenant": {
@@ -249,7 +251,16 @@
             "http_status": 200,
             "ms_date": "2025-01-14T00:00:00Z",
             "updated_at": "2026-04-09T22:11:00Z",
-            "latest_hash": "sha256:0d544715f899d605ed7fc0a293108944ddc62d5989b9669ceae12a376ff4b4d3"
+            "latest_hash": "sha256:0d544715f899d605ed7fc0a293108944ddc62d5989b9669ceae12a376ff4b4d3",
+            "reviewed_hash": "sha256:0d544715f899d605ed7fc0a293108944ddc62d5989b9669ceae12a376ff4b4d3"
+          },
+          "https://learn.microsoft.com/entra/fundamentals/how-subscriptions-associated-directory": {
+            "http_status": 200,
+            "ms_date": "2026-06-19T00:00:00Z",
+            "updated_at": "2026-06-19T22:42:00Z",
+            "latest_hash": "sha256:99d60abe835d0e2ab438561502b95e11196da8f90d5f058ba616235769688335",
+            "changed_at": "2026-10-24",
+            "reviewed_hash": "sha256:99d60abe835d0e2ab438561502b95e11196da8f90d5f058ba616235769688335"
           }
         }
       }
@@ -300,18 +311,22 @@
             }
           ],
           "changed_at": "2026-10-24"
-        }
-      },
-      "manual": {
+        },
         "purpose": "Group subscriptions so policy and access apply to all of them.",
-        "facts": []
+        "facts": [
+          "Governance conditions applied to a management group cascade to all nested management groups, subscriptions and resources. All subscriptions in one management group must trust the same tenant.",
+          "Each directory has one root management group, named 'Tenant root group' by default, with an ID equal to the tenant ID. It can't be moved or deleted, and new subscriptions land in it by default.",
+          "No one has access to the root management group by default; a Global Administrator must elevate access first.",
+          "A directory supports 10,000 management groups and a tree up to six levels deep (not counting the root or the subscription level)."
+        ]
       },
+      "manual": {},
       "review": {
         "status": "unconfirmed",
-        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+        "note": "Verified against Learn on 2026-10-24 (management-groups/overview): purpose, facts, four edges. Not verified: nothing known; limits can change, recheck on the next stale flag."
       },
       "freshness": {
-        "status": "unreviewed",
+        "status": "current",
         "changed_at": "2026-10-24",
         "sources": {
           "https://learn.microsoft.com/azure/governance/management-groups/overview": {
@@ -319,7 +334,8 @@
             "http_status": 200,
             "ms_date": "2024-07-18T00:00:00Z",
             "updated_at": "2025-07-21T22:12:00Z",
-            "latest_hash": "sha256:69c1b7b5c0f78d024d528ba5e0837b3671bd5bd93bbb6e82c10bef73ec57a273"
+            "latest_hash": "sha256:69c1b7b5c0f78d024d528ba5e0837b3671bd5bd93bbb6e82c10bef73ec57a273",
+            "reviewed_hash": "sha256:69c1b7b5c0f78d024d528ba5e0837b3671bd5bd93bbb6e82c10bef73ec57a273"
           }
         }
       }
@@ -331,7 +347,8 @@
       "category": "Organization",
       "tracking": {
         "learn_urls": [
-          "https://learn.microsoft.com/azure/azure-resource-manager/management/overview"
+          "https://learn.microsoft.com/azure/azure-resource-manager/management/overview",
+          "https://learn.microsoft.com/azure/azure-resource-manager/management/resource-providers-and-types"
         ],
         "terraform": [
           {
@@ -352,14 +369,14 @@
             }
           ],
           "changed_at": "2026-10-24"
-        }
+        },
+        "purpose": "The control plane every tool (portal, CLI, Terraform) talks to."
       },
       "manual": {
-        "purpose": "The control plane every tool (portal, CLI, Terraform) talks to.",
         "facts": [
           "Every create, update or delete goes through ARM, whichever tool you use. You don't enable it; it is part of the platform.",
           "ARM checks RBAC on every request and evaluates Azure Policy when one is assigned. Role and policy assignments are themselves ARM resources.",
-          "Resource providers (Microsoft.Compute, Microsoft.Network, ...) must be registered per subscription before you can create that type of resource.",
+          "Resource providers (Microsoft.Compute, Microsoft.Network, ...) must be registered on a subscription before you use them. Some are registered by default, and the portal and template or Bicep deployments often register them for you. Registering needs the /register/action permission, which Contributor and Owner have.",
           "Terraform's azurerm provider calls ARM's REST API resource by resource and keeps its own state file. It does not generate ARM templates.",
           "Bicep is an Azure-only language that compiles to an ARM template (JSON), which ARM's deployment engine applies. No state file: Azure itself is the record. Preview changes with what-if.",
           "Both describe desired state, but a deployment is one-shot: nothing keeps reconciling afterward (unlike a Kubernetes controller). Drift is found by re-running plan or what-if, or corrected by Azure Policy effects such as DeployIfNotExists."
@@ -367,10 +384,10 @@
       },
       "review": {
         "status": "unconfirmed",
-        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+        "note": "Verified against Learn on 2026-10-24 (arm/overview, resource-providers-and-types): purpose, request flow, role assignments as extension resources, resource provider registration, the RBAC edge. Not verified: the Terraform and Bicep facts, 'evaluates Azure Policy', and the Policy and Azure DevOps edges."
       },
       "freshness": {
-        "status": "unreviewed",
+        "status": "current",
         "changed_at": "2026-10-24",
         "sources": {
           "https://learn.microsoft.com/azure/azure-resource-manager/management/overview": {
@@ -378,7 +395,16 @@
             "http_status": 200,
             "ms_date": "2026-08-04T00:00:00Z",
             "updated_at": "2026-08-06T22:11:00Z",
-            "latest_hash": "sha256:dd7c41c16e8cb01e4e6f0a40daf5e715d1aff3487af576b1f7bc7ea4af6251ee"
+            "latest_hash": "sha256:dd7c41c16e8cb01e4e6f0a40daf5e715d1aff3487af576b1f7bc7ea4af6251ee",
+            "reviewed_hash": "sha256:dd7c41c16e8cb01e4e6f0a40daf5e715d1aff3487af576b1f7bc7ea4af6251ee"
+          },
+          "https://learn.microsoft.com/azure/azure-resource-manager/management/resource-providers-and-types": {
+            "http_status": 200,
+            "ms_date": "2026-02-27T00:00:00Z",
+            "updated_at": "2026-02-27T18:31:00Z",
+            "latest_hash": "sha256:67bc8c03b9cb942098f285fb40e7a82337f9ef7fd4ba465a6e9a9adce38d3d09",
+            "changed_at": "2026-10-24",
+            "reviewed_hash": "sha256:67bc8c03b9cb942098f285fb40e7a82337f9ef7fd4ba465a6e9a9adce38d3d09"
           }
         }
       }
@@ -390,7 +416,8 @@
       "category": "Organization",
       "tracking": {
         "learn_urls": [
-          "https://learn.microsoft.com/azure/cloud-adoption-framework/ready/landing-zone/design-area/resource-org-subscriptions"
+          "https://learn.microsoft.com/azure/cloud-adoption-framework/ready/landing-zone/design-area/resource-org-subscriptions",
+          "https://learn.microsoft.com/entra/fundamentals/how-subscriptions-associated-directory"
         ],
         "terraform": [
           {
@@ -429,20 +456,21 @@
             }
           ],
           "changed_at": "2026-10-24"
-        }
-      },
-      "manual": {
+        },
         "purpose": "The billing, quota and access boundary for resources.",
         "facts": [
-          "The billing and quota boundary. Trusts exactly one tenant."
+          "A unit of management, billing and scale, and a boundary for quota, governance, security and identity controls.",
+          "Trusts exactly one tenant.",
+          "Not tied to a region: one subscription can hold resources from many regions, and resource groups can organise them by region."
         ]
       },
+      "manual": {},
       "review": {
         "status": "unconfirmed",
-        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+        "note": "Verified against Learn on 2026-10-24 (cloud-adoption-framework subscriptions, arm/overview, how-subscriptions-associated-directory): purpose, facts, five edges. Not verified: the Cost Management, Resource Graph, Lighthouse and Azure DevOps edges."
       },
       "freshness": {
-        "status": "unreviewed",
+        "status": "current",
         "changed_at": "2026-10-24",
         "sources": {
           "https://learn.microsoft.com/azure/cloud-adoption-framework/ready/landing-zone/design-area/resource-org-subscriptions": {
@@ -450,7 +478,16 @@
             "http_status": 200,
             "ms_date": "2025-12-19T00:00:00Z",
             "updated_at": "2026-10-01T01:04:00Z",
-            "latest_hash": "sha256:465fc97aef8ca0898375530faa40a2a3bfc5a09100ce94e1fb185e6bd0a24bdc"
+            "latest_hash": "sha256:465fc97aef8ca0898375530faa40a2a3bfc5a09100ce94e1fb185e6bd0a24bdc",
+            "reviewed_hash": "sha256:465fc97aef8ca0898375530faa40a2a3bfc5a09100ce94e1fb185e6bd0a24bdc"
+          },
+          "https://learn.microsoft.com/entra/fundamentals/how-subscriptions-associated-directory": {
+            "http_status": 200,
+            "ms_date": "2026-06-19T00:00:00Z",
+            "updated_at": "2026-06-19T22:42:00Z",
+            "latest_hash": "sha256:99d60abe835d0e2ab438561502b95e11196da8f90d5f058ba616235769688335",
+            "changed_at": "2026-10-24",
+            "reviewed_hash": "sha256:99d60abe835d0e2ab438561502b95e11196da8f90d5f058ba616235769688335"
           }
         }
       }
@@ -491,22 +528,24 @@
             }
           ],
           "changed_at": "2026-10-24"
-        }
+        },
+        "purpose": "A container for resources that share a lifecycle."
       },
       "manual": {
-        "purpose": "A container for resources that share a lifecycle.",
         "facts": [
           "A resource belongs to exactly one resource group.",
           "Deleting a resource group deletes everything in it.",
-          "Resources can reference others in different resource groups."
+          "Resources can reference others in different resource groups.",
+          "A resource group stores metadata about its resources. Its location is only where that metadata is stored; resources inside can be in other regions.",
+          "Locks (read-only or delete) can protect a resource group from accidental deletion or change."
         ]
       },
       "review": {
         "status": "unconfirmed",
-        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+        "note": "Verified against Learn on 2026-10-24 (manage-resource-groups-portal, arm/overview): purpose, 27 'contains' edges (every one is an ARM resource that lives in a group), scope edges. Not verified: the three older facts (exactly one group, delete removes everything, cross-group references) and the Azure DevOps edge."
       },
       "freshness": {
-        "status": "unreviewed",
+        "status": "current",
         "changed_at": "2026-10-24",
         "sources": {
           "https://learn.microsoft.com/azure/azure-resource-manager/management/manage-resource-groups-portal": {
@@ -514,7 +553,8 @@
             "http_status": 200,
             "ms_date": "2026-02-27T00:00:00Z",
             "updated_at": "2026-03-04T23:27:00Z",
-            "latest_hash": "sha256:02bd87158f9ff31395b2ed2a4eedb42d115113bb490700b96ff007ebb7f1f068"
+            "latest_hash": "sha256:02bd87158f9ff31395b2ed2a4eedb42d115113bb490700b96ff007ebb7f1f068",
+            "reviewed_hash": "sha256:02bd87158f9ff31395b2ed2a4eedb42d115113bb490700b96ff007ebb7f1f068"
           }
         }
       }
@@ -577,18 +617,20 @@
             }
           ],
           "changed_at": "2026-10-24"
-        }
-      },
-      "manual": {
+        },
         "purpose": "Users, groups, applications and sign-in.",
-        "facts": []
+        "facts": [
+          "Entra ID is the foundational product of the wider Microsoft Entra family. Every tenant is automatically an Entra tenant, so Microsoft 365, Azure and Dynamics 365 subscribers already use it.",
+          "It is a cloud identity and access management service: authentication, policy enforcement and protection for users, devices, apps and resources."
+        ]
       },
+      "manual": {},
       "review": {
         "status": "unconfirmed",
-        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+        "note": "Verified against Learn on 2026-10-24 (entra/fundamentals/whatis): purpose, facts, the tenant edge. Not verified: the diagnostic-logs, Conditional Access, PIM, Azure SQL and Azure DevOps edges, and 'every object lives in a tenant'."
       },
       "freshness": {
-        "status": "unreviewed",
+        "status": "current",
         "changed_at": "2026-10-24",
         "sources": {
           "https://learn.microsoft.com/entra/fundamentals/whatis": {
@@ -596,7 +638,8 @@
             "http_status": 200,
             "ms_date": "2026-06-18T00:00:00Z",
             "updated_at": "2026-09-08T17:35:00Z",
-            "latest_hash": "sha256:c1af532b5b26222bfc52c7f8645427f8f4068f67c1db69539e861ea0b542fa59"
+            "latest_hash": "sha256:c1af532b5b26222bfc52c7f8645427f8f4068f67c1db69539e861ea0b542fa59",
+            "reviewed_hash": "sha256:c1af532b5b26222bfc52c7f8645427f8f4068f67c1db69539e861ea0b542fa59"
           }
         }
       }
@@ -652,23 +695,24 @@
             }
           ],
           "changed_at": "2026-10-24"
-        }
+        },
+        "purpose": "Grant a role to an identity at a given scope."
       },
       "manual": {
-        "purpose": "Grant a role to an identity at a given scope.",
         "facts": [
           "Three parts: who (principal), what (role), where (scope). Scopes inherit downward.",
           "Contributor manages resources but is not a data role. Use data roles such as Key Vault Secrets User for secrets.",
-          "RBAC answers 'who may do what?'. Azure Policy answers 'what is allowed to exist, and how must it be configured?'. Full access does not bypass policy.",
-          "A role assignment is its own ARM resource, stored at a scope, so one group assignment can cover many resources. That is why RBAC scales better than per-resource lists."
+          "RBAC answers 'who may do what?'. Azure Policy mainly answers 'what is allowed to exist, and how must it be configured?', though policy rules can also look at who makes a request. Full RBAC access does not bypass policy.",
+          "A role assignment is its own ARM resource, stored at a scope, so one group assignment can cover many resources. That is why RBAC scales better than per-resource lists.",
+          "RBAC is additive: effective permissions are the sum of all assignments that apply. If a deny assignment applies, access is blocked before role assignments are considered."
         ]
       },
       "review": {
         "status": "unconfirmed",
-        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+        "note": "Verified against Learn on 2026-10-24 (role-based-access-control/overview, arm/overview, key-vault rbac pages): purpose, three-part model, scopes and inheritance, role assignment as an ARM resource, additive evaluation, the Key Vault edge. Not verified: 'full access does not bypass policy', the Entra ID edge, and the Storage, ACR, Service Bus, AKS and PIM edges."
       },
       "freshness": {
-        "status": "unreviewed",
+        "status": "current",
         "changed_at": "2026-10-24",
         "sources": {
           "https://learn.microsoft.com/azure/role-based-access-control/overview": {
@@ -676,7 +720,8 @@
             "http_status": 200,
             "ms_date": "2024-03-12T00:00:00Z",
             "updated_at": "2025-10-15T22:11:00Z",
-            "latest_hash": "sha256:911caf54e528a1067789705b4c3f78bb96c75e8bc49ba300659d046fc5dc82da"
+            "latest_hash": "sha256:911caf54e528a1067789705b4c3f78bb96c75e8bc49ba300659d046fc5dc82da",
+            "reviewed_hash": "sha256:911caf54e528a1067789705b4c3f78bb96c75e8bc49ba300659d046fc5dc82da"
           }
         }
       }
@@ -727,22 +772,21 @@
             }
           ],
           "changed_at": "2026-10-24"
-        }
-      },
-      "manual": {
-        "purpose": "Secretless identities for Azure resources, rotated by Azure.",
+        },
+        "purpose": "Identities for Azure resources whose credentials Azure manages for you.",
         "facts": [
-          "System-assigned: tied to one resource's lifecycle. User-assigned: a standalone resource reusable by many.",
-          "No stored secret; short-lived tokens come from the platform.",
-          "Useless until it has a role assignment."
+          "System-assigned: created with one resource and deleted with it. User-assigned: a standalone resource that can be assigned to many resources. Microsoft recommends user-assigned for Microsoft services.",
+          "You don't manage credentials, and they aren't accessible to you; code gets a token from Entra ID through MSAL or the Azure.Identity SDK.",
+          "Each managed identity is a special service principal in Entra ID. It has no access until you grant permissions, for example with Azure RBAC role assignments."
         ]
       },
+      "manual": {},
       "review": {
         "status": "unconfirmed",
-        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+        "note": "Verified against Learn on 2026-10-24 (managed-identities-azure-resources/overview, key-vault rbac pages): purpose (reworded: 'rotated by Azure' is not stated), facts, the Entra ID and Key Vault edges. Not verified: the Storage, ACR, Service Bus, SQL, AKS, Automation, Logic Apps, Data Factory and Azure DevOps edges."
       },
       "freshness": {
-        "status": "unreviewed",
+        "status": "current",
         "changed_at": "2026-10-24",
         "sources": {
           "https://learn.microsoft.com/entra/identity/managed-identities-azure-resources/overview": {
@@ -750,7 +794,8 @@
             "http_status": 200,
             "ms_date": "2025-08-19T00:00:00Z",
             "updated_at": "2026-06-15T17:40:00Z",
-            "latest_hash": "sha256:062e78f969e0f08041fca5a990fa36a97e2d6d31a8cfc5212da733c1d010d3c6"
+            "latest_hash": "sha256:062e78f969e0f08041fca5a990fa36a97e2d6d31a8cfc5212da733c1d010d3c6",
+            "reviewed_hash": "sha256:062e78f969e0f08041fca5a990fa36a97e2d6d31a8cfc5212da733c1d010d3c6"
           }
         }
       }
@@ -762,7 +807,10 @@
       "category": "Identity and security",
       "tracking": {
         "learn_urls": [
-          "https://learn.microsoft.com/azure/key-vault/general/overview"
+          "https://learn.microsoft.com/azure/key-vault/general/overview",
+          "https://learn.microsoft.com/azure/key-vault/general/rbac-guide",
+          "https://learn.microsoft.com/azure/key-vault/general/rbac-migration",
+          "https://learn.microsoft.com/azure/key-vault/general/rbac-access-policy"
         ],
         "terraform": [
           {
@@ -831,23 +879,26 @@
             }
           ],
           "changed_at": "2026-10-24"
-        }
-      },
-      "manual": {
+        },
         "purpose": "Store secrets, keys and certificates with access control.",
         "facts": [
-          "Prefer RBAC with a data role such as Key Vault Secrets User for reading secrets.",
-          "Contributor is a management role, not a secrets role.",
-          "Permission model: either vault access policies or Azure RBAC, one at a time. Access policies are a property stored inside the vault, not a separate service.",
-          "Switching to RBAC ignores existing access policies, so create the equivalent role assignments first and test before switching."
+          "Each vault uses one permission model: Azure RBAC (the default and recommended model, and the default for new vaults from API version 2026-02-01) or vault access policies (legacy).",
+          "Access policies exist only at the vault level. RBAC roles can be assigned at management group, subscription, resource group, vault, or an individual key, secret or certificate. One vault per application per environment, with roles at vault scope, is recommended over per-object assignments.",
+          "Contributor is a management role, but in access-policy mode Contributor and Key Vault Contributor can grant themselves data access by editing an access policy. Read secrets with an RBAC data role such as Key Vault Secrets User, and limit who holds Contributor.",
+          "Setting the RBAC permission model invalidates all access policies and can cause outages if equivalent roles are not assigned. Create the role assignments first, then switch and test."
         ]
+      },
+      "manual": {
+        "terraform": {
+          "note": "Registry confirms azurerm resources for vaults, secrets, keys, certificates, certificate contacts and issuers, managed storage accounts and Managed HSM, and typed azapi pages for vaults, access policies, keys, secrets and managed HSMs. One-off operations such as backup, restore, purge and rotate-now are actions rather than resources; azapi_resource_action may cover them (unconfirmed for Key Vault)."
+        }
       },
       "review": {
         "status": "unconfirmed",
-        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+        "note": "Purpose and the permission-model facts verified against Learn on 2026-10-24 (key-vault overview, rbac-guide, rbac-migration, rbac-access-policy). Relationships, Terraform coverage and cloud native rating are not verified."
       },
       "freshness": {
-        "status": "unreviewed",
+        "status": "current",
         "changed_at": "2026-10-24",
         "sources": {
           "https://learn.microsoft.com/azure/key-vault/general/overview": {
@@ -855,7 +906,32 @@
             "http_status": 200,
             "ms_date": "2026-09-22T00:00:00Z",
             "updated_at": "2026-10-06T17:34:00Z",
-            "latest_hash": "sha256:00f909db6d10c669c7e4b34e0e22c670613a7114eeff95fe986802b393847c31"
+            "latest_hash": "sha256:00f909db6d10c669c7e4b34e0e22c670613a7114eeff95fe986802b393847c31",
+            "reviewed_hash": "sha256:00f909db6d10c669c7e4b34e0e22c670613a7114eeff95fe986802b393847c31"
+          },
+          "https://learn.microsoft.com/azure/key-vault/general/rbac-guide": {
+            "http_status": 200,
+            "ms_date": "2026-06-16T00:00:00Z",
+            "updated_at": "2026-08-21T17:34:00Z",
+            "latest_hash": "sha256:90cf26f5f867d5c4517c71503d9be9acd97dd90a372f67264eb1de22fcad79cb",
+            "changed_at": "2026-10-24",
+            "reviewed_hash": "sha256:90cf26f5f867d5c4517c71503d9be9acd97dd90a372f67264eb1de22fcad79cb"
+          },
+          "https://learn.microsoft.com/azure/key-vault/general/rbac-migration": {
+            "http_status": 200,
+            "ms_date": "2026-04-10T00:00:00Z",
+            "updated_at": "2026-06-12T22:35:00Z",
+            "latest_hash": "sha256:4e20b40b6d6479e87b110cc94e6f741bc0fc50387f7f9589291bf2561d0d7f71",
+            "changed_at": "2026-10-24",
+            "reviewed_hash": "sha256:4e20b40b6d6479e87b110cc94e6f741bc0fc50387f7f9589291bf2561d0d7f71"
+          },
+          "https://learn.microsoft.com/azure/key-vault/general/rbac-access-policy": {
+            "http_status": 200,
+            "ms_date": "2026-03-24T00:00:00Z",
+            "updated_at": "2026-06-12T22:35:00Z",
+            "latest_hash": "sha256:5a36488da0c21f2a460b17f2e74fea9f4f7eba24d271a6b6aa5204eecc13c2b9",
+            "changed_at": "2026-10-24",
+            "reviewed_hash": "sha256:5a36488da0c21f2a460b17f2e74fea9f4f7eba24d271a6b6aa5204eecc13c2b9"
           }
         }
       }
@@ -916,18 +992,21 @@
             }
           ],
           "changed_at": "2026-10-24"
-        }
+        },
+        "purpose": "Security posture management and threat protection for cloud workloads.",
+        "facts": [
+          "A Cloud Native Application Protection Platform (CNAPP): posture management (CSPM), workload protection (CWPP) and DevSecOps in one service.",
+          "Workload protection is enabled as separate plans per resource type, such as Defender for Storage, SQL, Key Vault and containers.",
+          "Parts of Defender for Cloud are moving into the Defender portal; check which portal an article applies to."
+        ]
       },
-      "manual": {
-        "purpose": "Security posture and threat protection.",
-        "facts": []
-      },
+      "manual": {},
       "review": {
         "status": "unconfirmed",
-        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+        "note": "Verified against Learn on 2026-10-24 (defender-for-cloud-introduction): purpose, facts, five protects edges. Not verified: the Container Registry edge (not found on the page)."
       },
       "freshness": {
-        "status": "unreviewed",
+        "status": "current",
         "changed_at": "2026-10-24",
         "sources": {
           "https://learn.microsoft.com/azure/defender-for-cloud/defender-for-cloud-introduction": {
@@ -935,7 +1014,8 @@
             "http_status": 200,
             "ms_date": "2026-08-10T00:00:00Z",
             "updated_at": "2026-08-10T22:36:00Z",
-            "latest_hash": "sha256:0da5d1d89f38d97b2502ef28a14a4945707f1e262d7bd0f7bd2fac5185a8abdf"
+            "latest_hash": "sha256:0da5d1d89f38d97b2502ef28a14a4945707f1e262d7bd0f7bd2fac5185a8abdf",
+            "reviewed_hash": "sha256:0da5d1d89f38d97b2502ef28a14a4945707f1e262d7bd0f7bd2fac5185a8abdf"
           }
         }
       }
@@ -1001,18 +1081,20 @@
             }
           ],
           "changed_at": "2026-10-24"
-        }
-      },
-      "manual": {
+        },
         "purpose": "Track, budget and analyze spend.",
-        "facts": []
+        "facts": [
+          "Available to anyone with access to a billing account, subscription, resource group or management group.",
+          "Supports budgets, anomaly and scheduled alerts, tag inheritance, cost allocation rules and scheduled exports to a storage account."
+        ]
       },
+      "manual": {},
       "review": {
         "status": "unconfirmed",
-        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+        "note": "Verified against Learn on 2026-10-24 (cost-management-billing/costs/overview-cost-management): purpose, scopes, features. Not verified: nothing known; Management groups are not supported for some Microsoft Customer Agreement subscriptions (per the management groups page), worth a fact later."
       },
       "freshness": {
-        "status": "unreviewed",
+        "status": "current",
         "changed_at": "2026-10-24",
         "sources": {
           "https://learn.microsoft.com/azure/cost-management-billing/costs/overview-cost-management": {
@@ -1020,7 +1102,8 @@
             "http_status": 200,
             "ms_date": "2025-06-27T00:00:00Z",
             "updated_at": "2026-05-14T22:12:00Z",
-            "latest_hash": "sha256:33adeb18efc3f23a6fcaf4b1c16bb778b83eeffea5d59dd42b6c1e9b1f17bf60"
+            "latest_hash": "sha256:33adeb18efc3f23a6fcaf4b1c16bb778b83eeffea5d59dd42b6c1e9b1f17bf60",
+            "reviewed_hash": "sha256:33adeb18efc3f23a6fcaf4b1c16bb778b83eeffea5d59dd42b6c1e9b1f17bf60"
           }
         }
       }
@@ -1061,18 +1144,18 @@
             }
           ],
           "changed_at": "2026-10-24"
-        }
+        },
+        "purpose": "Recommendations on cost, performance, reliability and security."
       },
       "manual": {
-        "purpose": "Recommendations on cost, reliability and security.",
         "facts": []
       },
       "review": {
         "status": "unconfirmed",
-        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+        "note": "Verified against Learn on 2026-10-24 (advisor/advisor-overview): purpose (performance added). Not verified: its relationships; none are mapped yet."
       },
       "freshness": {
-        "status": "unreviewed",
+        "status": "current",
         "changed_at": "2026-10-24",
         "sources": {
           "https://learn.microsoft.com/azure/advisor/advisor-overview": {
@@ -1080,7 +1163,8 @@
             "http_status": 200,
             "ms_date": "2024-12-02T00:00:00Z",
             "updated_at": "2026-05-18T22:10:00Z",
-            "latest_hash": "sha256:0a6eb1a2f119b710019280609fac7f9d054822cf96322ed19eac7f2b9ddaeea3"
+            "latest_hash": "sha256:0a6eb1a2f119b710019280609fac7f9d054822cf96322ed19eac7f2b9ddaeea3",
+            "reviewed_hash": "sha256:0a6eb1a2f119b710019280609fac7f9d054822cf96322ed19eac7f2b9ddaeea3"
           }
         }
       }
@@ -1101,21 +1185,24 @@
         "terraform": {
           "resources": [],
           "changed_at": "2026-10-24"
-        }
+        },
+        "purpose": "Query resources across subscriptions.",
+        "facts": [
+          "Queries use a language based on Kusto Query Language (KQL). You get results only for resources you have at least read permission on.",
+          "Typical uses: filter, group and sort resources by property, explore resources for governance, assess the effect of policies, and query changes to resource properties."
+        ]
       },
       "manual": {
-        "purpose": "Query resources across subscriptions.",
-        "facts": [],
         "terraform": {
           "note": "A query API rather than a deployable resource, so no azurerm resource exists for running queries. Saved queries are the ARM type Microsoft.ResourceGraph/queries (unconfirmed)."
         }
       },
       "review": {
         "status": "unconfirmed",
-        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+        "note": "Verified against Learn on 2026-10-24 (governance/resource-graph/overview): purpose, facts, the Subscriptions edge. Not verified: Terraform coverage (no resource for running queries)."
       },
       "freshness": {
-        "status": "unreviewed",
+        "status": "current",
         "changed_at": "2026-10-24",
         "sources": {
           "https://learn.microsoft.com/azure/governance/resource-graph/overview": {
@@ -1123,7 +1210,8 @@
             "http_status": 200,
             "ms_date": "2024-06-18T00:00:00Z",
             "updated_at": "2026-08-19T17:11:00Z",
-            "latest_hash": "sha256:6aa2aa42c9cf408335290a38c42707cc727a4625b567a6ef827a591fd6585d75"
+            "latest_hash": "sha256:6aa2aa42c9cf408335290a38c42707cc727a4625b567a6ef827a591fd6585d75",
+            "reviewed_hash": "sha256:6aa2aa42c9cf408335290a38c42707cc727a4625b567a6ef827a591fd6585d75"
           }
         }
       }
@@ -1209,23 +1297,23 @@
             }
           ],
           "changed_at": "2026-10-24"
-        }
+        },
+        "purpose": "Enforce and audit rules on resources."
       },
       "manual": {
-        "purpose": "Enforce and audit rules on resources.",
         "facts": [
-          "Rules about resource configuration, not about who may act. Examples: allowed regions, required tags, no public IPs, storage must disable public access.",
-          "Assigned at a management group, subscription or resource group and inherited downward; specific scopes can be excluded. It only applies to the resource types and properties its rule matches.",
-          "Effects: Deny, Audit, Modify, Append, DeployIfNotExists, AuditIfNotExists, Disabled. Evaluated on create and update, plus a periodic compliance scan. Existing resources are not deleted.",
+          "Rules about resource properties and actions. Examples: allowed regions, required tags, diagnostic logs sent to Log Analytics. Rules can also check who makes the request, so policy is not only about configuration.",
+          "Assigned at a management group, subscription, resource group or individual resource, and inherited downward; specific scopes can be excluded. It only applies to the resource types and properties its rule matches.",
+          "Evaluated when a resource is created or updated, when a policy is newly assigned or changed at a scope, and on a compliance cycle every 24 hours. Effects set the response: deny, log, alter the resource before or after the change, deploy related resources, or block actions. Existing non-compliant resources are not deleted; remediation can fix them.",
           "If a Terraform apply fails with RequestDisallowedByPolicy, read the policy name in the error before debugging the code."
         ]
       },
       "review": {
         "status": "unconfirmed",
-        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+        "note": "Verified against Learn on 2026-10-24 (policy/overview): purpose, identity-aware rules (the old fact said policy is not about who acts), assignment scopes, evaluation triggers, effects and remediation. Not verified: scope exclusions, the exact effect names, and the RequestDisallowedByPolicy tip."
       },
       "freshness": {
-        "status": "unreviewed",
+        "status": "current",
         "changed_at": "2026-10-24",
         "sources": {
           "https://learn.microsoft.com/azure/governance/policy/overview": {
@@ -1233,7 +1321,8 @@
             "http_status": 200,
             "ms_date": "2025-03-04T00:00:00Z",
             "updated_at": "2026-07-08T05:12:00Z",
-            "latest_hash": "sha256:fb077c0acb0640bf4b5010a624bee487f19bb2a4307692c5f4a4327cab230582"
+            "latest_hash": "sha256:fb077c0acb0640bf4b5010a624bee487f19bb2a4307692c5f4a4327cab230582",
+            "reviewed_hash": "sha256:fb077c0acb0640bf4b5010a624bee487f19bb2a4307692c5f4a4327cab230582"
           }
         }
       }
@@ -1309,18 +1398,18 @@
             }
           ],
           "changed_at": "2026-10-24"
-        }
+        },
+        "purpose": "Back up VMs, disks, files, blobs and databases."
       },
       "manual": {
-        "purpose": "Back up VMs, disks, files and databases.",
         "facts": []
       },
       "review": {
         "status": "unconfirmed",
-        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+        "note": "Verified against Learn on 2026-10-24 (backup/backup-overview): purpose (blobs added), four protects edges. Not verified: the Azure Files edge (the page lists Azure Files, but not as an edge to the Azure Files service, which is tier 2) and the Recovery Services vault versus Backup vault distinction."
       },
       "freshness": {
-        "status": "unreviewed",
+        "status": "current",
         "changed_at": "2026-10-24",
         "sources": {
           "https://learn.microsoft.com/azure/backup/backup-overview": {
@@ -1328,7 +1417,8 @@
             "http_status": 200,
             "ms_date": "2026-09-16T00:00:00Z",
             "updated_at": "2026-09-16T17:11:00Z",
-            "latest_hash": "sha256:ff142b364b739a44eeac1bb16e1435e6336b58de09d9ae267f07c6a0cad1859f"
+            "latest_hash": "sha256:ff142b364b739a44eeac1bb16e1435e6336b58de09d9ae267f07c6a0cad1859f",
+            "reviewed_hash": "sha256:ff142b364b739a44eeac1bb16e1435e6336b58de09d9ae267f07c6a0cad1859f"
           }
         }
       }
@@ -1399,14 +1489,16 @@
             }
           ],
           "changed_at": "2026-10-24"
-        }
+        },
+        "purpose": "General-purpose virtual servers you manage."
       },
       "manual": {
-        "purpose": "General-purpose virtual servers you manage.",
         "facts": [
           "Hard requirements: a resource group, one NIC (which needs a subnet) and an OS disk.",
           "Optional: data disks, public IP, NSG, managed identity, extensions, load balancer membership.",
-          "GPU is not a separate resource; it comes from the VM size (N-series). The size sets vCPU, memory and GPU."
+          "GPU is not a separate resource; it comes from the VM size (N-series). The size sets vCPU, memory and GPU.",
+          "You still maintain the VM: configuring, patching and running the software on it.",
+          "Keep data on a separate disk from the OS disk, so you can detach it and attach it to a new VM if the VM fails."
         ],
         "cloud_native": {
           "level": "not",
@@ -1415,10 +1507,10 @@
       },
       "review": {
         "status": "unconfirmed",
-        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+        "note": "Verified against Learn on 2026-10-24 (virtual-machines/overview): purpose, NIC and disk components, maintenance duty, the NIC and Managed Disks edges. Not verified: 'GPU comes from the VM size', the Site Recovery, Update Manager, boot diagnostics, Log Analytics, Application Gateway and Bastion edges."
       },
       "freshness": {
-        "status": "unreviewed",
+        "status": "current",
         "changed_at": "2026-10-24",
         "sources": {
           "https://learn.microsoft.com/azure/virtual-machines/overview": {
@@ -1426,7 +1518,8 @@
             "http_status": 200,
             "ms_date": "2025-03-27T00:00:00Z",
             "updated_at": "2026-08-03T11:04:00Z",
-            "latest_hash": "sha256:54fe64714bf32958579093e293cb4da4f2708ec0bd718e417ac33c3ccd5d1888"
+            "latest_hash": "sha256:54fe64714bf32958579093e293cb4da4f2708ec0bd718e417ac33c3ccd5d1888",
+            "reviewed_hash": "sha256:54fe64714bf32958579093e293cb4da4f2708ec0bd718e417ac33c3ccd5d1888"
           }
         }
       }
@@ -1477,21 +1570,22 @@
             }
           ],
           "changed_at": "2026-10-24"
-        }
-      },
-      "manual": {
+        },
         "purpose": "Block storage attached to VMs.",
         "facts": [
-          "Separate resources: detach from one VM and attach to another.",
-          "There is no storage account for you to manage. Only legacy unmanaged disks use one."
+          "Block-level storage volumes managed by Azure. There are five types: Ultra Disk, Premium SSD v2, Premium SSD, Standard SSD and Standard HDD.",
+          "A disk is a separate resource: you can detach a data disk from one VM and attach it to another.",
+          "You don't manage a storage account for managed disks; Azure handles it in the background.",
+          "Backup options include built-in redundancy (LRS and ZRS), Azure Backup, snapshots and restore points."
         ]
       },
+      "manual": {},
       "review": {
         "status": "unconfirmed",
-        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+        "note": "Verified against Learn on 2026-10-24 (managed-disks-overview, virtual-machines/overview): purpose, facts, the Azure Backup and VM edges. Not verified: the Key Vault customer-managed key edge."
       },
       "freshness": {
-        "status": "unreviewed",
+        "status": "current",
         "changed_at": "2026-10-24",
         "sources": {
           "https://learn.microsoft.com/azure/virtual-machines/managed-disks-overview": {
@@ -1499,7 +1593,8 @@
             "http_status": 200,
             "ms_date": "2026-08-20T00:00:00Z",
             "updated_at": "2026-08-20T22:03:00Z",
-            "latest_hash": "sha256:b6ce3699d95260176cc6a28bcc8ec25ea2874e4224c2557766d08e75edcafc28"
+            "latest_hash": "sha256:b6ce3699d95260176cc6a28bcc8ec25ea2874e4224c2557766d08e75edcafc28",
+            "reviewed_hash": "sha256:b6ce3699d95260176cc6a28bcc8ec25ea2874e4224c2557766d08e75edcafc28"
           }
         }
       }
@@ -1560,18 +1655,26 @@
             }
           ],
           "changed_at": "2026-10-24"
-        }
+        },
+        "purpose": "Groups of load-balanced VM instances that scale out and in automatically.",
+        "facts": [
+          "Instance count can grow or shrink with demand or a schedule, and VMs are spread across availability zones or fault domains.",
+          "Two orchestration modes: Flexible (the unified VM experience) and Uniform.",
+          "Works with Azure Load Balancer for layer 4 and Application Gateway for layer 7 traffic."
+        ]
       },
       "manual": {
-        "purpose": "Groups of identical VMs that scale together.",
-        "facts": []
+        "cloud_native": {
+          "level": "not",
+          "note": "Groups of VMs: you still manage the operating system and instances, even though they scale automatically."
+        }
       },
       "review": {
         "status": "unconfirmed",
-        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+        "note": "Verified against Learn on 2026-10-24 (virtual-machine-scale-sets/overview): purpose (reworded: 'identical' is not stated), facts, the Load Balancer edge. Not verified: the subnet edge and 'each AKS node pool is a scale set'."
       },
       "freshness": {
-        "status": "unreviewed",
+        "status": "current",
         "changed_at": "2026-10-24",
         "sources": {
           "https://learn.microsoft.com/azure/virtual-machine-scale-sets/overview": {
@@ -1579,7 +1682,8 @@
             "http_status": 200,
             "ms_date": "2026-05-19T00:00:00Z",
             "updated_at": "2026-06-24T06:10:00Z",
-            "latest_hash": "sha256:d4e2f76b787b88420e639ffe274f01beef73fccde9482118defed1da9ad532bc"
+            "latest_hash": "sha256:d4e2f76b787b88420e639ffe274f01beef73fccde9482118defed1da9ad532bc",
+            "reviewed_hash": "sha256:d4e2f76b787b88420e639ffe274f01beef73fccde9482118defed1da9ad532bc"
           }
         }
       }
@@ -1655,18 +1759,25 @@
             }
           ],
           "changed_at": "2026-10-24"
-        }
+        },
+        "purpose": "Managed hosting for web apps and APIs.",
+        "facts": [
+          "Runs web apps, mobile back ends and REST APIs on a managed platform. Stacks: .NET, Java, Node.js, Python and PHP, on Windows and Linux, or any container as a custom container.",
+          "Virtual Network integration secures ingress and egress; App Service environments give full isolation with dedicated networking and VMs."
+        ]
       },
       "manual": {
-        "purpose": "Managed hosting for web apps and APIs.",
-        "facts": []
+        "cloud_native": {
+          "level": "partly",
+          "note": "Managed platform for web apps that runs classic and containerised apps; no servers to manage but not built around containers or events."
+        }
       },
       "review": {
         "status": "unconfirmed",
-        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+        "note": "Verified against Learn on 2026-10-24 (app-service/overview): purpose, facts, the VNet edge. Not verified: the Key Vault references, Application Insights, App Configuration, Application Gateway, Traffic Manager, Private Endpoint and API Management edges, and the delegated-subnet detail."
       },
       "freshness": {
-        "status": "unreviewed",
+        "status": "current",
         "changed_at": "2026-10-24",
         "sources": {
           "https://learn.microsoft.com/azure/app-service/overview": {
@@ -1674,7 +1785,8 @@
             "http_status": 200,
             "ms_date": "2026-08-18T00:00:00Z",
             "updated_at": "2026-08-18T22:40:00Z",
-            "latest_hash": "sha256:7ebf4eb2d21dfe3b0789d44f7a6fc3aabb1b8a326a56f276ac104f9f572e66c3"
+            "latest_hash": "sha256:7ebf4eb2d21dfe3b0789d44f7a6fc3aabb1b8a326a56f276ac104f9f572e66c3",
+            "reviewed_hash": "sha256:7ebf4eb2d21dfe3b0789d44f7a6fc3aabb1b8a326a56f276ac104f9f572e66c3"
           }
         }
       }
@@ -1725,18 +1837,25 @@
             }
           ],
           "changed_at": "2026-10-24"
-        }
+        },
+        "purpose": "Event-driven serverless code.",
+        "facts": [
+          "Serverless: you don't deploy or maintain servers. Event-driven triggers and bindings connect functions to other services without extra code.",
+          "Durable Functions chain functions into event-driven workflows."
+        ]
       },
       "manual": {
-        "purpose": "Event-driven serverless code.",
-        "facts": []
+        "cloud_native": {
+          "level": "native",
+          "note": "Serverless and event-driven: no servers to manage, triggers and bindings, scales with events."
+        }
       },
       "review": {
         "status": "unconfirmed",
-        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+        "note": "Verified against Learn on 2026-10-24 (azure-functions/functions-overview): purpose, facts. Not verified: all edges: the Storage requirement, Application Insights, Event Grid, Service Bus and API Management."
       },
       "freshness": {
-        "status": "unreviewed",
+        "status": "current",
         "changed_at": "2026-10-24",
         "sources": {
           "https://learn.microsoft.com/azure/azure-functions/functions-overview": {
@@ -1744,7 +1863,8 @@
             "http_status": 200,
             "ms_date": "2026-09-04T00:00:00Z",
             "updated_at": "2026-09-21T22:12:00Z",
-            "latest_hash": "sha256:1f0d9566f35fce7877e06b0d416fedaf3bc45960cfc0ee90832b029d5352d806"
+            "latest_hash": "sha256:1f0d9566f35fce7877e06b0d416fedaf3bc45960cfc0ee90832b029d5352d806",
+            "reviewed_hash": "sha256:1f0d9566f35fce7877e06b0d416fedaf3bc45960cfc0ee90832b029d5352d806"
           }
         }
       }
@@ -1810,18 +1930,25 @@
             }
           ],
           "changed_at": "2026-10-24"
-        }
+        },
+        "purpose": "Serverless containers that can scale to zero.",
+        "facts": [
+          "Serverless platform for containers: you don't manage servers or orchestrate containers yourself. Autoscaling uses any KEDA-supported scaler, and most apps can scale to zero.",
+          "Runs containers from any registry, public or private. Dapr is built in for microservices, and you can provide an existing virtual network when creating the environment."
+        ]
       },
       "manual": {
-        "purpose": "Serverless containers that can scale to zero.",
-        "facts": []
+        "cloud_native": {
+          "level": "native",
+          "note": "Serverless containers with KEDA autoscaling, Dapr and scale to zero."
+        }
       },
       "review": {
         "status": "unconfirmed",
-        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+        "note": "Verified against Learn on 2026-10-24 (container-apps/overview): purpose, facts, the ACR and VNet edges. Not verified: the Log Analytics edge."
       },
       "freshness": {
-        "status": "unreviewed",
+        "status": "current",
         "changed_at": "2026-10-24",
         "sources": {
           "https://learn.microsoft.com/azure/container-apps/overview": {
@@ -1829,7 +1956,8 @@
             "http_status": 200,
             "ms_date": "2026-07-07T00:00:00Z",
             "updated_at": "2026-07-07T22:18:00Z",
-            "latest_hash": "sha256:b0ee03fb18ccdc113d9bea2f32fb6827070dd3a6b657c852a160ed8b61b9a250"
+            "latest_hash": "sha256:b0ee03fb18ccdc113d9bea2f32fb6827070dd3a6b657c852a160ed8b61b9a250",
+            "reviewed_hash": "sha256:b0ee03fb18ccdc113d9bea2f32fb6827070dd3a6b657c852a160ed8b61b9a250"
           }
         }
       }
@@ -1880,20 +2008,26 @@
             }
           ],
           "changed_at": "2026-10-24"
-        }
+        },
+        "purpose": "Managed Kubernetes: Azure runs the control plane; Standard gives you the node pools, Automatic manages nodes too.",
+        "facts": [
+          "Azure creates and manages the control plane for you at no cost. AKS is CNCF-certified.",
+          "Two modes: Automatic (fully managed, production-ready defaults, Azure handles nodes, scaling, security, monitoring and upgrades; recommended for most teams) and Standard (full control of cluster configuration and node pools).",
+          "In Automatic, Managed Prometheus, Container Insights and Azure Monitor dashboards with Grafana are on by default."
+        ]
       },
       "manual": {
-        "purpose": "Managed Kubernetes control plane with your node pools.",
-        "facts": [
-          "Azure manages the control plane; node pools are scale sets in your subscription."
-        ]
+        "cloud_native": {
+          "level": "native",
+          "note": "Managed, CNCF-certified Kubernetes for containerised microservices."
+        }
       },
       "review": {
         "status": "unconfirmed",
-        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+        "note": "Verified against Learn on 2026-10-24 (aks/what-is-aks, container-registry-intro): purpose (now covers Automatic mode), facts, the ACR and Managed Prometheus edges. The old fact 'node pools are scale sets' was dropped as unverified. Not verified: the managed identity, Key Vault, subnet, scale set, Log Analytics and Application Gateway edges."
       },
       "freshness": {
-        "status": "unreviewed",
+        "status": "current",
         "changed_at": "2026-10-24",
         "sources": {
           "https://learn.microsoft.com/azure/aks/what-is-aks": {
@@ -1901,7 +2035,8 @@
             "http_status": 200,
             "ms_date": "2026-05-26T00:00:00Z",
             "updated_at": "2026-10-20T22:04:00Z",
-            "latest_hash": "sha256:b7a92e19b0b666c4cfaf3b92ac395d38b721d4a16f3c51b3bf24f012608766f1"
+            "latest_hash": "sha256:b7a92e19b0b666c4cfaf3b92ac395d38b721d4a16f3c51b3bf24f012608766f1",
+            "reviewed_hash": "sha256:b7a92e19b0b666c4cfaf3b92ac395d38b721d4a16f3c51b3bf24f012608766f1"
           }
         }
       }
@@ -1952,18 +2087,21 @@
             }
           ],
           "changed_at": "2026-10-24"
-        }
-      },
-      "manual": {
+        },
         "purpose": "Private store for container images and charts.",
-        "facts": []
+        "facts": [
+          "Managed registry based on Docker; stores container images and related artifacts such as Helm charts.",
+          "Three tiers: Basic, Standard and Premium. Premium adds geo-replication.",
+          "ACR tasks can build images in Azure on demand or from triggers such as base image updates or Git commits."
+        ]
       },
+      "manual": {},
       "review": {
         "status": "unconfirmed",
-        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+        "note": "Verified against Learn on 2026-10-24 (container-registry-intro): purpose, facts, the AKS edge. Not verified: the RBAC and managed identity (AcrPull, AcrPush), Defender, Private Endpoint and Azure DevOps edges."
       },
       "freshness": {
-        "status": "unreviewed",
+        "status": "current",
         "changed_at": "2026-10-24",
         "sources": {
           "https://learn.microsoft.com/azure/container-registry/container-registry-intro": {
@@ -1971,7 +2109,8 @@
             "http_status": 200,
             "ms_date": "2026-02-11T00:00:00Z",
             "updated_at": "2026-06-12T06:03:00Z",
-            "latest_hash": "sha256:4180506a08b0beb3de2ba62dfe69c06139855254a9477251d1ade48db359a3a7"
+            "latest_hash": "sha256:4180506a08b0beb3de2ba62dfe69c06139855254a9477251d1ade48db359a3a7",
+            "reviewed_hash": "sha256:4180506a08b0beb3de2ba62dfe69c06139855254a9477251d1ade48db359a3a7"
           }
         }
       }
@@ -2022,22 +2161,24 @@
             }
           ],
           "changed_at": "2026-10-24"
-        }
+        },
+        "purpose": "Your private network in Azure: resources communicate with each other, the internet and on-premises networks."
       },
       "manual": {
-        "purpose": "The private network resources live in; it also hands out IP addresses (DHCP).",
         "facts": [
           "Subnets are child resources of the virtual network.",
           "DHCP is built in: you choose address ranges and Azure assigns private IPs to NICs.",
-          "DNS is Azure-provided by default, or custom servers, or private zones linked to the VNet."
+          "DNS is Azure-provided by default, or custom servers, or private zones linked to the VNet.",
+          "Filter traffic between subnets with network security groups and application security groups; override Azure's default routes with route tables.",
+          "Virtual networks and subnets span all availability zones in a region. Peering connects virtual networks, and service endpoints extend the network's private address space and identity to Azure services."
         ]
       },
       "review": {
         "status": "unconfirmed",
-        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+        "note": "Verified against Learn on 2026-10-24 (virtual-networks-overview): purpose (reworded: DHCP is not mentioned), traffic filtering, zones, peering, three edges. Not verified: 'subnets are child resources', 'DHCP is built in', DNS defaults, and the Private Endpoint, VPN, Bastion, Firewall, ExpressRoute, PostgreSQL and MySQL edges."
       },
       "freshness": {
-        "status": "unreviewed",
+        "status": "current",
         "changed_at": "2026-10-24",
         "sources": {
           "https://learn.microsoft.com/azure/virtual-network/virtual-networks-overview": {
@@ -2045,7 +2186,8 @@
             "http_status": 200,
             "ms_date": "2025-07-17T00:00:00Z",
             "updated_at": "2026-02-13T12:10:00Z",
-            "latest_hash": "sha256:99014399a719d7b623b81e29a40f537cb5665e703b2d45e86bae217f9ceaa460"
+            "latest_hash": "sha256:99014399a719d7b623b81e29a40f537cb5665e703b2d45e86bae217f9ceaa460",
+            "reviewed_hash": "sha256:99014399a719d7b623b81e29a40f537cb5665e703b2d45e86bae217f9ceaa460"
           }
         }
       }
@@ -2096,21 +2238,21 @@
             }
           ],
           "changed_at": "2026-10-24"
-        }
+        },
+        "purpose": "Lets a VM communicate with the internet, Azure and on-premises resources."
       },
       "manual": {
-        "purpose": "Connects a VM to a subnet.",
         "facts": [
-          "Always in exactly one subnet.",
+          "Always in exactly one subnet. You pick the subnet when you create it and can change it afterwards.",
           "Holds the private IP; can also hold a public IP, an NSG and load balancer membership."
         ]
       },
       "review": {
         "status": "unconfirmed",
-        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+        "note": "Verified against Learn on 2026-10-24 (virtual-network-network-interface): purpose, subnet fact, the VNet and Public IP edges. Not verified: the NSG and Load Balancer edges, and that the NIC holds the private IP."
       },
       "freshness": {
-        "status": "unreviewed",
+        "status": "current",
         "changed_at": "2026-10-24",
         "sources": {
           "https://learn.microsoft.com/azure/virtual-network/virtual-network-network-interface": {
@@ -2118,7 +2260,8 @@
             "http_status": 200,
             "ms_date": "2025-07-28T00:00:00Z",
             "updated_at": "2025-10-08T22:11:00Z",
-            "latest_hash": "sha256:89b850c5c2d98f3b0efbf365dd7f5c676e2f775b1b639b3030f899ad3bb48a25"
+            "latest_hash": "sha256:89b850c5c2d98f3b0efbf365dd7f5c676e2f775b1b639b3030f899ad3bb48a25",
+            "reviewed_hash": "sha256:89b850c5c2d98f3b0efbf365dd7f5c676e2f775b1b639b3030f899ad3bb48a25"
           }
         }
       }
@@ -2179,18 +2322,20 @@
             }
           ],
           "changed_at": "2026-10-24"
-        }
+        },
+        "purpose": "Allow and deny rules that filter network traffic between Azure resources in a virtual network.",
+        "facts": [
+          "Rules have a priority from 100 to 4096; lower numbers run first and processing stops at the first match. Azure's default rules have the lowest priority, so your rules always run first.",
+          "A rule matches on source, destination, port, protocol and direction. Sources and destinations can be an IP, a CIDR block, a service tag or an application security group."
+        ]
       },
-      "manual": {
-        "purpose": "Allow and deny rules for traffic to subnets and NICs.",
-        "facts": []
-      },
+      "manual": {},
       "review": {
         "status": "unconfirmed",
-        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+        "note": "Verified against Learn on 2026-10-24 (network-security-groups-overview): purpose, priority and rule facts, the VNet edge. Not verified: the NIC-level association edge."
       },
       "freshness": {
-        "status": "unreviewed",
+        "status": "current",
         "changed_at": "2026-10-24",
         "sources": {
           "https://learn.microsoft.com/azure/virtual-network/network-security-groups-overview": {
@@ -2198,7 +2343,8 @@
             "http_status": 200,
             "ms_date": "2025-07-15T00:00:00Z",
             "updated_at": "2025-10-23T11:11:00Z",
-            "latest_hash": "sha256:637b69d3fa17b72ff8227c487c18daa8d7828b131ff4f7babfc11ee629b1f702"
+            "latest_hash": "sha256:637b69d3fa17b72ff8227c487c18daa8d7828b131ff4f7babfc11ee629b1f702",
+            "reviewed_hash": "sha256:637b69d3fa17b72ff8227c487c18daa8d7828b131ff4f7babfc11ee629b1f702"
           }
         }
       }
@@ -2249,18 +2395,20 @@
             }
           ],
           "changed_at": "2026-10-24"
-        }
+        },
+        "purpose": "An internet-facing address that lets resources communicate with the internet.",
+        "facts": [
+          "A resource without a public IP can still go outbound: Azure assigns an available dynamic address that isn't dedicated to you.",
+          "Basic SKU public IPs were retired on September 30, 2025; use Standard SKU. For scale sets, use public IP prefixes."
+        ]
       },
-      "manual": {
-        "purpose": "An internet-facing address for a resource.",
-        "facts": []
-      },
+      "manual": {},
       "review": {
         "status": "unconfirmed",
-        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+        "note": "Verified against Learn on 2026-10-24 (ip-services/public-ip-addresses): purpose, outbound behaviour, Basic SKU retirement, all seven edges (the page lists NICs, load balancers, gateways, NAT, Application Gateway, Firewall and Bastion). Not verified: nothing known."
       },
       "freshness": {
-        "status": "unreviewed",
+        "status": "current",
         "changed_at": "2026-10-24",
         "sources": {
           "https://learn.microsoft.com/azure/virtual-network/ip-services/public-ip-addresses": {
@@ -2268,7 +2416,8 @@
             "http_status": 200,
             "ms_date": "2025-02-04T00:00:00Z",
             "updated_at": "2026-02-25T06:24:00Z",
-            "latest_hash": "sha256:447f5caa08c34c17c2bb2cf71851251d8aba836ba2baf54c698496257bf5ace1"
+            "latest_hash": "sha256:447f5caa08c34c17c2bb2cf71851251d8aba836ba2baf54c698496257bf5ace1",
+            "reviewed_hash": "sha256:447f5caa08c34c17c2bb2cf71851251d8aba836ba2baf54c698496257bf5ace1"
           }
         }
       }
@@ -2339,18 +2488,20 @@
             }
           ],
           "changed_at": "2026-10-24"
-        }
+        },
+        "purpose": "Layer 4 (TCP and UDP) traffic distribution across VMs and scale sets.",
+        "facts": [
+          "Public load balancers handle internet-facing inbound and outbound traffic; internal ones balance private traffic inside a virtual network.",
+          "Current SKUs are Standard and Gateway. Basic Load Balancer was retired on September 30, 2025."
+        ]
       },
-      "manual": {
-        "purpose": "Layer 4 traffic distribution across VMs.",
-        "facts": []
-      },
+      "manual": {},
       "review": {
         "status": "unconfirmed",
-        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+        "note": "Verified against Learn on 2026-10-24 (load-balancer/load-balancer-overview): purpose, facts, Basic retirement, the Public IP edge (via the Public IP page). Not verified: the NIC backend pool edge."
       },
       "freshness": {
-        "status": "unreviewed",
+        "status": "current",
         "changed_at": "2026-10-24",
         "sources": {
           "https://learn.microsoft.com/azure/load-balancer/load-balancer-overview": {
@@ -2358,7 +2509,8 @@
             "http_status": 200,
             "ms_date": "2026-07-07T00:00:00Z",
             "updated_at": "2026-08-21T05:10:00Z",
-            "latest_hash": "sha256:370195ec394b8469f5d840e7b0758743597a80c6bf5f0d84a4a287405f2e85a3"
+            "latest_hash": "sha256:370195ec394b8469f5d840e7b0758743597a80c6bf5f0d84a4a287405f2e85a3",
+            "reviewed_hash": "sha256:370195ec394b8469f5d840e7b0758743597a80c6bf5f0d84a4a287405f2e85a3"
           }
         }
       }
@@ -2435,18 +2587,20 @@
             }
           ],
           "changed_at": "2026-10-24"
-        }
+        },
+        "purpose": "Layer 7 web traffic routing. Application Gateway is regional; Front Door is a global content delivery network.",
+        "facts": [
+          "Application Gateway works at OSI layer 7: TLS termination, autoscaling, zone redundancy and an optional Web Application Firewall. Use v2; the v1 SKUs retired on April 28, 2026.",
+          "Front Door is a global CDN for fast, secure access to web content and APIs. Traffic Manager is the DNS-based alternative when you don't need layer 7 processing."
+        ]
       },
-      "manual": {
-        "purpose": "Layer 7 routing; Front Door is global.",
-        "facts": []
-      },
+      "manual": {},
       "review": {
         "status": "unconfirmed",
-        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+        "note": "Verified against Learn on 2026-10-24 (application-gateway/overview, frontdoor/front-door-overview): purpose, facts, v1 retirement (as stated on the page), the AKS edge. Not verified: the Key Vault, App Service and Virtual Machines edges."
       },
       "freshness": {
-        "status": "unreviewed",
+        "status": "current",
         "changed_at": "2026-10-24",
         "sources": {
           "https://learn.microsoft.com/azure/application-gateway/overview": {
@@ -2454,14 +2608,16 @@
             "http_status": 200,
             "ms_date": "2026-09-10T00:00:00Z",
             "updated_at": "2026-09-10T22:03:00Z",
-            "latest_hash": "sha256:9a19a9ec6f0185470eec31cf7bdb03984e69a77410f82d5508baed8cf1ecd298"
+            "latest_hash": "sha256:9a19a9ec6f0185470eec31cf7bdb03984e69a77410f82d5508baed8cf1ecd298",
+            "reviewed_hash": "sha256:9a19a9ec6f0185470eec31cf7bdb03984e69a77410f82d5508baed8cf1ecd298"
           },
           "https://learn.microsoft.com/azure/frontdoor/front-door-overview": {
             "changed_at": "2026-10-24",
             "http_status": 200,
             "ms_date": "2026-08-28T00:00:00Z",
             "updated_at": "2026-09-01T12:02:00Z",
-            "latest_hash": "sha256:e0ea0e3d34937901a2b8ca918fb590b3340827d6fe5fcf0c47d327a0638d6c76"
+            "latest_hash": "sha256:e0ea0e3d34937901a2b8ca918fb590b3340827d6fe5fcf0c47d327a0638d6c76",
+            "reviewed_hash": "sha256:e0ea0e3d34937901a2b8ca918fb590b3340827d6fe5fcf0c47d327a0638d6c76"
           }
         }
       }
@@ -2538,18 +2694,20 @@
             }
           ],
           "changed_at": "2026-10-24"
-        }
+        },
+        "purpose": "DNS hosting and name resolution for public domains and private virtual networks.",
+        "facts": [
+          "Public DNS hosts internet-facing domains. Private DNS resolves names inside virtual networks without a custom DNS server.",
+          "DNS Private Resolver lets on-premises and Azure query each other's private zones without VM-based DNS servers. Traffic Manager is a separate DNS-based load balancer."
+        ]
       },
-      "manual": {
-        "purpose": "Name resolution for public and private zones.",
-        "facts": []
-      },
+      "manual": {},
       "review": {
         "status": "unconfirmed",
-        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+        "note": "Verified against Learn on 2026-10-24 (dns-overview, private-dns-overview): purpose, facts, the VNet edge. Not verified: the Private Endpoint edge (zone resolves to the private IP)."
       },
       "freshness": {
-        "status": "unreviewed",
+        "status": "current",
         "changed_at": "2026-10-24",
         "sources": {
           "https://learn.microsoft.com/azure/dns/dns-overview": {
@@ -2557,14 +2715,16 @@
             "http_status": 200,
             "ms_date": "2026-07-28T00:00:00Z",
             "updated_at": "2026-08-05T11:41:00Z",
-            "latest_hash": "sha256:1975c6b96fd070aca615fe46a526da17981bddbad8dd98346069789b16479b26"
+            "latest_hash": "sha256:1975c6b96fd070aca615fe46a526da17981bddbad8dd98346069789b16479b26",
+            "reviewed_hash": "sha256:1975c6b96fd070aca615fe46a526da17981bddbad8dd98346069789b16479b26"
           },
           "https://learn.microsoft.com/azure/dns/private-dns-overview": {
             "changed_at": "2026-10-24",
             "http_status": 200,
             "ms_date": "2025-12-16T00:00:00Z",
             "updated_at": "2026-10-01T17:22:00Z",
-            "latest_hash": "sha256:2d729aa73f94dc7efe4cf0d1fb18e33f91cbda27e672ada52a3cad948466f783"
+            "latest_hash": "sha256:2d729aa73f94dc7efe4cf0d1fb18e33f91cbda27e672ada52a3cad948466f783",
+            "reviewed_hash": "sha256:2d729aa73f94dc7efe4cf0d1fb18e33f91cbda27e672ada52a3cad948466f783"
           }
         }
       }
@@ -2605,21 +2765,22 @@
             }
           ],
           "changed_at": "2026-10-24"
-        }
+        },
+        "purpose": "A network interface with a private IP in your virtual network that connects privately to a service powered by Private Link."
       },
       "manual": {
-        "purpose": "A private IP in your network for a PaaS service.",
         "facts": [
           "Creates a NIC with a private IP in your subnet.",
-          "Needs a private DNS zone so the service name resolves to that IP."
+          "Needs a private DNS zone so the service name resolves to that IP.",
+          "Connections are approved automatically or manually depending on your RBAC permissions on the target; a manual one stays Pending until the resource owner approves."
         ]
       },
       "review": {
         "status": "unconfirmed",
-        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+        "note": "Verified against Learn on 2026-10-24 (private-link/private-endpoint-overview): purpose, approval, the subnet and Private Link edges, and all eight service edges (each appears in the page's supported-services table). Not verified: 'needs a private DNS zone' as stated, and the DNS edge."
       },
       "freshness": {
-        "status": "unreviewed",
+        "status": "current",
         "changed_at": "2026-10-24",
         "sources": {
           "https://learn.microsoft.com/azure/private-link/private-endpoint-overview": {
@@ -2627,7 +2788,8 @@
             "http_status": 200,
             "ms_date": "2026-08-11T00:00:00Z",
             "updated_at": "2026-08-11T17:12:00Z",
-            "latest_hash": "sha256:800962ac91b74c805724e9385eca9c08a234683d91a6450484711b7e126852f0"
+            "latest_hash": "sha256:800962ac91b74c805724e9385eca9c08a234683d91a6450484711b7e126852f0",
+            "reviewed_hash": "sha256:800962ac91b74c805724e9385eca9c08a234683d91a6450484711b7e126852f0"
           }
         }
       }
@@ -2718,21 +2880,23 @@
             }
           ],
           "changed_at": "2026-10-24"
-        }
+        },
+        "purpose": "Blob, Files, Queue and Table storage under one account."
       },
       "manual": {
-        "purpose": "Blob, Files, Queue and Table storage under one account.",
         "facts": [
           "Contains blob containers, file shares, queues and tables.",
-          "Common uses: Terraform state, boot diagnostics, Functions state, logs."
+          "Common uses: Terraform state, boot diagnostics, Functions state, logs.",
+          "Standard general-purpose v2 is the recommended type for most scenarios (blobs, files, queues, tables). Premium types exist for block blobs, file shares and page blobs, for high transaction rates or low latency.",
+          "Redundancy options include locally redundant (LRS), zone-redundant (ZRS), geo-redundant (GRS, RA-GRS) and geo-zone-redundant (GZRS, RA-GZRS); the options available depend on the account type."
         ]
       },
       "review": {
         "status": "unconfirmed",
-        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+        "note": "Verified against Learn on 2026-10-24 (storage-account-overview): purpose, account types, redundancy, the Azure Files and Data Lake edges. Not verified: 'common uses' (Terraform state, boot diagnostics, Functions state, logs), the hierarchical-namespace detail, and the RBAC, managed identity, Key Vault, VM, Functions, Event Grid, Log Analytics, Data Factory and Azure DevOps edges."
       },
       "freshness": {
-        "status": "unreviewed",
+        "status": "current",
         "changed_at": "2026-10-24",
         "sources": {
           "https://learn.microsoft.com/azure/storage/common/storage-account-overview": {
@@ -2740,7 +2904,8 @@
             "http_status": 200,
             "ms_date": "2026-07-16T00:00:00Z",
             "updated_at": "2026-10-16T22:20:00Z",
-            "latest_hash": "sha256:fb6f5f9b266a8432891f36bbf4b3aba087b892f241823625e833ccf20d2a7529"
+            "latest_hash": "sha256:fb6f5f9b266a8432891f36bbf4b3aba087b892f241823625e833ccf20d2a7529",
+            "reviewed_hash": "sha256:fb6f5f9b266a8432891f36bbf4b3aba087b892f241823625e833ccf20d2a7529"
           }
         }
       }
@@ -2816,18 +2981,21 @@
             }
           ],
           "changed_at": "2026-10-24"
-        }
+        },
+        "purpose": "Fully managed SQL Server databases (Azure SQL Database), including a serverless compute tier.",
+        "facts": [
+          "Fully managed: built-in high availability and backups, and no patching or upgrading. The newest SQL Server capabilities often arrive in Azure SQL Database first.",
+          "Two purchasing models: vCore (choose vCores, memory and storage) and DTU (bundled compute, memory and I/O). Hyperscale is the recommended vCore service tier, scaling to 128 TB.",
+          "Serverless compute (vCore model) scales compute automatically with workload and bills per second. A free tier is available."
+        ]
       },
-      "manual": {
-        "purpose": "Managed SQL Server databases, including serverless.",
-        "facts": []
-      },
+      "manual": {},
       "review": {
         "status": "unconfirmed",
-        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+        "note": "Verified against Learn on 2026-10-24 (azure-sql/database/sql-database-paas-overview): purpose (this entry covers Azure SQL Database; SQL Managed Instance is a separate tier 2 service), facts. Not verified: the managed identity, Key Vault, Log Analytics, Entra ID and Data Factory edges."
       },
       "freshness": {
-        "status": "unreviewed",
+        "status": "current",
         "changed_at": "2026-10-24",
         "sources": {
           "https://learn.microsoft.com/azure/azure-sql/database/sql-database-paas-overview": {
@@ -2835,7 +3003,8 @@
             "http_status": 200,
             "ms_date": "2026-10-13T00:00:00Z",
             "updated_at": "2026-10-21T17:40:00Z",
-            "latest_hash": "sha256:83126e049e49721a7e056aea48fd81cd2e4ba028a1fd19c4798c80ad136daf38"
+            "latest_hash": "sha256:83126e049e49721a7e056aea48fd81cd2e4ba028a1fd19c4798c80ad136daf38",
+            "reviewed_hash": "sha256:83126e049e49721a7e056aea48fd81cd2e4ba028a1fd19c4798c80ad136daf38"
           }
         }
       }
@@ -2906,18 +3075,21 @@
             }
           ],
           "changed_at": "2026-10-24"
-        }
-      },
-      "manual": {
+        },
         "purpose": "Managed PostgreSQL (flexible server).",
-        "facts": []
+        "facts": [
+          "Fully managed PostgreSQL with granular control over configuration. Compute and storage are separated.",
+          "High availability within one availability zone or zone-redundant across zones: a warm standby with synchronous replication. Zone-redundant HA is not available in every region.",
+          "Private access: inside an Azure virtual network the server is reachable only through private IP addresses."
+        ]
       },
+      "manual": {},
       "review": {
         "status": "unconfirmed",
-        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+        "note": "Verified against Learn on 2026-10-24 (postgresql/flexible-server/overview): purpose, facts, the VNet edge. Not verified: the delegated-subnet detail and the Log Analytics edge."
       },
       "freshness": {
-        "status": "unreviewed",
+        "status": "current",
         "changed_at": "2026-10-24",
         "sources": {
           "https://learn.microsoft.com/azure/postgresql/flexible-server/overview": {
@@ -2925,7 +3097,8 @@
             "http_status": 200,
             "ms_date": "2026-01-09T00:00:00Z",
             "updated_at": "2026-09-05T06:06:00Z",
-            "latest_hash": "sha256:844e50c5f134168ca048bc2c2c056dc853c3d405c60d2f219c382c7fac2532ed"
+            "latest_hash": "sha256:844e50c5f134168ca048bc2c2c056dc853c3d405c60d2f219c382c7fac2532ed",
+            "reviewed_hash": "sha256:844e50c5f134168ca048bc2c2c056dc853c3d405c60d2f219c382c7fac2532ed"
           }
         }
       }
@@ -2986,18 +3159,21 @@
             }
           ],
           "changed_at": "2026-10-24"
-        }
+        },
+        "purpose": "Fully managed, globally distributed NoSQL and vector database with autoscale and serverless throughput.",
+        "facts": [
+          "Turnkey global distribution with multi-region writes (99.999% SLA) and automatic failover. APIs: NoSQL, MongoDB, Apache Cassandra, Apache Gremlin and Table.",
+          "Throughput models include provisioned, autoscale and serverless. A lifetime free tier gives 1000 RU/s and 25 GB.",
+          "Integrated vector and hybrid search stores embeddings next to operational data."
+        ]
       },
-      "manual": {
-        "purpose": "Globally distributed NoSQL, with a serverless mode.",
-        "facts": []
-      },
+      "manual": {},
       "review": {
         "status": "unconfirmed",
-        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+        "note": "Verified against Learn on 2026-10-24 (cosmos-db/introduction): purpose (vector database added), facts. Not verified: the Log Analytics edge."
       },
       "freshness": {
-        "status": "unreviewed",
+        "status": "current",
         "changed_at": "2026-10-24",
         "sources": {
           "https://learn.microsoft.com/azure/cosmos-db/introduction": {
@@ -3005,7 +3181,8 @@
             "http_status": 200,
             "ms_date": "2026-06-08T00:00:00Z",
             "updated_at": "2026-06-15T22:16:00Z",
-            "latest_hash": "sha256:a3591170c564b26138fcf1e9476dee30e40342c7e581474accecd71d504f2bb3"
+            "latest_hash": "sha256:a3591170c564b26138fcf1e9476dee30e40342c7e581474accecd71d504f2bb3",
+            "reviewed_hash": "sha256:a3591170c564b26138fcf1e9476dee30e40342c7e581474accecd71d504f2bb3"
           }
         }
       }
@@ -3076,18 +3253,20 @@
             }
           ],
           "changed_at": "2026-10-24"
-        }
+        },
+        "purpose": "A fully managed enterprise message broker with queues and publish-subscribe topics.",
+        "facts": [
+          "Decouples applications and services. Features: load balancing with competing consumers, topics and subscriptions, atomic transactions and message sessions for strict ordering.",
+          "Transactions allow once-only processing semantics: results become visible downstream only after the input message is settled."
+        ]
       },
-      "manual": {
-        "purpose": "Queues and topics for reliable messaging.",
-        "facts": []
-      },
+      "manual": {},
       "review": {
         "status": "unconfirmed",
-        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+        "note": "Verified against Learn on 2026-10-24 (service-bus-messaging/service-bus-messaging-overview): purpose, facts. Not verified: all edges: RBAC and managed identity roles, Event Grid, Functions, Logic Apps."
       },
       "freshness": {
-        "status": "unreviewed",
+        "status": "current",
         "changed_at": "2026-10-24",
         "sources": {
           "https://learn.microsoft.com/azure/service-bus-messaging/service-bus-messaging-overview": {
@@ -3095,7 +3274,8 @@
             "http_status": 200,
             "ms_date": "2026-03-13T00:00:00Z",
             "updated_at": "2026-08-31T17:13:00Z",
-            "latest_hash": "sha256:2e7ca9fc8fb30b9109a8eb5214e7913a7ff355559393c529ff648498779dc999"
+            "latest_hash": "sha256:2e7ca9fc8fb30b9109a8eb5214e7913a7ff355559393c529ff648498779dc999",
+            "reviewed_hash": "sha256:2e7ca9fc8fb30b9109a8eb5214e7913a7ff355559393c529ff648498779dc999"
           }
         }
       }
@@ -3171,18 +3351,20 @@
             }
           ],
           "changed_at": "2026-10-24"
-        }
+        },
+        "purpose": "A fully managed publish-subscribe service for event and message distribution, including MQTT.",
+        "facts": [
+          "Two core features: MQTT messaging (v3.1.1 and v5) for IoT clients, and data distribution over HTTP with push and pull delivery.",
+          "Push delivery sends events to webhooks and Azure services; an event subscription defines the handler or destination."
+        ]
       },
-      "manual": {
-        "purpose": "Route events between services.",
-        "facts": []
-      },
+      "manual": {},
       "review": {
         "status": "unconfirmed",
-        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+        "note": "Verified against Learn on 2026-10-24 (event-grid/overview): purpose (reworded: it is a publish-subscribe service), facts. Not verified: all edges: Storage blob events, and Functions, Service Bus and Event Hubs as handlers (the page only mentions Functions and Event Hubs in tutorial links)."
       },
       "freshness": {
-        "status": "unreviewed",
+        "status": "current",
         "changed_at": "2026-10-24",
         "sources": {
           "https://learn.microsoft.com/azure/event-grid/overview": {
@@ -3190,7 +3372,8 @@
             "http_status": 200,
             "ms_date": "2026-07-23T00:00:00Z",
             "updated_at": "2026-07-23T22:13:00Z",
-            "latest_hash": "sha256:a2e3316ee3b89936e4718d0fa2eee0b0548586ab447a7f9044600fe25619e3a9"
+            "latest_hash": "sha256:a2e3316ee3b89936e4718d0fa2eee0b0548586ab447a7f9044600fe25619e3a9",
+            "reviewed_hash": "sha256:a2e3316ee3b89936e4718d0fa2eee0b0548586ab447a7f9044600fe25619e3a9"
           }
         }
       }
@@ -3271,18 +3454,20 @@
             }
           ],
           "changed_at": "2026-10-24"
-        }
+        },
+        "purpose": "Unified observability service for collecting, analyzing and acting on telemetry from cloud and hybrid environments.",
+        "facts": [
+          "Collects logs and metrics from Azure resources (including Entra ID audit logs) plus OpenTelemetry and Prometheus metrics for VMs and Kubernetes. The same data platform also serves Defender for Cloud and Microsoft Sentinel.",
+          "Application Insights is its application performance monitoring feature, built on OpenTelemetry."
+        ]
       },
-      "manual": {
-        "purpose": "Metrics, alerts and the umbrella for monitoring.",
-        "facts": []
-      },
+      "manual": {},
       "review": {
         "status": "unconfirmed",
-        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+        "note": "Verified against Learn on 2026-10-24 (azure-monitor/fundamentals/overview): purpose (reworded), facts, three containment edges. Not verified: the Event Hubs edge."
       },
       "freshness": {
-        "status": "unreviewed",
+        "status": "current",
         "changed_at": "2026-10-24",
         "sources": {
           "https://learn.microsoft.com/azure/azure-monitor/fundamentals/overview": {
@@ -3290,7 +3475,8 @@
             "http_status": 200,
             "ms_date": "2026-06-14T00:00:00Z",
             "updated_at": "2026-10-09T22:14:00Z",
-            "latest_hash": "sha256:32b549d7f3178c029dedae9a1081334f10c5b223a6fcf4c6c33d823fd7060c78"
+            "latest_hash": "sha256:32b549d7f3178c029dedae9a1081334f10c5b223a6fcf4c6c33d823fd7060c78",
+            "reviewed_hash": "sha256:32b549d7f3178c029dedae9a1081334f10c5b223a6fcf4c6c33d823fd7060c78"
           }
         }
       }
@@ -3331,21 +3517,25 @@
             }
           ],
           "changed_at": "2026-10-24"
-        }
+        },
+        "purpose": "The tool for querying logs in the Azure Monitor Logs store; data lives in Log Analytics workspaces."
       },
       "manual": {
-        "purpose": "Log store queried with KQL.",
         "facts": [
-          "A workspace stores logs; query them with KQL.",
+          "A workspace stores logs. Log Analytics queries them in simple mode (point and click) or KQL mode (full Kusto Query Language).",
           "Many resources send logs through diagnostic settings."
-        ]
+        ],
+        "cloud_native": {
+          "level": "partly",
+          "note": "Managed log store and KQL query tool that serves any kind of workload."
+        }
       },
       "review": {
         "status": "unconfirmed",
-        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+        "note": "Verified against Learn on 2026-10-24 (logs/log-analytics-overview): purpose (now the query tool plus workspace), the query modes, the Azure Monitor edge. Not verified: 'many resources send logs through diagnostic settings' and all sends edges (Key Vault, Entra ID, VMs, AKS, Container Apps, Storage, SQL, Cosmos DB, PostgreSQL), Sentinel and Grafana."
       },
       "freshness": {
-        "status": "unreviewed",
+        "status": "current",
         "changed_at": "2026-10-24",
         "sources": {
           "https://learn.microsoft.com/azure/azure-monitor/logs/log-analytics-overview": {
@@ -3353,7 +3543,8 @@
             "http_status": 200,
             "ms_date": "2026-07-19T00:00:00Z",
             "updated_at": "2026-07-20T12:04:00Z",
-            "latest_hash": "sha256:8fb25818a1826209766e51e37c5d28e9cbc1e2e9873581e2e0ca926af0e72e97"
+            "latest_hash": "sha256:8fb25818a1826209766e51e37c5d28e9cbc1e2e9873581e2e0ca926af0e72e97",
+            "reviewed_hash": "sha256:8fb25818a1826209766e51e37c5d28e9cbc1e2e9873581e2e0ca926af0e72e97"
           }
         }
       }
@@ -3394,18 +3585,25 @@
             }
           ],
           "changed_at": "2026-10-24"
-        }
+        },
+        "purpose": "Application performance monitoring (APM) for live applications, built on OpenTelemetry.",
+        "facts": [
+          "A feature of Azure Monitor. OpenTelemetry (a vendor-neutral standard) is the way to instrument supported apps, with distros for .NET, Node.js, Python and Java.",
+          "Views include failures, to identify and analyze failures and minimize downtime."
+        ]
       },
       "manual": {
-        "purpose": "Application telemetry: requests, traces, failures.",
-        "facts": []
+        "cloud_native": {
+          "level": "partly",
+          "note": "OpenTelemetry-based APM that works for classic and cloud-native apps alike."
+        }
       },
       "review": {
         "status": "unconfirmed",
-        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+        "note": "Verified against Learn on 2026-10-24 (app/app-insights-overview): purpose, facts, the Azure Monitor edge. Not verified: the App Service and Functions telemetry edges, 'requires Log Analytics', and the Grafana data source edge."
       },
       "freshness": {
-        "status": "unreviewed",
+        "status": "current",
         "changed_at": "2026-10-24",
         "sources": {
           "https://learn.microsoft.com/azure/azure-monitor/app/app-insights-overview": {
@@ -3413,7 +3611,8 @@
             "http_status": 200,
             "ms_date": "2025-11-14T00:00:00Z",
             "updated_at": "2026-10-09T22:14:00Z",
-            "latest_hash": "sha256:a6b2367dc7fd5d01c0ab87f82169fe00ae6b59442c5422cc4f1b936dcc4e7cca"
+            "latest_hash": "sha256:a6b2367dc7fd5d01c0ab87f82169fe00ae6b59442c5422cc4f1b936dcc4e7cca",
+            "reviewed_hash": "sha256:a6b2367dc7fd5d01c0ab87f82169fe00ae6b59442c5422cc4f1b936dcc4e7cca"
           }
         }
       }
@@ -3480,11 +3679,14 @@
             }
           ],
           "changed_at": "2026-10-24"
-        }
+        },
+        "purpose": "Azure Monitor's fully managed Prometheus for AKS and Azure Arc-enabled Kubernetes, with Grafana for dashboards.",
+        "facts": [
+          "Fully supports PromQL and comes with preconfigured alerts, rules and dashboards. Native integration with AKS and with Azure Managed Grafana or Azure Monitor dashboards with Grafana.",
+          "The only requirement is an Azure Monitor workspace, which stores the Prometheus metrics. There is no direct cost for the service or the workspace; pricing is on ingestion and query."
+        ]
       },
       "manual": {
-        "purpose": "Azure-hosted Prometheus metrics and Grafana dashboards.",
-        "facts": [],
         "cloud_native": {
           "level": "native",
           "note": "Managed versions of the Prometheus and Grafana open-source projects, aimed at Kubernetes metrics."
@@ -3492,10 +3694,10 @@
       },
       "review": {
         "status": "unconfirmed",
-        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+        "note": "Verified against Learn on 2026-10-24 (metrics/prometheus-metrics-overview): purpose, Prometheus facts, the AKS and Azure Monitor edges. Not verified: Managed Grafana (its page was not read for this review) and the Log Analytics and Application Insights data source edges."
       },
       "freshness": {
-        "status": "unreviewed",
+        "status": "current",
         "changed_at": "2026-10-24",
         "sources": {
           "https://learn.microsoft.com/azure/azure-monitor/metrics/prometheus-metrics-overview": {
@@ -3503,14 +3705,16 @@
             "http_status": 200,
             "ms_date": "2026-07-07T00:00:00Z",
             "updated_at": "2026-07-07T22:14:00Z",
-            "latest_hash": "sha256:330a1373471c6e1ac8886e720966bb20b3836073d0f7589444defba5b2765fa1"
+            "latest_hash": "sha256:330a1373471c6e1ac8886e720966bb20b3836073d0f7589444defba5b2765fa1",
+            "reviewed_hash": "sha256:330a1373471c6e1ac8886e720966bb20b3836073d0f7589444defba5b2765fa1"
           },
           "https://learn.microsoft.com/azure/managed-grafana/overview": {
             "changed_at": "2026-10-24",
             "http_status": 200,
             "ms_date": "2026-06-24T00:00:00Z",
             "updated_at": "2026-06-29T17:15:00Z",
-            "latest_hash": "sha256:f1a5990f1a1789f8386ccc02818627aea1cf7b4b5e8b4715e452cff0c032f84b"
+            "latest_hash": "sha256:f1a5990f1a1789f8386ccc02818627aea1cf7b4b5e8b4715e452cff0c032f84b",
+            "reviewed_hash": "sha256:f1a5990f1a1789f8386ccc02818627aea1cf7b4b5e8b4715e452cff0c032f84b"
           }
         }
       }
@@ -3563,18 +3767,22 @@
             }
           ],
           "changed_at": "2026-10-24"
-        }
+        },
+        "purpose": "Repos, pipelines, boards, test plans and artifacts for planning, building and delivering software.",
+        "facts": []
       },
       "manual": {
-        "purpose": "Repos, pipelines, boards and artifacts (a separate service from the Azure resource model).",
-        "facts": []
+        "facts": [
+          "A separate service from the Azure resource model (unconfirmed).",
+          "Five services: Boards (work tracking), Repos (Git or TFVC), Pipelines (CI/CD to any cloud or on-premises), Test Plans and Artifacts (NuGet, npm, Maven, Python and Universal packages)."
+        ]
       },
       "review": {
         "status": "unconfirmed",
-        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+        "note": "Verified against Learn on 2026-10-24 (devops/user-guide/what-is-azure-devops): purpose and the five services. Not verified: 'separate from the Azure resource model' and every edge (service connections, Key Vault, ARM, Entra ID, ACR, Storage)."
       },
       "freshness": {
-        "status": "unreviewed",
+        "status": "current",
         "changed_at": "2026-10-24",
         "sources": {
           "https://learn.microsoft.com/azure/devops/user-guide/what-is-azure-devops": {
@@ -3582,7 +3790,8 @@
             "http_status": 200,
             "ms_date": "2026-02-17T00:00:00Z",
             "updated_at": "2026-05-08T17:05:00Z",
-            "latest_hash": "sha256:dff62e9a5f81cb5630bd1533b31ae194aedfc1aade8e8d5ad9453580f4abb2fb"
+            "latest_hash": "sha256:dff62e9a5f81cb5630bd1533b31ae194aedfc1aade8e8d5ad9453580f4abb2fb",
+            "reviewed_hash": "sha256:dff62e9a5f81cb5630bd1533b31ae194aedfc1aade8e8d5ad9453580f4abb2fb"
           }
         }
       }
@@ -3734,264 +3943,264 @@
       "type": "contains",
       "to": "virtual-machines",
       "note": "",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "resource-groups",
       "type": "contains",
       "to": "managed-disks",
       "note": "",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "resource-groups",
       "type": "contains",
       "to": "virtual-machine-scale-sets",
       "note": "",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "resource-groups",
       "type": "contains",
       "to": "app-service",
       "note": "",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "resource-groups",
       "type": "contains",
       "to": "azure-functions",
       "note": "",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "resource-groups",
       "type": "contains",
       "to": "container-apps",
       "note": "",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "resource-groups",
       "type": "contains",
       "to": "azure-kubernetes-service-aks",
       "note": "",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "resource-groups",
       "type": "contains",
       "to": "container-registry-acr",
       "note": "",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "resource-groups",
       "type": "contains",
       "to": "virtual-network-and-subnets",
       "note": "",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "resource-groups",
       "type": "contains",
       "to": "network-interface-nic",
       "note": "",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "resource-groups",
       "type": "contains",
       "to": "network-security-group",
       "note": "",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "resource-groups",
       "type": "contains",
       "to": "public-ip-address",
       "note": "",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "resource-groups",
       "type": "contains",
       "to": "load-balancer",
       "note": "",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "resource-groups",
       "type": "contains",
       "to": "application-gateway-front-door",
       "note": "",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "resource-groups",
       "type": "contains",
       "to": "azure-dns-and-private-dns",
       "note": "",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "resource-groups",
       "type": "contains",
       "to": "private-endpoint",
       "note": "",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "resource-groups",
       "type": "contains",
       "to": "storage-account",
       "note": "",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "resource-groups",
       "type": "contains",
       "to": "azure-sql",
       "note": "",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "resource-groups",
       "type": "contains",
       "to": "azure-database-for-postgresql",
       "note": "",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "resource-groups",
       "type": "contains",
       "to": "cosmos-db",
       "note": "",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "resource-groups",
       "type": "contains",
       "to": "service-bus",
       "note": "",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "resource-groups",
       "type": "contains",
       "to": "event-grid",
       "note": "",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "resource-groups",
       "type": "contains",
       "to": "key-vault",
       "note": "",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "resource-groups",
       "type": "contains",
       "to": "managed-identities",
       "note": "",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "resource-groups",
       "type": "contains",
       "to": "log-analytics",
       "note": "",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "resource-groups",
       "type": "contains",
       "to": "application-insights",
       "note": "",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "resource-groups",
       "type": "contains",
       "to": "azure-backup-recovery-services-vault",
       "note": "",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "entra-tenant",
       "type": "contains",
       "to": "management-groups",
       "note": "The root management group is created per tenant",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "management-groups",
       "type": "contains",
       "to": "subscriptions",
       "note": "",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "subscriptions",
       "type": "contains",
       "to": "resource-groups",
       "note": "",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "subscriptions",
       "type": "requires",
       "to": "entra-tenant",
       "note": "Each subscription trusts exactly one tenant",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "azure-resource-manager",
       "type": "enforces",
       "to": "azure-policy",
       "note": "Evaluated on each create or update; can deny or modify the request",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "azure-resource-manager",
       "type": "enforces",
       "to": "azure-rbac-role-assignments",
-      "note": "Checked on every request: may this identity do this at this scope?",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "note": "Every request is authenticated and authorized; Azure RBAC is built into the management layer",
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "azure-devops",
@@ -4005,9 +4214,9 @@
       "from": "entra-id",
       "type": "requires",
       "to": "entra-tenant",
-      "note": "Every Entra ID object lives in a tenant",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "note": "Every tenant is automatically an Entra tenant",
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "azure-rbac-role-assignments",
@@ -4022,32 +4231,32 @@
       "type": "access",
       "to": "management-groups",
       "note": "Can be assigned at this scope",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "azure-rbac-role-assignments",
       "type": "access",
       "to": "subscriptions",
       "note": "Can be assigned at this scope",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "azure-rbac-role-assignments",
       "type": "access",
       "to": "resource-groups",
       "note": "Can be assigned at this scope",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "azure-rbac-role-assignments",
       "type": "access",
       "to": "key-vault",
-      "note": "Data roles such as Key Vault Secrets User",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "note": "Data roles such as Key Vault Secrets User; RBAC is the default and recommended permission model",
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "azure-rbac-role-assignments",
@@ -4086,16 +4295,16 @@
       "type": "requires",
       "to": "entra-id",
       "note": "Each one is a service principal in the tenant",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "managed-identities",
       "type": "access",
       "to": "key-vault",
       "note": "Needs a role assignment, e.g. Key Vault Secrets User",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "managed-identities",
@@ -4141,9 +4350,9 @@
       "from": "key-vault",
       "type": "requires",
       "to": "entra-tenant",
-      "note": "A vault is tied to one tenant",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "note": "A vault has a tenant ID; moving its subscription to another tenant means changing it",
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "key-vault",
@@ -4214,16 +4423,16 @@
       "type": "protects",
       "to": "virtual-machines",
       "note": "",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "defender-for-cloud",
       "type": "protects",
       "to": "azure-kubernetes-service-aks",
       "note": "",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "defender-for-cloud",
@@ -4238,24 +4447,24 @@
       "type": "protects",
       "to": "storage-account",
       "note": "",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "defender-for-cloud",
       "type": "protects",
       "to": "azure-sql",
       "note": "",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "defender-for-cloud",
       "type": "protects",
       "to": "key-vault",
       "note": "",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "microsoft-sentinel",
@@ -4302,40 +4511,40 @@
       "type": "protects",
       "to": "management-groups",
       "note": "Assigned at this scope",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "azure-policy",
       "type": "protects",
       "to": "subscriptions",
       "note": "Assigned at this scope",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "azure-policy",
       "type": "protects",
       "to": "resource-groups",
       "note": "Assigned at this scope",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "azure-backup-recovery-services-vault",
       "type": "protects",
       "to": "virtual-machines",
       "note": "",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "azure-backup-recovery-services-vault",
       "type": "protects",
       "to": "managed-disks",
       "note": "",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "azure-backup-recovery-services-vault",
@@ -4350,16 +4559,16 @@
       "type": "protects",
       "to": "storage-account",
       "note": "Blob backup",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "azure-backup-recovery-services-vault",
       "type": "protects",
       "to": "azure-database-for-postgresql",
       "note": "",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "site-recovery",
@@ -4389,17 +4598,17 @@
       "from": "cost-management",
       "type": "access",
       "to": "subscriptions",
-      "note": "Reads cost data at subscription, resource group or management-group scope",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "note": "Available at billing account, subscription, resource group or management group scope",
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "resource-graph",
       "type": "access",
       "to": "subscriptions",
-      "note": "Queries resources across subscriptions you can read",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "note": "Queries a chosen set of subscriptions; results are limited to what you can read",
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "lighthouse",
@@ -4413,17 +4622,17 @@
       "from": "virtual-machines",
       "type": "requires",
       "to": "network-interface-nic",
-      "note": "At least one NIC",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "note": "A virtual network interface card connects the VM to a network",
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "virtual-machines",
       "type": "requires",
       "to": "managed-disks",
-      "note": "An OS disk (legacy unmanaged disks use a storage account instead)",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "note": "An OS disk; managed disks handle the storage account for you",
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "virtual-machines",
@@ -4453,9 +4662,9 @@
       "from": "virtual-machine-scale-sets",
       "type": "optional",
       "to": "load-balancer",
-      "note": "Backend pool",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "note": "Azure Load Balancer for layer 4; Application Gateway for layer 7",
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "azure-kubernetes-service-aks",
@@ -4477,9 +4686,9 @@
       "from": "azure-kubernetes-service-aks",
       "type": "optional",
       "to": "container-registry-acr",
-      "note": "Pull images; grant AcrPull to the kubelet identity",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "note": "Pull images",
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "azure-kubernetes-service-aks",
@@ -4493,17 +4702,17 @@
       "from": "azure-kubernetes-service-aks",
       "type": "sends",
       "to": "managed-prometheus-and-grafana",
-      "note": "Prometheus metrics",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "note": "Managed Prometheus is on by default in AKS Automatic",
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "app-service",
       "type": "optional",
       "to": "virtual-network-and-subnets",
-      "note": "VNet integration uses a delegated subnet",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "note": "Virtual Network integration for ingress and egress; App Service environments for full isolation",
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "app-service",
@@ -4541,17 +4750,17 @@
       "from": "container-apps",
       "type": "optional",
       "to": "virtual-network-and-subnets",
-      "note": "Environment can be injected into a subnet",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "note": "Provide an existing virtual network when creating the environment",
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "container-apps",
       "type": "optional",
       "to": "container-registry-acr",
-      "note": "Pull images",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "note": "Run containers from any registry, including ACR",
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "container-apps",
@@ -4565,9 +4774,9 @@
       "from": "network-interface-nic",
       "type": "requires",
       "to": "virtual-network-and-subnets",
-      "note": "A NIC always sits in one subnet",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "note": "You select a subnet when you create the NIC",
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "network-interface-nic",
@@ -4581,9 +4790,9 @@
       "from": "network-interface-nic",
       "type": "optional",
       "to": "public-ip-address",
-      "note": "Gives the NIC an internet-facing address",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "note": "A public IP can be created and associated with the NIC",
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "network-interface-nic",
@@ -4597,49 +4806,49 @@
       "from": "virtual-network-and-subnets",
       "type": "optional",
       "to": "network-security-group",
-      "note": "Can be associated at subnet level",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "note": "Filters traffic between subnets",
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "virtual-network-and-subnets",
       "type": "optional",
       "to": "nat-gateway",
-      "note": "Outbound addresses for a subnet",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "note": "A NAT gateway manages outbound connections",
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "virtual-network-and-subnets",
       "type": "network",
       "to": "azure-dns-and-private-dns",
-      "note": "Azure-provided DNS by default; private zones link to the VNet",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "note": "Azure Private DNS manages and resolves names in a virtual network",
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "virtual-network-peering",
       "type": "requires",
       "to": "virtual-network-and-subnets",
-      "note": "Connects two VNets",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "note": "Connects two virtual networks",
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "load-balancer",
       "type": "optional",
       "to": "public-ip-address",
       "note": "Frontend IP (or an internal one)",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "application-gateway-front-door",
       "type": "optional",
       "to": "public-ip-address",
       "note": "Application Gateway frontend",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "application-gateway-front-door",
@@ -4653,9 +4862,9 @@
       "from": "application-gateway-front-door",
       "type": "network",
       "to": "azure-kubernetes-service-aks",
-      "note": "Ingress",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "note": "Application Gateway Ingress Controller (AGIC)",
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "application-gateway-front-door",
@@ -4678,80 +4887,80 @@
       "type": "requires",
       "to": "virtual-network-and-subnets",
       "note": "Creates a NIC with a private IP in your subnet",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "private-endpoint",
       "type": "requires",
       "to": "private-link",
-      "note": "The underlying service",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "note": "A private endpoint connects to a service powered by Private Link",
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "private-endpoint",
       "type": "network",
       "to": "key-vault",
       "note": "Puts the service behind a private IP",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "private-endpoint",
       "type": "network",
       "to": "storage-account",
       "note": "Puts the service behind a private IP",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "private-endpoint",
       "type": "network",
       "to": "azure-sql",
       "note": "Puts the service behind a private IP",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "private-endpoint",
       "type": "network",
       "to": "azure-database-for-postgresql",
       "note": "Puts the service behind a private IP",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "private-endpoint",
       "type": "network",
       "to": "cosmos-db",
       "note": "Puts the service behind a private IP",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "private-endpoint",
       "type": "network",
       "to": "service-bus",
       "note": "Puts the service behind a private IP",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "private-endpoint",
       "type": "network",
       "to": "container-registry-acr",
       "note": "Puts the service behind a private IP",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "private-endpoint",
       "type": "network",
       "to": "app-service",
       "note": "Puts the service behind a private IP",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "azure-dns-and-private-dns",
@@ -4774,8 +4983,8 @@
       "type": "requires",
       "to": "public-ip-address",
       "note": "",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "bastion",
@@ -4798,8 +5007,8 @@
       "type": "requires",
       "to": "public-ip-address",
       "note": "",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "vpn-gateway",
@@ -4814,8 +5023,8 @@
       "type": "requires",
       "to": "public-ip-address",
       "note": "",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "expressroute",
@@ -4830,24 +5039,24 @@
       "type": "requires",
       "to": "public-ip-address",
       "note": "Outbound address",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "storage-account",
       "type": "contains",
       "to": "azure-files",
       "note": "File shares live in a storage account",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "data-lake-storage-gen2",
       "type": "requires",
       "to": "storage-account",
-      "note": "A storage account with hierarchical namespace enabled",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "note": "Data Lake Storage is part of Blob Storage in a storage account",
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "storage-account",
@@ -4893,9 +5102,9 @@
       "from": "azure-database-for-postgresql",
       "type": "optional",
       "to": "virtual-network-and-subnets",
-      "note": "Private access through a delegated subnet",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "note": "Full private access through an Azure virtual network",
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "azure-database-for-postgresql",
@@ -5013,25 +5222,25 @@
       "from": "azure-monitor",
       "type": "contains",
       "to": "log-analytics",
-      "note": "The log store and query side",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "note": "Log Analytics is the tool for querying the Azure Monitor Logs store",
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "azure-monitor",
       "type": "contains",
       "to": "application-insights",
-      "note": "Application monitoring",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "note": "Application performance monitoring, built on OpenTelemetry",
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "azure-monitor",
       "type": "contains",
       "to": "managed-prometheus-and-grafana",
-      "note": "Metrics and dashboards",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "note": "Azure Monitor managed service for Prometheus",
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "azure-monitor",
@@ -5137,14 +5346,14 @@
       "title": "Observability",
       "question": "Which monitoring service fits my workload?",
       "status": "unconfirmed",
-      "note": "Drafted from the earlier hand-built page and the edges already in the model; not yet checked against Microsoft Learn.",
+      "note": "Reviewed against Learn on 2026-10-24. Application Insights is OpenTelemetry-based and Azure Monitor also collects Prometheus metrics, so the audience labels are a simplification: the options overlap.",
       "members": [
         {
           "services": [
             "azure-monitor"
           ],
           "audience": "Every organisation",
-          "choose_when": "The platform every subscription already has: metrics, alerts and diagnostic settings. Start here; the two options below sit under it."
+          "choose_when": "The unified service every subscription already has for logs, metrics and alerts across Azure resources. The two options below are parts of it."
         },
         {
           "services": [
@@ -5152,14 +5361,14 @@
             "application-insights"
           ],
           "audience": "Workloads that are not cloud native",
-          "choose_when": "VMs, App Service, Functions and classic apps. Agents or SDKs send logs and telemetry to a workspace and you query it with KQL."
+          "choose_when": "Logs and application telemetry in Azure Monitor: KQL queries over workspaces, and Application Insights for application performance monitoring, instrumented with OpenTelemetry. Suits any workload, including VMs and App Service."
         },
         {
           "services": [
             "managed-prometheus-and-grafana"
           ],
           "audience": "Cloud-native workloads",
-          "choose_when": "Kubernetes and containerised apps that already expose Prometheus metrics. PromQL queries and Grafana dashboards."
+          "choose_when": "Kubernetes metrics: Prometheus for AKS and Azure Arc-enabled clusters with PromQL and Grafana dashboards, when your tooling already speaks Prometheus."
         }
       ]
     },
