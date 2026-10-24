@@ -13,7 +13,7 @@ layers already merged, Terraform status derived) or merge the layers yourself wi
 | `tiers`, `categories` | Labels and display order. |
 | `edge_types` | `type`, `out` and `in` wording, `meaning`. Edge `[A, requires, B]` reads "A requires B". |
 | `edge_group_order` | Order of relationship groups on a card. |
-| `terraform_providers` | Per provider: registry namespace and name, `latest_version`, `checked_at`, `docs_url`. `azapi` is the fallback. |
+| `terraform_providers` | Per provider: registry namespace and name, `latest_version`, `changed_at`, `docs_url`. `azapi` is the fallback. |
 | `services` | Full entries (below). |
 | `stubs` | Out-of-scope services (id, name, tier, category) that edges point at. No content. |
 | `edges` | `from`, `type`, `to` (service or stub ids), `note`, `origin`, `status`. |
@@ -26,7 +26,7 @@ layers already merged, Terraform status derived) or merge the layers yourself wi
 | `fetched` | pipeline or AI ingestion | Content from Microsoft or the registry: `purpose`, `facts`, and `terraform.resources` (`type`, `exists`, `since`), `terraform.arm_types`. |
 | `manual` | human | Overrides. Allowed keys: `purpose`, `facts`, `terraform` (`gaps`, `note`, `status`). |
 | `review` | human | `status` `unconfirmed` or `verified`, plus a note. |
-| `freshness` | pipeline | `status`, `checked_at`, and per Learn URL: `http_status`, `ms_date`, `updated_at`, `latest_hash`, `reviewed_hash`. |
+| `freshness` | pipeline | `status`, `changed_at`, and per Learn URL: `http_status`, `ms_date`, `updated_at`, `latest_hash`, `reviewed_hash`. |
 
 ### Merge rule
 
@@ -44,6 +44,14 @@ accepted). Service status is the worst of its sources:
 - `current`: hashes match.
 
 `make ack SERVICE=<id>` copies `latest_hash` to `reviewed_hash` after you have re-read the page and updated the entry.
+
+Dates called `changed_at` move only when the recorded values change, so an unchanged day leaves the file untouched
+(no daily commit noise, and review branches don't conflict with the daily job).
+
+### Snapshots
+
+`data/snapshots/<service-id>/<page>.latest.txt` is the page text the pipeline last saw; `.reviewed.txt` is the text
+at the last `make ack`. `make stale` diffs the two to show what changed.
 
 ### Terraform status (derived)
 

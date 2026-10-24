@@ -1,6 +1,6 @@
 PY ?= python3
 
-.PHONY: help validate build check check-service ack update serve clean
+.PHONY: help validate build check check-service ack stale update serve clean
 
 help:  ## List the targets
 	@grep -E '^[a-z-]+:.*## ' $(MAKEFILE_LIST) | awk -F':.*## ' '{printf "  make %-14s %s\n", $$1, $$2}'
@@ -19,6 +19,9 @@ check-service:  ## Same for one service: make check-service SERVICE=key-vault
 
 ack:  ## Mark current Learn content as reviewed: make ack SERVICE=key-vault (or all)
 	$(PY) scripts/check_updates.py ack $(SERVICE)
+
+stale:  ## List what needs review and write review/PROMPT.md for an AI agent (ALL=1 adds never-reviewed, LIMIT=n caps it)
+	$(PY) scripts/stale.py $(if $(ALL),--all) $(if $(LIMIT),--limit $(LIMIT))
 
 update: check build  ## check, then rebuild the page
 

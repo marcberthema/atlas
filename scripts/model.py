@@ -91,7 +91,7 @@ def resolve_terraform(data, svc, merged):
         "gaps": gaps,
         "fallback": fallback,
         "note": manual.get("note", ""),
-        "checked_at": svc["fetched"].get("terraform", {}).get("checked_at"),
+        "changed_at": svc["fetched"].get("terraform", {}).get("changed_at"),
     }
 
 
@@ -109,7 +109,7 @@ def resolve(data):
             "facts": merged.get("facts", []),
             "docs": [{"url": u} for u in svc["tracking"]["learn_urls"]],
             "review": svc["review"],
-            "freshness": {"status": fresh["status"], "checked_at": fresh["checked_at"]},
+            "freshness": {"status": fresh["status"], "changed_at": fresh["changed_at"]},
             "terraform": resolve_terraform(data, svc, merged),
         })
     return {

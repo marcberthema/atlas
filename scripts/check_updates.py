@@ -10,6 +10,7 @@ provider docs, and the first provider version that added each (from the provider
 import argparse
 import hashlib
 import html
+import json
 import re
 import sys
 import time
@@ -60,23 +61,51 @@ def meta(page, name):
     return html.unescape(m.group(1)) if m else None
 
 
-def content_hash(page):
+def page_text(page):
+    """The main content as plain text, one block per line (so snapshots diff well)."""
     m = re.search(r"<main\b.*?</main>", page, re.S)
     text = m.group(0) if m else page
+    text = text[text.find("<h1"):] if "<h1" in text else text  # skip the toolbar above the title
     text = re.sub(r"<(script|style)\b.*?</\1>", " ", text, flags=re.S)
+    text = re.sub(r"</(p|li|h[1-6]|tr|div|pre|table|ul|ol|section|details|summary)>|<br\s*/?>", "\n", text)
     text = html.unescape(re.sub(r"<[^>]+>", " ", text))
-    return "sha256:" + hashlib.sha256(re.sub(r"\s+", " ", text).strip().encode()).hexdigest()
+    lines = (re.sub(r"\s+", " ", line).strip() for line in text.splitlines())
+    kept = [line for line in lines if line]
+    if "Was this page helpful?" in kept:  # feedback footer
+        kept = kept[:kept.index("Was this page helpful?")]
+    return "\n".join(kept) + "\n"
 
 
-def check_source(url, prev):
+def content_hash(text):
+    return "sha256:" + hashlib.sha256(text.encode()).hexdigest()
+
+
+def snapshot_path(svc_id, url, kind):
+    """data/snapshots/<service>/<page>.<latest|reviewed>.txt"""
+    page = re.sub(r"[^a-z0-9]+", "-", urllib.parse.urlparse(url).path.lower()).strip("-")
+    return model.ROOT / "data" / "snapshots" / svc_id / f"{page}.{kind}.txt"
+
+
+def write_if_changed(path, text):
+    if path.exists() and path.read_text(encoding="utf-8") == text:
+        return
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(text, encoding="utf-8")
+
+
+def check_source(svc_id, url, prev):
+    """Dates only move when a value changes, so an unchanged day leaves the file untouched."""
     code, page = fetch(url)
-    src = dict(prev)
-    src["checked_at"] = today()
+    src = {k: v for k, v in prev.items() if k != "checked_at"}
     src["http_status"] = code
     if code == 200:
+        text = page_text(page)
         src["ms_date"] = meta(page, "ms.date")
         src["updated_at"] = meta(page, "updated_at")
-        src["latest_hash"] = content_hash(page)
+        src["latest_hash"] = content_hash(text)
+        write_if_changed(snapshot_path(svc_id, url, "latest"), text)
+    keep = lambda d: {k: v for k, v in d.items() if k != "changed_at"}
+    src["changed_at"] = prev.get("changed_at") if keep(src) == keep(prev) and prev.get("changed_at") else today()
     return src
 
 
@@ -96,26 +125,34 @@ def service_status(sources):
 def check_learn(services):
     jobs = [(svc, u) for svc in services for u in svc["tracking"]["learn_urls"]]
     with ThreadPoolExecutor(max_workers=4) as ex:
-        results = list(ex.map(lambda j: check_source(j[1], j[0]["freshness"]["sources"].get(j[1], {})), jobs))
+        results = list(ex.map(lambda j: check_source(j[0]["id"], j[1], j[0]["freshness"]["sources"].get(j[1], {})), jobs))
+    before = {svc["id"]: json.dumps(svc["freshness"], sort_keys=True) for svc in services}
     for (svc, u), src in zip(jobs, results):
         svc["freshness"]["sources"][u] = src
     for svc in services:
         fr = svc["freshness"]
         fr["sources"] = {u: fr["sources"][u] for u in svc["tracking"]["learn_urls"]}
         fr["status"] = service_status(fr["sources"])
-        fr["checked_at"] = today()
+        fr.pop("checked_at", None)
+        if json.dumps(fr, sort_keys=True) != before[svc["id"]] or not fr.get("changed_at"):
+            fr["changed_at"] = today()
 
 
 def ack(data, which):
+    """Accept the latest page contents as reviewed (hash and text snapshot)."""
     hit = 0
     for svc in data["services"]:
         if which not in ("all", svc["id"]):
             continue
         hit += 1
-        for src in svc["freshness"]["sources"].values():
+        for url, src in svc["freshness"]["sources"].items():
             if src.get("latest_hash"):
                 src["reviewed_hash"] = src["latest_hash"]
+                latest = snapshot_path(svc["id"], url, "latest")
+                if latest.exists():
+                    write_if_changed(snapshot_path(svc["id"], url, "reviewed"), latest.read_text(encoding="utf-8"))
         svc["freshness"]["status"] = service_status(svc["freshness"]["sources"])
+        svc["freshness"]["changed_at"] = today()
     return hit
 
 
@@ -125,7 +162,6 @@ def get_json(url):
     code, body = fetch(url)
     if code != 200:
         raise RuntimeError(f"{url}: {code}")
-    import json
     return json.loads(body)
 
 
@@ -179,7 +215,9 @@ def check_terraform(data, services):
         try:
             latest, docs[p] = registry_docs(meta_p["namespace"], meta_p["name"])
             since[p] = changelog_since(p)
-            meta_p["latest_version"], meta_p["checked_at"] = latest, today()
+            meta_p.pop("checked_at", None)
+            if meta_p.get("latest_version") != latest or not meta_p.get("changed_at"):
+                meta_p["latest_version"], meta_p["changed_at"] = latest, today()
         except Exception as e:  # keep earlier results for this provider
             errors.append(f"{p}: {e}")
     for svc in services:
@@ -191,13 +229,16 @@ def check_terraform(data, services):
                             "since": since[t["provider"]].get((t["kind"], t["type"]))})
             elif t["type"] in prev:
                 out.append(prev[t["type"]])
-        entry = {"resources": out, "checked_at": today()}
+        entry = {"resources": out}
         if svc["tracking"]["arm_types"]:
             # azapi has a typed page per ARM type; types without one still work through azapi_resource
             typed = docs.get("azapi", {}).get("resource")
             entry["arm_types"] = [{"type": a, "documented": "azapi_" + a.replace("/", "_") in typed}
                                   for a in svc["tracking"]["arm_types"]] if typed is not None else \
                 svc["fetched"].get("terraform", {}).get("arm_types", [])
+        old = svc["fetched"].get("terraform", {})
+        keep = {k: v for k, v in old.items() if k not in ("changed_at", "checked_at")}
+        entry["changed_at"] = old.get("changed_at") if keep == entry and old.get("changed_at") else today()
         svc["fetched"]["terraform"] = entry
     return errors
 

@@ -153,7 +153,7 @@ function relGroup(id,dir,ty){
 function tfBlock(s){
   const t=s.terraform,lab=TFLABEL[t.status];
   let h='<h4>Terraform</h4><div class="tf"><span class="badge '+lab[1]+'">'+lab[0]+'</span>';
-  if(t.checked_at)h+=' <small>checked '+esc(t.checked_at)+'</small>';
+  if(t.changed_at)h+=' <small>checked '+esc(t.changed_at)+'</small>';
   if(t.first_supported)h+=' <small>· first added in provider version '+esc(t.first_supported)+'</small>';
   if(t.resources.length)h+='<ul>'+t.resources.map(r=>
     '<li><a href="'+safeUrl(r.docs_url)+'" target="_blank" rel="noopener"><code>'+esc(r.type)+'</code></a> <small>'+(r.kind==='data_source'?'data source · ':'')+esc(r.provider)+

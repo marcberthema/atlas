@@ -92,6 +92,7 @@ make validate   # must report bad 0
 make build      # validate + generate dist/
 make check      # network: Learn hashes + Terraform registry/changelogs; writes data/services.json
 make ack SERVICE=<id>
+make stale      # what needs review; writes review/PROMPT.md (git-ignored) for an agent
 make update     # check + build
 make serve
 ```
@@ -101,7 +102,9 @@ make serve
 1. Describe the change (add a service, fix a relationship, refresh a stale service).
 2. Claude edits `data/services.json` (or the template), runs `make build`, and checks `dist/index.html` in a browser.
 3. Commit after each coherent change, with a message saying what was added or corrected. Commit `dist/` with it.
-4. The daily GitHub Action commits freshness and Terraform status updates itself.
+4. The daily GitHub Action commits freshness, snapshots and Terraform status updates itself.
+5. Reviews run from `review/PROMPT.md` (`make stale`): one branch `review/<date>`, one commit per service, a PR to
+   `main` after the user confirms. Never push or open a PR without asking.
 
 Onboarding tier 2 and 3 later: add the service entries, remove the matching stub, and extend `scope.tiers`.
 

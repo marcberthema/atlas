@@ -164,28 +164,28 @@
       "namespace": "hashicorp",
       "name": "azurerm",
       "latest_version": "5.11.0",
-      "checked_at": "2026-10-24",
+      "changed_at": "2026-10-24",
       "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs"
     },
     "azuread": {
       "namespace": "hashicorp",
       "name": "azuread",
       "latest_version": "3.10.0",
-      "checked_at": "2026-10-24",
+      "changed_at": "2026-10-24",
       "docs_url": "https://registry.terraform.io/providers/hashicorp/azuread/latest/docs"
     },
     "azuredevops": {
       "namespace": "microsoft",
       "name": "azuredevops",
       "latest_version": "1.16.0",
-      "checked_at": "2026-10-24",
+      "changed_at": "2026-10-24",
       "docs_url": "https://registry.terraform.io/providers/microsoft/azuredevops/latest/docs"
     },
     "azapi": {
       "namespace": "Azure",
       "name": "azapi",
       "latest_version": "2.13.0",
-      "checked_at": "2026-10-24",
+      "changed_at": "2026-10-24",
       "docs_url": "https://registry.terraform.io/providers/Azure/azapi/latest/docs"
     }
   },
@@ -211,7 +211,7 @@
       },
       "freshness": {
         "status": "unreviewed",
-        "checked_at": "2026-10-24"
+        "changed_at": "2026-10-24"
       },
       "terraform": {
         "status": "listed",
@@ -238,7 +238,7 @@
         "gaps": [],
         "fallback": null,
         "note": "",
-        "checked_at": "2026-10-24"
+        "changed_at": "2026-10-24"
       }
     },
     {
@@ -260,7 +260,7 @@
       },
       "freshness": {
         "status": "unreviewed",
-        "checked_at": "2026-10-24"
+        "changed_at": "2026-10-24"
       },
       "terraform": {
         "status": "listed",
@@ -298,7 +298,7 @@
           ]
         },
         "note": "",
-        "checked_at": "2026-10-24"
+        "changed_at": "2026-10-24"
       }
     },
     {
@@ -327,7 +327,7 @@
       },
       "freshness": {
         "status": "unreviewed",
-        "checked_at": "2026-10-24"
+        "changed_at": "2026-10-24"
       },
       "terraform": {
         "status": "listed",
@@ -346,7 +346,7 @@
         "gaps": [],
         "fallback": null,
         "note": "",
-        "checked_at": "2026-10-24"
+        "changed_at": "2026-10-24"
       }
     },
     {
@@ -370,7 +370,7 @@
       },
       "freshness": {
         "status": "unreviewed",
-        "checked_at": "2026-10-24"
+        "changed_at": "2026-10-24"
       },
       "terraform": {
         "status": "listed",
@@ -408,7 +408,7 @@
           ]
         },
         "note": "",
-        "checked_at": "2026-10-24"
+        "changed_at": "2026-10-24"
       }
     },
     {
@@ -434,7 +434,7 @@
       },
       "freshness": {
         "status": "unreviewed",
-        "checked_at": "2026-10-24"
+        "changed_at": "2026-10-24"
       },
       "terraform": {
         "status": "listed",
@@ -464,7 +464,7 @@
           ]
         },
         "note": "",
-        "checked_at": "2026-10-24"
+        "changed_at": "2026-10-24"
       }
     },
     {
@@ -486,7 +486,7 @@
       },
       "freshness": {
         "status": "unreviewed",
-        "checked_at": "2026-10-24"
+        "changed_at": "2026-10-24"
       },
       "terraform": {
         "status": "listed",
@@ -529,7 +529,7 @@
         "gaps": [],
         "fallback": null,
         "note": "",
-        "checked_at": "2026-10-24"
+        "changed_at": "2026-10-24"
       }
     },
     {
@@ -556,7 +556,7 @@
       },
       "freshness": {
         "status": "unreviewed",
-        "checked_at": "2026-10-24"
+        "changed_at": "2026-10-24"
       },
       "terraform": {
         "status": "listed",
@@ -599,7 +599,7 @@
           ]
         },
         "note": "",
-        "checked_at": "2026-10-24"
+        "changed_at": "2026-10-24"
       }
     },
     {
@@ -625,7 +625,7 @@
       },
       "freshness": {
         "status": "unreviewed",
-        "checked_at": "2026-10-24"
+        "changed_at": "2026-10-24"
       },
       "terraform": {
         "status": "listed",
@@ -663,7 +663,7 @@
           ]
         },
         "note": "",
-        "checked_at": "2026-10-24"
+        "changed_at": "2026-10-24"
       }
     },
     {
@@ -690,7 +690,7 @@
       },
       "freshness": {
         "status": "unreviewed",
-        "checked_at": "2026-10-24"
+        "changed_at": "2026-10-24"
       },
       "terraform": {
         "status": "listed",
@@ -752,7 +752,7 @@
           ]
         },
         "note": "",
-        "checked_at": "2026-10-24"
+        "changed_at": "2026-10-24"
       }
     },
     {
@@ -774,7 +774,7 @@
       },
       "freshness": {
         "status": "unreviewed",
-        "checked_at": "2026-10-24"
+        "changed_at": "2026-10-24"
       },
       "terraform": {
         "status": "listed",
@@ -820,7 +820,7 @@
           ]
         },
         "note": "",
-        "checked_at": "2026-10-24"
+        "changed_at": "2026-10-24"
       }
     },
     {
@@ -842,7 +842,7 @@
       },
       "freshness": {
         "status": "unreviewed",
-        "checked_at": "2026-10-24"
+        "changed_at": "2026-10-24"
       },
       "terraform": {
         "status": "listed",
@@ -893,7 +893,7 @@
           ]
         },
         "note": "",
-        "checked_at": "2026-10-24"
+        "changed_at": "2026-10-24"
       }
     },
     {
@@ -915,7 +915,7 @@
       },
       "freshness": {
         "status": "unreviewed",
-        "checked_at": "2026-10-24"
+        "changed_at": "2026-10-24"
       },
       "terraform": {
         "status": "listed",
@@ -945,7 +945,7 @@
           ]
         },
         "note": "",
-        "checked_at": "2026-10-24"
+        "changed_at": "2026-10-24"
       }
     },
     {
@@ -967,7 +967,7 @@
       },
       "freshness": {
         "status": "unreviewed",
-        "checked_at": "2026-10-24"
+        "changed_at": "2026-10-24"
       },
       "terraform": {
         "status": "unknown",
@@ -977,7 +977,7 @@
         "gaps": [],
         "fallback": null,
         "note": "A query API rather than a deployable resource, so no azurerm resource exists for running queries. Saved queries are the ARM type Microsoft.ResourceGraph/queries (unconfirmed).",
-        "checked_at": "2026-10-24"
+        "changed_at": "2026-10-24"
       }
     },
     {
@@ -1004,7 +1004,7 @@
       },
       "freshness": {
         "status": "unreviewed",
-        "checked_at": "2026-10-24"
+        "changed_at": "2026-10-24"
       },
       "terraform": {
         "status": "listed",
@@ -1071,7 +1071,7 @@
           ]
         },
         "note": "",
-        "checked_at": "2026-10-24"
+        "changed_at": "2026-10-24"
       }
     },
     {
@@ -1093,7 +1093,7 @@
       },
       "freshness": {
         "status": "unreviewed",
-        "checked_at": "2026-10-24"
+        "changed_at": "2026-10-24"
       },
       "terraform": {
         "status": "listed",
@@ -1152,7 +1152,7 @@
           ]
         },
         "note": "",
-        "checked_at": "2026-10-24"
+        "changed_at": "2026-10-24"
       }
     },
     {
@@ -1178,7 +1178,7 @@
       },
       "freshness": {
         "status": "unreviewed",
-        "checked_at": "2026-10-24"
+        "changed_at": "2026-10-24"
       },
       "terraform": {
         "status": "listed",
@@ -1232,7 +1232,7 @@
           ]
         },
         "note": "",
-        "checked_at": "2026-10-24"
+        "changed_at": "2026-10-24"
       }
     },
     {
@@ -1257,7 +1257,7 @@
       },
       "freshness": {
         "status": "unreviewed",
-        "checked_at": "2026-10-24"
+        "changed_at": "2026-10-24"
       },
       "terraform": {
         "status": "listed",
@@ -1295,7 +1295,7 @@
           ]
         },
         "note": "",
-        "checked_at": "2026-10-24"
+        "changed_at": "2026-10-24"
       }
     },
     {
@@ -1317,7 +1317,7 @@
       },
       "freshness": {
         "status": "unreviewed",
-        "checked_at": "2026-10-24"
+        "changed_at": "2026-10-24"
       },
       "terraform": {
         "status": "listed",
@@ -1363,7 +1363,7 @@
           ]
         },
         "note": "",
-        "checked_at": "2026-10-24"
+        "changed_at": "2026-10-24"
       }
     },
     {
@@ -1385,7 +1385,7 @@
       },
       "freshness": {
         "status": "unreviewed",
-        "checked_at": "2026-10-24"
+        "changed_at": "2026-10-24"
       },
       "terraform": {
         "status": "listed",
@@ -1444,7 +1444,7 @@
           ]
         },
         "note": "",
-        "checked_at": "2026-10-24"
+        "changed_at": "2026-10-24"
       }
     },
     {
@@ -1466,7 +1466,7 @@
       },
       "freshness": {
         "status": "unreviewed",
-        "checked_at": "2026-10-24"
+        "changed_at": "2026-10-24"
       },
       "terraform": {
         "status": "listed",
@@ -1504,7 +1504,7 @@
           ]
         },
         "note": "",
-        "checked_at": "2026-10-24"
+        "changed_at": "2026-10-24"
       }
     },
     {
@@ -1526,7 +1526,7 @@
       },
       "freshness": {
         "status": "unreviewed",
-        "checked_at": "2026-10-24"
+        "changed_at": "2026-10-24"
       },
       "terraform": {
         "status": "listed",
@@ -1577,7 +1577,7 @@
           ]
         },
         "note": "",
-        "checked_at": "2026-10-24"
+        "changed_at": "2026-10-24"
       }
     },
     {
@@ -1601,7 +1601,7 @@
       },
       "freshness": {
         "status": "unreviewed",
-        "checked_at": "2026-10-24"
+        "changed_at": "2026-10-24"
       },
       "terraform": {
         "status": "listed",
@@ -1639,7 +1639,7 @@
           ]
         },
         "note": "",
-        "checked_at": "2026-10-24"
+        "changed_at": "2026-10-24"
       }
     },
     {
@@ -1661,7 +1661,7 @@
       },
       "freshness": {
         "status": "unreviewed",
-        "checked_at": "2026-10-24"
+        "changed_at": "2026-10-24"
       },
       "terraform": {
         "status": "listed",
@@ -1699,7 +1699,7 @@
           ]
         },
         "note": "",
-        "checked_at": "2026-10-24"
+        "changed_at": "2026-10-24"
       }
     },
     {
@@ -1725,7 +1725,7 @@
       },
       "freshness": {
         "status": "unreviewed",
-        "checked_at": "2026-10-24"
+        "changed_at": "2026-10-24"
       },
       "terraform": {
         "status": "listed",
@@ -1763,7 +1763,7 @@
           ]
         },
         "note": "",
-        "checked_at": "2026-10-24"
+        "changed_at": "2026-10-24"
       }
     },
     {
@@ -1788,7 +1788,7 @@
       },
       "freshness": {
         "status": "unreviewed",
-        "checked_at": "2026-10-24"
+        "changed_at": "2026-10-24"
       },
       "terraform": {
         "status": "listed",
@@ -1826,7 +1826,7 @@
           ]
         },
         "note": "",
-        "checked_at": "2026-10-24"
+        "changed_at": "2026-10-24"
       }
     },
     {
@@ -1848,7 +1848,7 @@
       },
       "freshness": {
         "status": "unreviewed",
-        "checked_at": "2026-10-24"
+        "changed_at": "2026-10-24"
       },
       "terraform": {
         "status": "listed",
@@ -1894,7 +1894,7 @@
           ]
         },
         "note": "",
-        "checked_at": "2026-10-24"
+        "changed_at": "2026-10-24"
       }
     },
     {
@@ -1916,7 +1916,7 @@
       },
       "freshness": {
         "status": "unreviewed",
-        "checked_at": "2026-10-24"
+        "changed_at": "2026-10-24"
       },
       "terraform": {
         "status": "listed",
@@ -1954,7 +1954,7 @@
           ]
         },
         "note": "",
-        "checked_at": "2026-10-24"
+        "changed_at": "2026-10-24"
       }
     },
     {
@@ -1976,7 +1976,7 @@
       },
       "freshness": {
         "status": "unreviewed",
-        "checked_at": "2026-10-24"
+        "changed_at": "2026-10-24"
       },
       "terraform": {
         "status": "listed",
@@ -2030,7 +2030,7 @@
           ]
         },
         "note": "",
-        "checked_at": "2026-10-24"
+        "changed_at": "2026-10-24"
       }
     },
     {
@@ -2055,7 +2055,7 @@
       },
       "freshness": {
         "status": "unreviewed",
-        "checked_at": "2026-10-24"
+        "changed_at": "2026-10-24"
       },
       "terraform": {
         "status": "listed",
@@ -2114,7 +2114,7 @@
           ]
         },
         "note": "",
-        "checked_at": "2026-10-24"
+        "changed_at": "2026-10-24"
       }
     },
     {
@@ -2139,7 +2139,7 @@
       },
       "freshness": {
         "status": "unreviewed",
-        "checked_at": "2026-10-24"
+        "changed_at": "2026-10-24"
       },
       "terraform": {
         "status": "listed",
@@ -2198,7 +2198,7 @@
           ]
         },
         "note": "",
-        "checked_at": "2026-10-24"
+        "changed_at": "2026-10-24"
       }
     },
     {
@@ -2223,7 +2223,7 @@
       },
       "freshness": {
         "status": "unreviewed",
-        "checked_at": "2026-10-24"
+        "changed_at": "2026-10-24"
       },
       "terraform": {
         "status": "listed",
@@ -2253,7 +2253,7 @@
           ]
         },
         "note": "",
-        "checked_at": "2026-10-24"
+        "changed_at": "2026-10-24"
       }
     },
     {
@@ -2278,7 +2278,7 @@
       },
       "freshness": {
         "status": "unreviewed",
-        "checked_at": "2026-10-24"
+        "changed_at": "2026-10-24"
       },
       "terraform": {
         "status": "listed",
@@ -2348,7 +2348,7 @@
           ]
         },
         "note": "",
-        "checked_at": "2026-10-24"
+        "changed_at": "2026-10-24"
       }
     },
     {
@@ -2370,7 +2370,7 @@
       },
       "freshness": {
         "status": "unreviewed",
-        "checked_at": "2026-10-24"
+        "changed_at": "2026-10-24"
       },
       "terraform": {
         "status": "listed",
@@ -2429,7 +2429,7 @@
           ]
         },
         "note": "",
-        "checked_at": "2026-10-24"
+        "changed_at": "2026-10-24"
       }
     },
     {
@@ -2451,7 +2451,7 @@
       },
       "freshness": {
         "status": "unreviewed",
-        "checked_at": "2026-10-24"
+        "changed_at": "2026-10-24"
       },
       "terraform": {
         "status": "listed",
@@ -2505,7 +2505,7 @@
           ]
         },
         "note": "",
-        "checked_at": "2026-10-24"
+        "changed_at": "2026-10-24"
       }
     },
     {
@@ -2527,7 +2527,7 @@
       },
       "freshness": {
         "status": "unreviewed",
-        "checked_at": "2026-10-24"
+        "changed_at": "2026-10-24"
       },
       "terraform": {
         "status": "listed",
@@ -2573,7 +2573,7 @@
           ]
         },
         "note": "",
-        "checked_at": "2026-10-24"
+        "changed_at": "2026-10-24"
       }
     },
     {
@@ -2595,7 +2595,7 @@
       },
       "freshness": {
         "status": "unreviewed",
-        "checked_at": "2026-10-24"
+        "changed_at": "2026-10-24"
       },
       "terraform": {
         "status": "listed",
@@ -2649,7 +2649,7 @@
           ]
         },
         "note": "",
-        "checked_at": "2026-10-24"
+        "changed_at": "2026-10-24"
       }
     },
     {
@@ -2671,7 +2671,7 @@
       },
       "freshness": {
         "status": "unreviewed",
-        "checked_at": "2026-10-24"
+        "changed_at": "2026-10-24"
       },
       "terraform": {
         "status": "listed",
@@ -2730,7 +2730,7 @@
           ]
         },
         "note": "",
-        "checked_at": "2026-10-24"
+        "changed_at": "2026-10-24"
       }
     },
     {
@@ -2752,7 +2752,7 @@
       },
       "freshness": {
         "status": "unreviewed",
-        "checked_at": "2026-10-24"
+        "changed_at": "2026-10-24"
       },
       "terraform": {
         "status": "listed",
@@ -2816,7 +2816,7 @@
           ]
         },
         "note": "",
-        "checked_at": "2026-10-24"
+        "changed_at": "2026-10-24"
       }
     },
     {
@@ -2841,7 +2841,7 @@
       },
       "freshness": {
         "status": "unreviewed",
-        "checked_at": "2026-10-24"
+        "changed_at": "2026-10-24"
       },
       "terraform": {
         "status": "listed",
@@ -2871,7 +2871,7 @@
           ]
         },
         "note": "",
-        "checked_at": "2026-10-24"
+        "changed_at": "2026-10-24"
       }
     },
     {
@@ -2893,7 +2893,7 @@
       },
       "freshness": {
         "status": "unreviewed",
-        "checked_at": "2026-10-24"
+        "changed_at": "2026-10-24"
       },
       "terraform": {
         "status": "listed",
@@ -2923,7 +2923,7 @@
           ]
         },
         "note": "",
-        "checked_at": "2026-10-24"
+        "changed_at": "2026-10-24"
       }
     },
     {
@@ -2948,7 +2948,7 @@
       },
       "freshness": {
         "status": "unreviewed",
-        "checked_at": "2026-10-24"
+        "changed_at": "2026-10-24"
       },
       "terraform": {
         "status": "listed",
@@ -2999,7 +2999,7 @@
           ]
         },
         "note": "",
-        "checked_at": "2026-10-24"
+        "changed_at": "2026-10-24"
       }
     },
     {
@@ -3021,7 +3021,7 @@
       },
       "freshness": {
         "status": "unreviewed",
-        "checked_at": "2026-10-24"
+        "changed_at": "2026-10-24"
       },
       "terraform": {
         "status": "listed",
@@ -3056,7 +3056,7 @@
         "gaps": [],
         "fallback": null,
         "note": "",
-        "checked_at": "2026-10-24"
+        "changed_at": "2026-10-24"
       }
     }
   ],
