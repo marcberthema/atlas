@@ -91,6 +91,51 @@
           "choose_when": "Kubernetes and containerised apps that already expose Prometheus metrics. PromQL queries and Grafana dashboards."
         }
       ]
+    },
+    {
+      "id": "compute",
+      "title": "Compute",
+      "question": "Where should my workload run?",
+      "status": "unconfirmed",
+      "note": "Drafted from the service purposes already in the model; not yet checked against Microsoft Learn.",
+      "members": [
+        {
+          "services": [
+            "virtual-machines",
+            "virtual-machine-scale-sets"
+          ],
+          "audience": "You want to manage the servers",
+          "choose_when": "Full control of the operating system, or lifting an existing app as it is. Scale sets run groups of identical VMs that scale together."
+        },
+        {
+          "services": [
+            "app-service"
+          ],
+          "audience": "Web apps and APIs, no servers to manage",
+          "choose_when": "A web app or API on a managed platform, without running the servers yourself."
+        },
+        {
+          "services": [
+            "azure-functions"
+          ],
+          "audience": "Event-driven code",
+          "choose_when": "Small pieces of code that run in response to events such as a queue message or a schedule, with no server to run."
+        },
+        {
+          "services": [
+            "container-apps"
+          ],
+          "audience": "Containers, no cluster to run",
+          "choose_when": "You have containers but do not want to operate Kubernetes. Serverless containers that can scale to zero."
+        },
+        {
+          "services": [
+            "azure-kubernetes-service-aks"
+          ],
+          "audience": "Containers that need Kubernetes",
+          "choose_when": "You need Kubernetes itself. Azure manages the control plane; you manage the node pools."
+        }
+      ]
     }
   ],
   "edge_types": [
