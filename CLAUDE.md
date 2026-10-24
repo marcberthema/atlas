@@ -1,0 +1,113 @@
+# Azure Services Map
+
+A day-to-day reference for what an Azure service provides, what it requires, how it relates to other
+services, and how to build it with Terraform. Personal study project, built with AI assistance.
+Scope for now: tier 0 ("always there") and tier 1 ("core") services only.
+
+---
+
+## Architecture: data in, view out
+
+```
+Learn + Terraform Registry  ->  data/services.json  ->  scripts/build.py  ->  dist/
+```
+
+- `data/services.json` is the only place content lives. See `docs/data-model.md` for the format.
+- `dist/services.resolved.json` is the stable contract for any front end (layers merged, Terraform status derived).
+- `templates/index.html` is the view. It reads only the resolved JSON. Changing the look or the tech stack must
+  never require touching the data or the scripts.
+- `scripts/` is Python 3, standard library only. No pip dependencies.
+- `azure-services.html` is the original single-file page. Frozen reference: do not edit or build on it.
+
+```
+azure-services-map/
+  CLAUDE.md  README.md  Makefile
+  data/services.json            source of truth
+  docs/data-model.md            schema and merge rules
+  scripts/model.py              load/save, merge, Terraform status
+  scripts/validate.py           consistency checks
+  scripts/check_updates.py      daily check (no AI) and `ack`
+  scripts/build.py              JSON -> dist/
+  templates/index.html          the view
+  dist/                         generated, committed
+  .github/workflows/daily-check.yml
+  azure-services.html           frozen reference
+```
+
+Do not add dependencies, a framework or external scripts or fonts without asking. The generated page must work from `file://`.
+
+---
+
+## Data layers
+
+Per service: `tracking` (inputs the check uses), `fetched` (from Microsoft or the registry), `manual` (human
+overrides, always win), `review`, `freshness` (written by the pipeline). Rules:
+
+- The pipeline never writes `manual`, `review`, `reviewed_hash` or `tracking`.
+- Content from AI ingestion goes into `fetched`, with its Learn URL in `tracking.learn_urls`.
+- Do not hand-edit `freshness` or `fetched.terraform`; `make check` owns them.
+- After updating a service from its Learn page, run `make ack SERVICE=<id>`, and set `review.status` to
+  `verified` only for facts actually checked against Learn.
+- Currently every entry is `unconfirmed`: it was imported from the first hand-drafted page.
+
+---
+
+## Conventions
+
+- **Services, not products.** "Service" is Microsoft's term and means a type (Virtual Machines).
+  A "resource" is an instance (`myvm`). Keep the distinction in all copy. Marketplace and third-party
+  offerings, Microsoft 365 and Dynamics are out of scope.
+- **Every edge must name an existing service or stub id.** `make validate` checks it.
+- **Edge direction reads left to right:** `from requires to` means "from requires to". Pick the
+  type by the real relationship, not by convenience:
+  - `contains`: B lives inside A (resource group contains a VM).
+  - `requires`: A cannot exist without B (VM requires a NIC).
+  - `optional`: A can use B but does not need it.
+  - `access`: A authenticates or authorizes against B.
+  - `network`: A is reached or connected through B.
+  - `sends`: A sends data (logs, metrics, events) to B.
+  - `protects`: A secures or backs up B.
+  - `enforces`: A checks or enforces B (Azure Resource Manager enforces Azure Policy). Do not use
+    `requires` for this; it reads backwards.
+- **Terraform:** versions mean *provider* versions (azurerm, azuread, azuredevops, azapi), never Terraform core.
+  `full` is a human judgement set in `manual.terraform.status`; the pipeline can only prove a resource exists
+  (`listed`). Record real gaps in `manual.terraform.gaps` with the azapi alternative. Name resource types
+  exactly as in the registry.
+- **Accuracy over completeness.** Do not add a fact or edge from memory when unsure. Verify against
+  Microsoft Learn (learn.microsoft.com) and say "unconfirmed" in the note if it can't be verified.
+  Retirement dates change often; always check the official retirement announcement before adding one.
+- **Keep text short and plain.** One line per service purpose. Facts only where a common confusion exists
+  (RBAC versus Policy, Key Vault access policy versus RBAC, and so on).
+- **No employer or client details.** Nothing from any current or past employer, client, or
+  confidential material goes in this repo: no internal names, architectures, region counts or team structures.
+  Only public Azure knowledge.
+- **Style:** match the existing code. Same naming, same comment density.
+
+---
+
+## Commands
+
+```bash
+make validate   # must report bad 0
+make build      # validate + generate dist/
+make check      # network: Learn hashes + Terraform registry/changelogs; writes data/services.json
+make ack SERVICE=<id>
+make update     # check + build
+make serve
+```
+
+## Workflow
+
+1. Describe the change (add a service, fix a relationship, refresh a stale service).
+2. Claude edits `data/services.json` (or the template), runs `make build`, and checks `dist/index.html` in a browser.
+3. Commit after each coherent change, with a message saying what was added or corrected. Commit `dist/` with it.
+4. The daily GitHub Action commits freshness and Terraform status updates itself.
+
+Onboarding tier 2 and 3 later: add the service entries, remove the matching stub, and extend `scope.tiers`.
+
+---
+
+## Feedback Style
+
+Be direct. If a relationship, claim or retirement date is uncertain, say so plainly rather than
+guessing. Flag errors in existing entries when you notice them.

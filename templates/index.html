@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Azure Services Map</title>
+<style>
+:root{
+  --bg:#fff;--fg:#111;--mut:#555;--acc:#1a3c5e;--rule:#d5dde5;--card:#f6f8fa;
+  --t0-bg:#e1eefc;--t0-bd:#1f6feb;--t1-bg:#e3f3e6;--t1-bd:#2e7d32;--t2-bg:#fff4c7;--t2-bd:#b58900;--t3-bg:#eef1f4;--t3-bd:#8a96a3;
+  --ok:#2e7d32;--warn:#b58900;--bad:#c62828;
+}
+@media(prefers-color-scheme:dark){:root{
+  --bg:#14181d;--fg:#e8ecef;--mut:#9aa6b2;--acc:#7fb2e5;--rule:#2b333b;--card:#1c2229;
+  --t0-bg:#142a45;--t0-bd:#58a6ff;--t1-bg:#173020;--t1-bd:#4caf50;--t2-bg:#3a3414;--t2-bd:#d4a72c;--t3-bg:#1f262d;--t3-bd:#6f7c89;
+  --ok:#4caf50;--warn:#d4a72c;--bad:#ef5350;
+}}
+*{box-sizing:border-box}
+body{font:16px/1.45 system-ui,sans-serif;background:var(--bg);color:var(--fg);margin:0;padding:16px;max-width:1100px;margin-inline:auto}
+h1{font-size:1.4rem;color:var(--acc);margin:0 0 2px}
+.sub{color:var(--mut);margin:0 0 12px;font-size:.95rem}
+.note{border-left:4px solid var(--acc);background:var(--card);padding:8px 12px;border-radius:4px;font-size:.92rem;margin-bottom:12px}
+.bar{position:sticky;top:0;background:var(--bg);padding:8px 0;border-bottom:1px solid var(--rule);z-index:2}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+.chip{font:inherit;color:var(--fg);border:2px solid;border-radius:999px;padding:5px 14px;cursor:pointer;display:inline-flex;gap:6px;align-items:center}
+.chip[data-t="0"]{background:var(--t0-bg);border-color:var(--t0-bd)}
+.chip[data-t="1"]{background:var(--t1-bg);border-color:var(--t1-bd)}
+.chip[data-t="2"]{background:var(--t2-bg);border-color:var(--t2-bd)}
+.chip[data-t="3"]{background:var(--t3-bg);border-color:var(--t3-bd)}
+.chip[aria-pressed=false]{background:transparent;opacity:.55;text-decoration:line-through}
+.chip small{color:var(--mut)}
+input[type=search]{font:inherit;width:100%;padding:8px 10px;border:1px solid var(--rule);border-radius:8px;background:var(--card);color:var(--fg)}
+.count{color:var(--mut);font-size:.9rem;margin:6px 0 0}
+h2{font-size:1.05rem;color:var(--acc);margin:20px 0 6px;border-bottom:1px solid var(--rule);padding-bottom:3px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:8px}
+button.svc,button.rel{font:inherit;color:inherit;text-align:left;cursor:pointer;border:1px solid;border-left-width:6px;border-radius:8px;padding:8px 10px;width:100%;display:block}
+button.svc:hover,button.rel:hover{filter:brightness(.97);box-shadow:0 0 0 2px var(--acc)}
+button:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+.svc b,.rel b{display:block}
+.svc span,.rel small{color:var(--mut);font-size:.92rem;display:block}
+[data-t="0"].svc,[data-t="0"].rel{background:var(--t0-bg);border-color:var(--t0-bd)}
+[data-t="1"].svc,[data-t="1"].rel{background:var(--t1-bg);border-color:var(--t1-bd)}
+[data-t="2"].svc,[data-t="2"].rel{background:var(--t2-bg);border-color:var(--t2-bd)}
+[data-t="3"].svc,[data-t="3"].rel{background:var(--t3-bg);border-color:var(--t3-bd)}
+.tag{float:right;font-size:.75rem;color:var(--mut);margin-left:6px}
+.badges{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.badge{font-size:.74rem;border:1px solid var(--rule);background:var(--bg);color:var(--mut);border-radius:999px;padding:0 8px;white-space:nowrap}
+.badge.ok{color:var(--ok);border-color:var(--ok)}
+.badge.warn{color:var(--warn);border-color:var(--warn)}
+.badge.bad{color:var(--bad);border-color:var(--bad)}
+.empty{color:var(--mut);padding:16px 0}
+dialog{width:min(820px,calc(100vw - 24px));max-height:calc(100vh - 24px);border:1px solid var(--rule);border-radius:12px;background:var(--bg);color:var(--fg);padding:0}
+dialog::backdrop{background:rgba(0,0,0,.5)}
+.dh{position:sticky;top:0;background:var(--bg);border-bottom:1px solid var(--rule);padding:10px 14px;display:flex;gap:8px;align-items:center;flex-wrap:wrap;z-index:1}
+.dh button{font:inherit;color:var(--fg);background:var(--card);border:1px solid var(--rule);border-radius:8px;padding:4px 12px;cursor:pointer}
+.dh button:disabled{opacity:.4;cursor:default}
+.crumbs{flex:1;min-width:140px;color:var(--mut);font-size:.88rem}
+.crumbs a{color:var(--acc);cursor:pointer;text-decoration:underline}
+.db{padding:12px 14px 18px}
+.db h3{margin:0;font-size:1.25rem}
+.db .meta{color:var(--mut);font-size:.9rem;margin:2px 0 8px}
+.db ul.facts{margin:8px 0 4px;padding-left:20px}
+.db h4{margin:16px 0 6px;font-size:.95rem;color:var(--acc)}
+.db a{color:var(--acc)}
+.db code{font:.88rem ui-monospace,monospace}
+.rels{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:8px}
+.tf{border:1px solid var(--rule);background:var(--card);border-radius:8px;padding:8px 12px}
+.tf ul{margin:6px 0;padding-left:20px}
+.tf li small{color:var(--mut)}
+.warn{color:var(--mut);font-size:.85rem;margin-top:14px}
+</style></head><body>
+<h1>Azure Services Map</h1>
+<p class="sub" id="sub"></p>
+<div class="note" id="note"></div>
+
+<div class="bar">
+  <div class="chips" id="chips" role="group" aria-label="Show or hide tiers"></div>
+  <input type="search" id="q" placeholder="Filter by name, purpose, category or Terraform resource" aria-label="Filter services">
+  <p class="count" id="count" aria-live="polite"></p>
+</div>
+<main id="out"></main>
+
+<dialog id="dlg" aria-labelledby="dtitle">
+  <div class="dh">
+    <button id="back" type="button">&larr; Back</button>
+    <div class="crumbs" id="crumbs"></div>
+    <button id="close" type="button">Close</button>
+  </div>
+  <div class="db" id="dbody"></div>
+</dialog>
+
+<script id="data" type="application/json">/*__DATA__*/</script>
+
+<script>
+const D=JSON.parse(document.getElementById('data').textContent);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const safeUrl=u=>/^https:\/\//.test(u)?esc(u):'#';
+const TIER={};D.tiers.forEach(t=>TIER[t.tier]=t.label.toLowerCase());
+const ET={};D.edge_types.forEach(t=>ET[t.type]=t);
+const TFLABEL={full:['Terraform: full','ok'],partial:['Terraform: partial','warn'],listed:['Terraform: resources found','ok'],
+  'azapi-only':['Terraform: azapi only','warn'],none:['Terraform: none','bad'],unchecked:['Terraform: unchecked',''],unknown:['Terraform: unknown','']};
+const FRLABEL={current:['docs current','ok'],stale:['docs changed','warn'],unreviewed:['docs unreviewed',''],error:['docs check failed','bad']};
+
+const N={};
+D.services.forEach(s=>N[s.id]=s);
+D.stubs.forEach(s=>N[s.id]={...s,stub:true,purpose:'',facts:[]});
+const OUT={},IN={};
+D.edges.forEach(e=>{
+  ((OUT[e.from]??={})[e.type]??=[]).push({id:e.to,note:e.note});
+  ((IN[e.to]??={})[e.type]??=[]).push({id:e.from,note:e.note});
+});
+
+const out=document.getElementById('out'),q=document.getElementById('q'),count=document.getElementById('count');
+const tiersShown=D.scope.tiers;
+const on={};tiersShown.forEach(t=>on[t]=true);
+document.getElementById('sub').textContent=D.tiers.filter(t=>on[t.tier]).map(t=>t.label+': '+t.description).join(' ')+' Click a card for what it provides, what it needs, and how to build it with Terraform.';
+document.getElementById('note').textContent='Generated from data/services.json. Entries marked unconfirmed were imported from a hand-drafted page and not yet checked against Microsoft Learn. Third-party Marketplace services are deliberately left out.';
+const chips=document.getElementById('chips');
+chips.innerHTML=tiersShown.map(t=>'<button class="chip" type="button" data-t="'+t+'" aria-pressed="true">'+esc(D.tiers.find(x=>x.tier===t).label)+' <small>('+D.services.filter(s=>s.tier===t).length+')</small></button>').join('');
+
+function badges(s){
+  const tf=TFLABEL[s.terraform.status],fr=FRLABEL[s.freshness.status];
+  return '<div class="badges"><span class="badge '+tf[1]+'">'+tf[0]+'</span><span class="badge '+fr[1]+'">'+fr[0]+'</span>'+
+    (s.review.status==='unconfirmed'?'<span class="badge warn">unconfirmed</span>':'')+'</div>';
+}
+function haystack(s){return [s.name,s.purpose,s.category].concat(s.terraform.resources.map(r=>r.type)).join(' ').toLowerCase()}
+
+function render(){
+  const f=q.value.trim().toLowerCase();let shown=0,html='';
+  for(const cat of D.categories){
+    const items=D.services.filter(s=>s.category===cat&&on[s.tier]&&(!f||haystack(s).includes(f))).sort((a,b)=>a.tier-b.tier);
+    if(!items.length)continue;shown+=items.length;
+    html+='<h2>'+esc(cat)+'</h2><div class="grid">'+items.map(s=>
+      '<button type="button" class="svc" data-t="'+s.tier+'" data-id="'+s.id+'"><b>'+esc(s.name)+'<span class="tag">'+TIER[s.tier]+'</span></b><span>'+esc(s.purpose)+'</span>'+badges(s)+'</button>').join('')+'</div>';
+  }
+  out.innerHTML=html||'<p class="empty">No matches.</p>';
+  count.textContent=shown+' of '+D.services.length+' services shown';
+}
+chips.addEventListener('click',e=>{
+  const b=e.target.closest('.chip');if(!b)return;
+  const t=+b.dataset.t;on[t]=!on[t];b.setAttribute('aria-pressed',on[t]);render();
+});
+q.addEventListener('input',render);
+
+// Detail dialog with a navigation trail.
+const dlg=document.getElementById('dlg'),dbody=document.getElementById('dbody'),crumbs=document.getElementById('crumbs');
+const backBtn=document.getElementById('back'),closeBtn=document.getElementById('close');
+let trail=[];
+
+function relGroup(id,dir,ty){
+  const list=(dir==='out'?OUT:IN)[id]?.[ty];
+  if(!list||!list.length)return '';
+  return '<h4>'+esc(ET[ty][dir])+' ('+list.length+')</h4><div class="rels">'+list.map(({id:o,note})=>
+    '<button type="button" class="rel" data-t="'+N[o].tier+'" data-id="'+o+'"><b>'+esc(N[o].name)+'</b>'+(note?'<small>'+esc(note)+'</small>':'')+'</button>').join('')+'</div>';
+}
+function tfBlock(s){
+  const t=s.terraform,lab=TFLABEL[t.status];
+  let h='<h4>Terraform</h4><div class="tf"><span class="badge '+lab[1]+'">'+lab[0]+'</span>';
+  if(t.checked_at)h+=' <small>checked '+esc(t.checked_at)+'</small>';
+  if(t.first_supported)h+=' <small>· first added in provider version '+esc(t.first_supported)+'</small>';
+  if(t.resources.length)h+='<ul>'+t.resources.map(r=>
+    '<li><a href="'+safeUrl(r.docs_url)+'" target="_blank" rel="noopener"><code>'+esc(r.type)+'</code></a> <small>'+(r.kind==='data_source'?'data source · ':'')+esc(r.provider)+
+    (r.exists===false?' · <b>not found in latest docs</b>':r.since?' · since '+esc(r.since):r.exists?' · no “new” entry in changelogs (predates them or logged differently)':'')+'</small></li>').join('')+'</ul>';
+  if(t.gaps.length)h+='<b>Not covered:</b><ul>'+t.gaps.map(g=>'<li>'+esc(g.what)+(g.alternative?' <small>→ '+esc(g.alternative)+'</small>':'')+'</li>').join('')+'</ul>';
+  if(t.fallback)h+='<div>Anything without a dedicated resource: <a href="'+safeUrl(t.fallback.docs_url)+'" target="_blank" rel="noopener"><code>azapi_resource</code></a> with ARM type '+
+    t.fallback.arm_types.map(a=>a.docs_url?'<a href="'+safeUrl(a.docs_url)+'" target="_blank" rel="noopener"><code>'+esc(a.type)+'</code></a>':'<code>'+esc(a.type)+'</code>').join(', ')+'. <small>Linked types have a typed azapi docs page.</small></div>';
+  if(t.note)h+='<div>'+esc(t.note)+'</div>';
+  return h+'</div>';
+}
+function show(){
+  const id=trail[trail.length-1],x=N[id];
+  let head;
+  if(x.stub){
+    head='<h3 id="dtitle">'+esc(x.name)+'</h3><div class="meta">'+esc(x.category)+' · '+TIER[x.tier]+'</div><p class="empty">Not documented yet: only the '+TIER[x.tier]+' tier is in scope. Shown because it is related to a service that is.</p>';
+  }else{
+    const facts=x.facts.length?'<ul class="facts">'+x.facts.map(f=>'<li>'+esc(f)+'</li>').join('')+'</ul>':'';
+    const docs=x.docs.length?'<h4>Microsoft Learn</h4><div>'+x.docs.map(d=>'<a href="'+safeUrl(d.url)+'" target="_blank" rel="noopener">'+esc(d.url.replace('https://learn.microsoft.com/',''))+'</a>').join('<br>')+'</div>':'';
+    head='<h3 id="dtitle">'+esc(x.name)+'</h3><div class="meta">'+esc(x.category)+' · '+TIER[x.tier]+'</div><div>'+esc(x.purpose)+'</div>'+badges(x)+facts+tfBlock(x)+docs+
+      (x.review.status==='unconfirmed'?'<p class="warn">'+esc(x.review.note)+'</p>':'');
+  }
+  const groups=D.edge_group_order.map(g=>relGroup(id,g.direction,g.type)).join('');
+  dbody.innerHTML=head+(groups||'<p class="empty">No relationships mapped yet for this service.</p>');
+  crumbs.innerHTML=trail.slice(-5).map((n,i,a)=>i<a.length-1?'<a data-jump="'+n+'">'+esc(N[n].name)+'</a>':'<b>'+esc(N[n].name)+'</b>').join(' &rsaquo; ');
+  backBtn.disabled=trail.length<2;
+  dlg.scrollTop=0;
+  history.replaceState(null,'','#'+id);
+}
+function open(id,push=true){
+  if(!N[id])return;
+  if(push)trail.push(id);
+  if(!dlg.open)dlg.showModal();
+  show();
+}
+out.addEventListener('click',e=>{const b=e.target.closest('.svc');if(b){trail=[];open(b.dataset.id)}});
+dbody.addEventListener('click',e=>{const b=e.target.closest('.rel');if(b)open(b.dataset.id)});
+crumbs.addEventListener('click',e=>{
+  const a=e.target.closest('[data-jump]');if(!a)return;
+  const i=trail.lastIndexOf(a.dataset.jump);if(i>=0){trail=trail.slice(0,i+1);show()}
+});
+backBtn.addEventListener('click',()=>{if(trail.length>1){trail.pop();show()}});
+closeBtn.addEventListener('click',()=>dlg.close());
+dlg.addEventListener('close',()=>{trail=[];history.replaceState(null,'',location.pathname+location.search)});
+dlg.addEventListener('click',e=>{if(e.target===dlg)dlg.close()});
+
+render();
+if(location.hash&&N[location.hash.slice(1)]){trail=[];open(location.hash.slice(1))}
+</script>
+</body></html>

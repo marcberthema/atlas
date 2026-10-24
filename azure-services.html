@@ -1,0 +1,484 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Azure Services Map</title>
+<style>
+:root{
+  --bg:#fff;--fg:#111;--mut:#555;--acc:#1a3c5e;--rule:#d5dde5;--card:#f6f8fa;
+  --t0-bg:#e1eefc;--t0-bd:#1f6feb;--t1-bg:#e3f3e6;--t1-bd:#2e7d32;--t2-bg:#fff4c7;--t2-bd:#b58900;--t3-bg:#eef1f4;--t3-bd:#8a96a3;
+}
+@media(prefers-color-scheme:dark){:root{
+  --bg:#14181d;--fg:#e8ecef;--mut:#9aa6b2;--acc:#7fb2e5;--rule:#2b333b;--card:#1c2229;
+  --t0-bg:#142a45;--t0-bd:#58a6ff;--t1-bg:#173020;--t1-bd:#4caf50;--t2-bg:#3a3414;--t2-bd:#d4a72c;--t3-bg:#1f262d;--t3-bd:#6f7c89;
+}}
+*{box-sizing:border-box}
+body{font:16px/1.45 system-ui,sans-serif;background:var(--bg);color:var(--fg);margin:0;padding:16px;max-width:1100px;margin-inline:auto}
+h1{font-size:1.4rem;color:var(--acc);margin:0 0 2px}
+.sub{color:var(--mut);margin:0 0 12px;font-size:.95rem}
+.note{border-left:4px solid var(--acc);background:var(--card);padding:8px 12px;border-radius:4px;font-size:.92rem;margin-bottom:12px}
+.bar{position:sticky;top:0;background:var(--bg);padding:8px 0;border-bottom:1px solid var(--rule);z-index:2}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+.chip{font:inherit;color:var(--fg);border:2px solid;border-radius:999px;padding:5px 14px;cursor:pointer;display:inline-flex;gap:6px;align-items:center}
+.chip[data-t="0"]{background:var(--t0-bg);border-color:var(--t0-bd)}
+.chip[data-t="1"]{background:var(--t1-bg);border-color:var(--t1-bd)}
+.chip[data-t="2"]{background:var(--t2-bg);border-color:var(--t2-bd)}
+.chip[data-t="3"]{background:var(--t3-bg);border-color:var(--t3-bd)}
+.chip[aria-pressed=false]{background:transparent;opacity:.55;text-decoration:line-through}
+.chip small{color:var(--mut)}
+input[type=search]{font:inherit;width:100%;padding:8px 10px;border:1px solid var(--rule);border-radius:8px;background:var(--card);color:var(--fg)}
+.count{color:var(--mut);font-size:.9rem;margin:6px 0 0}
+h2{font-size:1.05rem;color:var(--acc);margin:20px 0 6px;border-bottom:1px solid var(--rule);padding-bottom:3px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:8px}
+button.svc,button.rel{font:inherit;color:inherit;text-align:left;cursor:pointer;border:1px solid;border-left-width:6px;border-radius:8px;padding:8px 10px;width:100%;display:block}
+button.svc:hover,button.rel:hover{filter:brightness(.97);box-shadow:0 0 0 2px var(--acc)}
+button:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+.svc b,.rel b{display:block}
+.svc span,.rel small{color:var(--mut);font-size:.92rem;display:block}
+[data-t="0"].svc,[data-t="0"].rel{background:var(--t0-bg);border-color:var(--t0-bd)}
+[data-t="1"].svc,[data-t="1"].rel{background:var(--t1-bg);border-color:var(--t1-bd)}
+[data-t="2"].svc,[data-t="2"].rel{background:var(--t2-bg);border-color:var(--t2-bd)}
+[data-t="3"].svc,[data-t="3"].rel{background:var(--t3-bg);border-color:var(--t3-bd)}
+.tag{float:right;font-size:.75rem;color:var(--mut);margin-left:6px}
+.empty{color:var(--mut);padding:16px 0}
+dialog{width:min(820px,calc(100vw - 24px));max-height:calc(100vh - 24px);border:1px solid var(--rule);border-radius:12px;background:var(--bg);color:var(--fg);padding:0}
+dialog::backdrop{background:rgba(0,0,0,.5)}
+.dh{position:sticky;top:0;background:var(--bg);border-bottom:1px solid var(--rule);padding:10px 14px;display:flex;gap:8px;align-items:center;flex-wrap:wrap;z-index:1}
+.dh button{font:inherit;color:var(--fg);background:var(--card);border:1px solid var(--rule);border-radius:8px;padding:4px 12px;cursor:pointer}
+.dh button:disabled{opacity:.4;cursor:default}
+.crumbs{flex:1;min-width:140px;color:var(--mut);font-size:.88rem}
+.crumbs a{color:var(--acc);cursor:pointer;text-decoration:underline}
+.db{padding:12px 14px 18px}
+.db h3{margin:0;font-size:1.25rem}
+.db .meta{color:var(--mut);font-size:.9rem;margin:2px 0 8px}
+.db ul.facts{margin:8px 0 4px;padding-left:20px}
+.db h4{margin:16px 0 6px;font-size:.95rem;color:var(--acc)}
+.rels{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:8px}
+.warn{color:var(--mut);font-size:.85rem;margin-top:14px}
+</style></head><body>
+<h1>Azure Services Map</h1>
+<p class="sub">Microsoft-owned and supported Azure services, grouped by category. Blue = always there, green = core, yellow = adjacent, grey = long tail. Click a card to explore what it needs, contains and connects to.</p>
+<div class="note">Drafted from memory by an AI. Azure renames and retires services often, and the relationships are a simplified model. Check each entry against Microsoft Learn before relying on it. Third-party Marketplace services are deliberately left out.</div>
+
+<div class="bar">
+  <div class="chips" role="group" aria-label="Show or hide tiers">
+    <button class="chip" data-t="0" aria-pressed="true">Always there <small id="n0"></small></button>
+    <button class="chip" data-t="1" aria-pressed="true">Core <small id="n1"></small></button>
+    <button class="chip" data-t="2" aria-pressed="true">Adjacent <small id="n2"></small></button>
+    <button class="chip" data-t="3" aria-pressed="true">Long tail <small id="n3"></small></button>
+  </div>
+  <input type="search" id="q" placeholder="Filter by name, purpose or category" aria-label="Filter services">
+  <p class="count" id="count" aria-live="polite"></p>
+</div>
+<main id="out"></main>
+
+<dialog id="dlg" aria-labelledby="dtitle">
+  <div class="dh">
+    <button id="back" type="button">&larr; Back</button>
+    <div class="crumbs" id="crumbs"></div>
+    <button id="close" type="button">Close</button>
+  </div>
+  <div class="db" id="dbody"></div>
+</dialog>
+
+<script id="data">
+const CATS=["Organization","Identity and security","Governance and management","Compute and containers","Networking","Storage and databases","Messaging and integration","Observability","Data and AI","Developer tools and delivery","Migration","IoT and other"];
+// [tier, category, name, purpose]
+const S=[
+[0,"Organization","Entra tenant","The identity boundary that everything in Azure hangs from."],
+[0,"Organization","Management groups","Group subscriptions so policy and access apply to all of them."],
+[1,"Organization","Subscriptions","The billing, quota and access boundary for resources."],
+[1,"Organization","Resource groups","A container for resources that share a lifecycle."],
+[0,"Organization","Azure Resource Manager","The control plane every tool (portal, CLI, Terraform) talks to."],
+
+[0,"Identity and security","Entra ID","Users, groups, applications and sign-in."],
+[0,"Identity and security","Azure RBAC role assignments","Grant a role to an identity at a given scope."],
+[1,"Identity and security","Managed identities","Secretless identities for Azure resources, rotated by Azure."],
+[1,"Identity and security","Key Vault","Store secrets, keys and certificates with access control."],
+[1,"Identity and security","Defender for Cloud","Security posture and threat protection."],
+[2,"Identity and security","Microsoft Sentinel","Cloud SIEM and security automation."],
+[2,"Identity and security","Conditional Access","Sign-in rules based on user, device and risk."],
+[2,"Identity and security","Privileged Identity Management","Just-in-time elevation for admin roles."],
+[3,"Identity and security","Managed HSM","Dedicated hardware security module for keys."],
+[3,"Identity and security","Confidential computing","Protect data while it is in use."],
+[3,"Identity and security","External ID","Customer and partner identity."],
+
+[1,"Governance and management","Azure Policy","Enforce and audit rules on resources."],
+[1,"Governance and management","Azure Backup / Recovery Services vault","Back up VMs, disks, files and databases."],
+[0,"Governance and management","Cost Management","Track, budget and analyze spend."],
+[0,"Governance and management","Advisor","Recommendations on cost, reliability and security."],
+[0,"Governance and management","Resource Graph","Query resources across subscriptions."],
+[2,"Governance and management","Automation","Runbooks and scheduled operational tasks."],
+[2,"Governance and management","Update Manager","Patch management for VMs."],
+[2,"Governance and management","Site Recovery","Disaster recovery by replicating workloads."],
+[3,"Governance and management","Lighthouse","Delegated management across customer tenants."],
+
+[1,"Compute and containers","Virtual Machines","General-purpose virtual servers you manage."],
+[1,"Compute and containers","Managed Disks","Block storage attached to VMs."],
+[1,"Compute and containers","Virtual Machine Scale Sets","Groups of identical VMs that scale together."],
+[1,"Compute and containers","App Service","Managed hosting for web apps and APIs."],
+[1,"Compute and containers","Azure Functions","Event-driven serverless code."],
+[1,"Compute and containers","Container Apps","Serverless containers that can scale to zero."],
+[1,"Compute and containers","Azure Kubernetes Service (AKS)","Managed Kubernetes control plane with your node pools."],
+[1,"Compute and containers","Container Registry (ACR)","Private store for container images and charts."],
+[2,"Compute and containers","Container Instances","Run a container without a cluster."],
+[2,"Compute and containers","Batch","Large-scale parallel and HPC jobs."],
+[2,"Compute and containers","Static Web Apps","Host static front ends with a serverless API."],
+[2,"Compute and containers","Virtual Desktop","Hosted Windows desktops and apps."],
+[2,"Compute and containers","Azure Arc","Manage servers and Kubernetes outside Azure from Azure."],
+[3,"Compute and containers","Dedicated Host","Physical servers dedicated to your VMs."],
+[3,"Compute and containers","VMware Solution","Run VMware workloads inside Azure."],
+[3,"Compute and containers","Service Fabric","Microservice platform that predates Kubernetes."],
+[3,"Compute and containers","Azure Local (formerly Stack HCI)","Hyperconverged infrastructure managed from Azure."],
+
+[1,"Networking","Virtual Network and subnets","The private network resources live in; it also hands out IP addresses (DHCP)."],
+[1,"Networking","Network Interface (NIC)","Connects a VM to a subnet."],
+[1,"Networking","Network Security Group","Allow and deny rules for traffic to subnets and NICs."],
+[1,"Networking","Public IP address","An internet-facing address for a resource."],
+[1,"Networking","Load Balancer","Layer 4 traffic distribution across VMs."],
+[1,"Networking","Application Gateway / Front Door","Layer 7 routing; Front Door is global."],
+[1,"Networking","Azure DNS and Private DNS","Name resolution for public and private zones."],
+[1,"Networking","Private Endpoint","A private IP in your network for a PaaS service."],
+[2,"Networking","VPN Gateway","Encrypted tunnels between Azure and other networks."],
+[2,"Networking","ExpressRoute","Private dedicated connection from on-premises to Azure."],
+[2,"Networking","Azure Firewall","Managed network firewall with central rules."],
+[2,"Networking","Bastion","Browser-based SSH and RDP without public IPs."],
+[2,"Networking","NAT Gateway","Predictable outbound addresses for a subnet."],
+[2,"Networking","Traffic Manager","DNS-based traffic routing."],
+[2,"Networking","Network Watcher","Network diagnostics and topology views."],
+[2,"Networking","Virtual network peering","Connect two virtual networks privately."],
+[2,"Networking","Private Link","The service behind private endpoints."],
+[3,"Networking","Virtual WAN","Managed hub-and-spoke connectivity at scale."],
+[3,"Networking","DDoS Protection","Mitigation for volumetric attacks."],
+[3,"Networking","Route Server","Dynamic routing between appliances and the network."],
+
+[1,"Storage and databases","Storage account","Blob, Files, Queue and Table storage under one account."],
+[1,"Storage and databases","Azure SQL","Managed SQL Server databases, including serverless."],
+[1,"Storage and databases","Azure Database for PostgreSQL","Managed PostgreSQL (flexible server)."],
+[1,"Storage and databases","Cosmos DB","Globally distributed NoSQL, with a serverless mode."],
+[2,"Storage and databases","Data Lake Storage Gen2","Hierarchical storage for analytics."],
+[2,"Storage and databases","Azure Files","Managed SMB and NFS file shares."],
+[2,"Storage and databases","Azure Cache for Redis","Managed in-memory cache."],
+[2,"Storage and databases","Azure Database for MySQL","Managed MySQL (flexible server)."],
+[2,"Storage and databases","SQL Managed Instance","Near-complete SQL Server compatibility, managed."],
+[3,"Storage and databases","NetApp Files","Enterprise-grade file storage."],
+[3,"Storage and databases","Elastic SAN","Cloud block-storage area network."],
+[3,"Storage and databases","Data Box / Storage Mover","Move large datasets into Azure."],
+
+[1,"Messaging and integration","Service Bus","Queues and topics for reliable messaging."],
+[1,"Messaging and integration","Event Grid","Route events between services."],
+[2,"Messaging and integration","API Management","Publish, secure and monitor APIs."],
+[2,"Messaging and integration","Logic Apps","Low-code workflows connecting services."],
+[2,"Messaging and integration","Event Hubs","High-volume event and log ingestion."],
+[2,"Messaging and integration","Data Factory","Move and transform data between stores."],
+[3,"Messaging and integration","SignalR Service / Web PubSub","Real-time messaging for apps."],
+[3,"Messaging and integration","Notification Hubs","Push notifications to mobile devices."],
+
+[0,"Observability","Azure Monitor","Metrics, alerts and the umbrella for monitoring."],
+[1,"Observability","Log Analytics","Log store queried with KQL."],
+[1,"Observability","Application Insights","Application telemetry: requests, traces, failures."],
+[1,"Observability","Managed Prometheus and Grafana","Azure-hosted Prometheus metrics and Grafana dashboards."],
+
+[2,"Data and AI","Azure OpenAI / Foundry","Hosted language models and AI app tooling."],
+[2,"Data and AI","AI Search","Search and retrieval over your content."],
+[2,"Data and AI","Databricks","Managed Spark and data engineering platform."],
+[2,"Data and AI","Microsoft Fabric","Unified analytics platform."],
+[3,"Data and AI","Synapse Analytics","Data warehouse and analytics workspace."],
+[3,"Data and AI","Stream Analytics","Real-time stream processing."],
+[3,"Data and AI","HDInsight","Managed Hadoop and Spark clusters."],
+[3,"Data and AI","Data Explorer","Fast analytics over logs and telemetry."],
+[3,"Data and AI","Purview","Data governance and cataloging."],
+[3,"Data and AI","Machine Learning","Train, deploy and manage ML models."],
+[3,"Data and AI","AI Services","Vision, speech, language and document intelligence APIs."],
+[3,"Data and AI","Bot Service","Build and host conversational bots."],
+
+[0,"Developer tools and delivery","Azure DevOps","Repos, pipelines, boards and artifacts (a separate service from the Azure resource model)."],
+[2,"Developer tools and delivery","App Configuration","Central feature flags and settings."],
+[2,"Developer tools and delivery","Load Testing","Generate load against an application."],
+[3,"Developer tools and delivery","DevTest Labs","Self-service dev and test environments."],
+[3,"Developer tools and delivery","Deployment Environments","Templated environments for developers."],
+[3,"Developer tools and delivery","Dev Box","Cloud developer workstations."],
+
+[3,"Migration","Azure Migrate","Discover and assess workloads for migration."],
+[3,"Migration","Database Migration Service","Migrate databases to Azure."],
+
+[3,"IoT and other","IoT Hub / IoT Central","Connect and manage devices."],
+[3,"IoT and other","Digital Twins","Model physical environments digitally."],
+[3,"IoT and other","Communication Services","Voice, video, chat and SMS APIs."],
+[3,"IoT and other","Maps","Mapping and location APIs."],
+[3,"IoT and other","Media Services","Video encoding and streaming."]
+];
+
+// Relationship types and the wording for each direction.
+const TYPES={
+  contains:{out:"Contains",in:"Lives inside"},
+  requires:{out:"Requires",in:"Required by"},
+  optional:{out:"Can use",in:"Can be used by"},
+  access:{out:"Gives or uses access to",in:"Access given or used by"},
+  network:{out:"Routes or connects to",in:"Reached from"},
+  sends:{out:"Sends data or events to",in:"Receives data or events from"},
+  protects:{out:"Protects or governs",in:"Protected or governed by"},
+  enforces:{out:"Checks or enforces",in:"Checked or enforced by"}
+};
+// Order the groups appear in the detail view: [direction, type]
+const ORDER=[["in","contains"],["out","requires"],["out","contains"],["out","optional"],["out","access"],["out","network"],["out","sends"],["out","protects"],["out","enforces"],["in","requires"],["in","optional"],["in","access"],["in","network"],["in","sends"],["in","protects"],["in","enforces"]];
+
+// Edges: [from, type, to, note]. Only a core subset is mapped so far.
+const E=[];
+const RG_CHILDREN=["Virtual Machines","Managed Disks","Virtual Machine Scale Sets","App Service","Azure Functions","Container Apps","Azure Kubernetes Service (AKS)","Container Registry (ACR)","Virtual Network and subnets","Network Interface (NIC)","Network Security Group","Public IP address","Load Balancer","Application Gateway / Front Door","Azure DNS and Private DNS","Private Endpoint","Storage account","Azure SQL","Azure Database for PostgreSQL","Cosmos DB","Service Bus","Event Grid","Key Vault","Managed identities","Log Analytics","Application Insights","Azure Backup / Recovery Services vault"];
+RG_CHILDREN.forEach(n=>E.push(["Resource groups","contains",n,""]));
+E.push(
+// Organization and control plane
+["Entra tenant","contains","Management groups","The root management group is created per tenant"],
+["Management groups","contains","Subscriptions",""],
+["Subscriptions","contains","Resource groups",""],
+["Subscriptions","requires","Entra tenant","Each subscription trusts exactly one tenant"],
+["Azure Resource Manager","enforces","Azure Policy","Evaluated on each create or update; can deny or modify the request"],
+["Azure Resource Manager","enforces","Azure RBAC role assignments","Checked on every request: may this identity do this at this scope?"],
+["Azure DevOps","access","Azure Resource Manager","A service connection calls ARM using an identity"],
+// Identity and access
+["Entra ID","requires","Entra tenant","Every Entra ID object lives in a tenant"],
+["Azure RBAC role assignments","requires","Entra ID","The principal (user, group, service principal, managed identity) comes from Entra ID"],
+["Azure RBAC role assignments","access","Management groups","Can be assigned at this scope"],
+["Azure RBAC role assignments","access","Subscriptions","Can be assigned at this scope"],
+["Azure RBAC role assignments","access","Resource groups","Can be assigned at this scope"],
+["Azure RBAC role assignments","access","Key Vault","Data roles such as Key Vault Secrets User"],
+["Azure RBAC role assignments","access","Storage account","Data roles such as Storage Blob Data Contributor"],
+["Azure RBAC role assignments","access","Container Registry (ACR)","Roles such as AcrPull and AcrPush"],
+["Azure RBAC role assignments","access","Service Bus","Roles such as Azure Service Bus Data Sender"],
+["Azure RBAC role assignments","access","Azure Kubernetes Service (AKS)","Cluster management and Kubernetes data roles"],
+["Managed identities","requires","Entra ID","Each one is a service principal in the tenant"],
+["Managed identities","access","Key Vault","Needs a role assignment, e.g. Key Vault Secrets User"],
+["Managed identities","access","Storage account","Needs a role assignment, e.g. Storage Blob Data Contributor"],
+["Managed identities","access","Container Registry (ACR)","e.g. AcrPull"],
+["Managed identities","access","Service Bus","e.g. Azure Service Bus Data Sender"],
+["Managed identities","access","Azure SQL","Through an Entra user created in the database"],
+["Azure Kubernetes Service (AKS)","requires","Managed identities","Managed identity (recommended) or service principal"],
+["Key Vault","requires","Entra tenant","A vault is tied to one tenant"],
+["Key Vault","sends","Log Analytics","Audit logs via diagnostic settings"],
+["Managed Disks","optional","Key Vault","Customer-managed encryption keys"],
+["Storage account","optional","Key Vault","Customer-managed encryption keys"],
+["Azure SQL","optional","Key Vault","Customer-managed encryption keys"],
+["App Service","optional","Key Vault","Key Vault references for app settings"],
+["Azure Kubernetes Service (AKS)","optional","Key Vault","Secrets Store CSI driver"],
+["Application Gateway / Front Door","optional","Key Vault","TLS certificates"],
+["Azure DevOps","access","Key Vault","Variable groups linked to a vault"],
+["Defender for Cloud","protects","Virtual Machines",""],
+["Defender for Cloud","protects","Azure Kubernetes Service (AKS)",""],
+["Defender for Cloud","protects","Container Registry (ACR)",""],
+["Defender for Cloud","protects","Storage account",""],
+["Defender for Cloud","protects","Azure SQL",""],
+["Defender for Cloud","protects","Key Vault",""],
+["Microsoft Sentinel","requires","Log Analytics","Sentinel is enabled on a workspace"],
+["Entra ID","sends","Log Analytics","Sign-in and audit logs via diagnostic settings"],
+["Conditional Access","requires","Entra ID",""],
+["Privileged Identity Management","requires","Entra ID",""],
+["Privileged Identity Management","access","Azure RBAC role assignments","Makes role assignments eligible and time-limited"],
+// Governance
+["Azure Policy","protects","Management groups","Assigned at this scope"],
+["Azure Policy","protects","Subscriptions","Assigned at this scope"],
+["Azure Policy","protects","Resource groups","Assigned at this scope"],
+["Azure Backup / Recovery Services vault","protects","Virtual Machines",""],
+["Azure Backup / Recovery Services vault","protects","Managed Disks",""],
+["Azure Backup / Recovery Services vault","protects","Azure Files",""],
+["Azure Backup / Recovery Services vault","protects","Storage account","Blob backup"],
+["Azure Backup / Recovery Services vault","protects","Azure Database for PostgreSQL",""],
+["Site Recovery","protects","Virtual Machines","Replication to another region"],
+["Update Manager","protects","Virtual Machines","Patching"],
+["Automation","optional","Managed identities","Runbooks can authenticate with one"],
+["Cost Management","access","Subscriptions","Reads cost data at subscription, resource group or management-group scope"],
+["Resource Graph","access","Subscriptions","Queries resources across subscriptions you can read"],
+["Lighthouse","access","Subscriptions","Delegated access to customer subscriptions"],
+// Compute
+["Virtual Machines","requires","Network Interface (NIC)","At least one NIC"],
+["Virtual Machines","requires","Managed Disks","An OS disk (legacy unmanaged disks use a storage account instead)"],
+["Virtual Machines","optional","Storage account","Boot diagnostics (a managed option also exists)"],
+["Virtual Machines","sends","Log Analytics","Logs and metrics via Azure Monitor Agent"],
+["Virtual Machine Scale Sets","requires","Virtual Network and subnets","Instances get NICs in a subnet"],
+["Virtual Machine Scale Sets","optional","Load Balancer","Backend pool"],
+["Azure Kubernetes Service (AKS)","requires","Virtual Network and subnets","Node pools run in a subnet"],
+["Azure Kubernetes Service (AKS)","requires","Virtual Machine Scale Sets","Each node pool is a scale set"],
+["Azure Kubernetes Service (AKS)","optional","Container Registry (ACR)","Pull images; grant AcrPull to the kubelet identity"],
+["Azure Kubernetes Service (AKS)","sends","Log Analytics","Container Insights"],
+["Azure Kubernetes Service (AKS)","sends","Managed Prometheus and Grafana","Prometheus metrics"],
+["App Service","optional","Virtual Network and subnets","VNet integration uses a delegated subnet"],
+["App Service","sends","Application Insights","Request and failure telemetry"],
+["App Service","optional","App Configuration","Central settings"],
+["Azure Functions","requires","Storage account","Needed for triggers, state and logs on most plans"],
+["Azure Functions","sends","Application Insights","Telemetry"],
+["Container Apps","optional","Virtual Network and subnets","Environment can be injected into a subnet"],
+["Container Apps","optional","Container Registry (ACR)","Pull images"],
+["Container Apps","sends","Log Analytics","Console and system logs"],
+// Networking
+["Network Interface (NIC)","requires","Virtual Network and subnets","A NIC always sits in one subnet"],
+["Network Interface (NIC)","optional","Network Security Group","Can be attached at NIC level"],
+["Network Interface (NIC)","optional","Public IP address","Gives the NIC an internet-facing address"],
+["Network Interface (NIC)","optional","Load Balancer","Backend pool membership"],
+["Virtual Network and subnets","optional","Network Security Group","Can be associated at subnet level"],
+["Virtual Network and subnets","optional","NAT Gateway","Outbound addresses for a subnet"],
+["Virtual Network and subnets","network","Azure DNS and Private DNS","Azure-provided DNS by default; private zones link to the VNet"],
+["Virtual network peering","requires","Virtual Network and subnets","Connects two VNets"],
+["Load Balancer","optional","Public IP address","Frontend IP (or an internal one)"],
+["Application Gateway / Front Door","optional","Public IP address","Application Gateway frontend"],
+["Application Gateway / Front Door","network","App Service","Routes HTTP(S) to backends"],
+["Application Gateway / Front Door","network","Azure Kubernetes Service (AKS)","Ingress"],
+["Application Gateway / Front Door","network","Virtual Machines","Backend pool"],
+["Traffic Manager","network","App Service","DNS-level routing to endpoints"],
+["Private Endpoint","requires","Virtual Network and subnets","Creates a NIC with a private IP in your subnet"],
+["Private Endpoint","requires","Private Link","The underlying service"],
+["Private Endpoint","network","Key Vault","Puts the service behind a private IP"],
+["Private Endpoint","network","Storage account","Puts the service behind a private IP"],
+["Private Endpoint","network","Azure SQL","Puts the service behind a private IP"],
+["Private Endpoint","network","Azure Database for PostgreSQL","Puts the service behind a private IP"],
+["Private Endpoint","network","Cosmos DB","Puts the service behind a private IP"],
+["Private Endpoint","network","Service Bus","Puts the service behind a private IP"],
+["Private Endpoint","network","Container Registry (ACR)","Puts the service behind a private IP"],
+["Private Endpoint","network","App Service","Puts the service behind a private IP"],
+["Azure DNS and Private DNS","network","Private Endpoint","A private zone resolves the service name to the private IP"],
+["Bastion","requires","Virtual Network and subnets","Needs its own subnet named AzureBastionSubnet"],
+["Bastion","requires","Public IP address",""],
+["Bastion","network","Virtual Machines","Browser-based SSH or RDP"],
+["Azure Firewall","requires","Virtual Network and subnets","Needs AzureFirewallSubnet"],
+["Azure Firewall","requires","Public IP address",""],
+["VPN Gateway","requires","Virtual Network and subnets","Needs GatewaySubnet"],
+["VPN Gateway","requires","Public IP address",""],
+["ExpressRoute","network","Virtual Network and subnets","Connects through a gateway in the VNet"],
+["NAT Gateway","requires","Public IP address","Outbound address"],
+// Storage and databases
+["Storage account","contains","Azure Files","File shares live in a storage account"],
+["Data Lake Storage Gen2","requires","Storage account","A storage account with hierarchical namespace enabled"],
+["Storage account","sends","Event Grid","Blob events"],
+["Storage account","sends","Log Analytics","Storage logs via diagnostic settings"],
+["Azure SQL","sends","Log Analytics","Audit and diagnostics"],
+["Azure SQL","access","Entra ID","Entra authentication for logins"],
+["Cosmos DB","sends","Log Analytics","Diagnostics"],
+["Azure Database for PostgreSQL","optional","Virtual Network and subnets","Private access through a delegated subnet"],
+["Azure Database for PostgreSQL","sends","Log Analytics","Diagnostics"],
+["Azure Database for MySQL","optional","Virtual Network and subnets","Private access through a delegated subnet"],
+// Messaging and integration
+["Event Grid","sends","Azure Functions","Event handler"],
+["Event Grid","sends","Service Bus","Event handler"],
+["Event Grid","sends","Event Hubs","Event handler"],
+["Service Bus","sends","Azure Functions","Queue or topic trigger"],
+["API Management","network","App Service","Backend API"],
+["API Management","network","Azure Functions","Backend API"],
+["Logic Apps","sends","Service Bus","Connector action"],
+["Logic Apps","optional","Managed identities","Connector authentication"],
+["Data Factory","sends","Storage account","Copy source or sink"],
+["Data Factory","sends","Azure SQL","Copy source or sink"],
+["Data Factory","access","Key Vault","Linked service secrets"],
+["Data Factory","optional","Managed identities","Authentication to data stores"],
+// Observability
+["Azure Monitor","contains","Log Analytics","The log store and query side"],
+["Azure Monitor","contains","Application Insights","Application monitoring"],
+["Azure Monitor","contains","Managed Prometheus and Grafana","Metrics and dashboards"],
+["Azure Monitor","sends","Event Hubs","Stream diagnostics to external tools"],
+["Application Insights","requires","Log Analytics","Workspace-based Application Insights stores its data in a workspace"],
+["Managed Prometheus and Grafana","access","Log Analytics","Used as a Grafana data source"],
+["Managed Prometheus and Grafana","access","Application Insights","Used as a Grafana data source"],
+// Delivery
+["Azure DevOps","access","Subscriptions","A service connection scoped to a subscription"],
+["Azure DevOps","access","Resource groups","A service connection scoped to a resource group"],
+["Azure DevOps","access","Managed identities","Service connections can use a managed identity or workload identity federation"],
+["Azure DevOps","optional","Entra ID","Organization can be backed by the tenant for sign-in"],
+["Azure DevOps","sends","Container Registry (ACR)","Pipelines push images"],
+["Azure DevOps","access","Storage account","Common pattern: Terraform state read by the pipeline identity"]
+);
+
+// Short key facts shown at the top of a service's detail view.
+const F={
+"Virtual Machines":["Hard requirements: a resource group, one NIC (which needs a subnet) and an OS disk.","Optional: data disks, public IP, NSG, managed identity, extensions, load balancer membership.","GPU is not a separate resource; it comes from the VM size (N-series). The size sets vCPU, memory and GPU."],
+"Managed Disks":["Separate resources: detach from one VM and attach to another.","There is no storage account for you to manage. Only legacy unmanaged disks use one."],
+"Network Interface (NIC)":["Always in exactly one subnet.","Holds the private IP; can also hold a public IP, an NSG and load balancer membership."],
+"Virtual Network and subnets":["Subnets are child resources of the virtual network.","DHCP is built in: you choose address ranges and Azure assigns private IPs to NICs.","DNS is Azure-provided by default, or custom servers, or private zones linked to the VNet."],
+"Storage account":["Contains blob containers, file shares, queues and tables.","Common uses: Terraform state, boot diagnostics, Functions state, logs."],
+"Resource groups":["A resource belongs to exactly one resource group.","Deleting a resource group deletes everything in it.","Resources can reference others in different resource groups."],
+"Subscriptions":["The billing and quota boundary. Trusts exactly one tenant."],
+"Managed identities":["System-assigned: tied to one resource's lifecycle. User-assigned: a standalone resource reusable by many.","No stored secret; short-lived tokens come from the platform.","Useless until it has a role assignment."],
+"Azure RBAC role assignments":["Three parts: who (principal), what (role), where (scope). Scopes inherit downward.","Contributor manages resources but is not a data role. Use data roles such as Key Vault Secrets User for secrets.","RBAC answers 'who may do what?'. Azure Policy answers 'what is allowed to exist, and how must it be configured?'. Full access does not bypass policy.","A role assignment is its own ARM resource, stored at a scope, so one group assignment can cover many resources. That is why RBAC scales better than per-resource lists."],
+"Azure Policy":["Rules about resource configuration, not about who may act. Examples: allowed regions, required tags, no public IPs, storage must disable public access.","Assigned at a management group, subscription or resource group and inherited downward; specific scopes can be excluded. It only applies to the resource types and properties its rule matches.","Effects: Deny, Audit, Modify, Append, DeployIfNotExists, AuditIfNotExists, Disabled. Evaluated on create and update, plus a periodic compliance scan. Existing resources are not deleted.","If a Terraform apply fails with RequestDisallowedByPolicy, read the policy name in the error before debugging the code."],
+"Key Vault":["Prefer RBAC with a data role such as Key Vault Secrets User for reading secrets.","Contributor is a management role, not a secrets role.","Permission model: either vault access policies or Azure RBAC, one at a time. Access policies are a property stored inside the vault, not a separate service.","Switching to RBAC ignores existing access policies, so create the equivalent role assignments first and test before switching."],
+"Private Endpoint":["Creates a NIC with a private IP in your subnet.","Needs a private DNS zone so the service name resolves to that IP."],
+"Azure Kubernetes Service (AKS)":["Azure manages the control plane; node pools are scale sets in your subscription."],
+"Azure Resource Manager":["Every create, update or delete goes through ARM, whichever tool you use. You don't enable it; it is part of the platform.","ARM checks RBAC on every request and evaluates Azure Policy when one is assigned. Role and policy assignments are themselves ARM resources.","Resource providers (Microsoft.Compute, Microsoft.Network, ...) must be registered per subscription before you can create that type of resource.","Terraform's azurerm provider calls ARM's REST API resource by resource and keeps its own state file. It does not generate ARM templates.","Bicep is an Azure-only language that compiles to an ARM template (JSON), which ARM's deployment engine applies. No state file: Azure itself is the record. Preview changes with what-if.","Both describe desired state, but a deployment is one-shot: nothing keeps reconciling afterward (unlike a Kubernetes controller). Drift is found by re-running plan or what-if, or corrected by Azure Policy effects such as DeployIfNotExists."],
+"Log Analytics":["A workspace stores logs; query them with KQL.","Many resources send logs through diagnostic settings."],
+"Entra tenant":["The root of identity. A subscription trusts exactly one tenant."]
+};
+</script>
+
+<script>
+const slug=s=>s.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const TAG={0:"always there",1:"core",2:"adjacent",3:"long tail"};
+const N={},BYID={};
+S.forEach(([t,c,n,p])=>{N[n]={id:slug(n),t,c,name:n,p};BYID[slug(n)]=N[n]});
+const OUT={},IN={};
+E.forEach(([a,ty,b,note])=>{
+  if(!N[a]||!N[b]){console.warn('unknown edge',a,b);return}
+  ((OUT[a]??={})[ty]??=[]).push({n:b,note});
+  ((IN[b]??={})[ty]??=[]).push({n:a,note});
+});
+
+const out=document.getElementById('out'),q=document.getElementById('q'),count=document.getElementById('count');
+const chips=[...document.querySelectorAll('.chip')];
+const on={0:true,1:true,2:true,3:true};
+[0,1,2,3].forEach(t=>document.getElementById('n'+t).textContent='('+S.filter(s=>s[0]===t).length+')');
+
+function render(){
+  const f=q.value.trim().toLowerCase();let shown=0,html='';
+  for(const cat of CATS){
+    const items=S.filter(([t,c,n,p])=>c===cat&&on[t]&&(!f||(n+' '+p+' '+c).toLowerCase().includes(f))).sort((a,b)=>a[0]-b[0]);
+    if(!items.length)continue;shown+=items.length;
+    html+='<h2>'+esc(cat)+'</h2><div class="grid">'+items.map(([t,c,n,p])=>
+      '<button type="button" class="svc" data-t="'+t+'" data-n="'+esc(n)+'"><b>'+esc(n)+'<span class="tag">'+TAG[t]+'</span></b><span>'+esc(p)+'</span></button>').join('')+'</div>';
+  }
+  out.innerHTML=html||'<p class="empty">No matches.</p>';
+  count.textContent=shown+' of '+S.length+' services shown';
+}
+chips.forEach(b=>b.addEventListener('click',()=>{
+  const t=+b.dataset.t;on[t]=!on[t];b.setAttribute('aria-pressed',on[t]);render();
+}));
+q.addEventListener('input',render);
+
+// Detail dialog with a navigation trail.
+const dlg=document.getElementById('dlg'),dbody=document.getElementById('dbody'),crumbs=document.getElementById('crumbs');
+const backBtn=document.getElementById('back'),closeBtn=document.getElementById('close');
+let trail=[];
+
+function relGroup(name,dir,ty){
+  const list=(dir==='out'?OUT:IN)[name]?.[ty];
+  if(!list||!list.length)return '';
+  return '<h4>'+esc(TYPES[ty][dir])+' ('+list.length+')</h4><div class="rels">'+list.map(({n,note})=>
+    '<button type="button" class="rel" data-t="'+N[n].t+'" data-n="'+esc(n)+'"><b>'+esc(n)+'</b>'+(note?'<small>'+esc(note)+'</small>':'')+'</button>').join('')+'</div>';
+}
+function show(){
+  const name=trail[trail.length-1],x=N[name];
+  const facts=F[name]?'<ul class="facts">'+F[name].map(f=>'<li>'+esc(f)+'</li>').join('')+'</ul>':'';
+  const groups=ORDER.map(([d,ty])=>relGroup(name,d,ty)).join('');
+  dbody.innerHTML='<h3 id="dtitle">'+esc(name)+'</h3><div class="meta">'+esc(x.c)+' · '+TAG[x.t]+'</div><div>'+esc(x.p)+'</div>'+facts+
+    (groups||'<p class="empty">No relationships mapped yet for this service.</p>')+
+    '<p class="warn">Relationships are a simplified model drafted from memory. Verify against Microsoft Learn.</p>';
+  crumbs.innerHTML=trail.slice(-5).map((n,i,a)=>i<a.length-1?'<a data-jump="'+esc(n)+'">'+esc(n)+'</a>':'<b>'+esc(n)+'</b>').join(' &rsaquo; ');
+  backBtn.disabled=trail.length<2;
+  dlg.scrollTop=0;
+  history.replaceState(null,'','#'+x.id);
+}
+function open(name,push=true){
+  if(!N[name])return;
+  if(push)trail.push(name);
+  if(!dlg.open)dlg.showModal();
+  show();
+}
+out.addEventListener('click',e=>{const b=e.target.closest('.svc');if(b){trail=[];open(b.dataset.n)}});
+dbody.addEventListener('click',e=>{const b=e.target.closest('.rel');if(b)open(b.dataset.n)});
+crumbs.addEventListener('click',e=>{
+  const a=e.target.closest('[data-jump]');if(!a)return;
+  const i=trail.lastIndexOf(a.dataset.jump);if(i>=0){trail=trail.slice(0,i+1);show()}
+});
+backBtn.addEventListener('click',()=>{if(trail.length>1){trail.pop();show()}});
+closeBtn.addEventListener('click',()=>dlg.close());
+dlg.addEventListener('close',()=>{trail=[];history.replaceState(null,'',location.pathname+location.search)});
+dlg.addEventListener('click',e=>{if(e.target===dlg)dlg.close()});
+
+render();
+if(location.hash&&BYID[location.hash.slice(1)]){trail=[];open(BYID[location.hash.slice(1)].name)}
+</script>
+</body></html>

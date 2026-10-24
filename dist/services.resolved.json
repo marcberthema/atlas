@@ -1,0 +1,4589 @@
+{
+  "schema_version": 1,
+  "scope": {
+    "tiers": [
+      0,
+      1
+    ],
+    "note": "Tiers 0 and 1 only. Tier 2 and 3 services appear as stubs when an edge points at them."
+  },
+  "tiers": [
+    {
+      "tier": 0,
+      "label": "Always there",
+      "description": "Exists in every tenant or subscription; you don't create or enable it."
+    },
+    {
+      "tier": 1,
+      "label": "Core",
+      "description": "The services most workloads are built from."
+    },
+    {
+      "tier": 2,
+      "label": "Adjacent",
+      "description": "Commonly used next to the core services."
+    },
+    {
+      "tier": 3,
+      "label": "Long tail",
+      "description": "The long tail of specialised services."
+    }
+  ],
+  "categories": [
+    "Organization",
+    "Identity and security",
+    "Governance and management",
+    "Compute and containers",
+    "Networking",
+    "Storage and databases",
+    "Messaging and integration",
+    "Observability",
+    "Data and AI",
+    "Developer tools and delivery",
+    "Migration",
+    "IoT and other"
+  ],
+  "edge_types": [
+    {
+      "type": "contains",
+      "out": "Contains",
+      "in": "Lives inside",
+      "meaning": "B lives inside A (resource group contains a VM)."
+    },
+    {
+      "type": "requires",
+      "out": "Requires",
+      "in": "Required by",
+      "meaning": "A cannot exist without B (VM requires a NIC)."
+    },
+    {
+      "type": "optional",
+      "out": "Can use",
+      "in": "Can be used by",
+      "meaning": "A can use B but does not need it."
+    },
+    {
+      "type": "access",
+      "out": "Gives or uses access to",
+      "in": "Access given or used by",
+      "meaning": "A authenticates or authorizes against B."
+    },
+    {
+      "type": "network",
+      "out": "Routes or connects to",
+      "in": "Reached from",
+      "meaning": "A is reached or connected through B."
+    },
+    {
+      "type": "sends",
+      "out": "Sends data or events to",
+      "in": "Receives data or events from",
+      "meaning": "A sends data (logs, metrics, events) to B."
+    },
+    {
+      "type": "protects",
+      "out": "Protects or governs",
+      "in": "Protected or governed by",
+      "meaning": "A secures or backs up B."
+    },
+    {
+      "type": "enforces",
+      "out": "Checks or enforces",
+      "in": "Checked or enforced by",
+      "meaning": "A checks or enforces B (Azure Resource Manager enforces Azure Policy)."
+    }
+  ],
+  "edge_group_order": [
+    {
+      "direction": "in",
+      "type": "contains"
+    },
+    {
+      "direction": "out",
+      "type": "requires"
+    },
+    {
+      "direction": "out",
+      "type": "contains"
+    },
+    {
+      "direction": "out",
+      "type": "optional"
+    },
+    {
+      "direction": "out",
+      "type": "access"
+    },
+    {
+      "direction": "out",
+      "type": "network"
+    },
+    {
+      "direction": "out",
+      "type": "sends"
+    },
+    {
+      "direction": "out",
+      "type": "protects"
+    },
+    {
+      "direction": "out",
+      "type": "enforces"
+    },
+    {
+      "direction": "in",
+      "type": "requires"
+    },
+    {
+      "direction": "in",
+      "type": "optional"
+    },
+    {
+      "direction": "in",
+      "type": "access"
+    },
+    {
+      "direction": "in",
+      "type": "network"
+    },
+    {
+      "direction": "in",
+      "type": "sends"
+    },
+    {
+      "direction": "in",
+      "type": "protects"
+    },
+    {
+      "direction": "in",
+      "type": "enforces"
+    }
+  ],
+  "terraform_providers": {
+    "azurerm": {
+      "namespace": "hashicorp",
+      "name": "azurerm",
+      "latest_version": "5.11.0",
+      "checked_at": "2026-10-24",
+      "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs"
+    },
+    "azuread": {
+      "namespace": "hashicorp",
+      "name": "azuread",
+      "latest_version": "3.10.0",
+      "checked_at": "2026-10-24",
+      "docs_url": "https://registry.terraform.io/providers/hashicorp/azuread/latest/docs"
+    },
+    "azuredevops": {
+      "namespace": "microsoft",
+      "name": "azuredevops",
+      "latest_version": "1.16.0",
+      "checked_at": "2026-10-24",
+      "docs_url": "https://registry.terraform.io/providers/microsoft/azuredevops/latest/docs"
+    },
+    "azapi": {
+      "namespace": "Azure",
+      "name": "azapi",
+      "latest_version": "2.13.0",
+      "checked_at": "2026-10-24",
+      "docs_url": "https://registry.terraform.io/providers/Azure/azapi/latest/docs"
+    }
+  },
+  "services": [
+    {
+      "id": "entra-tenant",
+      "name": "Entra tenant",
+      "tier": 0,
+      "tier_label": "Always there",
+      "category": "Organization",
+      "purpose": "The identity boundary that everything in Azure hangs from.",
+      "facts": [
+        "The root of identity. A subscription trusts exactly one tenant."
+      ],
+      "docs": [
+        {
+          "url": "https://learn.microsoft.com/entra/fundamentals/how-to-find-tenant"
+        }
+      ],
+      "review": {
+        "status": "unconfirmed",
+        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+      },
+      "freshness": {
+        "status": "unreviewed",
+        "checked_at": "2026-10-24"
+      },
+      "terraform": {
+        "status": "listed",
+        "resources": [
+          {
+            "provider": "azuread",
+            "kind": "data_source",
+            "type": "azuread_client_config",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azuread/latest/docs/data-sources/client_config",
+            "exists": true,
+            "since": "0.8.0"
+          },
+          {
+            "provider": "azurerm",
+            "kind": "data_source",
+            "type": "azurerm_client_config",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/client_config",
+            "exists": true,
+            "since": null
+          }
+        ],
+        "first_supported": null,
+        "fully_supported_since": null,
+        "gaps": [],
+        "fallback": null,
+        "note": "",
+        "checked_at": "2026-10-24"
+      }
+    },
+    {
+      "id": "management-groups",
+      "name": "Management groups",
+      "tier": 0,
+      "tier_label": "Always there",
+      "category": "Organization",
+      "purpose": "Group subscriptions so policy and access apply to all of them.",
+      "facts": [],
+      "docs": [
+        {
+          "url": "https://learn.microsoft.com/azure/governance/management-groups/overview"
+        }
+      ],
+      "review": {
+        "status": "unconfirmed",
+        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+      },
+      "freshness": {
+        "status": "unreviewed",
+        "checked_at": "2026-10-24"
+      },
+      "terraform": {
+        "status": "listed",
+        "resources": [
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_management_group",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/management_group",
+            "exists": true,
+            "since": "1.14.0"
+          },
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_management_group_subscription_association",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/management_group_subscription_association",
+            "exists": true,
+            "since": "2.54.0"
+          }
+        ],
+        "first_supported": "1.14.0",
+        "fully_supported_since": "2.54.0",
+        "gaps": [],
+        "fallback": {
+          "provider": "azapi",
+          "resource": "azapi_resource",
+          "docs_url": "https://registry.terraform.io/providers/Azure/azapi/latest/docs/resources/resource",
+          "arm_types": [
+            {
+              "type": "Microsoft.Management/managementGroups",
+              "documented": false,
+              "docs_url": null
+            }
+          ]
+        },
+        "note": "",
+        "checked_at": "2026-10-24"
+      }
+    },
+    {
+      "id": "azure-resource-manager",
+      "name": "Azure Resource Manager",
+      "tier": 0,
+      "tier_label": "Always there",
+      "category": "Organization",
+      "purpose": "The control plane every tool (portal, CLI, Terraform) talks to.",
+      "facts": [
+        "Every create, update or delete goes through ARM, whichever tool you use. You don't enable it; it is part of the platform.",
+        "ARM checks RBAC on every request and evaluates Azure Policy when one is assigned. Role and policy assignments are themselves ARM resources.",
+        "Resource providers (Microsoft.Compute, Microsoft.Network, ...) must be registered per subscription before you can create that type of resource.",
+        "Terraform's azurerm provider calls ARM's REST API resource by resource and keeps its own state file. It does not generate ARM templates.",
+        "Bicep is an Azure-only language that compiles to an ARM template (JSON), which ARM's deployment engine applies. No state file: Azure itself is the record. Preview changes with what-if.",
+        "Both describe desired state, but a deployment is one-shot: nothing keeps reconciling afterward (unlike a Kubernetes controller). Drift is found by re-running plan or what-if, or corrected by Azure Policy effects such as DeployIfNotExists."
+      ],
+      "docs": [
+        {
+          "url": "https://learn.microsoft.com/azure/azure-resource-manager/management/overview"
+        }
+      ],
+      "review": {
+        "status": "unconfirmed",
+        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+      },
+      "freshness": {
+        "status": "unreviewed",
+        "checked_at": "2026-10-24"
+      },
+      "terraform": {
+        "status": "listed",
+        "resources": [
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_resource_provider_registration",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/resource_provider_registration",
+            "exists": true,
+            "since": null
+          }
+        ],
+        "first_supported": null,
+        "fully_supported_since": null,
+        "gaps": [],
+        "fallback": null,
+        "note": "",
+        "checked_at": "2026-10-24"
+      }
+    },
+    {
+      "id": "subscriptions",
+      "name": "Subscriptions",
+      "tier": 1,
+      "tier_label": "Core",
+      "category": "Organization",
+      "purpose": "The billing, quota and access boundary for resources.",
+      "facts": [
+        "The billing and quota boundary. Trusts exactly one tenant."
+      ],
+      "docs": [
+        {
+          "url": "https://learn.microsoft.com/azure/cloud-adoption-framework/ready/landing-zone/design-area/resource-org-subscriptions"
+        }
+      ],
+      "review": {
+        "status": "unconfirmed",
+        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+      },
+      "freshness": {
+        "status": "unreviewed",
+        "checked_at": "2026-10-24"
+      },
+      "terraform": {
+        "status": "listed",
+        "resources": [
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_subscription",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/subscription",
+            "exists": true,
+            "since": null
+          },
+          {
+            "provider": "azurerm",
+            "kind": "data_source",
+            "type": "azurerm_subscription",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/subscription",
+            "exists": true,
+            "since": null
+          }
+        ],
+        "first_supported": null,
+        "fully_supported_since": null,
+        "gaps": [],
+        "fallback": {
+          "provider": "azapi",
+          "resource": "azapi_resource",
+          "docs_url": "https://registry.terraform.io/providers/Azure/azapi/latest/docs/resources/resource",
+          "arm_types": [
+            {
+              "type": "Microsoft.Subscription/aliases",
+              "documented": false,
+              "docs_url": null
+            }
+          ]
+        },
+        "note": "",
+        "checked_at": "2026-10-24"
+      }
+    },
+    {
+      "id": "resource-groups",
+      "name": "Resource groups",
+      "tier": 1,
+      "tier_label": "Core",
+      "category": "Organization",
+      "purpose": "A container for resources that share a lifecycle.",
+      "facts": [
+        "A resource belongs to exactly one resource group.",
+        "Deleting a resource group deletes everything in it.",
+        "Resources can reference others in different resource groups."
+      ],
+      "docs": [
+        {
+          "url": "https://learn.microsoft.com/azure/azure-resource-manager/management/manage-resource-groups-portal"
+        }
+      ],
+      "review": {
+        "status": "unconfirmed",
+        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+      },
+      "freshness": {
+        "status": "unreviewed",
+        "checked_at": "2026-10-24"
+      },
+      "terraform": {
+        "status": "listed",
+        "resources": [
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_resource_group",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/resource_group",
+            "exists": true,
+            "since": null
+          }
+        ],
+        "first_supported": null,
+        "fully_supported_since": null,
+        "gaps": [],
+        "fallback": {
+          "provider": "azapi",
+          "resource": "azapi_resource",
+          "docs_url": "https://registry.terraform.io/providers/Azure/azapi/latest/docs/resources/resource",
+          "arm_types": [
+            {
+              "type": "Microsoft.Resources/resourceGroups",
+              "documented": true,
+              "docs_url": "https://registry.terraform.io/providers/Azure/azapi/latest/docs/resources/Microsoft.Resources_resourceGroups"
+            }
+          ]
+        },
+        "note": "",
+        "checked_at": "2026-10-24"
+      }
+    },
+    {
+      "id": "entra-id",
+      "name": "Entra ID",
+      "tier": 0,
+      "tier_label": "Always there",
+      "category": "Identity and security",
+      "purpose": "Users, groups, applications and sign-in.",
+      "facts": [],
+      "docs": [
+        {
+          "url": "https://learn.microsoft.com/entra/fundamentals/whatis"
+        }
+      ],
+      "review": {
+        "status": "unconfirmed",
+        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+      },
+      "freshness": {
+        "status": "unreviewed",
+        "checked_at": "2026-10-24"
+      },
+      "terraform": {
+        "status": "listed",
+        "resources": [
+          {
+            "provider": "azuread",
+            "kind": "resource",
+            "type": "azuread_user",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azuread/latest/docs/resources/user",
+            "exists": true,
+            "since": null
+          },
+          {
+            "provider": "azuread",
+            "kind": "resource",
+            "type": "azuread_group",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azuread/latest/docs/resources/group",
+            "exists": true,
+            "since": "0.2.0"
+          },
+          {
+            "provider": "azuread",
+            "kind": "resource",
+            "type": "azuread_application",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azuread/latest/docs/resources/application",
+            "exists": true,
+            "since": "0.1.0"
+          },
+          {
+            "provider": "azuread",
+            "kind": "resource",
+            "type": "azuread_service_principal",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azuread/latest/docs/resources/service_principal",
+            "exists": true,
+            "since": "0.1.0"
+          }
+        ],
+        "first_supported": null,
+        "fully_supported_since": null,
+        "gaps": [],
+        "fallback": null,
+        "note": "",
+        "checked_at": "2026-10-24"
+      }
+    },
+    {
+      "id": "azure-rbac-role-assignments",
+      "name": "Azure RBAC role assignments",
+      "tier": 0,
+      "tier_label": "Always there",
+      "category": "Identity and security",
+      "purpose": "Grant a role to an identity at a given scope.",
+      "facts": [
+        "Three parts: who (principal), what (role), where (scope). Scopes inherit downward.",
+        "Contributor manages resources but is not a data role. Use data roles such as Key Vault Secrets User for secrets.",
+        "RBAC answers 'who may do what?'. Azure Policy answers 'what is allowed to exist, and how must it be configured?'. Full access does not bypass policy.",
+        "A role assignment is its own ARM resource, stored at a scope, so one group assignment can cover many resources. That is why RBAC scales better than per-resource lists."
+      ],
+      "docs": [
+        {
+          "url": "https://learn.microsoft.com/azure/role-based-access-control/overview"
+        }
+      ],
+      "review": {
+        "status": "unconfirmed",
+        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+      },
+      "freshness": {
+        "status": "unreviewed",
+        "checked_at": "2026-10-24"
+      },
+      "terraform": {
+        "status": "listed",
+        "resources": [
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_role_assignment",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/role_assignment",
+            "exists": true,
+            "since": null
+          },
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_role_definition",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/role_definition",
+            "exists": true,
+            "since": null
+          }
+        ],
+        "first_supported": null,
+        "fully_supported_since": null,
+        "gaps": [],
+        "fallback": {
+          "provider": "azapi",
+          "resource": "azapi_resource",
+          "docs_url": "https://registry.terraform.io/providers/Azure/azapi/latest/docs/resources/resource",
+          "arm_types": [
+            {
+              "type": "Microsoft.Authorization/roleAssignments",
+              "documented": true,
+              "docs_url": "https://registry.terraform.io/providers/Azure/azapi/latest/docs/resources/Microsoft.Authorization_roleAssignments"
+            },
+            {
+              "type": "Microsoft.Authorization/roleDefinitions",
+              "documented": true,
+              "docs_url": "https://registry.terraform.io/providers/Azure/azapi/latest/docs/resources/Microsoft.Authorization_roleDefinitions"
+            }
+          ]
+        },
+        "note": "",
+        "checked_at": "2026-10-24"
+      }
+    },
+    {
+      "id": "managed-identities",
+      "name": "Managed identities",
+      "tier": 1,
+      "tier_label": "Core",
+      "category": "Identity and security",
+      "purpose": "Secretless identities for Azure resources, rotated by Azure.",
+      "facts": [
+        "System-assigned: tied to one resource's lifecycle. User-assigned: a standalone resource reusable by many.",
+        "No stored secret; short-lived tokens come from the platform.",
+        "Useless until it has a role assignment."
+      ],
+      "docs": [
+        {
+          "url": "https://learn.microsoft.com/entra/identity/managed-identities-azure-resources/overview"
+        }
+      ],
+      "review": {
+        "status": "unconfirmed",
+        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+      },
+      "freshness": {
+        "status": "unreviewed",
+        "checked_at": "2026-10-24"
+      },
+      "terraform": {
+        "status": "listed",
+        "resources": [
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_user_assigned_identity",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/user_assigned_identity",
+            "exists": true,
+            "since": "1.9.0"
+          },
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_federated_identity_credential",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/federated_identity_credential",
+            "exists": true,
+            "since": "3.31.0"
+          }
+        ],
+        "first_supported": "1.9.0",
+        "fully_supported_since": "3.31.0",
+        "gaps": [],
+        "fallback": {
+          "provider": "azapi",
+          "resource": "azapi_resource",
+          "docs_url": "https://registry.terraform.io/providers/Azure/azapi/latest/docs/resources/resource",
+          "arm_types": [
+            {
+              "type": "Microsoft.ManagedIdentity/userAssignedIdentities",
+              "documented": true,
+              "docs_url": "https://registry.terraform.io/providers/Azure/azapi/latest/docs/resources/Microsoft.ManagedIdentity_userAssignedIdentities"
+            }
+          ]
+        },
+        "note": "",
+        "checked_at": "2026-10-24"
+      }
+    },
+    {
+      "id": "key-vault",
+      "name": "Key Vault",
+      "tier": 1,
+      "tier_label": "Core",
+      "category": "Identity and security",
+      "purpose": "Store secrets, keys and certificates with access control.",
+      "facts": [
+        "Prefer RBAC with a data role such as Key Vault Secrets User for reading secrets.",
+        "Contributor is a management role, not a secrets role.",
+        "Permission model: either vault access policies or Azure RBAC, one at a time. Access policies are a property stored inside the vault, not a separate service.",
+        "Switching to RBAC ignores existing access policies, so create the equivalent role assignments first and test before switching."
+      ],
+      "docs": [
+        {
+          "url": "https://learn.microsoft.com/azure/key-vault/general/overview"
+        }
+      ],
+      "review": {
+        "status": "unconfirmed",
+        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+      },
+      "freshness": {
+        "status": "unreviewed",
+        "checked_at": "2026-10-24"
+      },
+      "terraform": {
+        "status": "listed",
+        "resources": [
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_key_vault",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/key_vault",
+            "exists": true,
+            "since": null
+          },
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_key_vault_secret",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/key_vault_secret",
+            "exists": true,
+            "since": null
+          },
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_key_vault_key",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/key_vault_key",
+            "exists": true,
+            "since": null
+          },
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_key_vault_certificate",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/key_vault_certificate",
+            "exists": true,
+            "since": null
+          },
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_key_vault_access_policy",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/key_vault_access_policy",
+            "exists": true,
+            "since": "1.9.0"
+          }
+        ],
+        "first_supported": null,
+        "fully_supported_since": null,
+        "gaps": [],
+        "fallback": {
+          "provider": "azapi",
+          "resource": "azapi_resource",
+          "docs_url": "https://registry.terraform.io/providers/Azure/azapi/latest/docs/resources/resource",
+          "arm_types": [
+            {
+              "type": "Microsoft.KeyVault/vaults",
+              "documented": true,
+              "docs_url": "https://registry.terraform.io/providers/Azure/azapi/latest/docs/resources/Microsoft.KeyVault_vaults"
+            }
+          ]
+        },
+        "note": "",
+        "checked_at": "2026-10-24"
+      }
+    },
+    {
+      "id": "defender-for-cloud",
+      "name": "Defender for Cloud",
+      "tier": 1,
+      "tier_label": "Core",
+      "category": "Identity and security",
+      "purpose": "Security posture and threat protection.",
+      "facts": [],
+      "docs": [
+        {
+          "url": "https://learn.microsoft.com/azure/defender-for-cloud/defender-for-cloud-introduction"
+        }
+      ],
+      "review": {
+        "status": "unconfirmed",
+        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+      },
+      "freshness": {
+        "status": "unreviewed",
+        "checked_at": "2026-10-24"
+      },
+      "terraform": {
+        "status": "listed",
+        "resources": [
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_security_center_subscription_pricing",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/security_center_subscription_pricing",
+            "exists": true,
+            "since": "1.17.0"
+          },
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_security_center_contact",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/security_center_contact",
+            "exists": true,
+            "since": "1.17.0"
+          },
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_security_center_setting",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/security_center_setting",
+            "exists": true,
+            "since": null
+          }
+        ],
+        "first_supported": null,
+        "fully_supported_since": null,
+        "gaps": [],
+        "fallback": {
+          "provider": "azapi",
+          "resource": "azapi_resource",
+          "docs_url": "https://registry.terraform.io/providers/Azure/azapi/latest/docs/resources/resource",
+          "arm_types": [
+            {
+              "type": "Microsoft.Security/pricings",
+              "documented": false,
+              "docs_url": null
+            }
+          ]
+        },
+        "note": "",
+        "checked_at": "2026-10-24"
+      }
+    },
+    {
+      "id": "cost-management",
+      "name": "Cost Management",
+      "tier": 0,
+      "tier_label": "Always there",
+      "category": "Governance and management",
+      "purpose": "Track, budget and analyze spend.",
+      "facts": [],
+      "docs": [
+        {
+          "url": "https://learn.microsoft.com/azure/cost-management-billing/costs/overview-cost-management"
+        }
+      ],
+      "review": {
+        "status": "unconfirmed",
+        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+      },
+      "freshness": {
+        "status": "unreviewed",
+        "checked_at": "2026-10-24"
+      },
+      "terraform": {
+        "status": "listed",
+        "resources": [
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_consumption_budget_subscription",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/consumption_budget_subscription",
+            "exists": true,
+            "since": "2.59.0"
+          },
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_consumption_budget_resource_group",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/consumption_budget_resource_group",
+            "exists": true,
+            "since": "2.59.0"
+          },
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_subscription_cost_management_export",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/subscription_cost_management_export",
+            "exists": true,
+            "since": "2.86.0"
+          }
+        ],
+        "first_supported": "2.59.0",
+        "fully_supported_since": "2.86.0",
+        "gaps": [],
+        "fallback": {
+          "provider": "azapi",
+          "resource": "azapi_resource",
+          "docs_url": "https://registry.terraform.io/providers/Azure/azapi/latest/docs/resources/resource",
+          "arm_types": [
+            {
+              "type": "Microsoft.Consumption/budgets",
+              "documented": true,
+              "docs_url": "https://registry.terraform.io/providers/Azure/azapi/latest/docs/resources/Microsoft.Consumption_budgets"
+            },
+            {
+              "type": "Microsoft.CostManagement/exports",
+              "documented": true,
+              "docs_url": "https://registry.terraform.io/providers/Azure/azapi/latest/docs/resources/Microsoft.CostManagement_exports"
+            }
+          ]
+        },
+        "note": "",
+        "checked_at": "2026-10-24"
+      }
+    },
+    {
+      "id": "advisor",
+      "name": "Advisor",
+      "tier": 0,
+      "tier_label": "Always there",
+      "category": "Governance and management",
+      "purpose": "Recommendations on cost, reliability and security.",
+      "facts": [],
+      "docs": [
+        {
+          "url": "https://learn.microsoft.com/azure/advisor/advisor-overview"
+        }
+      ],
+      "review": {
+        "status": "unconfirmed",
+        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+      },
+      "freshness": {
+        "status": "unreviewed",
+        "checked_at": "2026-10-24"
+      },
+      "terraform": {
+        "status": "listed",
+        "resources": [
+          {
+            "provider": "azurerm",
+            "kind": "data_source",
+            "type": "azurerm_advisor_recommendations",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/advisor_recommendations",
+            "exists": true,
+            "since": "2.12.0"
+          }
+        ],
+        "first_supported": "2.12.0",
+        "fully_supported_since": "2.12.0",
+        "gaps": [],
+        "fallback": {
+          "provider": "azapi",
+          "resource": "azapi_resource",
+          "docs_url": "https://registry.terraform.io/providers/Azure/azapi/latest/docs/resources/resource",
+          "arm_types": [
+            {
+              "type": "Microsoft.Advisor/recommendations",
+              "documented": false,
+              "docs_url": null
+            }
+          ]
+        },
+        "note": "",
+        "checked_at": "2026-10-24"
+      }
+    },
+    {
+      "id": "resource-graph",
+      "name": "Resource Graph",
+      "tier": 0,
+      "tier_label": "Always there",
+      "category": "Governance and management",
+      "purpose": "Query resources across subscriptions.",
+      "facts": [],
+      "docs": [
+        {
+          "url": "https://learn.microsoft.com/azure/governance/resource-graph/overview"
+        }
+      ],
+      "review": {
+        "status": "unconfirmed",
+        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+      },
+      "freshness": {
+        "status": "unreviewed",
+        "checked_at": "2026-10-24"
+      },
+      "terraform": {
+        "status": "unknown",
+        "resources": [],
+        "first_supported": null,
+        "fully_supported_since": null,
+        "gaps": [],
+        "fallback": null,
+        "note": "A query API rather than a deployable resource, so no azurerm resource exists for running queries. Saved queries are the ARM type Microsoft.ResourceGraph/queries (unconfirmed).",
+        "checked_at": "2026-10-24"
+      }
+    },
+    {
+      "id": "azure-policy",
+      "name": "Azure Policy",
+      "tier": 1,
+      "tier_label": "Core",
+      "category": "Governance and management",
+      "purpose": "Enforce and audit rules on resources.",
+      "facts": [
+        "Rules about resource configuration, not about who may act. Examples: allowed regions, required tags, no public IPs, storage must disable public access.",
+        "Assigned at a management group, subscription or resource group and inherited downward; specific scopes can be excluded. It only applies to the resource types and properties its rule matches.",
+        "Effects: Deny, Audit, Modify, Append, DeployIfNotExists, AuditIfNotExists, Disabled. Evaluated on create and update, plus a periodic compliance scan. Existing resources are not deleted.",
+        "If a Terraform apply fails with RequestDisallowedByPolicy, read the policy name in the error before debugging the code."
+      ],
+      "docs": [
+        {
+          "url": "https://learn.microsoft.com/azure/governance/policy/overview"
+        }
+      ],
+      "review": {
+        "status": "unconfirmed",
+        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+      },
+      "freshness": {
+        "status": "unreviewed",
+        "checked_at": "2026-10-24"
+      },
+      "terraform": {
+        "status": "listed",
+        "resources": [
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_policy_definition",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/policy_definition",
+            "exists": true,
+            "since": "1.3.1"
+          },
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_policy_set_definition",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/policy_set_definition",
+            "exists": true,
+            "since": "1.21.0"
+          },
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_subscription_policy_assignment",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/subscription_policy_assignment",
+            "exists": true,
+            "since": "2.66.0"
+          },
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_resource_group_policy_assignment",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/resource_group_policy_assignment",
+            "exists": true,
+            "since": "2.66.0"
+          },
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_management_group_policy_assignment",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/management_group_policy_assignment",
+            "exists": true,
+            "since": "2.66.0"
+          }
+        ],
+        "first_supported": "1.3.1",
+        "fully_supported_since": "2.66.0",
+        "gaps": [],
+        "fallback": {
+          "provider": "azapi",
+          "resource": "azapi_resource",
+          "docs_url": "https://registry.terraform.io/providers/Azure/azapi/latest/docs/resources/resource",
+          "arm_types": [
+            {
+              "type": "Microsoft.Authorization/policyDefinitions",
+              "documented": true,
+              "docs_url": "https://registry.terraform.io/providers/Azure/azapi/latest/docs/resources/Microsoft.Authorization_policyDefinitions"
+            },
+            {
+              "type": "Microsoft.Authorization/policyAssignments",
+              "documented": true,
+              "docs_url": "https://registry.terraform.io/providers/Azure/azapi/latest/docs/resources/Microsoft.Authorization_policyAssignments"
+            }
+          ]
+        },
+        "note": "",
+        "checked_at": "2026-10-24"
+      }
+    },
+    {
+      "id": "azure-backup-recovery-services-vault",
+      "name": "Azure Backup / Recovery Services vault",
+      "tier": 1,
+      "tier_label": "Core",
+      "category": "Governance and management",
+      "purpose": "Back up VMs, disks, files and databases.",
+      "facts": [],
+      "docs": [
+        {
+          "url": "https://learn.microsoft.com/azure/backup/backup-overview"
+        }
+      ],
+      "review": {
+        "status": "unconfirmed",
+        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+      },
+      "freshness": {
+        "status": "unreviewed",
+        "checked_at": "2026-10-24"
+      },
+      "terraform": {
+        "status": "listed",
+        "resources": [
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_recovery_services_vault",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/recovery_services_vault",
+            "exists": true,
+            "since": "1.4.0"
+          },
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_backup_policy_vm",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/backup_policy_vm",
+            "exists": true,
+            "since": null
+          },
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_backup_protected_vm",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/backup_protected_vm",
+            "exists": true,
+            "since": null
+          },
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_data_protection_backup_vault",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/data_protection_backup_vault",
+            "exists": true,
+            "since": "2.62.0"
+          }
+        ],
+        "first_supported": null,
+        "fully_supported_since": null,
+        "gaps": [],
+        "fallback": {
+          "provider": "azapi",
+          "resource": "azapi_resource",
+          "docs_url": "https://registry.terraform.io/providers/Azure/azapi/latest/docs/resources/resource",
+          "arm_types": [
+            {
+              "type": "Microsoft.RecoveryServices/vaults",
+              "documented": true,
+              "docs_url": "https://registry.terraform.io/providers/Azure/azapi/latest/docs/resources/Microsoft.RecoveryServices_vaults"
+            },
+            {
+              "type": "Microsoft.DataProtection/backupVaults",
+              "documented": true,
+              "docs_url": "https://registry.terraform.io/providers/Azure/azapi/latest/docs/resources/Microsoft.DataProtection_backupVaults"
+            }
+          ]
+        },
+        "note": "",
+        "checked_at": "2026-10-24"
+      }
+    },
+    {
+      "id": "virtual-machines",
+      "name": "Virtual Machines",
+      "tier": 1,
+      "tier_label": "Core",
+      "category": "Compute and containers",
+      "purpose": "General-purpose virtual servers you manage.",
+      "facts": [
+        "Hard requirements: a resource group, one NIC (which needs a subnet) and an OS disk.",
+        "Optional: data disks, public IP, NSG, managed identity, extensions, load balancer membership.",
+        "GPU is not a separate resource; it comes from the VM size (N-series). The size sets vCPU, memory and GPU."
+      ],
+      "docs": [
+        {
+          "url": "https://learn.microsoft.com/azure/virtual-machines/overview"
+        }
+      ],
+      "review": {
+        "status": "unconfirmed",
+        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+      },
+      "freshness": {
+        "status": "unreviewed",
+        "checked_at": "2026-10-24"
+      },
+      "terraform": {
+        "status": "listed",
+        "resources": [
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_linux_virtual_machine",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/linux_virtual_machine",
+            "exists": true,
+            "since": "2.0.0"
+          },
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_windows_virtual_machine",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/windows_virtual_machine",
+            "exists": true,
+            "since": "2.0.0"
+          },
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_virtual_machine_extension",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/virtual_machine_extension",
+            "exists": true,
+            "since": null
+          },
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_virtual_machine_data_disk_attachment",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/virtual_machine_data_disk_attachment",
+            "exists": true,
+            "since": "1.8.0"
+          }
+        ],
+        "first_supported": null,
+        "fully_supported_since": null,
+        "gaps": [],
+        "fallback": {
+          "provider": "azapi",
+          "resource": "azapi_resource",
+          "docs_url": "https://registry.terraform.io/providers/Azure/azapi/latest/docs/resources/resource",
+          "arm_types": [
+            {
+              "type": "Microsoft.Compute/virtualMachines",
+              "documented": true,
+              "docs_url": "https://registry.terraform.io/providers/Azure/azapi/latest/docs/resources/Microsoft.Compute_virtualMachines"
+            }
+          ]
+        },
+        "note": "",
+        "checked_at": "2026-10-24"
+      }
+    },
+    {
+      "id": "managed-disks",
+      "name": "Managed Disks",
+      "tier": 1,
+      "tier_label": "Core",
+      "category": "Compute and containers",
+      "purpose": "Block storage attached to VMs.",
+      "facts": [
+        "Separate resources: detach from one VM and attach to another.",
+        "There is no storage account for you to manage. Only legacy unmanaged disks use one."
+      ],
+      "docs": [
+        {
+          "url": "https://learn.microsoft.com/azure/virtual-machines/managed-disks-overview"
+        }
+      ],
+      "review": {
+        "status": "unconfirmed",
+        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+      },
+      "freshness": {
+        "status": "unreviewed",
+        "checked_at": "2026-10-24"
+      },
+      "terraform": {
+        "status": "listed",
+        "resources": [
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_managed_disk",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/managed_disk",
+            "exists": true,
+            "since": null
+          },
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_disk_encryption_set",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/disk_encryption_set",
+            "exists": true,
+            "since": "1.41.0"
+          }
+        ],
+        "first_supported": null,
+        "fully_supported_since": null,
+        "gaps": [],
+        "fallback": {
+          "provider": "azapi",
+          "resource": "azapi_resource",
+          "docs_url": "https://registry.terraform.io/providers/Azure/azapi/latest/docs/resources/resource",
+          "arm_types": [
+            {
+              "type": "Microsoft.Compute/disks",
+              "documented": true,
+              "docs_url": "https://registry.terraform.io/providers/Azure/azapi/latest/docs/resources/Microsoft.Compute_disks"
+            }
+          ]
+        },
+        "note": "",
+        "checked_at": "2026-10-24"
+      }
+    },
+    {
+      "id": "virtual-machine-scale-sets",
+      "name": "Virtual Machine Scale Sets",
+      "tier": 1,
+      "tier_label": "Core",
+      "category": "Compute and containers",
+      "purpose": "Groups of identical VMs that scale together.",
+      "facts": [],
+      "docs": [
+        {
+          "url": "https://learn.microsoft.com/azure/virtual-machine-scale-sets/overview"
+        }
+      ],
+      "review": {
+        "status": "unconfirmed",
+        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+      },
+      "freshness": {
+        "status": "unreviewed",
+        "checked_at": "2026-10-24"
+      },
+      "terraform": {
+        "status": "listed",
+        "resources": [
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_linux_virtual_machine_scale_set",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/linux_virtual_machine_scale_set",
+            "exists": true,
+            "since": "2.0.0"
+          },
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_windows_virtual_machine_scale_set",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/windows_virtual_machine_scale_set",
+            "exists": true,
+            "since": "2.0.0"
+          },
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_orchestrated_virtual_machine_scale_set",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/orchestrated_virtual_machine_scale_set",
+            "exists": true,
+            "since": "2.11.0"
+          }
+        ],
+        "first_supported": "2.0.0",
+        "fully_supported_since": "2.11.0",
+        "gaps": [],
+        "fallback": {
+          "provider": "azapi",
+          "resource": "azapi_resource",
+          "docs_url": "https://registry.terraform.io/providers/Azure/azapi/latest/docs/resources/resource",
+          "arm_types": [
+            {
+              "type": "Microsoft.Compute/virtualMachineScaleSets",
+              "documented": true,
+              "docs_url": "https://registry.terraform.io/providers/Azure/azapi/latest/docs/resources/Microsoft.Compute_virtualMachineScaleSets"
+            }
+          ]
+        },
+        "note": "",
+        "checked_at": "2026-10-24"
+      }
+    },
+    {
+      "id": "app-service",
+      "name": "App Service",
+      "tier": 1,
+      "tier_label": "Core",
+      "category": "Compute and containers",
+      "purpose": "Managed hosting for web apps and APIs.",
+      "facts": [],
+      "docs": [
+        {
+          "url": "https://learn.microsoft.com/azure/app-service/overview"
+        }
+      ],
+      "review": {
+        "status": "unconfirmed",
+        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+      },
+      "freshness": {
+        "status": "unreviewed",
+        "checked_at": "2026-10-24"
+      },
+      "terraform": {
+        "status": "listed",
+        "resources": [
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_service_plan",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/service_plan",
+            "exists": true,
+            "since": null
+          },
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_linux_web_app",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/linux_web_app",
+            "exists": true,
+            "since": null
+          },
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_windows_web_app",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/windows_web_app",
+            "exists": true,
+            "since": null
+          },
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_linux_web_app_slot",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/linux_web_app_slot",
+            "exists": true,
+            "since": null
+          }
+        ],
+        "first_supported": null,
+        "fully_supported_since": null,
+        "gaps": [],
+        "fallback": {
+          "provider": "azapi",
+          "resource": "azapi_resource",
+          "docs_url": "https://registry.terraform.io/providers/Azure/azapi/latest/docs/resources/resource",
+          "arm_types": [
+            {
+              "type": "Microsoft.Web/serverfarms",
+              "documented": true,
+              "docs_url": "https://registry.terraform.io/providers/Azure/azapi/latest/docs/resources/Microsoft.Web_serverfarms"
+            },
+            {
+              "type": "Microsoft.Web/sites",
+              "documented": true,
+              "docs_url": "https://registry.terraform.io/providers/Azure/azapi/latest/docs/resources/Microsoft.Web_sites"
+            }
+          ]
+        },
+        "note": "",
+        "checked_at": "2026-10-24"
+      }
+    },
+    {
+      "id": "azure-functions",
+      "name": "Azure Functions",
+      "tier": 1,
+      "tier_label": "Core",
+      "category": "Compute and containers",
+      "purpose": "Event-driven serverless code.",
+      "facts": [],
+      "docs": [
+        {
+          "url": "https://learn.microsoft.com/azure/azure-functions/functions-overview"
+        }
+      ],
+      "review": {
+        "status": "unconfirmed",
+        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+      },
+      "freshness": {
+        "status": "unreviewed",
+        "checked_at": "2026-10-24"
+      },
+      "terraform": {
+        "status": "listed",
+        "resources": [
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_linux_function_app",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/linux_function_app",
+            "exists": true,
+            "since": null
+          },
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_windows_function_app",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/windows_function_app",
+            "exists": true,
+            "since": null
+          }
+        ],
+        "first_supported": null,
+        "fully_supported_since": null,
+        "gaps": [],
+        "fallback": {
+          "provider": "azapi",
+          "resource": "azapi_resource",
+          "docs_url": "https://registry.terraform.io/providers/Azure/azapi/latest/docs/resources/resource",
+          "arm_types": [
+            {
+              "type": "Microsoft.Web/sites",
+              "documented": true,
+              "docs_url": "https://registry.terraform.io/providers/Azure/azapi/latest/docs/resources/Microsoft.Web_sites"
+            }
+          ]
+        },
+        "note": "",
+        "checked_at": "2026-10-24"
+      }
+    },
+    {
+      "id": "container-apps",
+      "name": "Container Apps",
+      "tier": 1,
+      "tier_label": "Core",
+      "category": "Compute and containers",
+      "purpose": "Serverless containers that can scale to zero.",
+      "facts": [],
+      "docs": [
+        {
+          "url": "https://learn.microsoft.com/azure/container-apps/overview"
+        }
+      ],
+      "review": {
+        "status": "unconfirmed",
+        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+      },
+      "freshness": {
+        "status": "unreviewed",
+        "checked_at": "2026-10-24"
+      },
+      "terraform": {
+        "status": "listed",
+        "resources": [
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_container_app_environment",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/container_app_environment",
+            "exists": true,
+            "since": "3.43.0"
+          },
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_container_app",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/container_app",
+            "exists": true,
+            "since": "3.43.0"
+          },
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_container_app_job",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/container_app_job",
+            "exists": true,
+            "since": "3.103.0"
+          }
+        ],
+        "first_supported": "3.43.0",
+        "fully_supported_since": "3.103.0",
+        "gaps": [],
+        "fallback": {
+          "provider": "azapi",
+          "resource": "azapi_resource",
+          "docs_url": "https://registry.terraform.io/providers/Azure/azapi/latest/docs/resources/resource",
+          "arm_types": [
+            {
+              "type": "Microsoft.App/managedEnvironments",
+              "documented": true,
+              "docs_url": "https://registry.terraform.io/providers/Azure/azapi/latest/docs/resources/Microsoft.App_managedEnvironments"
+            },
+            {
+              "type": "Microsoft.App/containerApps",
+              "documented": true,
+              "docs_url": "https://registry.terraform.io/providers/Azure/azapi/latest/docs/resources/Microsoft.App_containerApps"
+            }
+          ]
+        },
+        "note": "",
+        "checked_at": "2026-10-24"
+      }
+    },
+    {
+      "id": "azure-kubernetes-service-aks",
+      "name": "Azure Kubernetes Service (AKS)",
+      "tier": 1,
+      "tier_label": "Core",
+      "category": "Compute and containers",
+      "purpose": "Managed Kubernetes control plane with your node pools.",
+      "facts": [
+        "Azure manages the control plane; node pools are scale sets in your subscription."
+      ],
+      "docs": [
+        {
+          "url": "https://learn.microsoft.com/azure/aks/what-is-aks"
+        }
+      ],
+      "review": {
+        "status": "unconfirmed",
+        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+      },
+      "freshness": {
+        "status": "unreviewed",
+        "checked_at": "2026-10-24"
+      },
+      "terraform": {
+        "status": "listed",
+        "resources": [
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_kubernetes_cluster",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/kubernetes_cluster",
+            "exists": true,
+            "since": "1.1.2"
+          },
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_kubernetes_cluster_node_pool",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/kubernetes_cluster_node_pool",
+            "exists": true,
+            "since": "1.37.0"
+          }
+        ],
+        "first_supported": "1.1.2",
+        "fully_supported_since": "1.37.0",
+        "gaps": [],
+        "fallback": {
+          "provider": "azapi",
+          "resource": "azapi_resource",
+          "docs_url": "https://registry.terraform.io/providers/Azure/azapi/latest/docs/resources/resource",
+          "arm_types": [
+            {
+              "type": "Microsoft.ContainerService/managedClusters",
+              "documented": true,
+              "docs_url": "https://registry.terraform.io/providers/Azure/azapi/latest/docs/resources/Microsoft.ContainerService_managedClusters"
+            }
+          ]
+        },
+        "note": "",
+        "checked_at": "2026-10-24"
+      }
+    },
+    {
+      "id": "container-registry-acr",
+      "name": "Container Registry (ACR)",
+      "tier": 1,
+      "tier_label": "Core",
+      "category": "Compute and containers",
+      "purpose": "Private store for container images and charts.",
+      "facts": [],
+      "docs": [
+        {
+          "url": "https://learn.microsoft.com/azure/container-registry/container-registry-intro"
+        }
+      ],
+      "review": {
+        "status": "unconfirmed",
+        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+      },
+      "freshness": {
+        "status": "unreviewed",
+        "checked_at": "2026-10-24"
+      },
+      "terraform": {
+        "status": "listed",
+        "resources": [
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_container_registry",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/container_registry",
+            "exists": true,
+            "since": null
+          },
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_container_registry_task",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/container_registry_task",
+            "exists": true,
+            "since": "2.90.0"
+          }
+        ],
+        "first_supported": null,
+        "fully_supported_since": null,
+        "gaps": [],
+        "fallback": {
+          "provider": "azapi",
+          "resource": "azapi_resource",
+          "docs_url": "https://registry.terraform.io/providers/Azure/azapi/latest/docs/resources/resource",
+          "arm_types": [
+            {
+              "type": "Microsoft.ContainerRegistry/registries",
+              "documented": true,
+              "docs_url": "https://registry.terraform.io/providers/Azure/azapi/latest/docs/resources/Microsoft.ContainerRegistry_registries"
+            }
+          ]
+        },
+        "note": "",
+        "checked_at": "2026-10-24"
+      }
+    },
+    {
+      "id": "virtual-network-and-subnets",
+      "name": "Virtual Network and subnets",
+      "tier": 1,
+      "tier_label": "Core",
+      "category": "Networking",
+      "purpose": "The private network resources live in; it also hands out IP addresses (DHCP).",
+      "facts": [
+        "Subnets are child resources of the virtual network.",
+        "DHCP is built in: you choose address ranges and Azure assigns private IPs to NICs.",
+        "DNS is Azure-provided by default, or custom servers, or private zones linked to the VNet."
+      ],
+      "docs": [
+        {
+          "url": "https://learn.microsoft.com/azure/virtual-network/virtual-networks-overview"
+        }
+      ],
+      "review": {
+        "status": "unconfirmed",
+        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+      },
+      "freshness": {
+        "status": "unreviewed",
+        "checked_at": "2026-10-24"
+      },
+      "terraform": {
+        "status": "listed",
+        "resources": [
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_virtual_network",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/virtual_network",
+            "exists": true,
+            "since": null
+          },
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_subnet",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/subnet",
+            "exists": true,
+            "since": null
+          }
+        ],
+        "first_supported": null,
+        "fully_supported_since": null,
+        "gaps": [],
+        "fallback": {
+          "provider": "azapi",
+          "resource": "azapi_resource",
+          "docs_url": "https://registry.terraform.io/providers/Azure/azapi/latest/docs/resources/resource",
+          "arm_types": [
+            {
+              "type": "Microsoft.Network/virtualNetworks",
+              "documented": true,
+              "docs_url": "https://registry.terraform.io/providers/Azure/azapi/latest/docs/resources/Microsoft.Network_virtualNetworks"
+            }
+          ]
+        },
+        "note": "",
+        "checked_at": "2026-10-24"
+      }
+    },
+    {
+      "id": "network-interface-nic",
+      "name": "Network Interface (NIC)",
+      "tier": 1,
+      "tier_label": "Core",
+      "category": "Networking",
+      "purpose": "Connects a VM to a subnet.",
+      "facts": [
+        "Always in exactly one subnet.",
+        "Holds the private IP; can also hold a public IP, an NSG and load balancer membership."
+      ],
+      "docs": [
+        {
+          "url": "https://learn.microsoft.com/azure/virtual-network/virtual-network-network-interface"
+        }
+      ],
+      "review": {
+        "status": "unconfirmed",
+        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+      },
+      "freshness": {
+        "status": "unreviewed",
+        "checked_at": "2026-10-24"
+      },
+      "terraform": {
+        "status": "listed",
+        "resources": [
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_network_interface",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/network_interface",
+            "exists": true,
+            "since": null
+          },
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_network_interface_security_group_association",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/network_interface_security_group_association",
+            "exists": true,
+            "since": "2.0.0"
+          }
+        ],
+        "first_supported": null,
+        "fully_supported_since": null,
+        "gaps": [],
+        "fallback": {
+          "provider": "azapi",
+          "resource": "azapi_resource",
+          "docs_url": "https://registry.terraform.io/providers/Azure/azapi/latest/docs/resources/resource",
+          "arm_types": [
+            {
+              "type": "Microsoft.Network/networkInterfaces",
+              "documented": true,
+              "docs_url": "https://registry.terraform.io/providers/Azure/azapi/latest/docs/resources/Microsoft.Network_networkInterfaces"
+            }
+          ]
+        },
+        "note": "",
+        "checked_at": "2026-10-24"
+      }
+    },
+    {
+      "id": "network-security-group",
+      "name": "Network Security Group",
+      "tier": 1,
+      "tier_label": "Core",
+      "category": "Networking",
+      "purpose": "Allow and deny rules for traffic to subnets and NICs.",
+      "facts": [],
+      "docs": [
+        {
+          "url": "https://learn.microsoft.com/azure/virtual-network/network-security-groups-overview"
+        }
+      ],
+      "review": {
+        "status": "unconfirmed",
+        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+      },
+      "freshness": {
+        "status": "unreviewed",
+        "checked_at": "2026-10-24"
+      },
+      "terraform": {
+        "status": "listed",
+        "resources": [
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_network_security_group",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/network_security_group",
+            "exists": true,
+            "since": null
+          },
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_network_security_rule",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/network_security_rule",
+            "exists": true,
+            "since": null
+          },
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_subnet_network_security_group_association",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/subnet_network_security_group_association",
+            "exists": true,
+            "since": "1.17.0"
+          }
+        ],
+        "first_supported": null,
+        "fully_supported_since": null,
+        "gaps": [],
+        "fallback": {
+          "provider": "azapi",
+          "resource": "azapi_resource",
+          "docs_url": "https://registry.terraform.io/providers/Azure/azapi/latest/docs/resources/resource",
+          "arm_types": [
+            {
+              "type": "Microsoft.Network/networkSecurityGroups",
+              "documented": true,
+              "docs_url": "https://registry.terraform.io/providers/Azure/azapi/latest/docs/resources/Microsoft.Network_networkSecurityGroups"
+            }
+          ]
+        },
+        "note": "",
+        "checked_at": "2026-10-24"
+      }
+    },
+    {
+      "id": "public-ip-address",
+      "name": "Public IP address",
+      "tier": 1,
+      "tier_label": "Core",
+      "category": "Networking",
+      "purpose": "An internet-facing address for a resource.",
+      "facts": [],
+      "docs": [
+        {
+          "url": "https://learn.microsoft.com/azure/virtual-network/ip-services/public-ip-addresses"
+        }
+      ],
+      "review": {
+        "status": "unconfirmed",
+        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+      },
+      "freshness": {
+        "status": "unreviewed",
+        "checked_at": "2026-10-24"
+      },
+      "terraform": {
+        "status": "listed",
+        "resources": [
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_public_ip",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/public_ip",
+            "exists": true,
+            "since": null
+          },
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_public_ip_prefix",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/public_ip_prefix",
+            "exists": true,
+            "since": "1.25.0"
+          }
+        ],
+        "first_supported": null,
+        "fully_supported_since": null,
+        "gaps": [],
+        "fallback": {
+          "provider": "azapi",
+          "resource": "azapi_resource",
+          "docs_url": "https://registry.terraform.io/providers/Azure/azapi/latest/docs/resources/resource",
+          "arm_types": [
+            {
+              "type": "Microsoft.Network/publicIPAddresses",
+              "documented": true,
+              "docs_url": "https://registry.terraform.io/providers/Azure/azapi/latest/docs/resources/Microsoft.Network_publicIPAddresses"
+            }
+          ]
+        },
+        "note": "",
+        "checked_at": "2026-10-24"
+      }
+    },
+    {
+      "id": "load-balancer",
+      "name": "Load Balancer",
+      "tier": 1,
+      "tier_label": "Core",
+      "category": "Networking",
+      "purpose": "Layer 4 traffic distribution across VMs.",
+      "facts": [],
+      "docs": [
+        {
+          "url": "https://learn.microsoft.com/azure/load-balancer/load-balancer-overview"
+        }
+      ],
+      "review": {
+        "status": "unconfirmed",
+        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+      },
+      "freshness": {
+        "status": "unreviewed",
+        "checked_at": "2026-10-24"
+      },
+      "terraform": {
+        "status": "listed",
+        "resources": [
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_lb",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/lb",
+            "exists": true,
+            "since": null
+          },
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_lb_backend_address_pool",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/lb_backend_address_pool",
+            "exists": true,
+            "since": null
+          },
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_lb_rule",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/lb_rule",
+            "exists": true,
+            "since": null
+          },
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_lb_probe",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/lb_probe",
+            "exists": true,
+            "since": null
+          }
+        ],
+        "first_supported": null,
+        "fully_supported_since": null,
+        "gaps": [],
+        "fallback": {
+          "provider": "azapi",
+          "resource": "azapi_resource",
+          "docs_url": "https://registry.terraform.io/providers/Azure/azapi/latest/docs/resources/resource",
+          "arm_types": [
+            {
+              "type": "Microsoft.Network/loadBalancers",
+              "documented": true,
+              "docs_url": "https://registry.terraform.io/providers/Azure/azapi/latest/docs/resources/Microsoft.Network_loadBalancers"
+            }
+          ]
+        },
+        "note": "",
+        "checked_at": "2026-10-24"
+      }
+    },
+    {
+      "id": "application-gateway-front-door",
+      "name": "Application Gateway / Front Door",
+      "tier": 1,
+      "tier_label": "Core",
+      "category": "Networking",
+      "purpose": "Layer 7 routing; Front Door is global.",
+      "facts": [],
+      "docs": [
+        {
+          "url": "https://learn.microsoft.com/azure/application-gateway/overview"
+        },
+        {
+          "url": "https://learn.microsoft.com/azure/frontdoor/front-door-overview"
+        }
+      ],
+      "review": {
+        "status": "unconfirmed",
+        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+      },
+      "freshness": {
+        "status": "unreviewed",
+        "checked_at": "2026-10-24"
+      },
+      "terraform": {
+        "status": "listed",
+        "resources": [
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_application_gateway",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/application_gateway",
+            "exists": true,
+            "since": null
+          },
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_cdn_frontdoor_profile",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/cdn_frontdoor_profile",
+            "exists": true,
+            "since": "3.9.0"
+          },
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_cdn_frontdoor_endpoint",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/cdn_frontdoor_endpoint",
+            "exists": true,
+            "since": "3.9.0"
+          },
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_cdn_frontdoor_origin",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/cdn_frontdoor_origin",
+            "exists": true,
+            "since": "3.15.0"
+          }
+        ],
+        "first_supported": null,
+        "fully_supported_since": null,
+        "gaps": [],
+        "fallback": {
+          "provider": "azapi",
+          "resource": "azapi_resource",
+          "docs_url": "https://registry.terraform.io/providers/Azure/azapi/latest/docs/resources/resource",
+          "arm_types": [
+            {
+              "type": "Microsoft.Network/applicationGateways",
+              "documented": true,
+              "docs_url": "https://registry.terraform.io/providers/Azure/azapi/latest/docs/resources/Microsoft.Network_applicationGateways"
+            },
+            {
+              "type": "Microsoft.Cdn/profiles",
+              "documented": true,
+              "docs_url": "https://registry.terraform.io/providers/Azure/azapi/latest/docs/resources/Microsoft.Cdn_profiles"
+            }
+          ]
+        },
+        "note": "",
+        "checked_at": "2026-10-24"
+      }
+    },
+    {
+      "id": "azure-dns-and-private-dns",
+      "name": "Azure DNS and Private DNS",
+      "tier": 1,
+      "tier_label": "Core",
+      "category": "Networking",
+      "purpose": "Name resolution for public and private zones.",
+      "facts": [],
+      "docs": [
+        {
+          "url": "https://learn.microsoft.com/azure/dns/dns-overview"
+        },
+        {
+          "url": "https://learn.microsoft.com/azure/dns/private-dns-overview"
+        }
+      ],
+      "review": {
+        "status": "unconfirmed",
+        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+      },
+      "freshness": {
+        "status": "unreviewed",
+        "checked_at": "2026-10-24"
+      },
+      "terraform": {
+        "status": "listed",
+        "resources": [
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_dns_zone",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/dns_zone",
+            "exists": true,
+            "since": null
+          },
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_dns_a_record",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/dns_a_record",
+            "exists": true,
+            "since": null
+          },
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_private_dns_zone",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/private_dns_zone",
+            "exists": true,
+            "since": "1.31.0"
+          },
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_private_dns_zone_virtual_network_link",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/private_dns_zone_virtual_network_link",
+            "exists": true,
+            "since": "1.34.0"
+          }
+        ],
+        "first_supported": null,
+        "fully_supported_since": null,
+        "gaps": [],
+        "fallback": {
+          "provider": "azapi",
+          "resource": "azapi_resource",
+          "docs_url": "https://registry.terraform.io/providers/Azure/azapi/latest/docs/resources/resource",
+          "arm_types": [
+            {
+              "type": "Microsoft.Network/dnsZones",
+              "documented": true,
+              "docs_url": "https://registry.terraform.io/providers/Azure/azapi/latest/docs/resources/Microsoft.Network_dnsZones"
+            },
+            {
+              "type": "Microsoft.Network/privateDnsZones",
+              "documented": true,
+              "docs_url": "https://registry.terraform.io/providers/Azure/azapi/latest/docs/resources/Microsoft.Network_privateDnsZones"
+            }
+          ]
+        },
+        "note": "",
+        "checked_at": "2026-10-24"
+      }
+    },
+    {
+      "id": "private-endpoint",
+      "name": "Private Endpoint",
+      "tier": 1,
+      "tier_label": "Core",
+      "category": "Networking",
+      "purpose": "A private IP in your network for a PaaS service.",
+      "facts": [
+        "Creates a NIC with a private IP in your subnet.",
+        "Needs a private DNS zone so the service name resolves to that IP."
+      ],
+      "docs": [
+        {
+          "url": "https://learn.microsoft.com/azure/private-link/private-endpoint-overview"
+        }
+      ],
+      "review": {
+        "status": "unconfirmed",
+        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+      },
+      "freshness": {
+        "status": "unreviewed",
+        "checked_at": "2026-10-24"
+      },
+      "terraform": {
+        "status": "listed",
+        "resources": [
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_private_endpoint",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/private_endpoint",
+            "exists": true,
+            "since": null
+          }
+        ],
+        "first_supported": null,
+        "fully_supported_since": null,
+        "gaps": [],
+        "fallback": {
+          "provider": "azapi",
+          "resource": "azapi_resource",
+          "docs_url": "https://registry.terraform.io/providers/Azure/azapi/latest/docs/resources/resource",
+          "arm_types": [
+            {
+              "type": "Microsoft.Network/privateEndpoints",
+              "documented": true,
+              "docs_url": "https://registry.terraform.io/providers/Azure/azapi/latest/docs/resources/Microsoft.Network_privateEndpoints"
+            }
+          ]
+        },
+        "note": "",
+        "checked_at": "2026-10-24"
+      }
+    },
+    {
+      "id": "storage-account",
+      "name": "Storage account",
+      "tier": 1,
+      "tier_label": "Core",
+      "category": "Storage and databases",
+      "purpose": "Blob, Files, Queue and Table storage under one account.",
+      "facts": [
+        "Contains blob containers, file shares, queues and tables.",
+        "Common uses: Terraform state, boot diagnostics, Functions state, logs."
+      ],
+      "docs": [
+        {
+          "url": "https://learn.microsoft.com/azure/storage/common/storage-account-overview"
+        }
+      ],
+      "review": {
+        "status": "unconfirmed",
+        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+      },
+      "freshness": {
+        "status": "unreviewed",
+        "checked_at": "2026-10-24"
+      },
+      "terraform": {
+        "status": "listed",
+        "resources": [
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_storage_account",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/storage_account",
+            "exists": true,
+            "since": null
+          },
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_storage_container",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/storage_container",
+            "exists": true,
+            "since": null
+          },
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_storage_share",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/storage_share",
+            "exists": true,
+            "since": null
+          },
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_storage_queue",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/storage_queue",
+            "exists": true,
+            "since": null
+          },
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_storage_table",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/storage_table",
+            "exists": true,
+            "since": null
+          },
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_storage_blob",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/storage_blob",
+            "exists": true,
+            "since": null
+          }
+        ],
+        "first_supported": null,
+        "fully_supported_since": null,
+        "gaps": [],
+        "fallback": {
+          "provider": "azapi",
+          "resource": "azapi_resource",
+          "docs_url": "https://registry.terraform.io/providers/Azure/azapi/latest/docs/resources/resource",
+          "arm_types": [
+            {
+              "type": "Microsoft.Storage/storageAccounts",
+              "documented": true,
+              "docs_url": "https://registry.terraform.io/providers/Azure/azapi/latest/docs/resources/Microsoft.Storage_storageAccounts"
+            }
+          ]
+        },
+        "note": "",
+        "checked_at": "2026-10-24"
+      }
+    },
+    {
+      "id": "azure-sql",
+      "name": "Azure SQL",
+      "tier": 1,
+      "tier_label": "Core",
+      "category": "Storage and databases",
+      "purpose": "Managed SQL Server databases, including serverless.",
+      "facts": [],
+      "docs": [
+        {
+          "url": "https://learn.microsoft.com/azure/azure-sql/database/sql-database-paas-overview"
+        }
+      ],
+      "review": {
+        "status": "unconfirmed",
+        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+      },
+      "freshness": {
+        "status": "unreviewed",
+        "checked_at": "2026-10-24"
+      },
+      "terraform": {
+        "status": "listed",
+        "resources": [
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_mssql_server",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/mssql_server",
+            "exists": true,
+            "since": "2.8.0"
+          },
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_mssql_database",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/mssql_database",
+            "exists": true,
+            "since": "2.3.0"
+          },
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_mssql_elasticpool",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/mssql_elasticpool",
+            "exists": true,
+            "since": "1.19.0"
+          },
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_mssql_firewall_rule",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/mssql_firewall_rule",
+            "exists": true,
+            "since": "2.52.0"
+          }
+        ],
+        "first_supported": "1.19.0",
+        "fully_supported_since": "2.52.0",
+        "gaps": [],
+        "fallback": {
+          "provider": "azapi",
+          "resource": "azapi_resource",
+          "docs_url": "https://registry.terraform.io/providers/Azure/azapi/latest/docs/resources/resource",
+          "arm_types": [
+            {
+              "type": "Microsoft.Sql/servers",
+              "documented": true,
+              "docs_url": "https://registry.terraform.io/providers/Azure/azapi/latest/docs/resources/Microsoft.Sql_servers"
+            },
+            {
+              "type": "Microsoft.Sql/servers/databases",
+              "documented": true,
+              "docs_url": "https://registry.terraform.io/providers/Azure/azapi/latest/docs/resources/Microsoft.Sql_servers_databases"
+            }
+          ]
+        },
+        "note": "",
+        "checked_at": "2026-10-24"
+      }
+    },
+    {
+      "id": "azure-database-for-postgresql",
+      "name": "Azure Database for PostgreSQL",
+      "tier": 1,
+      "tier_label": "Core",
+      "category": "Storage and databases",
+      "purpose": "Managed PostgreSQL (flexible server).",
+      "facts": [],
+      "docs": [
+        {
+          "url": "https://learn.microsoft.com/azure/postgresql/flexible-server/overview"
+        }
+      ],
+      "review": {
+        "status": "unconfirmed",
+        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+      },
+      "freshness": {
+        "status": "unreviewed",
+        "checked_at": "2026-10-24"
+      },
+      "terraform": {
+        "status": "listed",
+        "resources": [
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_postgresql_flexible_server",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/postgresql_flexible_server",
+            "exists": true,
+            "since": "2.57.0"
+          },
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_postgresql_flexible_server_database",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/postgresql_flexible_server_database",
+            "exists": true,
+            "since": "2.71.0"
+          },
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_postgresql_flexible_server_configuration",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/postgresql_flexible_server_configuration",
+            "exists": true,
+            "since": "2.68.0"
+          },
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_postgresql_flexible_server_firewall_rule",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/postgresql_flexible_server_firewall_rule",
+            "exists": true,
+            "since": "2.62.0"
+          }
+        ],
+        "first_supported": "2.57.0",
+        "fully_supported_since": "2.71.0",
+        "gaps": [],
+        "fallback": {
+          "provider": "azapi",
+          "resource": "azapi_resource",
+          "docs_url": "https://registry.terraform.io/providers/Azure/azapi/latest/docs/resources/resource",
+          "arm_types": [
+            {
+              "type": "Microsoft.DBforPostgreSQL/flexibleServers",
+              "documented": true,
+              "docs_url": "https://registry.terraform.io/providers/Azure/azapi/latest/docs/resources/Microsoft.DBforPostgreSQL_flexibleServers"
+            }
+          ]
+        },
+        "note": "",
+        "checked_at": "2026-10-24"
+      }
+    },
+    {
+      "id": "cosmos-db",
+      "name": "Cosmos DB",
+      "tier": 1,
+      "tier_label": "Core",
+      "category": "Storage and databases",
+      "purpose": "Globally distributed NoSQL, with a serverless mode.",
+      "facts": [],
+      "docs": [
+        {
+          "url": "https://learn.microsoft.com/azure/cosmos-db/introduction"
+        }
+      ],
+      "review": {
+        "status": "unconfirmed",
+        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+      },
+      "freshness": {
+        "status": "unreviewed",
+        "checked_at": "2026-10-24"
+      },
+      "terraform": {
+        "status": "listed",
+        "resources": [
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_cosmosdb_account",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/cosmosdb_account",
+            "exists": true,
+            "since": null
+          },
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_cosmosdb_sql_database",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/cosmosdb_sql_database",
+            "exists": true,
+            "since": "1.28.0"
+          },
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_cosmosdb_sql_container",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/cosmosdb_sql_container",
+            "exists": true,
+            "since": "1.33.0"
+          }
+        ],
+        "first_supported": null,
+        "fully_supported_since": null,
+        "gaps": [],
+        "fallback": {
+          "provider": "azapi",
+          "resource": "azapi_resource",
+          "docs_url": "https://registry.terraform.io/providers/Azure/azapi/latest/docs/resources/resource",
+          "arm_types": [
+            {
+              "type": "Microsoft.DocumentDB/databaseAccounts",
+              "documented": true,
+              "docs_url": "https://registry.terraform.io/providers/Azure/azapi/latest/docs/resources/Microsoft.DocumentDB_databaseAccounts"
+            }
+          ]
+        },
+        "note": "",
+        "checked_at": "2026-10-24"
+      }
+    },
+    {
+      "id": "service-bus",
+      "name": "Service Bus",
+      "tier": 1,
+      "tier_label": "Core",
+      "category": "Messaging and integration",
+      "purpose": "Queues and topics for reliable messaging.",
+      "facts": [],
+      "docs": [
+        {
+          "url": "https://learn.microsoft.com/azure/service-bus-messaging/service-bus-messaging-overview"
+        }
+      ],
+      "review": {
+        "status": "unconfirmed",
+        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+      },
+      "freshness": {
+        "status": "unreviewed",
+        "checked_at": "2026-10-24"
+      },
+      "terraform": {
+        "status": "listed",
+        "resources": [
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_servicebus_namespace",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/servicebus_namespace",
+            "exists": true,
+            "since": null
+          },
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_servicebus_queue",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/servicebus_queue",
+            "exists": true,
+            "since": null
+          },
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_servicebus_topic",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/servicebus_topic",
+            "exists": true,
+            "since": null
+          },
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_servicebus_subscription",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/servicebus_subscription",
+            "exists": true,
+            "since": null
+          }
+        ],
+        "first_supported": null,
+        "fully_supported_since": null,
+        "gaps": [],
+        "fallback": {
+          "provider": "azapi",
+          "resource": "azapi_resource",
+          "docs_url": "https://registry.terraform.io/providers/Azure/azapi/latest/docs/resources/resource",
+          "arm_types": [
+            {
+              "type": "Microsoft.ServiceBus/namespaces",
+              "documented": true,
+              "docs_url": "https://registry.terraform.io/providers/Azure/azapi/latest/docs/resources/Microsoft.ServiceBus_namespaces"
+            }
+          ]
+        },
+        "note": "",
+        "checked_at": "2026-10-24"
+      }
+    },
+    {
+      "id": "event-grid",
+      "name": "Event Grid",
+      "tier": 1,
+      "tier_label": "Core",
+      "category": "Messaging and integration",
+      "purpose": "Route events between services.",
+      "facts": [],
+      "docs": [
+        {
+          "url": "https://learn.microsoft.com/azure/event-grid/overview"
+        }
+      ],
+      "review": {
+        "status": "unconfirmed",
+        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+      },
+      "freshness": {
+        "status": "unreviewed",
+        "checked_at": "2026-10-24"
+      },
+      "terraform": {
+        "status": "listed",
+        "resources": [
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_eventgrid_topic",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/eventgrid_topic",
+            "exists": true,
+            "since": null
+          },
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_eventgrid_system_topic",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/eventgrid_system_topic",
+            "exists": true,
+            "since": null
+          },
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_eventgrid_event_subscription",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/eventgrid_event_subscription",
+            "exists": true,
+            "since": "1.23.0"
+          },
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_eventgrid_domain",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/eventgrid_domain",
+            "exists": true,
+            "since": "1.23.0"
+          }
+        ],
+        "first_supported": null,
+        "fully_supported_since": null,
+        "gaps": [],
+        "fallback": {
+          "provider": "azapi",
+          "resource": "azapi_resource",
+          "docs_url": "https://registry.terraform.io/providers/Azure/azapi/latest/docs/resources/resource",
+          "arm_types": [
+            {
+              "type": "Microsoft.EventGrid/topics",
+              "documented": true,
+              "docs_url": "https://registry.terraform.io/providers/Azure/azapi/latest/docs/resources/Microsoft.EventGrid_topics"
+            },
+            {
+              "type": "Microsoft.EventGrid/systemTopics",
+              "documented": true,
+              "docs_url": "https://registry.terraform.io/providers/Azure/azapi/latest/docs/resources/Microsoft.EventGrid_systemTopics"
+            }
+          ]
+        },
+        "note": "",
+        "checked_at": "2026-10-24"
+      }
+    },
+    {
+      "id": "azure-monitor",
+      "name": "Azure Monitor",
+      "tier": 0,
+      "tier_label": "Always there",
+      "category": "Observability",
+      "purpose": "Metrics, alerts and the umbrella for monitoring.",
+      "facts": [],
+      "docs": [
+        {
+          "url": "https://learn.microsoft.com/azure/azure-monitor/fundamentals/overview"
+        }
+      ],
+      "review": {
+        "status": "unconfirmed",
+        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+      },
+      "freshness": {
+        "status": "unreviewed",
+        "checked_at": "2026-10-24"
+      },
+      "terraform": {
+        "status": "listed",
+        "resources": [
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_monitor_action_group",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/monitor_action_group",
+            "exists": true,
+            "since": "1.13.0"
+          },
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_monitor_metric_alert",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/monitor_metric_alert",
+            "exists": true,
+            "since": "1.17.0"
+          },
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_monitor_diagnostic_setting",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/monitor_diagnostic_setting",
+            "exists": true,
+            "since": "1.19.0"
+          },
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_monitor_data_collection_rule",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/monitor_data_collection_rule",
+            "exists": true,
+            "since": "3.15.0"
+          }
+        ],
+        "first_supported": "1.13.0",
+        "fully_supported_since": "3.15.0",
+        "gaps": [],
+        "fallback": {
+          "provider": "azapi",
+          "resource": "azapi_resource",
+          "docs_url": "https://registry.terraform.io/providers/Azure/azapi/latest/docs/resources/resource",
+          "arm_types": [
+            {
+              "type": "Microsoft.Insights/actionGroups",
+              "documented": true,
+              "docs_url": "https://registry.terraform.io/providers/Azure/azapi/latest/docs/resources/Microsoft.Insights_actionGroups"
+            },
+            {
+              "type": "Microsoft.Insights/diagnosticSettings",
+              "documented": true,
+              "docs_url": "https://registry.terraform.io/providers/Azure/azapi/latest/docs/resources/Microsoft.Insights_diagnosticSettings"
+            },
+            {
+              "type": "Microsoft.Insights/dataCollectionRules",
+              "documented": true,
+              "docs_url": "https://registry.terraform.io/providers/Azure/azapi/latest/docs/resources/Microsoft.Insights_dataCollectionRules"
+            }
+          ]
+        },
+        "note": "",
+        "checked_at": "2026-10-24"
+      }
+    },
+    {
+      "id": "log-analytics",
+      "name": "Log Analytics",
+      "tier": 1,
+      "tier_label": "Core",
+      "category": "Observability",
+      "purpose": "Log store queried with KQL.",
+      "facts": [
+        "A workspace stores logs; query them with KQL.",
+        "Many resources send logs through diagnostic settings."
+      ],
+      "docs": [
+        {
+          "url": "https://learn.microsoft.com/azure/azure-monitor/logs/log-analytics-overview"
+        }
+      ],
+      "review": {
+        "status": "unconfirmed",
+        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+      },
+      "freshness": {
+        "status": "unreviewed",
+        "checked_at": "2026-10-24"
+      },
+      "terraform": {
+        "status": "listed",
+        "resources": [
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_log_analytics_workspace",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/log_analytics_workspace",
+            "exists": true,
+            "since": null
+          }
+        ],
+        "first_supported": null,
+        "fully_supported_since": null,
+        "gaps": [],
+        "fallback": {
+          "provider": "azapi",
+          "resource": "azapi_resource",
+          "docs_url": "https://registry.terraform.io/providers/Azure/azapi/latest/docs/resources/resource",
+          "arm_types": [
+            {
+              "type": "Microsoft.OperationalInsights/workspaces",
+              "documented": true,
+              "docs_url": "https://registry.terraform.io/providers/Azure/azapi/latest/docs/resources/Microsoft.OperationalInsights_workspaces"
+            }
+          ]
+        },
+        "note": "",
+        "checked_at": "2026-10-24"
+      }
+    },
+    {
+      "id": "application-insights",
+      "name": "Application Insights",
+      "tier": 1,
+      "tier_label": "Core",
+      "category": "Observability",
+      "purpose": "Application telemetry: requests, traces, failures.",
+      "facts": [],
+      "docs": [
+        {
+          "url": "https://learn.microsoft.com/azure/azure-monitor/app/app-insights-overview"
+        }
+      ],
+      "review": {
+        "status": "unconfirmed",
+        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+      },
+      "freshness": {
+        "status": "unreviewed",
+        "checked_at": "2026-10-24"
+      },
+      "terraform": {
+        "status": "listed",
+        "resources": [
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_application_insights",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/application_insights",
+            "exists": true,
+            "since": null
+          }
+        ],
+        "first_supported": null,
+        "fully_supported_since": null,
+        "gaps": [],
+        "fallback": {
+          "provider": "azapi",
+          "resource": "azapi_resource",
+          "docs_url": "https://registry.terraform.io/providers/Azure/azapi/latest/docs/resources/resource",
+          "arm_types": [
+            {
+              "type": "Microsoft.Insights/components",
+              "documented": true,
+              "docs_url": "https://registry.terraform.io/providers/Azure/azapi/latest/docs/resources/Microsoft.Insights_components"
+            }
+          ]
+        },
+        "note": "",
+        "checked_at": "2026-10-24"
+      }
+    },
+    {
+      "id": "managed-prometheus-and-grafana",
+      "name": "Managed Prometheus and Grafana",
+      "tier": 1,
+      "tier_label": "Core",
+      "category": "Observability",
+      "purpose": "Azure-hosted Prometheus metrics and Grafana dashboards.",
+      "facts": [],
+      "docs": [
+        {
+          "url": "https://learn.microsoft.com/azure/azure-monitor/metrics/prometheus-metrics-overview"
+        },
+        {
+          "url": "https://learn.microsoft.com/azure/managed-grafana/overview"
+        }
+      ],
+      "review": {
+        "status": "unconfirmed",
+        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+      },
+      "freshness": {
+        "status": "unreviewed",
+        "checked_at": "2026-10-24"
+      },
+      "terraform": {
+        "status": "listed",
+        "resources": [
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_monitor_workspace",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/monitor_workspace",
+            "exists": true,
+            "since": "3.56.0"
+          },
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_dashboard_grafana",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/dashboard_grafana",
+            "exists": true,
+            "since": "3.21.0"
+          },
+          {
+            "provider": "azurerm",
+            "kind": "resource",
+            "type": "azurerm_monitor_alert_prometheus_rule_group",
+            "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/monitor_alert_prometheus_rule_group",
+            "exists": true,
+            "since": "3.58.0"
+          }
+        ],
+        "first_supported": "3.21.0",
+        "fully_supported_since": "3.58.0",
+        "gaps": [],
+        "fallback": {
+          "provider": "azapi",
+          "resource": "azapi_resource",
+          "docs_url": "https://registry.terraform.io/providers/Azure/azapi/latest/docs/resources/resource",
+          "arm_types": [
+            {
+              "type": "Microsoft.Monitor/accounts",
+              "documented": true,
+              "docs_url": "https://registry.terraform.io/providers/Azure/azapi/latest/docs/resources/Microsoft.Monitor_accounts"
+            },
+            {
+              "type": "Microsoft.Dashboard/grafana",
+              "documented": true,
+              "docs_url": "https://registry.terraform.io/providers/Azure/azapi/latest/docs/resources/Microsoft.Dashboard_grafana"
+            }
+          ]
+        },
+        "note": "",
+        "checked_at": "2026-10-24"
+      }
+    },
+    {
+      "id": "azure-devops",
+      "name": "Azure DevOps",
+      "tier": 0,
+      "tier_label": "Always there",
+      "category": "Developer tools and delivery",
+      "purpose": "Repos, pipelines, boards and artifacts (a separate service from the Azure resource model).",
+      "facts": [],
+      "docs": [
+        {
+          "url": "https://learn.microsoft.com/azure/devops/user-guide/what-is-azure-devops"
+        }
+      ],
+      "review": {
+        "status": "unconfirmed",
+        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+      },
+      "freshness": {
+        "status": "unreviewed",
+        "checked_at": "2026-10-24"
+      },
+      "terraform": {
+        "status": "listed",
+        "resources": [
+          {
+            "provider": "azuredevops",
+            "kind": "resource",
+            "type": "azuredevops_project",
+            "docs_url": "https://registry.terraform.io/providers/microsoft/azuredevops/latest/docs/resources/project",
+            "exists": true,
+            "since": "0.0.1"
+          },
+          {
+            "provider": "azuredevops",
+            "kind": "resource",
+            "type": "azuredevops_build_definition",
+            "docs_url": "https://registry.terraform.io/providers/microsoft/azuredevops/latest/docs/resources/build_definition",
+            "exists": true,
+            "since": "0.0.1"
+          },
+          {
+            "provider": "azuredevops",
+            "kind": "resource",
+            "type": "azuredevops_serviceendpoint_azurerm",
+            "docs_url": "https://registry.terraform.io/providers/microsoft/azuredevops/latest/docs/resources/serviceendpoint_azurerm",
+            "exists": true,
+            "since": "0.0.1"
+          }
+        ],
+        "first_supported": "0.0.1",
+        "fully_supported_since": "0.0.1",
+        "gaps": [],
+        "fallback": null,
+        "note": "",
+        "checked_at": "2026-10-24"
+      }
+    }
+  ],
+  "stubs": [
+    {
+      "id": "api-management",
+      "name": "API Management",
+      "tier": 2,
+      "category": "Messaging and integration"
+    },
+    {
+      "id": "app-configuration",
+      "name": "App Configuration",
+      "tier": 2,
+      "category": "Developer tools and delivery"
+    },
+    {
+      "id": "automation",
+      "name": "Automation",
+      "tier": 2,
+      "category": "Governance and management"
+    },
+    {
+      "id": "azure-database-for-mysql",
+      "name": "Azure Database for MySQL",
+      "tier": 2,
+      "category": "Storage and databases"
+    },
+    {
+      "id": "azure-files",
+      "name": "Azure Files",
+      "tier": 2,
+      "category": "Storage and databases"
+    },
+    {
+      "id": "azure-firewall",
+      "name": "Azure Firewall",
+      "tier": 2,
+      "category": "Networking"
+    },
+    {
+      "id": "bastion",
+      "name": "Bastion",
+      "tier": 2,
+      "category": "Networking"
+    },
+    {
+      "id": "conditional-access",
+      "name": "Conditional Access",
+      "tier": 2,
+      "category": "Identity and security"
+    },
+    {
+      "id": "data-factory",
+      "name": "Data Factory",
+      "tier": 2,
+      "category": "Messaging and integration"
+    },
+    {
+      "id": "data-lake-storage-gen2",
+      "name": "Data Lake Storage Gen2",
+      "tier": 2,
+      "category": "Storage and databases"
+    },
+    {
+      "id": "event-hubs",
+      "name": "Event Hubs",
+      "tier": 2,
+      "category": "Messaging and integration"
+    },
+    {
+      "id": "expressroute",
+      "name": "ExpressRoute",
+      "tier": 2,
+      "category": "Networking"
+    },
+    {
+      "id": "lighthouse",
+      "name": "Lighthouse",
+      "tier": 3,
+      "category": "Governance and management"
+    },
+    {
+      "id": "logic-apps",
+      "name": "Logic Apps",
+      "tier": 2,
+      "category": "Messaging and integration"
+    },
+    {
+      "id": "microsoft-sentinel",
+      "name": "Microsoft Sentinel",
+      "tier": 2,
+      "category": "Identity and security"
+    },
+    {
+      "id": "nat-gateway",
+      "name": "NAT Gateway",
+      "tier": 2,
+      "category": "Networking"
+    },
+    {
+      "id": "private-link",
+      "name": "Private Link",
+      "tier": 2,
+      "category": "Networking"
+    },
+    {
+      "id": "privileged-identity-management",
+      "name": "Privileged Identity Management",
+      "tier": 2,
+      "category": "Identity and security"
+    },
+    {
+      "id": "site-recovery",
+      "name": "Site Recovery",
+      "tier": 2,
+      "category": "Governance and management"
+    },
+    {
+      "id": "traffic-manager",
+      "name": "Traffic Manager",
+      "tier": 2,
+      "category": "Networking"
+    },
+    {
+      "id": "update-manager",
+      "name": "Update Manager",
+      "tier": 2,
+      "category": "Governance and management"
+    },
+    {
+      "id": "vpn-gateway",
+      "name": "VPN Gateway",
+      "tier": 2,
+      "category": "Networking"
+    },
+    {
+      "id": "virtual-network-peering",
+      "name": "Virtual network peering",
+      "tier": 2,
+      "category": "Networking"
+    }
+  ],
+  "edges": [
+    {
+      "from": "resource-groups",
+      "type": "contains",
+      "to": "virtual-machines",
+      "note": "",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "resource-groups",
+      "type": "contains",
+      "to": "managed-disks",
+      "note": "",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "resource-groups",
+      "type": "contains",
+      "to": "virtual-machine-scale-sets",
+      "note": "",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "resource-groups",
+      "type": "contains",
+      "to": "app-service",
+      "note": "",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "resource-groups",
+      "type": "contains",
+      "to": "azure-functions",
+      "note": "",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "resource-groups",
+      "type": "contains",
+      "to": "container-apps",
+      "note": "",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "resource-groups",
+      "type": "contains",
+      "to": "azure-kubernetes-service-aks",
+      "note": "",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "resource-groups",
+      "type": "contains",
+      "to": "container-registry-acr",
+      "note": "",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "resource-groups",
+      "type": "contains",
+      "to": "virtual-network-and-subnets",
+      "note": "",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "resource-groups",
+      "type": "contains",
+      "to": "network-interface-nic",
+      "note": "",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "resource-groups",
+      "type": "contains",
+      "to": "network-security-group",
+      "note": "",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "resource-groups",
+      "type": "contains",
+      "to": "public-ip-address",
+      "note": "",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "resource-groups",
+      "type": "contains",
+      "to": "load-balancer",
+      "note": "",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "resource-groups",
+      "type": "contains",
+      "to": "application-gateway-front-door",
+      "note": "",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "resource-groups",
+      "type": "contains",
+      "to": "azure-dns-and-private-dns",
+      "note": "",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "resource-groups",
+      "type": "contains",
+      "to": "private-endpoint",
+      "note": "",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "resource-groups",
+      "type": "contains",
+      "to": "storage-account",
+      "note": "",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "resource-groups",
+      "type": "contains",
+      "to": "azure-sql",
+      "note": "",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "resource-groups",
+      "type": "contains",
+      "to": "azure-database-for-postgresql",
+      "note": "",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "resource-groups",
+      "type": "contains",
+      "to": "cosmos-db",
+      "note": "",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "resource-groups",
+      "type": "contains",
+      "to": "service-bus",
+      "note": "",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "resource-groups",
+      "type": "contains",
+      "to": "event-grid",
+      "note": "",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "resource-groups",
+      "type": "contains",
+      "to": "key-vault",
+      "note": "",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "resource-groups",
+      "type": "contains",
+      "to": "managed-identities",
+      "note": "",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "resource-groups",
+      "type": "contains",
+      "to": "log-analytics",
+      "note": "",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "resource-groups",
+      "type": "contains",
+      "to": "application-insights",
+      "note": "",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "resource-groups",
+      "type": "contains",
+      "to": "azure-backup-recovery-services-vault",
+      "note": "",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "entra-tenant",
+      "type": "contains",
+      "to": "management-groups",
+      "note": "The root management group is created per tenant",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "management-groups",
+      "type": "contains",
+      "to": "subscriptions",
+      "note": "",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "subscriptions",
+      "type": "contains",
+      "to": "resource-groups",
+      "note": "",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "subscriptions",
+      "type": "requires",
+      "to": "entra-tenant",
+      "note": "Each subscription trusts exactly one tenant",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "azure-resource-manager",
+      "type": "enforces",
+      "to": "azure-policy",
+      "note": "Evaluated on each create or update; can deny or modify the request",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "azure-resource-manager",
+      "type": "enforces",
+      "to": "azure-rbac-role-assignments",
+      "note": "Checked on every request: may this identity do this at this scope?",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "azure-devops",
+      "type": "access",
+      "to": "azure-resource-manager",
+      "note": "A service connection calls ARM using an identity",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "entra-id",
+      "type": "requires",
+      "to": "entra-tenant",
+      "note": "Every Entra ID object lives in a tenant",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "azure-rbac-role-assignments",
+      "type": "requires",
+      "to": "entra-id",
+      "note": "The principal (user, group, service principal, managed identity) comes from Entra ID",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "azure-rbac-role-assignments",
+      "type": "access",
+      "to": "management-groups",
+      "note": "Can be assigned at this scope",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "azure-rbac-role-assignments",
+      "type": "access",
+      "to": "subscriptions",
+      "note": "Can be assigned at this scope",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "azure-rbac-role-assignments",
+      "type": "access",
+      "to": "resource-groups",
+      "note": "Can be assigned at this scope",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "azure-rbac-role-assignments",
+      "type": "access",
+      "to": "key-vault",
+      "note": "Data roles such as Key Vault Secrets User",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "azure-rbac-role-assignments",
+      "type": "access",
+      "to": "storage-account",
+      "note": "Data roles such as Storage Blob Data Contributor",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "azure-rbac-role-assignments",
+      "type": "access",
+      "to": "container-registry-acr",
+      "note": "Roles such as AcrPull and AcrPush",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "azure-rbac-role-assignments",
+      "type": "access",
+      "to": "service-bus",
+      "note": "Roles such as Azure Service Bus Data Sender",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "azure-rbac-role-assignments",
+      "type": "access",
+      "to": "azure-kubernetes-service-aks",
+      "note": "Cluster management and Kubernetes data roles",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "managed-identities",
+      "type": "requires",
+      "to": "entra-id",
+      "note": "Each one is a service principal in the tenant",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "managed-identities",
+      "type": "access",
+      "to": "key-vault",
+      "note": "Needs a role assignment, e.g. Key Vault Secrets User",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "managed-identities",
+      "type": "access",
+      "to": "storage-account",
+      "note": "Needs a role assignment, e.g. Storage Blob Data Contributor",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "managed-identities",
+      "type": "access",
+      "to": "container-registry-acr",
+      "note": "e.g. AcrPull",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "managed-identities",
+      "type": "access",
+      "to": "service-bus",
+      "note": "e.g. Azure Service Bus Data Sender",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "managed-identities",
+      "type": "access",
+      "to": "azure-sql",
+      "note": "Through an Entra user created in the database",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "azure-kubernetes-service-aks",
+      "type": "requires",
+      "to": "managed-identities",
+      "note": "Managed identity (recommended) or service principal",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "key-vault",
+      "type": "requires",
+      "to": "entra-tenant",
+      "note": "A vault is tied to one tenant",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "key-vault",
+      "type": "sends",
+      "to": "log-analytics",
+      "note": "Audit logs via diagnostic settings",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "managed-disks",
+      "type": "optional",
+      "to": "key-vault",
+      "note": "Customer-managed encryption keys",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "storage-account",
+      "type": "optional",
+      "to": "key-vault",
+      "note": "Customer-managed encryption keys",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "azure-sql",
+      "type": "optional",
+      "to": "key-vault",
+      "note": "Customer-managed encryption keys",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "app-service",
+      "type": "optional",
+      "to": "key-vault",
+      "note": "Key Vault references for app settings",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "azure-kubernetes-service-aks",
+      "type": "optional",
+      "to": "key-vault",
+      "note": "Secrets Store CSI driver",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "application-gateway-front-door",
+      "type": "optional",
+      "to": "key-vault",
+      "note": "TLS certificates",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "azure-devops",
+      "type": "access",
+      "to": "key-vault",
+      "note": "Variable groups linked to a vault",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "defender-for-cloud",
+      "type": "protects",
+      "to": "virtual-machines",
+      "note": "",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "defender-for-cloud",
+      "type": "protects",
+      "to": "azure-kubernetes-service-aks",
+      "note": "",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "defender-for-cloud",
+      "type": "protects",
+      "to": "container-registry-acr",
+      "note": "",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "defender-for-cloud",
+      "type": "protects",
+      "to": "storage-account",
+      "note": "",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "defender-for-cloud",
+      "type": "protects",
+      "to": "azure-sql",
+      "note": "",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "defender-for-cloud",
+      "type": "protects",
+      "to": "key-vault",
+      "note": "",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "microsoft-sentinel",
+      "type": "requires",
+      "to": "log-analytics",
+      "note": "Sentinel is enabled on a workspace",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "entra-id",
+      "type": "sends",
+      "to": "log-analytics",
+      "note": "Sign-in and audit logs via diagnostic settings",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "conditional-access",
+      "type": "requires",
+      "to": "entra-id",
+      "note": "",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "privileged-identity-management",
+      "type": "requires",
+      "to": "entra-id",
+      "note": "",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "privileged-identity-management",
+      "type": "access",
+      "to": "azure-rbac-role-assignments",
+      "note": "Makes role assignments eligible and time-limited",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "azure-policy",
+      "type": "protects",
+      "to": "management-groups",
+      "note": "Assigned at this scope",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "azure-policy",
+      "type": "protects",
+      "to": "subscriptions",
+      "note": "Assigned at this scope",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "azure-policy",
+      "type": "protects",
+      "to": "resource-groups",
+      "note": "Assigned at this scope",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "azure-backup-recovery-services-vault",
+      "type": "protects",
+      "to": "virtual-machines",
+      "note": "",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "azure-backup-recovery-services-vault",
+      "type": "protects",
+      "to": "managed-disks",
+      "note": "",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "azure-backup-recovery-services-vault",
+      "type": "protects",
+      "to": "azure-files",
+      "note": "",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "azure-backup-recovery-services-vault",
+      "type": "protects",
+      "to": "storage-account",
+      "note": "Blob backup",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "azure-backup-recovery-services-vault",
+      "type": "protects",
+      "to": "azure-database-for-postgresql",
+      "note": "",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "site-recovery",
+      "type": "protects",
+      "to": "virtual-machines",
+      "note": "Replication to another region",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "update-manager",
+      "type": "protects",
+      "to": "virtual-machines",
+      "note": "Patching",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "automation",
+      "type": "optional",
+      "to": "managed-identities",
+      "note": "Runbooks can authenticate with one",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "cost-management",
+      "type": "access",
+      "to": "subscriptions",
+      "note": "Reads cost data at subscription, resource group or management-group scope",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "resource-graph",
+      "type": "access",
+      "to": "subscriptions",
+      "note": "Queries resources across subscriptions you can read",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "lighthouse",
+      "type": "access",
+      "to": "subscriptions",
+      "note": "Delegated access to customer subscriptions",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "virtual-machines",
+      "type": "requires",
+      "to": "network-interface-nic",
+      "note": "At least one NIC",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "virtual-machines",
+      "type": "requires",
+      "to": "managed-disks",
+      "note": "An OS disk (legacy unmanaged disks use a storage account instead)",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "virtual-machines",
+      "type": "optional",
+      "to": "storage-account",
+      "note": "Boot diagnostics (a managed option also exists)",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "virtual-machines",
+      "type": "sends",
+      "to": "log-analytics",
+      "note": "Logs and metrics via Azure Monitor Agent",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "virtual-machine-scale-sets",
+      "type": "requires",
+      "to": "virtual-network-and-subnets",
+      "note": "Instances get NICs in a subnet",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "virtual-machine-scale-sets",
+      "type": "optional",
+      "to": "load-balancer",
+      "note": "Backend pool",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "azure-kubernetes-service-aks",
+      "type": "requires",
+      "to": "virtual-network-and-subnets",
+      "note": "Node pools run in a subnet",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "azure-kubernetes-service-aks",
+      "type": "requires",
+      "to": "virtual-machine-scale-sets",
+      "note": "Each node pool is a scale set",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "azure-kubernetes-service-aks",
+      "type": "optional",
+      "to": "container-registry-acr",
+      "note": "Pull images; grant AcrPull to the kubelet identity",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "azure-kubernetes-service-aks",
+      "type": "sends",
+      "to": "log-analytics",
+      "note": "Container Insights",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "azure-kubernetes-service-aks",
+      "type": "sends",
+      "to": "managed-prometheus-and-grafana",
+      "note": "Prometheus metrics",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "app-service",
+      "type": "optional",
+      "to": "virtual-network-and-subnets",
+      "note": "VNet integration uses a delegated subnet",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "app-service",
+      "type": "sends",
+      "to": "application-insights",
+      "note": "Request and failure telemetry",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "app-service",
+      "type": "optional",
+      "to": "app-configuration",
+      "note": "Central settings",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "azure-functions",
+      "type": "requires",
+      "to": "storage-account",
+      "note": "Needed for triggers, state and logs on most plans",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "azure-functions",
+      "type": "sends",
+      "to": "application-insights",
+      "note": "Telemetry",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "container-apps",
+      "type": "optional",
+      "to": "virtual-network-and-subnets",
+      "note": "Environment can be injected into a subnet",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "container-apps",
+      "type": "optional",
+      "to": "container-registry-acr",
+      "note": "Pull images",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "container-apps",
+      "type": "sends",
+      "to": "log-analytics",
+      "note": "Console and system logs",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "network-interface-nic",
+      "type": "requires",
+      "to": "virtual-network-and-subnets",
+      "note": "A NIC always sits in one subnet",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "network-interface-nic",
+      "type": "optional",
+      "to": "network-security-group",
+      "note": "Can be attached at NIC level",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "network-interface-nic",
+      "type": "optional",
+      "to": "public-ip-address",
+      "note": "Gives the NIC an internet-facing address",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "network-interface-nic",
+      "type": "optional",
+      "to": "load-balancer",
+      "note": "Backend pool membership",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "virtual-network-and-subnets",
+      "type": "optional",
+      "to": "network-security-group",
+      "note": "Can be associated at subnet level",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "virtual-network-and-subnets",
+      "type": "optional",
+      "to": "nat-gateway",
+      "note": "Outbound addresses for a subnet",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "virtual-network-and-subnets",
+      "type": "network",
+      "to": "azure-dns-and-private-dns",
+      "note": "Azure-provided DNS by default; private zones link to the VNet",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "virtual-network-peering",
+      "type": "requires",
+      "to": "virtual-network-and-subnets",
+      "note": "Connects two VNets",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "load-balancer",
+      "type": "optional",
+      "to": "public-ip-address",
+      "note": "Frontend IP (or an internal one)",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "application-gateway-front-door",
+      "type": "optional",
+      "to": "public-ip-address",
+      "note": "Application Gateway frontend",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "application-gateway-front-door",
+      "type": "network",
+      "to": "app-service",
+      "note": "Routes HTTP(S) to backends",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "application-gateway-front-door",
+      "type": "network",
+      "to": "azure-kubernetes-service-aks",
+      "note": "Ingress",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "application-gateway-front-door",
+      "type": "network",
+      "to": "virtual-machines",
+      "note": "Backend pool",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "traffic-manager",
+      "type": "network",
+      "to": "app-service",
+      "note": "DNS-level routing to endpoints",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "private-endpoint",
+      "type": "requires",
+      "to": "virtual-network-and-subnets",
+      "note": "Creates a NIC with a private IP in your subnet",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "private-endpoint",
+      "type": "requires",
+      "to": "private-link",
+      "note": "The underlying service",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "private-endpoint",
+      "type": "network",
+      "to": "key-vault",
+      "note": "Puts the service behind a private IP",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "private-endpoint",
+      "type": "network",
+      "to": "storage-account",
+      "note": "Puts the service behind a private IP",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "private-endpoint",
+      "type": "network",
+      "to": "azure-sql",
+      "note": "Puts the service behind a private IP",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "private-endpoint",
+      "type": "network",
+      "to": "azure-database-for-postgresql",
+      "note": "Puts the service behind a private IP",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "private-endpoint",
+      "type": "network",
+      "to": "cosmos-db",
+      "note": "Puts the service behind a private IP",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "private-endpoint",
+      "type": "network",
+      "to": "service-bus",
+      "note": "Puts the service behind a private IP",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "private-endpoint",
+      "type": "network",
+      "to": "container-registry-acr",
+      "note": "Puts the service behind a private IP",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "private-endpoint",
+      "type": "network",
+      "to": "app-service",
+      "note": "Puts the service behind a private IP",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "azure-dns-and-private-dns",
+      "type": "network",
+      "to": "private-endpoint",
+      "note": "A private zone resolves the service name to the private IP",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "bastion",
+      "type": "requires",
+      "to": "virtual-network-and-subnets",
+      "note": "Needs its own subnet named AzureBastionSubnet",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "bastion",
+      "type": "requires",
+      "to": "public-ip-address",
+      "note": "",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "bastion",
+      "type": "network",
+      "to": "virtual-machines",
+      "note": "Browser-based SSH or RDP",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "azure-firewall",
+      "type": "requires",
+      "to": "virtual-network-and-subnets",
+      "note": "Needs AzureFirewallSubnet",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "azure-firewall",
+      "type": "requires",
+      "to": "public-ip-address",
+      "note": "",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "vpn-gateway",
+      "type": "requires",
+      "to": "virtual-network-and-subnets",
+      "note": "Needs GatewaySubnet",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "vpn-gateway",
+      "type": "requires",
+      "to": "public-ip-address",
+      "note": "",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "expressroute",
+      "type": "network",
+      "to": "virtual-network-and-subnets",
+      "note": "Connects through a gateway in the VNet",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "nat-gateway",
+      "type": "requires",
+      "to": "public-ip-address",
+      "note": "Outbound address",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "storage-account",
+      "type": "contains",
+      "to": "azure-files",
+      "note": "File shares live in a storage account",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "data-lake-storage-gen2",
+      "type": "requires",
+      "to": "storage-account",
+      "note": "A storage account with hierarchical namespace enabled",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "storage-account",
+      "type": "sends",
+      "to": "event-grid",
+      "note": "Blob events",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "storage-account",
+      "type": "sends",
+      "to": "log-analytics",
+      "note": "Storage logs via diagnostic settings",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "azure-sql",
+      "type": "sends",
+      "to": "log-analytics",
+      "note": "Audit and diagnostics",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "azure-sql",
+      "type": "access",
+      "to": "entra-id",
+      "note": "Entra authentication for logins",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "cosmos-db",
+      "type": "sends",
+      "to": "log-analytics",
+      "note": "Diagnostics",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "azure-database-for-postgresql",
+      "type": "optional",
+      "to": "virtual-network-and-subnets",
+      "note": "Private access through a delegated subnet",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "azure-database-for-postgresql",
+      "type": "sends",
+      "to": "log-analytics",
+      "note": "Diagnostics",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "azure-database-for-mysql",
+      "type": "optional",
+      "to": "virtual-network-and-subnets",
+      "note": "Private access through a delegated subnet",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "event-grid",
+      "type": "sends",
+      "to": "azure-functions",
+      "note": "Event handler",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "event-grid",
+      "type": "sends",
+      "to": "service-bus",
+      "note": "Event handler",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "event-grid",
+      "type": "sends",
+      "to": "event-hubs",
+      "note": "Event handler",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "service-bus",
+      "type": "sends",
+      "to": "azure-functions",
+      "note": "Queue or topic trigger",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "api-management",
+      "type": "network",
+      "to": "app-service",
+      "note": "Backend API",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "api-management",
+      "type": "network",
+      "to": "azure-functions",
+      "note": "Backend API",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "logic-apps",
+      "type": "sends",
+      "to": "service-bus",
+      "note": "Connector action",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "logic-apps",
+      "type": "optional",
+      "to": "managed-identities",
+      "note": "Connector authentication",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "data-factory",
+      "type": "sends",
+      "to": "storage-account",
+      "note": "Copy source or sink",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "data-factory",
+      "type": "sends",
+      "to": "azure-sql",
+      "note": "Copy source or sink",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "data-factory",
+      "type": "access",
+      "to": "key-vault",
+      "note": "Linked service secrets",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "data-factory",
+      "type": "optional",
+      "to": "managed-identities",
+      "note": "Authentication to data stores",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "azure-monitor",
+      "type": "contains",
+      "to": "log-analytics",
+      "note": "The log store and query side",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "azure-monitor",
+      "type": "contains",
+      "to": "application-insights",
+      "note": "Application monitoring",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "azure-monitor",
+      "type": "contains",
+      "to": "managed-prometheus-and-grafana",
+      "note": "Metrics and dashboards",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "azure-monitor",
+      "type": "sends",
+      "to": "event-hubs",
+      "note": "Stream diagnostics to external tools",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "application-insights",
+      "type": "requires",
+      "to": "log-analytics",
+      "note": "Workspace-based Application Insights stores its data in a workspace",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "managed-prometheus-and-grafana",
+      "type": "access",
+      "to": "log-analytics",
+      "note": "Used as a Grafana data source",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "managed-prometheus-and-grafana",
+      "type": "access",
+      "to": "application-insights",
+      "note": "Used as a Grafana data source",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "azure-devops",
+      "type": "access",
+      "to": "subscriptions",
+      "note": "A service connection scoped to a subscription",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "azure-devops",
+      "type": "access",
+      "to": "resource-groups",
+      "note": "A service connection scoped to a resource group",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "azure-devops",
+      "type": "access",
+      "to": "managed-identities",
+      "note": "Service connections can use a managed identity or workload identity federation",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "azure-devops",
+      "type": "optional",
+      "to": "entra-id",
+      "note": "Organization can be backed by the tenant for sign-in",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "azure-devops",
+      "type": "sends",
+      "to": "container-registry-acr",
+      "note": "Pipelines push images",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    },
+    {
+      "from": "azure-devops",
+      "type": "access",
+      "to": "storage-account",
+      "note": "Common pattern: Terraform state read by the pipeline identity",
+      "origin": "legacy-import",
+      "status": "unconfirmed"
+    }
+  ]
+}

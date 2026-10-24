@@ -1,0 +1,39 @@
+name: Daily check
+
+on:
+  schedule:
+    - cron: "17 5 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Check Learn pages and Terraform support
+        run: make check
+      - name: Validate and rebuild
+        run: make build
+      - name: Summary
+        run: |
+          python3 - <<'EOF' >> "$GITHUB_STEP_SUMMARY"
+          import json
+          d = json.load(open("dist/services.resolved.json"))
+          print("### Services needing attention")
+          for s in d["services"]:
+              if s["freshness"]["status"] in ("stale", "error"):
+                  print(f"- `{s['id']}`: docs {s['freshness']['status']}")
+          EOF
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/services.json dist
+          git diff --cached --quiet || git commit -m "Daily check: update freshness and Terraform status"
+          git push
