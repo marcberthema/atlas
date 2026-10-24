@@ -8,7 +8,7 @@ FRESHNESS = {"unreviewed", "current", "stale", "error"}
 REVIEW = {"unconfirmed", "verified"}
 EDGE_STATUS = {"unconfirmed", "verified"}
 TF_KINDS = set(model.TF_KINDS)
-MANUAL_KEYS = {"purpose", "facts", "terraform"}
+MANUAL_KEYS = {"purpose", "facts", "cloud_native", "terraform"}
 
 
 def main():
@@ -47,6 +47,17 @@ def main():
         for r in s["fetched"].get("terraform", {}).get("resources", []):
             if r["exists"] is False:
                 warn.append(f"terraform resource not found: {r['type']} ({i})")
+    levels = {c["level"] for c in data["cloud_native_scale"]}
+    for s in data["services"]:
+        cn = model.deep_merge(s["fetched"], s["manual"]).get("cloud_native")
+        if cn and (cn.get("level") not in levels or not cn.get("note")):
+            bad.append(f"cloud_native needs a level from the scale and a note: {s['id']}")
+    service_ids = {s["id"] for s in data["services"]}
+    for c in data["comparisons"]:
+        for m in c["members"]:
+            bad += [f"comparison {c['id']}: unknown service {i}" for i in m["services"] if i not in service_ids]
+            if not m.get("audience") or not m.get("choose_when"):
+                bad.append(f"comparison {c['id']}: member needs audience and choose_when")
     for s in data["stubs"]:
         if s["tier"] in scope or s["category"] not in cats:
             bad.append(f"stub: {s['id']}")

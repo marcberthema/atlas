@@ -1407,7 +1407,11 @@
           "Hard requirements: a resource group, one NIC (which needs a subnet) and an OS disk.",
           "Optional: data disks, public IP, NSG, managed identity, extensions, load balancer membership.",
           "GPU is not a separate resource; it comes from the VM size (N-series). The size sets vCPU, memory and GPU."
-        ]
+        ],
+        "cloud_native": {
+          "level": "not",
+          "note": "You manage the operating system and instances yourself."
+        }
       },
       "review": {
         "status": "unconfirmed",
@@ -3480,7 +3484,11 @@
       },
       "manual": {
         "purpose": "Azure-hosted Prometheus metrics and Grafana dashboards.",
-        "facts": []
+        "facts": [],
+        "cloud_native": {
+          "level": "native",
+          "note": "Managed versions of the Prometheus and Grafana open-source projects, aimed at Kubernetes metrics."
+        }
       },
       "review": {
         "status": "unconfirmed",
@@ -5104,6 +5112,56 @@
       "note": "Common pattern: Terraform state read by the pipeline identity",
       "origin": "legacy-import",
       "status": "unconfirmed"
+    }
+  ],
+  "cloud_native_scale": [
+    {
+      "level": "native",
+      "label": "Cloud native",
+      "description": "Built for containers, microservices or event-driven apps: platform-managed scaling, declarative APIs, open standards."
+    },
+    {
+      "level": "partly",
+      "label": "Partly",
+      "description": "A managed platform that can host cloud-native designs but does not require them."
+    },
+    {
+      "level": "not",
+      "label": "Not cloud native",
+      "description": "You manage servers or instances; the lift-and-shift style."
+    }
+  ],
+  "comparisons": [
+    {
+      "id": "observability",
+      "title": "Observability",
+      "question": "Which monitoring service fits my workload?",
+      "status": "unconfirmed",
+      "note": "Drafted from the earlier hand-built page and the edges already in the model; not yet checked against Microsoft Learn.",
+      "members": [
+        {
+          "services": [
+            "azure-monitor"
+          ],
+          "audience": "Every organisation",
+          "choose_when": "The platform every subscription already has: metrics, alerts and diagnostic settings. Start here; the two options below sit under it."
+        },
+        {
+          "services": [
+            "log-analytics",
+            "application-insights"
+          ],
+          "audience": "Workloads that are not cloud native",
+          "choose_when": "VMs, App Service, Functions and classic apps. Agents or SDKs send logs and telemetry to a workspace and you query it with KQL."
+        },
+        {
+          "services": [
+            "managed-prometheus-and-grafana"
+          ],
+          "audience": "Cloud-native workloads",
+          "choose_when": "Kubernetes and containerised apps that already expose Prometheus metrics. PromQL queries and Grafana dashboards."
+        }
+      ]
     }
   ]
 }

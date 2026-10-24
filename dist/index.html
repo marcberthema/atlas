@@ -46,6 +46,16 @@ button:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
 .badge.warn{color:var(--warn);border-color:var(--warn)}
 .badge.bad{color:var(--bad);border-color:var(--bad)}
 .empty{color:var(--mut);padding:16px 0}
+.tabs{display:flex;gap:8px;margin-bottom:8px}
+.tab{font:inherit;color:var(--fg);background:transparent;border:0;border-bottom:3px solid transparent;padding:4px 10px;cursor:pointer}
+.tab[aria-selected=true]{border-bottom-color:var(--acc);color:var(--acc);font-weight:600}
+.tools{display:flex;gap:8px}
+select{font:inherit;padding:8px 10px;border:1px solid var(--rule);border-radius:8px;background:var(--card);color:var(--fg)}
+.cmp{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px;align-items:start}
+.col{border:1px solid var(--rule);border-radius:8px;padding:10px 12px;background:var(--card)}
+.col h3{margin:0 0 6px;font-size:1rem;color:var(--acc)}
+.col p{margin:8px 0 0;font-size:.92rem}
+.col .rel{margin-top:6px}
 dialog{width:min(820px,calc(100vw - 24px));max-height:calc(100vh - 24px);border:1px solid var(--rule);border-radius:12px;background:var(--bg);color:var(--fg);padding:0}
 dialog::backdrop{background:rgba(0,0,0,.5)}
 .dh{position:sticky;top:0;background:var(--bg);border-bottom:1px solid var(--rule);padding:10px 14px;display:flex;gap:8px;align-items:center;flex-wrap:wrap;z-index:1}
@@ -71,11 +81,18 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
 <div class="note" id="note"></div>
 
 <div class="bar">
-  <div class="chips" id="chips" role="group" aria-label="Show or hide tiers"></div>
-  <input type="search" id="q" placeholder="Filter by name, purpose, category or Terraform resource" aria-label="Filter services">
-  <p class="count" id="count" aria-live="polite"></p>
+  <div class="tabs" role="tablist"><button class="tab" role="tab" data-v="list" aria-selected="true">Services</button><button class="tab" role="tab" data-v="cmp" aria-selected="false">Compare</button></div>
+  <div id="filters">
+    <div class="chips" id="chips" role="group" aria-label="Show or hide tiers"></div>
+    <div class="tools">
+      <input type="search" id="q" placeholder="Filter by name, purpose, category or Terraform resource" aria-label="Filter services">
+      <select id="cn" aria-label="Filter by cloud native rating"></select>
+    </div>
+    <p class="count" id="count" aria-live="polite"></p>
+  </div>
 </div>
 <main id="out"></main>
+<section id="cmpview" hidden></section>
 
 <dialog id="dlg" aria-labelledby="dtitle">
   <div class="dh">
@@ -130,6 +147,56 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
     "Developer tools and delivery",
     "Migration",
     "IoT and other"
+  ],
+  "cloud_native_scale": [
+    {
+      "level": "native",
+      "label": "Cloud native",
+      "description": "Built for containers, microservices or event-driven apps: platform-managed scaling, declarative APIs, open standards."
+    },
+    {
+      "level": "partly",
+      "label": "Partly",
+      "description": "A managed platform that can host cloud-native designs but does not require them."
+    },
+    {
+      "level": "not",
+      "label": "Not cloud native",
+      "description": "You manage servers or instances; the lift-and-shift style."
+    }
+  ],
+  "comparisons": [
+    {
+      "id": "observability",
+      "title": "Observability",
+      "question": "Which monitoring service fits my workload?",
+      "status": "unconfirmed",
+      "note": "Drafted from the earlier hand-built page and the edges already in the model; not yet checked against Microsoft Learn.",
+      "members": [
+        {
+          "services": [
+            "azure-monitor"
+          ],
+          "audience": "Every organisation",
+          "choose_when": "The platform every subscription already has: metrics, alerts and diagnostic settings. Start here; the two options below sit under it."
+        },
+        {
+          "services": [
+            "log-analytics",
+            "application-insights"
+          ],
+          "audience": "Workloads that are not cloud native",
+          "choose_when": "VMs, App Service, Functions and classic apps. Agents or SDKs send logs and telemetry to a workspace and you query it with KQL."
+        },
+        {
+          "services": [
+            "managed-prometheus-and-grafana"
+          ],
+          "audience": "Cloud-native workloads",
+          "choose_when": "Kubernetes and containerised apps that already expose Prometheus metrics. PromQL queries and Grafana dashboards."
+        }
+      ]
+    }
   ],
   "edge_types": [
     {
@@ -288,6 +355,10 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
       "facts": [
         "The root of identity. A subscription trusts exactly one tenant."
       ],
+      "cloud_native": {
+        "level": "unrated",
+        "note": ""
+      },
       "docs": [
         {
           "url": "https://learn.microsoft.com/entra/fundamentals/how-to-find-tenant"
@@ -337,6 +408,10 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
       "category": "Organization",
       "purpose": "Group subscriptions so policy and access apply to all of them.",
       "facts": [],
+      "cloud_native": {
+        "level": "unrated",
+        "note": ""
+      },
       "docs": [
         {
           "url": "https://learn.microsoft.com/azure/governance/management-groups/overview"
@@ -404,6 +479,10 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         "Bicep is an Azure-only language that compiles to an ARM template (JSON), which ARM's deployment engine applies. No state file: Azure itself is the record. Preview changes with what-if.",
         "Both describe desired state, but a deployment is one-shot: nothing keeps reconciling afterward (unlike a Kubernetes controller). Drift is found by re-running plan or what-if, or corrected by Azure Policy effects such as DeployIfNotExists."
       ],
+      "cloud_native": {
+        "level": "unrated",
+        "note": ""
+      },
       "docs": [
         {
           "url": "https://learn.microsoft.com/azure/azure-resource-manager/management/overview"
@@ -447,6 +526,10 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
       "facts": [
         "The billing and quota boundary. Trusts exactly one tenant."
       ],
+      "cloud_native": {
+        "level": "unrated",
+        "note": ""
+      },
       "docs": [
         {
           "url": "https://learn.microsoft.com/azure/cloud-adoption-framework/ready/landing-zone/design-area/resource-org-subscriptions"
@@ -511,6 +594,10 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         "Deleting a resource group deletes everything in it.",
         "Resources can reference others in different resource groups."
       ],
+      "cloud_native": {
+        "level": "unrated",
+        "note": ""
+      },
       "docs": [
         {
           "url": "https://learn.microsoft.com/azure/azure-resource-manager/management/manage-resource-groups-portal"
@@ -563,6 +650,10 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
       "category": "Identity and security",
       "purpose": "Users, groups, applications and sign-in.",
       "facts": [],
+      "cloud_native": {
+        "level": "unrated",
+        "note": ""
+      },
       "docs": [
         {
           "url": "https://learn.microsoft.com/entra/fundamentals/whatis"
@@ -633,6 +724,10 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         "RBAC answers 'who may do what?'. Azure Policy answers 'what is allowed to exist, and how must it be configured?'. Full access does not bypass policy.",
         "A role assignment is its own ARM resource, stored at a scope, so one group assignment can cover many resources. That is why RBAC scales better than per-resource lists."
       ],
+      "cloud_native": {
+        "level": "unrated",
+        "note": ""
+      },
       "docs": [
         {
           "url": "https://learn.microsoft.com/azure/role-based-access-control/overview"
@@ -702,6 +797,10 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         "No stored secret; short-lived tokens come from the platform.",
         "Useless until it has a role assignment."
       ],
+      "cloud_native": {
+        "level": "unrated",
+        "note": ""
+      },
       "docs": [
         {
           "url": "https://learn.microsoft.com/entra/identity/managed-identities-azure-resources/overview"
@@ -767,6 +866,10 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         "Permission model: either vault access policies or Azure RBAC, one at a time. Access policies are a property stored inside the vault, not a separate service.",
         "Switching to RBAC ignores existing access policies, so create the equivalent role assignments first and test before switching."
       ],
+      "cloud_native": {
+        "level": "unrated",
+        "note": ""
+      },
       "docs": [
         {
           "url": "https://learn.microsoft.com/azure/key-vault/general/overview"
@@ -851,6 +954,10 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
       "category": "Identity and security",
       "purpose": "Security posture and threat protection.",
       "facts": [],
+      "cloud_native": {
+        "level": "unrated",
+        "note": ""
+      },
       "docs": [
         {
           "url": "https://learn.microsoft.com/azure/defender-for-cloud/defender-for-cloud-introduction"
@@ -919,6 +1026,10 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
       "category": "Governance and management",
       "purpose": "Track, budget and analyze spend.",
       "facts": [],
+      "cloud_native": {
+        "level": "unrated",
+        "note": ""
+      },
       "docs": [
         {
           "url": "https://learn.microsoft.com/azure/cost-management-billing/costs/overview-cost-management"
@@ -992,6 +1103,10 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
       "category": "Governance and management",
       "purpose": "Recommendations on cost, reliability and security.",
       "facts": [],
+      "cloud_native": {
+        "level": "unrated",
+        "note": ""
+      },
       "docs": [
         {
           "url": "https://learn.microsoft.com/azure/advisor/advisor-overview"
@@ -1044,6 +1159,10 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
       "category": "Governance and management",
       "purpose": "Query resources across subscriptions.",
       "facts": [],
+      "cloud_native": {
+        "level": "unrated",
+        "note": ""
+      },
       "docs": [
         {
           "url": "https://learn.microsoft.com/azure/governance/resource-graph/overview"
@@ -1081,6 +1200,10 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         "Effects: Deny, Audit, Modify, Append, DeployIfNotExists, AuditIfNotExists, Disabled. Evaluated on create and update, plus a periodic compliance scan. Existing resources are not deleted.",
         "If a Terraform apply fails with RequestDisallowedByPolicy, read the policy name in the error before debugging the code."
       ],
+      "cloud_native": {
+        "level": "unrated",
+        "note": ""
+      },
       "docs": [
         {
           "url": "https://learn.microsoft.com/azure/governance/policy/overview"
@@ -1170,6 +1293,10 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
       "category": "Governance and management",
       "purpose": "Back up VMs, disks, files and databases.",
       "facts": [],
+      "cloud_native": {
+        "level": "unrated",
+        "note": ""
+      },
       "docs": [
         {
           "url": "https://learn.microsoft.com/azure/backup/backup-overview"
@@ -1255,6 +1382,10 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         "Optional: data disks, public IP, NSG, managed identity, extensions, load balancer membership.",
         "GPU is not a separate resource; it comes from the VM size (N-series). The size sets vCPU, memory and GPU."
       ],
+      "cloud_native": {
+        "level": "not",
+        "note": "You manage the operating system and instances yourself."
+      },
       "docs": [
         {
           "url": "https://learn.microsoft.com/azure/virtual-machines/overview"
@@ -1334,6 +1465,10 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         "Separate resources: detach from one VM and attach to another.",
         "There is no storage account for you to manage. Only legacy unmanaged disks use one."
       ],
+      "cloud_native": {
+        "level": "unrated",
+        "note": ""
+      },
       "docs": [
         {
           "url": "https://learn.microsoft.com/azure/virtual-machines/managed-disks-overview"
@@ -1394,6 +1529,10 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
       "category": "Compute and containers",
       "purpose": "Groups of identical VMs that scale together.",
       "facts": [],
+      "cloud_native": {
+        "level": "unrated",
+        "note": ""
+      },
       "docs": [
         {
           "url": "https://learn.microsoft.com/azure/virtual-machine-scale-sets/overview"
@@ -1462,6 +1601,10 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
       "category": "Compute and containers",
       "purpose": "Managed hosting for web apps and APIs.",
       "facts": [],
+      "cloud_native": {
+        "level": "unrated",
+        "note": ""
+      },
       "docs": [
         {
           "url": "https://learn.microsoft.com/azure/app-service/overview"
@@ -1543,6 +1686,10 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
       "category": "Compute and containers",
       "purpose": "Event-driven serverless code.",
       "facts": [],
+      "cloud_native": {
+        "level": "unrated",
+        "note": ""
+      },
       "docs": [
         {
           "url": "https://learn.microsoft.com/azure/azure-functions/functions-overview"
@@ -1603,6 +1750,10 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
       "category": "Compute and containers",
       "purpose": "Serverless containers that can scale to zero.",
       "facts": [],
+      "cloud_native": {
+        "level": "unrated",
+        "note": ""
+      },
       "docs": [
         {
           "url": "https://learn.microsoft.com/azure/container-apps/overview"
@@ -1678,6 +1829,10 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
       "facts": [
         "Azure manages the control plane; node pools are scale sets in your subscription."
       ],
+      "cloud_native": {
+        "level": "unrated",
+        "note": ""
+      },
       "docs": [
         {
           "url": "https://learn.microsoft.com/azure/aks/what-is-aks"
@@ -1738,6 +1893,10 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
       "category": "Compute and containers",
       "purpose": "Private store for container images and charts.",
       "facts": [],
+      "cloud_native": {
+        "level": "unrated",
+        "note": ""
+      },
       "docs": [
         {
           "url": "https://learn.microsoft.com/azure/container-registry/container-registry-intro"
@@ -1802,6 +1961,10 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         "DHCP is built in: you choose address ranges and Azure assigns private IPs to NICs.",
         "DNS is Azure-provided by default, or custom servers, or private zones linked to the VNet."
       ],
+      "cloud_native": {
+        "level": "unrated",
+        "note": ""
+      },
       "docs": [
         {
           "url": "https://learn.microsoft.com/azure/virtual-network/virtual-networks-overview"
@@ -1865,6 +2028,10 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         "Always in exactly one subnet.",
         "Holds the private IP; can also hold a public IP, an NSG and load balancer membership."
       ],
+      "cloud_native": {
+        "level": "unrated",
+        "note": ""
+      },
       "docs": [
         {
           "url": "https://learn.microsoft.com/azure/virtual-network/virtual-network-network-interface"
@@ -1925,6 +2092,10 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
       "category": "Networking",
       "purpose": "Allow and deny rules for traffic to subnets and NICs.",
       "facts": [],
+      "cloud_native": {
+        "level": "unrated",
+        "note": ""
+      },
       "docs": [
         {
           "url": "https://learn.microsoft.com/azure/virtual-network/network-security-groups-overview"
@@ -1993,6 +2164,10 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
       "category": "Networking",
       "purpose": "An internet-facing address for a resource.",
       "facts": [],
+      "cloud_native": {
+        "level": "unrated",
+        "note": ""
+      },
       "docs": [
         {
           "url": "https://learn.microsoft.com/azure/virtual-network/ip-services/public-ip-addresses"
@@ -2053,6 +2228,10 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
       "category": "Networking",
       "purpose": "Layer 4 traffic distribution across VMs.",
       "facts": [],
+      "cloud_native": {
+        "level": "unrated",
+        "note": ""
+      },
       "docs": [
         {
           "url": "https://learn.microsoft.com/azure/load-balancer/load-balancer-overview"
@@ -2129,6 +2308,10 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
       "category": "Networking",
       "purpose": "Layer 7 routing; Front Door is global.",
       "facts": [],
+      "cloud_native": {
+        "level": "unrated",
+        "note": ""
+      },
       "docs": [
         {
           "url": "https://learn.microsoft.com/azure/application-gateway/overview"
@@ -2213,6 +2396,10 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
       "category": "Networking",
       "purpose": "Name resolution for public and private zones.",
       "facts": [],
+      "cloud_native": {
+        "level": "unrated",
+        "note": ""
+      },
       "docs": [
         {
           "url": "https://learn.microsoft.com/azure/dns/dns-overview"
@@ -2300,6 +2487,10 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         "Creates a NIC with a private IP in your subnet.",
         "Needs a private DNS zone so the service name resolves to that IP."
       ],
+      "cloud_native": {
+        "level": "unrated",
+        "note": ""
+      },
       "docs": [
         {
           "url": "https://learn.microsoft.com/azure/private-link/private-endpoint-overview"
@@ -2355,6 +2546,10 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         "Contains blob containers, file shares, queues and tables.",
         "Common uses: Terraform state, boot diagnostics, Functions state, logs."
       ],
+      "cloud_native": {
+        "level": "unrated",
+        "note": ""
+      },
       "docs": [
         {
           "url": "https://learn.microsoft.com/azure/storage/common/storage-account-overview"
@@ -2447,6 +2642,10 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
       "category": "Storage and databases",
       "purpose": "Managed SQL Server databases, including serverless.",
       "facts": [],
+      "cloud_native": {
+        "level": "unrated",
+        "note": ""
+      },
       "docs": [
         {
           "url": "https://learn.microsoft.com/azure/azure-sql/database/sql-database-paas-overview"
@@ -2528,6 +2727,10 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
       "category": "Storage and databases",
       "purpose": "Managed PostgreSQL (flexible server).",
       "facts": [],
+      "cloud_native": {
+        "level": "unrated",
+        "note": ""
+      },
       "docs": [
         {
           "url": "https://learn.microsoft.com/azure/postgresql/flexible-server/overview"
@@ -2604,6 +2807,10 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
       "category": "Storage and databases",
       "purpose": "Globally distributed NoSQL, with a serverless mode.",
       "facts": [],
+      "cloud_native": {
+        "level": "unrated",
+        "note": ""
+      },
       "docs": [
         {
           "url": "https://learn.microsoft.com/azure/cosmos-db/introduction"
@@ -2672,6 +2879,10 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
       "category": "Messaging and integration",
       "purpose": "Queues and topics for reliable messaging.",
       "facts": [],
+      "cloud_native": {
+        "level": "unrated",
+        "note": ""
+      },
       "docs": [
         {
           "url": "https://learn.microsoft.com/azure/service-bus-messaging/service-bus-messaging-overview"
@@ -2748,6 +2959,10 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
       "category": "Messaging and integration",
       "purpose": "Route events between services.",
       "facts": [],
+      "cloud_native": {
+        "level": "unrated",
+        "note": ""
+      },
       "docs": [
         {
           "url": "https://learn.microsoft.com/azure/event-grid/overview"
@@ -2829,6 +3044,10 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
       "category": "Observability",
       "purpose": "Metrics, alerts and the umbrella for monitoring.",
       "facts": [],
+      "cloud_native": {
+        "level": "unrated",
+        "note": ""
+      },
       "docs": [
         {
           "url": "https://learn.microsoft.com/azure/azure-monitor/fundamentals/overview"
@@ -2918,6 +3137,10 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         "A workspace stores logs; query them with KQL.",
         "Many resources send logs through diagnostic settings."
       ],
+      "cloud_native": {
+        "level": "unrated",
+        "note": ""
+      },
       "docs": [
         {
           "url": "https://learn.microsoft.com/azure/azure-monitor/logs/log-analytics-overview"
@@ -2970,6 +3193,10 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
       "category": "Observability",
       "purpose": "Application telemetry: requests, traces, failures.",
       "facts": [],
+      "cloud_native": {
+        "level": "unrated",
+        "note": ""
+      },
       "docs": [
         {
           "url": "https://learn.microsoft.com/azure/azure-monitor/app/app-insights-overview"
@@ -3022,6 +3249,10 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
       "category": "Observability",
       "purpose": "Azure-hosted Prometheus metrics and Grafana dashboards.",
       "facts": [],
+      "cloud_native": {
+        "level": "native",
+        "note": "Managed versions of the Prometheus and Grafana open-source projects, aimed at Kubernetes metrics."
+      },
       "docs": [
         {
           "url": "https://learn.microsoft.com/azure/azure-monitor/metrics/prometheus-metrics-overview"
@@ -3098,6 +3329,10 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
       "category": "Developer tools and delivery",
       "purpose": "Repos, pipelines, boards and artifacts (a separate service from the Azure resource model).",
       "facts": [],
+      "cloud_native": {
+        "level": "unrated",
+        "note": ""
+      },
       "docs": [
         {
           "url": "https://learn.microsoft.com/azure/devops/user-guide/what-is-azure-devops"
@@ -4686,6 +4921,8 @@ const TFLABEL={full:['Terraform: full','ok'],partial:['Terraform: partial','warn
   'azapi-only':['Terraform: azapi only','warn'],none:['Terraform: none','bad'],unchecked:['Terraform: unchecked',''],unknown:['Terraform: unknown','']};
 const FRLABEL={current:['docs current','ok'],stale:['docs changed','warn'],unreviewed:['docs unreviewed',''],error:['docs check failed','bad']};
 
+const CN={};D.cloud_native_scale.forEach(c=>CN[c.level]=c);
+const CNBADGE={native:['cloud native','ok'],partly:['partly cloud native','warn'],not:['not cloud native','']};
 const N={};
 D.services.forEach(s=>N[s.id]=s);
 D.stubs.forEach(s=>N[s.id]={...s,stub:true,purpose:'',facts:[]});
@@ -4696,6 +4933,8 @@ D.edges.forEach(e=>{
 });
 
 const out=document.getElementById('out'),q=document.getElementById('q'),count=document.getElementById('count');
+const cnSel=document.getElementById('cn');
+cnSel.innerHTML='<option value="">Cloud native: any</option>'+D.cloud_native_scale.map(c=>'<option value="'+c.level+'">'+esc(c.label)+'</option>').join('')+'<option value="unrated">Not rated yet</option>';
 const tiersShown=D.scope.tiers;
 const on={};tiersShown.forEach(t=>on[t]=true);
 document.getElementById('sub').textContent=D.tiers.filter(t=>on[t.tier]).map(t=>t.label+': '+t.description).join(' ')+' Click a card for what it provides, what it needs, and how to build it with Terraform.';
@@ -4706,6 +4945,7 @@ chips.innerHTML=tiersShown.map(t=>'<button class="chip" type="button" data-t="'+
 function badges(s){
   const tf=TFLABEL[s.terraform.status],fr=FRLABEL[s.freshness.status];
   return '<div class="badges"><span class="badge '+tf[1]+'">'+tf[0]+'</span><span class="badge '+fr[1]+'">'+fr[0]+'</span>'+
+    (CNBADGE[s.cloud_native.level]?'<span class="badge '+CNBADGE[s.cloud_native.level][1]+'">'+CNBADGE[s.cloud_native.level][0]+'</span>':'')+
     (s.review.status==='unconfirmed'?'<span class="badge warn">unconfirmed</span>':'')+'</div>';
 }
 function haystack(s){return [s.name,s.purpose,s.category].concat(s.terraform.resources.map(r=>r.type)).join(' ').toLowerCase()}
@@ -4713,7 +4953,7 @@ function haystack(s){return [s.name,s.purpose,s.category].concat(s.terraform.res
 function render(){
   const f=q.value.trim().toLowerCase();let shown=0,html='';
   for(const cat of D.categories){
-    const items=D.services.filter(s=>s.category===cat&&on[s.tier]&&(!f||haystack(s).includes(f))).sort((a,b)=>a.tier-b.tier);
+    const items=D.services.filter(s=>s.category===cat&&on[s.tier]&&(!cnSel.value||s.cloud_native.level===cnSel.value)&&(!f||haystack(s).includes(f))).sort((a,b)=>a.tier-b.tier);
     if(!items.length)continue;shown+=items.length;
     html+='<h2>'+esc(cat)+'</h2><div class="grid">'+items.map(s=>
       '<button type="button" class="svc" data-t="'+s.tier+'" data-id="'+s.id+'"><b>'+esc(s.name)+'<span class="tag">'+TIER[s.tier]+'</span></b><span>'+esc(s.purpose)+'</span>'+badges(s)+'</button>').join('')+'</div>';
@@ -4726,6 +4966,23 @@ chips.addEventListener('click',e=>{
   const t=+b.dataset.t;on[t]=!on[t];b.setAttribute('aria-pressed',on[t]);render();
 });
 q.addEventListener('input',render);
+cnSel.addEventListener('change',render);
+
+// Compare view: services that solve the same problem, side by side.
+const cmpView=document.getElementById('cmpview');
+function renderCompare(){
+  cmpView.innerHTML=D.comparisons.map(c=>'<h2>'+esc(c.title)+'</h2><p class="sub">'+esc(c.question)+'</p>'+
+    (c.status==='unconfirmed'?'<div class="note">Unconfirmed: '+esc(c.note)+'</div>':'')+
+    '<div class="cmp">'+c.members.map(m=>'<div class="col"><h3>'+esc(m.audience)+'</h3>'+
+      m.services.map(id=>{const x=N[id];return '<button type="button" class="rel" data-t="'+x.tier+'" data-id="'+id+'"><b>'+esc(x.name)+'</b><small>'+esc(x.purpose)+'</small>'+badges(x)+'</button>'}).join('')+
+      '<p>'+esc(m.choose_when)+'</p></div>').join('')+'</div>').join('')||'<p class="empty">No comparisons yet.</p>';
+}
+function setView(v){
+  document.querySelectorAll('.tab').forEach(b=>b.setAttribute('aria-selected',b.dataset.v===v));
+  out.hidden=v!=='list';cmpView.hidden=v!=='cmp';document.getElementById('filters').hidden=v!=='list';
+}
+document.querySelector('.tabs').addEventListener('click',e=>{const b=e.target.closest('.tab');if(b)setView(b.dataset.v)});
+cmpView.addEventListener('click',e=>{const b=e.target.closest('.rel');if(b){trail=[];open(b.dataset.id)}});
 
 // Detail dialog with a navigation trail.
 const dlg=document.getElementById('dlg'),dbody=document.getElementById('dbody'),crumbs=document.getElementById('crumbs');
@@ -4752,6 +5009,10 @@ function tfBlock(s){
   if(t.note)h+='<div>'+esc(t.note)+'</div>';
   return h+'</div>';
 }
+function cnLine(x){
+  const c=CN[x.cloud_native.level];
+  return c?'<p><b>'+esc(c.label)+'.</b> '+esc(x.cloud_native.note)+'</p>':'';
+}
 function show(){
   const id=trail[trail.length-1],x=N[id];
   let head;
@@ -4760,7 +5021,7 @@ function show(){
   }else{
     const facts=x.facts.length?'<ul class="facts">'+x.facts.map(f=>'<li>'+esc(f)+'</li>').join('')+'</ul>':'';
     const docs=x.docs.length?'<h4>Microsoft Learn</h4><div>'+x.docs.map(d=>'<a href="'+safeUrl(d.url)+'" target="_blank" rel="noopener">'+esc(d.url.replace('https://learn.microsoft.com/',''))+'</a>').join('<br>')+'</div>':'';
-    head='<h3 id="dtitle">'+esc(x.name)+'</h3><div class="meta">'+esc(x.category)+' · '+TIER[x.tier]+'</div><div>'+esc(x.purpose)+'</div>'+badges(x)+facts+tfBlock(x)+docs+
+    head='<h3 id="dtitle">'+esc(x.name)+'</h3><div class="meta">'+esc(x.category)+' · '+TIER[x.tier]+'</div><div>'+esc(x.purpose)+'</div>'+badges(x)+cnLine(x)+facts+tfBlock(x)+docs+
       (x.review.status==='unconfirmed'?'<p class="warn">'+esc(x.review.note)+'</p>':'');
   }
   const groups=D.edge_group_order.map(g=>relGroup(id,g.direction,g.type)).join('');
@@ -4787,7 +5048,7 @@ closeBtn.addEventListener('click',()=>dlg.close());
 dlg.addEventListener('close',()=>{trail=[];history.replaceState(null,'',location.pathname+location.search)});
 dlg.addEventListener('click',e=>{if(e.target===dlg)dlg.close()});
 
-render();
+render();renderCompare();
 if(location.hash&&N[location.hash.slice(1)]){trail=[];open(location.hash.slice(1))}
 </script>
 </body></html>

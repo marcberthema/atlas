@@ -46,6 +46,16 @@ button:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
 .badge.warn{color:var(--warn);border-color:var(--warn)}
 .badge.bad{color:var(--bad);border-color:var(--bad)}
 .empty{color:var(--mut);padding:16px 0}
+.tabs{display:flex;gap:8px;margin-bottom:8px}
+.tab{font:inherit;color:var(--fg);background:transparent;border:0;border-bottom:3px solid transparent;padding:4px 10px;cursor:pointer}
+.tab[aria-selected=true]{border-bottom-color:var(--acc);color:var(--acc);font-weight:600}
+.tools{display:flex;gap:8px}
+select{font:inherit;padding:8px 10px;border:1px solid var(--rule);border-radius:8px;background:var(--card);color:var(--fg)}
+.cmp{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px;align-items:start}
+.col{border:1px solid var(--rule);border-radius:8px;padding:10px 12px;background:var(--card)}
+.col h3{margin:0 0 6px;font-size:1rem;color:var(--acc)}
+.col p{margin:8px 0 0;font-size:.92rem}
+.col .rel{margin-top:6px}
 dialog{width:min(820px,calc(100vw - 24px));max-height:calc(100vh - 24px);border:1px solid var(--rule);border-radius:12px;background:var(--bg);color:var(--fg);padding:0}
 dialog::backdrop{background:rgba(0,0,0,.5)}
 .dh{position:sticky;top:0;background:var(--bg);border-bottom:1px solid var(--rule);padding:10px 14px;display:flex;gap:8px;align-items:center;flex-wrap:wrap;z-index:1}
@@ -71,11 +81,18 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
 <div class="note" id="note"></div>
 
 <div class="bar">
-  <div class="chips" id="chips" role="group" aria-label="Show or hide tiers"></div>
-  <input type="search" id="q" placeholder="Filter by name, purpose, category or Terraform resource" aria-label="Filter services">
-  <p class="count" id="count" aria-live="polite"></p>
+  <div class="tabs" role="tablist"><button class="tab" role="tab" data-v="list" aria-selected="true">Services</button><button class="tab" role="tab" data-v="cmp" aria-selected="false">Compare</button></div>
+  <div id="filters">
+    <div class="chips" id="chips" role="group" aria-label="Show or hide tiers"></div>
+    <div class="tools">
+      <input type="search" id="q" placeholder="Filter by name, purpose, category or Terraform resource" aria-label="Filter services">
+      <select id="cn" aria-label="Filter by cloud native rating"></select>
+    </div>
+    <p class="count" id="count" aria-live="polite"></p>
+  </div>
 </div>
 <main id="out"></main>
+<section id="cmpview" hidden></section>
 
 <dialog id="dlg" aria-labelledby="dtitle">
   <div class="dh">
@@ -98,6 +115,8 @@ const TFLABEL={full:['Terraform: full','ok'],partial:['Terraform: partial','warn
   'azapi-only':['Terraform: azapi only','warn'],none:['Terraform: none','bad'],unchecked:['Terraform: unchecked',''],unknown:['Terraform: unknown','']};
 const FRLABEL={current:['docs current','ok'],stale:['docs changed','warn'],unreviewed:['docs unreviewed',''],error:['docs check failed','bad']};
 
+const CN={};D.cloud_native_scale.forEach(c=>CN[c.level]=c);
+const CNBADGE={native:['cloud native','ok'],partly:['partly cloud native','warn'],not:['not cloud native','']};
 const N={};
 D.services.forEach(s=>N[s.id]=s);
 D.stubs.forEach(s=>N[s.id]={...s,stub:true,purpose:'',facts:[]});
@@ -108,6 +127,8 @@ D.edges.forEach(e=>{
 });
 
 const out=document.getElementById('out'),q=document.getElementById('q'),count=document.getElementById('count');
+const cnSel=document.getElementById('cn');
+cnSel.innerHTML='<option value="">Cloud native: any</option>'+D.cloud_native_scale.map(c=>'<option value="'+c.level+'">'+esc(c.label)+'</option>').join('')+'<option value="unrated">Not rated yet</option>';
 const tiersShown=D.scope.tiers;
 const on={};tiersShown.forEach(t=>on[t]=true);
 document.getElementById('sub').textContent=D.tiers.filter(t=>on[t.tier]).map(t=>t.label+': '+t.description).join(' ')+' Click a card for what it provides, what it needs, and how to build it with Terraform.';
@@ -118,6 +139,7 @@ chips.innerHTML=tiersShown.map(t=>'<button class="chip" type="button" data-t="'+
 function badges(s){
   const tf=TFLABEL[s.terraform.status],fr=FRLABEL[s.freshness.status];
   return '<div class="badges"><span class="badge '+tf[1]+'">'+tf[0]+'</span><span class="badge '+fr[1]+'">'+fr[0]+'</span>'+
+    (CNBADGE[s.cloud_native.level]?'<span class="badge '+CNBADGE[s.cloud_native.level][1]+'">'+CNBADGE[s.cloud_native.level][0]+'</span>':'')+
     (s.review.status==='unconfirmed'?'<span class="badge warn">unconfirmed</span>':'')+'</div>';
 }
 function haystack(s){return [s.name,s.purpose,s.category].concat(s.terraform.resources.map(r=>r.type)).join(' ').toLowerCase()}
@@ -125,7 +147,7 @@ function haystack(s){return [s.name,s.purpose,s.category].concat(s.terraform.res
 function render(){
   const f=q.value.trim().toLowerCase();let shown=0,html='';
   for(const cat of D.categories){
-    const items=D.services.filter(s=>s.category===cat&&on[s.tier]&&(!f||haystack(s).includes(f))).sort((a,b)=>a.tier-b.tier);
+    const items=D.services.filter(s=>s.category===cat&&on[s.tier]&&(!cnSel.value||s.cloud_native.level===cnSel.value)&&(!f||haystack(s).includes(f))).sort((a,b)=>a.tier-b.tier);
     if(!items.length)continue;shown+=items.length;
     html+='<h2>'+esc(cat)+'</h2><div class="grid">'+items.map(s=>
       '<button type="button" class="svc" data-t="'+s.tier+'" data-id="'+s.id+'"><b>'+esc(s.name)+'<span class="tag">'+TIER[s.tier]+'</span></b><span>'+esc(s.purpose)+'</span>'+badges(s)+'</button>').join('')+'</div>';
@@ -138,6 +160,23 @@ chips.addEventListener('click',e=>{
   const t=+b.dataset.t;on[t]=!on[t];b.setAttribute('aria-pressed',on[t]);render();
 });
 q.addEventListener('input',render);
+cnSel.addEventListener('change',render);
+
+// Compare view: services that solve the same problem, side by side.
+const cmpView=document.getElementById('cmpview');
+function renderCompare(){
+  cmpView.innerHTML=D.comparisons.map(c=>'<h2>'+esc(c.title)+'</h2><p class="sub">'+esc(c.question)+'</p>'+
+    (c.status==='unconfirmed'?'<div class="note">Unconfirmed: '+esc(c.note)+'</div>':'')+
+    '<div class="cmp">'+c.members.map(m=>'<div class="col"><h3>'+esc(m.audience)+'</h3>'+
+      m.services.map(id=>{const x=N[id];return '<button type="button" class="rel" data-t="'+x.tier+'" data-id="'+id+'"><b>'+esc(x.name)+'</b><small>'+esc(x.purpose)+'</small>'+badges(x)+'</button>'}).join('')+
+      '<p>'+esc(m.choose_when)+'</p></div>').join('')+'</div>').join('')||'<p class="empty">No comparisons yet.</p>';
+}
+function setView(v){
+  document.querySelectorAll('.tab').forEach(b=>b.setAttribute('aria-selected',b.dataset.v===v));
+  out.hidden=v!=='list';cmpView.hidden=v!=='cmp';document.getElementById('filters').hidden=v!=='list';
+}
+document.querySelector('.tabs').addEventListener('click',e=>{const b=e.target.closest('.tab');if(b)setView(b.dataset.v)});
+cmpView.addEventListener('click',e=>{const b=e.target.closest('.rel');if(b){trail=[];open(b.dataset.id)}});
 
 // Detail dialog with a navigation trail.
 const dlg=document.getElementById('dlg'),dbody=document.getElementById('dbody'),crumbs=document.getElementById('crumbs');
@@ -164,6 +203,10 @@ function tfBlock(s){
   if(t.note)h+='<div>'+esc(t.note)+'</div>';
   return h+'</div>';
 }
+function cnLine(x){
+  const c=CN[x.cloud_native.level];
+  return c?'<p><b>'+esc(c.label)+'.</b> '+esc(x.cloud_native.note)+'</p>':'';
+}
 function show(){
   const id=trail[trail.length-1],x=N[id];
   let head;
@@ -172,7 +215,7 @@ function show(){
   }else{
     const facts=x.facts.length?'<ul class="facts">'+x.facts.map(f=>'<li>'+esc(f)+'</li>').join('')+'</ul>':'';
     const docs=x.docs.length?'<h4>Microsoft Learn</h4><div>'+x.docs.map(d=>'<a href="'+safeUrl(d.url)+'" target="_blank" rel="noopener">'+esc(d.url.replace('https://learn.microsoft.com/',''))+'</a>').join('<br>')+'</div>':'';
-    head='<h3 id="dtitle">'+esc(x.name)+'</h3><div class="meta">'+esc(x.category)+' · '+TIER[x.tier]+'</div><div>'+esc(x.purpose)+'</div>'+badges(x)+facts+tfBlock(x)+docs+
+    head='<h3 id="dtitle">'+esc(x.name)+'</h3><div class="meta">'+esc(x.category)+' · '+TIER[x.tier]+'</div><div>'+esc(x.purpose)+'</div>'+badges(x)+cnLine(x)+facts+tfBlock(x)+docs+
       (x.review.status==='unconfirmed'?'<p class="warn">'+esc(x.review.note)+'</p>':'');
   }
   const groups=D.edge_group_order.map(g=>relGroup(id,g.direction,g.type)).join('');
@@ -199,7 +242,7 @@ closeBtn.addEventListener('click',()=>dlg.close());
 dlg.addEventListener('close',()=>{trail=[];history.replaceState(null,'',location.pathname+location.search)});
 dlg.addEventListener('click',e=>{if(e.target===dlg)dlg.close()});
 
-render();
+render();renderCompare();
 if(location.hash&&N[location.hash.slice(1)]){trail=[];open(location.hash.slice(1))}
 </script>
 </body></html>

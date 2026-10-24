@@ -38,6 +38,9 @@ entry ("Entry") and what changed on the page ("Now").
       - Verified content goes in `fetched` (`purpose`, `facts`). If the same key currently sits in `manual` only
         because it was imported (`review.note` says so), move it: delete the `manual` key and write `fetched`.
         Keep a `manual` value only when the user says it is a deliberate override.
+      - Cloud native rating: if `cloud_native` is missing or the page changes the picture, propose a level from
+        `cloud_native_scale` in the data file with a one-line note, and ask the user to confirm. Store it in
+        `manual.cloud_native` (`level`, `note`). It is a judgement, so never set it without the user's answer.
       - Terraform judgement goes in `manual.terraform`: `status` (`full` or `partial`), `gaps` (`what`,
         `alternative` such as the azapi ARM type), `note`. Fix `tracking.terraform` if a resource was renamed
         or removed.
@@ -108,6 +111,8 @@ def entry_block(svc, resolved, names, edges):
     where = [k for k in ("purpose", "facts") if k in svc["manual"]]
     lines.append(f"- layers: `manual` holds {', '.join(where) or 'nothing'}; `fetched` holds "
                  f"{', '.join(k for k in svc['fetched'] if k != 'terraform') or 'nothing'}")
+    cn = r["cloud_native"]
+    lines.append(f"- cloud native: {cn['level']}" + (f" ({cn['note']})" if cn["note"] else " (not rated yet)"))
     lines.append(f"- terraform: {t['status']}; first supported {t['first_supported']}; "
                  f"resources: {', '.join(x['type'] + ('' if x['exists'] is not False else ' (NOT FOUND)') for x in t['resources']) or 'none'}")
     if t["gaps"]:

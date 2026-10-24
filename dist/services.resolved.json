@@ -43,6 +43,56 @@
     "Migration",
     "IoT and other"
   ],
+  "cloud_native_scale": [
+    {
+      "level": "native",
+      "label": "Cloud native",
+      "description": "Built for containers, microservices or event-driven apps: platform-managed scaling, declarative APIs, open standards."
+    },
+    {
+      "level": "partly",
+      "label": "Partly",
+      "description": "A managed platform that can host cloud-native designs but does not require them."
+    },
+    {
+      "level": "not",
+      "label": "Not cloud native",
+      "description": "You manage servers or instances; the lift-and-shift style."
+    }
+  ],
+  "comparisons": [
+    {
+      "id": "observability",
+      "title": "Observability",
+      "question": "Which monitoring service fits my workload?",
+      "status": "unconfirmed",
+      "note": "Drafted from the earlier hand-built page and the edges already in the model; not yet checked against Microsoft Learn.",
+      "members": [
+        {
+          "services": [
+            "azure-monitor"
+          ],
+          "audience": "Every organisation",
+          "choose_when": "The platform every subscription already has: metrics, alerts and diagnostic settings. Start here; the two options below sit under it."
+        },
+        {
+          "services": [
+            "log-analytics",
+            "application-insights"
+          ],
+          "audience": "Workloads that are not cloud native",
+          "choose_when": "VMs, App Service, Functions and classic apps. Agents or SDKs send logs and telemetry to a workspace and you query it with KQL."
+        },
+        {
+          "services": [
+            "managed-prometheus-and-grafana"
+          ],
+          "audience": "Cloud-native workloads",
+          "choose_when": "Kubernetes and containerised apps that already expose Prometheus metrics. PromQL queries and Grafana dashboards."
+        }
+      ]
+    }
+  ],
   "edge_types": [
     {
       "type": "contains",
@@ -200,6 +250,10 @@
       "facts": [
         "The root of identity. A subscription trusts exactly one tenant."
       ],
+      "cloud_native": {
+        "level": "unrated",
+        "note": ""
+      },
       "docs": [
         {
           "url": "https://learn.microsoft.com/entra/fundamentals/how-to-find-tenant"
@@ -249,6 +303,10 @@
       "category": "Organization",
       "purpose": "Group subscriptions so policy and access apply to all of them.",
       "facts": [],
+      "cloud_native": {
+        "level": "unrated",
+        "note": ""
+      },
       "docs": [
         {
           "url": "https://learn.microsoft.com/azure/governance/management-groups/overview"
@@ -316,6 +374,10 @@
         "Bicep is an Azure-only language that compiles to an ARM template (JSON), which ARM's deployment engine applies. No state file: Azure itself is the record. Preview changes with what-if.",
         "Both describe desired state, but a deployment is one-shot: nothing keeps reconciling afterward (unlike a Kubernetes controller). Drift is found by re-running plan or what-if, or corrected by Azure Policy effects such as DeployIfNotExists."
       ],
+      "cloud_native": {
+        "level": "unrated",
+        "note": ""
+      },
       "docs": [
         {
           "url": "https://learn.microsoft.com/azure/azure-resource-manager/management/overview"
@@ -359,6 +421,10 @@
       "facts": [
         "The billing and quota boundary. Trusts exactly one tenant."
       ],
+      "cloud_native": {
+        "level": "unrated",
+        "note": ""
+      },
       "docs": [
         {
           "url": "https://learn.microsoft.com/azure/cloud-adoption-framework/ready/landing-zone/design-area/resource-org-subscriptions"
@@ -423,6 +489,10 @@
         "Deleting a resource group deletes everything in it.",
         "Resources can reference others in different resource groups."
       ],
+      "cloud_native": {
+        "level": "unrated",
+        "note": ""
+      },
       "docs": [
         {
           "url": "https://learn.microsoft.com/azure/azure-resource-manager/management/manage-resource-groups-portal"
@@ -475,6 +545,10 @@
       "category": "Identity and security",
       "purpose": "Users, groups, applications and sign-in.",
       "facts": [],
+      "cloud_native": {
+        "level": "unrated",
+        "note": ""
+      },
       "docs": [
         {
           "url": "https://learn.microsoft.com/entra/fundamentals/whatis"
@@ -545,6 +619,10 @@
         "RBAC answers 'who may do what?'. Azure Policy answers 'what is allowed to exist, and how must it be configured?'. Full access does not bypass policy.",
         "A role assignment is its own ARM resource, stored at a scope, so one group assignment can cover many resources. That is why RBAC scales better than per-resource lists."
       ],
+      "cloud_native": {
+        "level": "unrated",
+        "note": ""
+      },
       "docs": [
         {
           "url": "https://learn.microsoft.com/azure/role-based-access-control/overview"
@@ -614,6 +692,10 @@
         "No stored secret; short-lived tokens come from the platform.",
         "Useless until it has a role assignment."
       ],
+      "cloud_native": {
+        "level": "unrated",
+        "note": ""
+      },
       "docs": [
         {
           "url": "https://learn.microsoft.com/entra/identity/managed-identities-azure-resources/overview"
@@ -679,6 +761,10 @@
         "Permission model: either vault access policies or Azure RBAC, one at a time. Access policies are a property stored inside the vault, not a separate service.",
         "Switching to RBAC ignores existing access policies, so create the equivalent role assignments first and test before switching."
       ],
+      "cloud_native": {
+        "level": "unrated",
+        "note": ""
+      },
       "docs": [
         {
           "url": "https://learn.microsoft.com/azure/key-vault/general/overview"
@@ -763,6 +849,10 @@
       "category": "Identity and security",
       "purpose": "Security posture and threat protection.",
       "facts": [],
+      "cloud_native": {
+        "level": "unrated",
+        "note": ""
+      },
       "docs": [
         {
           "url": "https://learn.microsoft.com/azure/defender-for-cloud/defender-for-cloud-introduction"
@@ -831,6 +921,10 @@
       "category": "Governance and management",
       "purpose": "Track, budget and analyze spend.",
       "facts": [],
+      "cloud_native": {
+        "level": "unrated",
+        "note": ""
+      },
       "docs": [
         {
           "url": "https://learn.microsoft.com/azure/cost-management-billing/costs/overview-cost-management"
@@ -904,6 +998,10 @@
       "category": "Governance and management",
       "purpose": "Recommendations on cost, reliability and security.",
       "facts": [],
+      "cloud_native": {
+        "level": "unrated",
+        "note": ""
+      },
       "docs": [
         {
           "url": "https://learn.microsoft.com/azure/advisor/advisor-overview"
@@ -956,6 +1054,10 @@
       "category": "Governance and management",
       "purpose": "Query resources across subscriptions.",
       "facts": [],
+      "cloud_native": {
+        "level": "unrated",
+        "note": ""
+      },
       "docs": [
         {
           "url": "https://learn.microsoft.com/azure/governance/resource-graph/overview"
@@ -993,6 +1095,10 @@
         "Effects: Deny, Audit, Modify, Append, DeployIfNotExists, AuditIfNotExists, Disabled. Evaluated on create and update, plus a periodic compliance scan. Existing resources are not deleted.",
         "If a Terraform apply fails with RequestDisallowedByPolicy, read the policy name in the error before debugging the code."
       ],
+      "cloud_native": {
+        "level": "unrated",
+        "note": ""
+      },
       "docs": [
         {
           "url": "https://learn.microsoft.com/azure/governance/policy/overview"
@@ -1082,6 +1188,10 @@
       "category": "Governance and management",
       "purpose": "Back up VMs, disks, files and databases.",
       "facts": [],
+      "cloud_native": {
+        "level": "unrated",
+        "note": ""
+      },
       "docs": [
         {
           "url": "https://learn.microsoft.com/azure/backup/backup-overview"
@@ -1167,6 +1277,10 @@
         "Optional: data disks, public IP, NSG, managed identity, extensions, load balancer membership.",
         "GPU is not a separate resource; it comes from the VM size (N-series). The size sets vCPU, memory and GPU."
       ],
+      "cloud_native": {
+        "level": "not",
+        "note": "You manage the operating system and instances yourself."
+      },
       "docs": [
         {
           "url": "https://learn.microsoft.com/azure/virtual-machines/overview"
@@ -1246,6 +1360,10 @@
         "Separate resources: detach from one VM and attach to another.",
         "There is no storage account for you to manage. Only legacy unmanaged disks use one."
       ],
+      "cloud_native": {
+        "level": "unrated",
+        "note": ""
+      },
       "docs": [
         {
           "url": "https://learn.microsoft.com/azure/virtual-machines/managed-disks-overview"
@@ -1306,6 +1424,10 @@
       "category": "Compute and containers",
       "purpose": "Groups of identical VMs that scale together.",
       "facts": [],
+      "cloud_native": {
+        "level": "unrated",
+        "note": ""
+      },
       "docs": [
         {
           "url": "https://learn.microsoft.com/azure/virtual-machine-scale-sets/overview"
@@ -1374,6 +1496,10 @@
       "category": "Compute and containers",
       "purpose": "Managed hosting for web apps and APIs.",
       "facts": [],
+      "cloud_native": {
+        "level": "unrated",
+        "note": ""
+      },
       "docs": [
         {
           "url": "https://learn.microsoft.com/azure/app-service/overview"
@@ -1455,6 +1581,10 @@
       "category": "Compute and containers",
       "purpose": "Event-driven serverless code.",
       "facts": [],
+      "cloud_native": {
+        "level": "unrated",
+        "note": ""
+      },
       "docs": [
         {
           "url": "https://learn.microsoft.com/azure/azure-functions/functions-overview"
@@ -1515,6 +1645,10 @@
       "category": "Compute and containers",
       "purpose": "Serverless containers that can scale to zero.",
       "facts": [],
+      "cloud_native": {
+        "level": "unrated",
+        "note": ""
+      },
       "docs": [
         {
           "url": "https://learn.microsoft.com/azure/container-apps/overview"
@@ -1590,6 +1724,10 @@
       "facts": [
         "Azure manages the control plane; node pools are scale sets in your subscription."
       ],
+      "cloud_native": {
+        "level": "unrated",
+        "note": ""
+      },
       "docs": [
         {
           "url": "https://learn.microsoft.com/azure/aks/what-is-aks"
@@ -1650,6 +1788,10 @@
       "category": "Compute and containers",
       "purpose": "Private store for container images and charts.",
       "facts": [],
+      "cloud_native": {
+        "level": "unrated",
+        "note": ""
+      },
       "docs": [
         {
           "url": "https://learn.microsoft.com/azure/container-registry/container-registry-intro"
@@ -1714,6 +1856,10 @@
         "DHCP is built in: you choose address ranges and Azure assigns private IPs to NICs.",
         "DNS is Azure-provided by default, or custom servers, or private zones linked to the VNet."
       ],
+      "cloud_native": {
+        "level": "unrated",
+        "note": ""
+      },
       "docs": [
         {
           "url": "https://learn.microsoft.com/azure/virtual-network/virtual-networks-overview"
@@ -1777,6 +1923,10 @@
         "Always in exactly one subnet.",
         "Holds the private IP; can also hold a public IP, an NSG and load balancer membership."
       ],
+      "cloud_native": {
+        "level": "unrated",
+        "note": ""
+      },
       "docs": [
         {
           "url": "https://learn.microsoft.com/azure/virtual-network/virtual-network-network-interface"
@@ -1837,6 +1987,10 @@
       "category": "Networking",
       "purpose": "Allow and deny rules for traffic to subnets and NICs.",
       "facts": [],
+      "cloud_native": {
+        "level": "unrated",
+        "note": ""
+      },
       "docs": [
         {
           "url": "https://learn.microsoft.com/azure/virtual-network/network-security-groups-overview"
@@ -1905,6 +2059,10 @@
       "category": "Networking",
       "purpose": "An internet-facing address for a resource.",
       "facts": [],
+      "cloud_native": {
+        "level": "unrated",
+        "note": ""
+      },
       "docs": [
         {
           "url": "https://learn.microsoft.com/azure/virtual-network/ip-services/public-ip-addresses"
@@ -1965,6 +2123,10 @@
       "category": "Networking",
       "purpose": "Layer 4 traffic distribution across VMs.",
       "facts": [],
+      "cloud_native": {
+        "level": "unrated",
+        "note": ""
+      },
       "docs": [
         {
           "url": "https://learn.microsoft.com/azure/load-balancer/load-balancer-overview"
@@ -2041,6 +2203,10 @@
       "category": "Networking",
       "purpose": "Layer 7 routing; Front Door is global.",
       "facts": [],
+      "cloud_native": {
+        "level": "unrated",
+        "note": ""
+      },
       "docs": [
         {
           "url": "https://learn.microsoft.com/azure/application-gateway/overview"
@@ -2125,6 +2291,10 @@
       "category": "Networking",
       "purpose": "Name resolution for public and private zones.",
       "facts": [],
+      "cloud_native": {
+        "level": "unrated",
+        "note": ""
+      },
       "docs": [
         {
           "url": "https://learn.microsoft.com/azure/dns/dns-overview"
@@ -2212,6 +2382,10 @@
         "Creates a NIC with a private IP in your subnet.",
         "Needs a private DNS zone so the service name resolves to that IP."
       ],
+      "cloud_native": {
+        "level": "unrated",
+        "note": ""
+      },
       "docs": [
         {
           "url": "https://learn.microsoft.com/azure/private-link/private-endpoint-overview"
@@ -2267,6 +2441,10 @@
         "Contains blob containers, file shares, queues and tables.",
         "Common uses: Terraform state, boot diagnostics, Functions state, logs."
       ],
+      "cloud_native": {
+        "level": "unrated",
+        "note": ""
+      },
       "docs": [
         {
           "url": "https://learn.microsoft.com/azure/storage/common/storage-account-overview"
@@ -2359,6 +2537,10 @@
       "category": "Storage and databases",
       "purpose": "Managed SQL Server databases, including serverless.",
       "facts": [],
+      "cloud_native": {
+        "level": "unrated",
+        "note": ""
+      },
       "docs": [
         {
           "url": "https://learn.microsoft.com/azure/azure-sql/database/sql-database-paas-overview"
@@ -2440,6 +2622,10 @@
       "category": "Storage and databases",
       "purpose": "Managed PostgreSQL (flexible server).",
       "facts": [],
+      "cloud_native": {
+        "level": "unrated",
+        "note": ""
+      },
       "docs": [
         {
           "url": "https://learn.microsoft.com/azure/postgresql/flexible-server/overview"
@@ -2516,6 +2702,10 @@
       "category": "Storage and databases",
       "purpose": "Globally distributed NoSQL, with a serverless mode.",
       "facts": [],
+      "cloud_native": {
+        "level": "unrated",
+        "note": ""
+      },
       "docs": [
         {
           "url": "https://learn.microsoft.com/azure/cosmos-db/introduction"
@@ -2584,6 +2774,10 @@
       "category": "Messaging and integration",
       "purpose": "Queues and topics for reliable messaging.",
       "facts": [],
+      "cloud_native": {
+        "level": "unrated",
+        "note": ""
+      },
       "docs": [
         {
           "url": "https://learn.microsoft.com/azure/service-bus-messaging/service-bus-messaging-overview"
@@ -2660,6 +2854,10 @@
       "category": "Messaging and integration",
       "purpose": "Route events between services.",
       "facts": [],
+      "cloud_native": {
+        "level": "unrated",
+        "note": ""
+      },
       "docs": [
         {
           "url": "https://learn.microsoft.com/azure/event-grid/overview"
@@ -2741,6 +2939,10 @@
       "category": "Observability",
       "purpose": "Metrics, alerts and the umbrella for monitoring.",
       "facts": [],
+      "cloud_native": {
+        "level": "unrated",
+        "note": ""
+      },
       "docs": [
         {
           "url": "https://learn.microsoft.com/azure/azure-monitor/fundamentals/overview"
@@ -2830,6 +3032,10 @@
         "A workspace stores logs; query them with KQL.",
         "Many resources send logs through diagnostic settings."
       ],
+      "cloud_native": {
+        "level": "unrated",
+        "note": ""
+      },
       "docs": [
         {
           "url": "https://learn.microsoft.com/azure/azure-monitor/logs/log-analytics-overview"
@@ -2882,6 +3088,10 @@
       "category": "Observability",
       "purpose": "Application telemetry: requests, traces, failures.",
       "facts": [],
+      "cloud_native": {
+        "level": "unrated",
+        "note": ""
+      },
       "docs": [
         {
           "url": "https://learn.microsoft.com/azure/azure-monitor/app/app-insights-overview"
@@ -2934,6 +3144,10 @@
       "category": "Observability",
       "purpose": "Azure-hosted Prometheus metrics and Grafana dashboards.",
       "facts": [],
+      "cloud_native": {
+        "level": "native",
+        "note": "Managed versions of the Prometheus and Grafana open-source projects, aimed at Kubernetes metrics."
+      },
       "docs": [
         {
           "url": "https://learn.microsoft.com/azure/azure-monitor/metrics/prometheus-metrics-overview"
@@ -3010,6 +3224,10 @@
       "category": "Developer tools and delivery",
       "purpose": "Repos, pipelines, boards and artifacts (a separate service from the Azure resource model).",
       "facts": [],
+      "cloud_native": {
+        "level": "unrated",
+        "note": ""
+      },
       "docs": [
         {
           "url": "https://learn.microsoft.com/azure/devops/user-guide/what-is-azure-devops"

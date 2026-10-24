@@ -69,6 +69,9 @@ overrides, always win), `review`, `freshness` (written by the pipeline). Rules:
   - `protects`: A secures or backs up B.
   - `enforces`: A checks or enforces B (Azure Resource Manager enforces Azure Policy). Do not use
     `requires` for this; it reads backwards.
+- **Cloud native:** a 3-level judgement (`native`, `partly`, `not`) against the criteria in `cloud_native_scale`, stored in
+  `manual.cloud_native` with a note. It is not a Microsoft label: never set it without the user's answer. Services that
+  solve the same problem are grouped in `comparisons` (first one: observability) and shown on the Compare tab.
 - **Terraform:** versions mean *provider* versions (azurerm, azuread, azuredevops, azapi), never Terraform core.
   `full` is a human judgement set in `manual.terraform.status`; the pipeline can only prove a resource exists
   (`listed`). Record real gaps in `manual.terraform.gaps` with the azapi alternative. Name resource types

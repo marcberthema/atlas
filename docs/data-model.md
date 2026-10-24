@@ -13,6 +13,8 @@ layers already merged, Terraform status derived) or merge the layers yourself wi
 | `tiers`, `categories` | Labels and display order. |
 | `edge_types` | `type`, `out` and `in` wording, `meaning`. Edge `[A, requires, B]` reads "A requires B". |
 | `edge_group_order` | Order of relationship groups on a card. |
+| `cloud_native_scale` | The levels (`native`, `partly`, `not`) with a label and the criteria for each. |
+| `comparisons` | Groups of services that solve the same problem: `id`, `title`, `question`, `status`, `note`, and `members` (`services`, `audience`, `choose_when`). |
 | `terraform_providers` | Per provider: registry namespace and name, `latest_version`, `changed_at`, `docs_url`. `azapi` is the fallback. |
 | `services` | Full entries (below). |
 | `stubs` | Out-of-scope services (id, name, tier, category) that edges point at. No content. |
@@ -24,9 +26,15 @@ layers already merged, Terraform status derived) or merge the layers yourself wi
 |---|---|---|
 | `tracking` | human | Inputs to the check: `learn_urls`, `terraform` (provider, kind `resource`/`data_source`, type), `arm_types`. |
 | `fetched` | pipeline or AI ingestion | Content from Microsoft or the registry: `purpose`, `facts`, and `terraform.resources` (`type`, `exists`, `since`), `terraform.arm_types`. |
-| `manual` | human | Overrides. Allowed keys: `purpose`, `facts`, `terraform` (`gaps`, `note`, `status`). |
+| `manual` | human | Overrides. Allowed keys: `purpose`, `facts`, `cloud_native` (`level`, `note`), `terraform` (`gaps`, `note`, `status`). |
 | `review` | human | `status` `unconfirmed` or `verified`, plus a note. |
 | `freshness` | pipeline | `status`, `changed_at`, and per Learn URL: `http_status`, `ms_date`, `updated_at`, `latest_hash`, `reviewed_hash`. |
+
+### Cloud native rating
+
+`cloud_native.level` is one of the levels in `cloud_native_scale`, with a one-line `note`. It is a human judgement
+against the scale's criteria, not a Microsoft label, so it lives in `manual` and is only set after the user confirms.
+A service with no rating resolves to `unrated`.
 
 ### Merge rule
 
