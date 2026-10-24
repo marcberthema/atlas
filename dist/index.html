@@ -1453,7 +1453,9 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
       "facts": [
         "Hard requirements: a resource group, one NIC (which needs a subnet) and an OS disk.",
         "Optional: data disks, public IP, NSG, managed identity, extensions, load balancer membership.",
-        "GPU is not a separate resource; it comes from the VM size (N-series). The size sets vCPU, memory and GPU."
+        "GPU is not a separate resource; it comes from the VM size (N-series). The size sets vCPU, memory and GPU.",
+        "You still maintain the VM: configuring, patching and running the software on it.",
+        "Keep data on a separate disk from the OS disk, so you can detach it and attach it to a new VM if the VM fails."
       ],
       "cloud_native": {
         "level": "not",
@@ -1466,10 +1468,10 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
       ],
       "review": {
         "status": "unconfirmed",
-        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+        "note": "Verified against Learn on 2026-10-24 (virtual-machines/overview): purpose, NIC and disk components, maintenance duty, the NIC and Managed Disks edges. Not verified: 'GPU comes from the VM size', the Site Recovery, Update Manager, boot diagnostics, Log Analytics, Application Gateway and Bastion edges."
       },
       "freshness": {
-        "status": "unreviewed",
+        "status": "current",
         "changed_at": "2026-10-24"
       },
       "terraform": {
@@ -1535,8 +1537,10 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
       "category": "Compute and containers",
       "purpose": "Block storage attached to VMs.",
       "facts": [
-        "Separate resources: detach from one VM and attach to another.",
-        "There is no storage account for you to manage. Only legacy unmanaged disks use one."
+        "Block-level storage volumes managed by Azure. There are five types: Ultra Disk, Premium SSD v2, Premium SSD, Standard SSD and Standard HDD.",
+        "A disk is a separate resource: you can detach a data disk from one VM and attach it to another.",
+        "You don't manage a storage account for managed disks; Azure handles it in the background.",
+        "Backup options include built-in redundancy (LRS and ZRS), Azure Backup, snapshots and restore points."
       ],
       "cloud_native": {
         "level": "unrated",
@@ -1549,10 +1553,10 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
       ],
       "review": {
         "status": "unconfirmed",
-        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+        "note": "Verified against Learn on 2026-10-24 (managed-disks-overview, virtual-machines/overview): purpose, facts, the Azure Backup and VM edges. Not verified: the Key Vault customer-managed key edge."
       },
       "freshness": {
-        "status": "unreviewed",
+        "status": "current",
         "changed_at": "2026-10-24"
       },
       "terraform": {
@@ -1600,8 +1604,12 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
       "tier": 1,
       "tier_label": "Core",
       "category": "Compute and containers",
-      "purpose": "Groups of identical VMs that scale together.",
-      "facts": [],
+      "purpose": "Groups of load-balanced VM instances that scale out and in automatically.",
+      "facts": [
+        "Instance count can grow or shrink with demand or a schedule, and VMs are spread across availability zones or fault domains.",
+        "Two orchestration modes: Flexible (the unified VM experience) and Uniform.",
+        "Works with Azure Load Balancer for layer 4 and Application Gateway for layer 7 traffic."
+      ],
       "cloud_native": {
         "level": "unrated",
         "note": ""
@@ -1613,10 +1621,10 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
       ],
       "review": {
         "status": "unconfirmed",
-        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+        "note": "Verified against Learn on 2026-10-24 (virtual-machine-scale-sets/overview): purpose (reworded: 'identical' is not stated), facts, the Load Balancer edge. Not verified: the subnet edge and 'each AKS node pool is a scale set'."
       },
       "freshness": {
-        "status": "unreviewed",
+        "status": "current",
         "changed_at": "2026-10-24"
       },
       "terraform": {
@@ -1673,7 +1681,10 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
       "tier_label": "Core",
       "category": "Compute and containers",
       "purpose": "Managed hosting for web apps and APIs.",
-      "facts": [],
+      "facts": [
+        "Runs web apps, mobile back ends and REST APIs on a managed platform. Stacks: .NET, Java, Node.js, Python and PHP, on Windows and Linux, or any container as a custom container.",
+        "Virtual Network integration secures ingress and egress; App Service environments give full isolation with dedicated networking and VMs."
+      ],
       "cloud_native": {
         "level": "unrated",
         "note": ""
@@ -1685,10 +1696,10 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
       ],
       "review": {
         "status": "unconfirmed",
-        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+        "note": "Verified against Learn on 2026-10-24 (app-service/overview): purpose, facts, the VNet edge. Not verified: the Key Vault references, Application Insights, App Configuration, Application Gateway, Traffic Manager, Private Endpoint and API Management edges, and the delegated-subnet detail."
       },
       "freshness": {
-        "status": "unreviewed",
+        "status": "current",
         "changed_at": "2026-10-24"
       },
       "terraform": {
@@ -1758,7 +1769,10 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
       "tier_label": "Core",
       "category": "Compute and containers",
       "purpose": "Event-driven serverless code.",
-      "facts": [],
+      "facts": [
+        "Serverless: you don't deploy or maintain servers. Event-driven triggers and bindings connect functions to other services without extra code.",
+        "Durable Functions chain functions into event-driven workflows."
+      ],
       "cloud_native": {
         "level": "unrated",
         "note": ""
@@ -1770,10 +1784,10 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
       ],
       "review": {
         "status": "unconfirmed",
-        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+        "note": "Verified against Learn on 2026-10-24 (azure-functions/functions-overview): purpose, facts. Not verified: all edges: the Storage requirement, Application Insights, Event Grid, Service Bus and API Management."
       },
       "freshness": {
-        "status": "unreviewed",
+        "status": "current",
         "changed_at": "2026-10-24"
       },
       "terraform": {
@@ -1822,7 +1836,10 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
       "tier_label": "Core",
       "category": "Compute and containers",
       "purpose": "Serverless containers that can scale to zero.",
-      "facts": [],
+      "facts": [
+        "Serverless platform for containers: you don't manage servers or orchestrate containers yourself. Autoscaling uses any KEDA-supported scaler, and most apps can scale to zero.",
+        "Runs containers from any registry, public or private. Dapr is built in for microservices, and you can provide an existing virtual network when creating the environment."
+      ],
       "cloud_native": {
         "level": "unrated",
         "note": ""
@@ -1834,10 +1851,10 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
       ],
       "review": {
         "status": "unconfirmed",
-        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+        "note": "Verified against Learn on 2026-10-24 (container-apps/overview): purpose, facts, the ACR and VNet edges. Not verified: the Log Analytics edge."
       },
       "freshness": {
-        "status": "unreviewed",
+        "status": "current",
         "changed_at": "2026-10-24"
       },
       "terraform": {
@@ -1898,9 +1915,11 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
       "tier": 1,
       "tier_label": "Core",
       "category": "Compute and containers",
-      "purpose": "Managed Kubernetes control plane with your node pools.",
+      "purpose": "Managed Kubernetes: Azure runs the control plane; Standard gives you the node pools, Automatic manages nodes too.",
       "facts": [
-        "Azure manages the control plane; node pools are scale sets in your subscription."
+        "Azure creates and manages the control plane for you at no cost. AKS is CNCF-certified.",
+        "Two modes: Automatic (fully managed, production-ready defaults, Azure handles nodes, scaling, security, monitoring and upgrades; recommended for most teams) and Standard (full control of cluster configuration and node pools).",
+        "In Automatic, Managed Prometheus, Container Insights and Azure Monitor dashboards with Grafana are on by default."
       ],
       "cloud_native": {
         "level": "unrated",
@@ -1913,10 +1932,10 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
       ],
       "review": {
         "status": "unconfirmed",
-        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+        "note": "Verified against Learn on 2026-10-24 (aks/what-is-aks, container-registry-intro): purpose (now covers Automatic mode), facts, the ACR and Managed Prometheus edges. The old fact 'node pools are scale sets' was dropped as unverified. Not verified: the managed identity, Key Vault, subnet, scale set, Log Analytics and Application Gateway edges."
       },
       "freshness": {
-        "status": "unreviewed",
+        "status": "current",
         "changed_at": "2026-10-24"
       },
       "terraform": {
@@ -1965,7 +1984,11 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
       "tier_label": "Core",
       "category": "Compute and containers",
       "purpose": "Private store for container images and charts.",
-      "facts": [],
+      "facts": [
+        "Managed registry based on Docker; stores container images and related artifacts such as Helm charts.",
+        "Three tiers: Basic, Standard and Premium. Premium adds geo-replication.",
+        "ACR tasks can build images in Azure on demand or from triggers such as base image updates or Git commits."
+      ],
       "cloud_native": {
         "level": "unrated",
         "note": ""
@@ -1977,10 +2000,10 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
       ],
       "review": {
         "status": "unconfirmed",
-        "note": "Imported from the first hand-drafted page; not yet checked against Microsoft Learn."
+        "note": "Verified against Learn on 2026-10-24 (container-registry-intro): purpose, facts, the AKS edge. Not verified: the RBAC and managed identity (AcrPull, AcrPush), Defender, Private Endpoint and Azure DevOps edges."
       },
       "freshness": {
-        "status": "unreviewed",
+        "status": "current",
         "changed_at": "2026-10-24"
       },
       "terraform": {
@@ -4281,17 +4304,17 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
       "from": "virtual-machines",
       "type": "requires",
       "to": "network-interface-nic",
-      "note": "At least one NIC",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "note": "A virtual network interface card connects the VM to a network",
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "virtual-machines",
       "type": "requires",
       "to": "managed-disks",
-      "note": "An OS disk (legacy unmanaged disks use a storage account instead)",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "note": "An OS disk; managed disks handle the storage account for you",
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "virtual-machines",
@@ -4321,9 +4344,9 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
       "from": "virtual-machine-scale-sets",
       "type": "optional",
       "to": "load-balancer",
-      "note": "Backend pool",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "note": "Azure Load Balancer for layer 4; Application Gateway for layer 7",
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "azure-kubernetes-service-aks",
@@ -4345,9 +4368,9 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
       "from": "azure-kubernetes-service-aks",
       "type": "optional",
       "to": "container-registry-acr",
-      "note": "Pull images; grant AcrPull to the kubelet identity",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "note": "Pull images",
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "azure-kubernetes-service-aks",
@@ -4361,17 +4384,17 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
       "from": "azure-kubernetes-service-aks",
       "type": "sends",
       "to": "managed-prometheus-and-grafana",
-      "note": "Prometheus metrics",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "note": "Managed Prometheus is on by default in AKS Automatic",
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "app-service",
       "type": "optional",
       "to": "virtual-network-and-subnets",
-      "note": "VNet integration uses a delegated subnet",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "note": "Virtual Network integration for ingress and egress; App Service environments for full isolation",
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "app-service",
@@ -4409,17 +4432,17 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
       "from": "container-apps",
       "type": "optional",
       "to": "virtual-network-and-subnets",
-      "note": "Environment can be injected into a subnet",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "note": "Provide an existing virtual network when creating the environment",
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "container-apps",
       "type": "optional",
       "to": "container-registry-acr",
-      "note": "Pull images",
-      "origin": "legacy-import",
-      "status": "unconfirmed"
+      "note": "Run containers from any registry, including ACR",
+      "origin": "learn",
+      "status": "verified"
     },
     {
       "from": "container-apps",
