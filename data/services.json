@@ -890,7 +890,25 @@
       },
       "manual": {
         "terraform": {
-          "note": "Registry confirms azurerm resources for vaults, secrets, keys, certificates, certificate contacts and issuers, managed storage accounts and Managed HSM, and typed azapi pages for vaults, access policies, keys, secrets and managed HSMs. One-off operations such as backup, restore, purge and rotate-now are actions rather than resources; azapi_resource_action may cover them (unconfirmed for Key Vault)."
+          "gaps": [
+            {
+              "what": "ignoreMissingVnetServiceEndpoint on network ACL virtual network rules",
+              "alternative": "azapi_resource with Microsoft.KeyVault/vaults"
+            }
+          ],
+          "content": [
+            {
+              "what": "Secrets, keys and certificates, plus certificate contacts and issuers",
+              "how": "azurerm_key_vault_secret, _key, _certificate, _certificate_contacts, _certificate_issuer; azapi types Microsoft.KeyVault/vaults/secrets and /keys"
+            }
+          ],
+          "compared": {
+            "api_version": "2026-05-15",
+            "provider": "azurerm",
+            "provider_version": "5.11.0",
+            "compared_at": "2026-10-24"
+          },
+          "note": "End-user actions (backup, restore, purge, recover) are not configuration and are not counted. Two API-only vault fields have no azurerm argument: createMode (recover a soft-deleted vault, an end-user action) and enableSoftDelete (whether it can still be changed is unconfirmed). Private endpoint connections are configured through the Private Endpoint service."
         }
       },
       "review": {

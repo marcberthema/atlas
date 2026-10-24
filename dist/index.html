@@ -445,6 +445,8 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         "first_supported": null,
         "fully_supported_since": null,
         "gaps": [],
+        "content": [],
+        "compared": null,
         "fallback": null,
         "note": "",
         "changed_at": "2026-10-24"
@@ -503,6 +505,8 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         "first_supported": "1.14.0",
         "fully_supported_since": "2.54.0",
         "gaps": [],
+        "content": [],
+        "compared": null,
         "fallback": {
           "provider": "azapi",
           "resource": "azapi_resource",
@@ -569,6 +573,8 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         "first_supported": null,
         "fully_supported_since": null,
         "gaps": [],
+        "content": [],
+        "compared": null,
         "fallback": null,
         "note": "",
         "changed_at": "2026-10-24"
@@ -629,6 +635,8 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         "first_supported": null,
         "fully_supported_since": null,
         "gaps": [],
+        "content": [],
+        "compared": null,
         "fallback": {
           "provider": "azapi",
           "resource": "azapi_resource",
@@ -691,6 +699,8 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         "first_supported": null,
         "fully_supported_since": null,
         "gaps": [],
+        "content": [],
+        "compared": null,
         "fallback": {
           "provider": "azapi",
           "resource": "azapi_resource",
@@ -774,6 +784,8 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         "first_supported": null,
         "fully_supported_since": null,
         "gaps": [],
+        "content": [],
+        "compared": null,
         "fallback": null,
         "note": "",
         "changed_at": "2026-10-24"
@@ -833,6 +845,8 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         "first_supported": null,
         "fully_supported_since": null,
         "gaps": [],
+        "content": [],
+        "compared": null,
         "fallback": {
           "provider": "azapi",
           "resource": "azapi_resource",
@@ -906,6 +920,8 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         "first_supported": "1.9.0",
         "fully_supported_since": "3.31.0",
         "gaps": [],
+        "content": [],
+        "compared": null,
         "fallback": {
           "provider": "azapi",
           "resource": "azapi_resource",
@@ -962,7 +978,7 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         "changed_at": "2026-10-24"
       },
       "terraform": {
-        "status": "listed",
+        "status": "partial",
         "resources": [
           {
             "provider": "azurerm",
@@ -1007,7 +1023,24 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         ],
         "first_supported": null,
         "fully_supported_since": null,
-        "gaps": [],
+        "gaps": [
+          {
+            "what": "ignoreMissingVnetServiceEndpoint on network ACL virtual network rules",
+            "alternative": "azapi_resource with Microsoft.KeyVault/vaults"
+          }
+        ],
+        "content": [
+          {
+            "what": "Secrets, keys and certificates, plus certificate contacts and issuers",
+            "how": "azurerm_key_vault_secret, _key, _certificate, _certificate_contacts, _certificate_issuer; azapi types Microsoft.KeyVault/vaults/secrets and /keys"
+          }
+        ],
+        "compared": {
+          "api_version": "2026-05-15",
+          "provider": "azurerm",
+          "provider_version": "5.11.0",
+          "compared_at": "2026-10-24"
+        },
         "fallback": {
           "provider": "azapi",
           "resource": "azapi_resource",
@@ -1020,7 +1053,7 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
             }
           ]
         },
-        "note": "Registry confirms azurerm resources for vaults, secrets, keys, certificates, certificate contacts and issuers, managed storage accounts and Managed HSM, and typed azapi pages for vaults, access policies, keys, secrets and managed HSMs. One-off operations such as backup, restore, purge and rotate-now are actions rather than resources; azapi_resource_action may cover them (unconfirmed for Key Vault).",
+        "note": "End-user actions (backup, restore, purge, recover) are not configuration and are not counted. Two API-only vault fields have no azurerm argument: createMode (recover a soft-deleted vault, an end-user action) and enableSoftDelete (whether it can still be changed is unconfirmed). Private endpoint connections are configured through the Private Endpoint service.",
         "changed_at": "2026-10-24"
       }
     },
@@ -1084,6 +1117,8 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         "first_supported": null,
         "fully_supported_since": null,
         "gaps": [],
+        "content": [],
+        "compared": null,
         "fallback": {
           "provider": "azapi",
           "resource": "azapi_resource",
@@ -1159,6 +1194,8 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         "first_supported": "2.59.0",
         "fully_supported_since": "2.86.0",
         "gaps": [],
+        "content": [],
+        "compared": null,
         "fallback": {
           "provider": "azapi",
           "resource": "azapi_resource",
@@ -1220,6 +1257,8 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         "first_supported": "2.12.0",
         "fully_supported_since": "2.12.0",
         "gaps": [],
+        "content": [],
+        "compared": null,
         "fallback": {
           "provider": "azapi",
           "resource": "azapi_resource",
@@ -1270,6 +1309,8 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         "first_supported": null,
         "fully_supported_since": null,
         "gaps": [],
+        "content": [],
+        "compared": null,
         "fallback": null,
         "note": "A query API rather than a deployable resource, so no azurerm resource exists for running queries. Saved queries are the ARM type Microsoft.ResourceGraph/queries (unconfirmed).",
         "changed_at": "2026-10-24"
@@ -1352,6 +1393,8 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         "first_supported": "1.3.1",
         "fully_supported_since": "2.66.0",
         "gaps": [],
+        "content": [],
+        "compared": null,
         "fallback": {
           "provider": "azapi",
           "resource": "azapi_resource",
@@ -1437,6 +1480,8 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         "first_supported": null,
         "fully_supported_since": null,
         "gaps": [],
+        "content": [],
+        "compared": null,
         "fallback": {
           "provider": "azapi",
           "resource": "azapi_resource",
@@ -1528,6 +1573,8 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         "first_supported": null,
         "fully_supported_since": null,
         "gaps": [],
+        "content": [],
+        "compared": null,
         "fallback": {
           "provider": "azapi",
           "resource": "azapi_resource",
@@ -1597,6 +1644,8 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         "first_supported": null,
         "fully_supported_since": null,
         "gaps": [],
+        "content": [],
+        "compared": null,
         "fallback": {
           "provider": "azapi",
           "resource": "azapi_resource",
@@ -1673,6 +1722,8 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         "first_supported": "2.0.0",
         "fully_supported_since": "2.11.0",
         "gaps": [],
+        "content": [],
+        "compared": null,
         "fallback": {
           "provider": "azapi",
           "resource": "azapi_resource",
@@ -1756,6 +1807,8 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         "first_supported": null,
         "fully_supported_since": null,
         "gaps": [],
+        "content": [],
+        "compared": null,
         "fallback": {
           "provider": "azapi",
           "resource": "azapi_resource",
@@ -1828,6 +1881,8 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         "first_supported": null,
         "fully_supported_since": null,
         "gaps": [],
+        "content": [],
+        "compared": null,
         "fallback": {
           "provider": "azapi",
           "resource": "azapi_resource",
@@ -1903,6 +1958,8 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         "first_supported": "3.43.0",
         "fully_supported_since": "3.103.0",
         "gaps": [],
+        "content": [],
+        "compared": null,
         "fallback": {
           "provider": "azapi",
           "resource": "azapi_resource",
@@ -1976,6 +2033,8 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         "first_supported": "1.1.2",
         "fully_supported_since": "1.37.0",
         "gaps": [],
+        "content": [],
+        "compared": null,
         "fallback": {
           "provider": "azapi",
           "resource": "azapi_resource",
@@ -2044,6 +2103,8 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         "first_supported": null,
         "fully_supported_since": null,
         "gaps": [],
+        "content": [],
+        "compared": null,
         "fallback": {
           "provider": "azapi",
           "resource": "azapi_resource",
@@ -2114,6 +2175,8 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         "first_supported": null,
         "fully_supported_since": null,
         "gaps": [],
+        "content": [],
+        "compared": null,
         "fallback": {
           "provider": "azapi",
           "resource": "azapi_resource",
@@ -2181,6 +2244,8 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         "first_supported": null,
         "fully_supported_since": null,
         "gaps": [],
+        "content": [],
+        "compared": null,
         "fallback": {
           "provider": "azapi",
           "resource": "azapi_resource",
@@ -2256,6 +2321,8 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         "first_supported": null,
         "fully_supported_since": null,
         "gaps": [],
+        "content": [],
+        "compared": null,
         "fallback": {
           "provider": "azapi",
           "resource": "azapi_resource",
@@ -2323,6 +2390,8 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         "first_supported": null,
         "fully_supported_since": null,
         "gaps": [],
+        "content": [],
+        "compared": null,
         "fallback": {
           "provider": "azapi",
           "resource": "azapi_resource",
@@ -2406,6 +2475,8 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         "first_supported": null,
         "fully_supported_since": null,
         "gaps": [],
+        "content": [],
+        "compared": null,
         "fallback": {
           "provider": "azapi",
           "resource": "azapi_resource",
@@ -2492,6 +2563,8 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         "first_supported": null,
         "fully_supported_since": null,
         "gaps": [],
+        "content": [],
+        "compared": null,
         "fallback": {
           "provider": "azapi",
           "resource": "azapi_resource",
@@ -2583,6 +2656,8 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         "first_supported": null,
         "fully_supported_since": null,
         "gaps": [],
+        "content": [],
+        "compared": null,
         "fallback": {
           "provider": "azapi",
           "resource": "azapi_resource",
@@ -2648,6 +2723,8 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         "first_supported": null,
         "fully_supported_since": null,
         "gaps": [],
+        "content": [],
+        "compared": null,
         "fallback": {
           "provider": "azapi",
           "resource": "azapi_resource",
@@ -2749,6 +2826,8 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         "first_supported": null,
         "fully_supported_since": null,
         "gaps": [],
+        "content": [],
+        "compared": null,
         "fallback": {
           "provider": "azapi",
           "resource": "azapi_resource",
@@ -2833,6 +2912,8 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         "first_supported": "1.19.0",
         "fully_supported_since": "2.52.0",
         "gaps": [],
+        "content": [],
+        "compared": null,
         "fallback": {
           "provider": "azapi",
           "resource": "azapi_resource",
@@ -2922,6 +3003,8 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         "first_supported": "2.57.0",
         "fully_supported_since": "2.71.0",
         "gaps": [],
+        "content": [],
+        "compared": null,
         "fallback": {
           "provider": "azapi",
           "resource": "azapi_resource",
@@ -2998,6 +3081,8 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         "first_supported": null,
         "fully_supported_since": null,
         "gaps": [],
+        "content": [],
+        "compared": null,
         "fallback": {
           "provider": "azapi",
           "resource": "azapi_resource",
@@ -3081,6 +3166,8 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         "first_supported": null,
         "fully_supported_since": null,
         "gaps": [],
+        "content": [],
+        "compared": null,
         "fallback": {
           "provider": "azapi",
           "resource": "azapi_resource",
@@ -3164,6 +3251,8 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         "first_supported": null,
         "fully_supported_since": null,
         "gaps": [],
+        "content": [],
+        "compared": null,
         "fallback": {
           "provider": "azapi",
           "resource": "azapi_resource",
@@ -3252,6 +3341,8 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         "first_supported": "1.13.0",
         "fully_supported_since": "3.15.0",
         "gaps": [],
+        "content": [],
+        "compared": null,
         "fallback": {
           "provider": "azapi",
           "resource": "azapi_resource",
@@ -3321,6 +3412,8 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         "first_supported": null,
         "fully_supported_since": null,
         "gaps": [],
+        "content": [],
+        "compared": null,
         "fallback": {
           "provider": "azapi",
           "resource": "azapi_resource",
@@ -3380,6 +3473,8 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         "first_supported": null,
         "fully_supported_since": null,
         "gaps": [],
+        "content": [],
+        "compared": null,
         "fallback": {
           "provider": "azapi",
           "resource": "azapi_resource",
@@ -3458,6 +3553,8 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         "first_supported": "3.21.0",
         "fully_supported_since": "3.58.0",
         "gaps": [],
+        "content": [],
+        "compared": null,
         "fallback": {
           "provider": "azapi",
           "resource": "azapi_resource",
@@ -3538,6 +3635,8 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         "first_supported": "0.0.1",
         "fully_supported_since": "0.0.1",
         "gaps": [],
+        "content": [],
+        "compared": null,
         "fallback": null,
         "note": "",
         "changed_at": "2026-10-24"
@@ -5165,6 +5264,8 @@ function tfBlock(s){
     '<li><a href="'+safeUrl(r.docs_url)+'" target="_blank" rel="noopener"><code>'+esc(r.type)+'</code></a> <small>'+(r.kind==='data_source'?'data source · ':'')+esc(r.provider)+
     (r.exists===false?' · <b>not found in latest docs</b>':r.since?' · since '+esc(r.since):r.exists?' · no “new” entry in changelogs (predates them or logged differently)':'')+'</small></li>').join('')+'</ul>';
   if(t.gaps.length)h+='<b>Not covered:</b><ul>'+t.gaps.map(g=>'<li>'+esc(g.what)+(g.alternative?' <small>→ '+esc(g.alternative)+'</small>':'')+'</li>').join('')+'</ul>';
+  if(t.content.length)h+='<b>Btw, content you can manage:</b><ul>'+t.content.map(c=>'<li>'+esc(c.what)+' <small>→ '+esc(c.how)+'</small></li>').join('')+'</ul>';
+  if(t.compared)h+='<div><small>Compared '+esc(t.compared.compared_at)+': API '+esc(t.compared.api_version)+' against '+esc(t.compared.provider)+' '+esc(t.compared.provider_version)+'.</small></div>';
   if(t.fallback)h+='<div>Anything without a dedicated resource: <a href="'+safeUrl(t.fallback.docs_url)+'" target="_blank" rel="noopener"><code>azapi_resource</code></a> with ARM type '+
     t.fallback.arm_types.map(a=>a.docs_url?'<a href="'+safeUrl(a.docs_url)+'" target="_blank" rel="noopener"><code>'+esc(a.type)+'</code></a>':'<code>'+esc(a.type)+'</code>').join(', ')+'. <small>Linked types have a typed azapi docs page.</small></div>';
   if(t.note)h+='<div>'+esc(t.note)+'</div>';

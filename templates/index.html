@@ -198,6 +198,8 @@ function tfBlock(s){
     '<li><a href="'+safeUrl(r.docs_url)+'" target="_blank" rel="noopener"><code>'+esc(r.type)+'</code></a> <small>'+(r.kind==='data_source'?'data source · ':'')+esc(r.provider)+
     (r.exists===false?' · <b>not found in latest docs</b>':r.since?' · since '+esc(r.since):r.exists?' · no “new” entry in changelogs (predates them or logged differently)':'')+'</small></li>').join('')+'</ul>';
   if(t.gaps.length)h+='<b>Not covered:</b><ul>'+t.gaps.map(g=>'<li>'+esc(g.what)+(g.alternative?' <small>→ '+esc(g.alternative)+'</small>':'')+'</li>').join('')+'</ul>';
+  if(t.content.length)h+='<b>Btw, content you can manage:</b><ul>'+t.content.map(c=>'<li>'+esc(c.what)+' <small>→ '+esc(c.how)+'</small></li>').join('')+'</ul>';
+  if(t.compared)h+='<div><small>Compared '+esc(t.compared.compared_at)+': API '+esc(t.compared.api_version)+' against '+esc(t.compared.provider)+' '+esc(t.compared.provider_version)+'.</small></div>';
   if(t.fallback)h+='<div>Anything without a dedicated resource: <a href="'+safeUrl(t.fallback.docs_url)+'" target="_blank" rel="noopener"><code>azapi_resource</code></a> with ARM type '+
     t.fallback.arm_types.map(a=>a.docs_url?'<a href="'+safeUrl(a.docs_url)+'" target="_blank" rel="noopener"><code>'+esc(a.type)+'</code></a>':'<code>'+esc(a.type)+'</code>').join(', ')+'. <small>Linked types have a typed azapi docs page.</small></div>';
   if(t.note)h+='<div>'+esc(t.note)+'</div>';

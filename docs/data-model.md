@@ -82,4 +82,17 @@ Versions are **provider** versions (azurerm, azuread, azuredevops, azapi), not T
 `null` means no such entry was found: it predates the changelogs, or was logged in another format. `first_supported`
 and `fully_supported_since` are only set when every found resource has a `since`.
 
+### How Terraform coverage is judged
+
+Compare the configuration the Azure REST API accepts for the service (the OpenAPI spec in `Azure/azure-rest-api-specs`)
+with what the provider resource accepts (its documented arguments):
+
+- `full`: every configurable setting can be set through the provider.
+- `partial`: some settings can only be set through the API; each goes in `gaps` with the azapi alternative.
+- `none` / `azapi-only`: the provider has no resource for the service.
+
+End-user actions (backup, restore, purge, recover, rotate now) are not configuration and never count as gaps.
+Content you can manage in the service (secrets, keys, items in a store) is not a gap either: it goes in `content` as
+"you can also manage this with ...". `compared` records the API version and provider version the judgement is based on.
+
 `gaps` entries are `{ "what": "...", "alternative": "..." }`, for example a feature that needs `azapi_resource`.
