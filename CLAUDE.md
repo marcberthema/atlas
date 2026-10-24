@@ -45,7 +45,7 @@ overrides, always win), `review`, `freshness` (written by the pipeline). Rules:
 
 - The pipeline never writes `manual`, `review`, `reviewed_hash` or `tracking`.
 - Content from AI ingestion goes into `fetched`, with its Learn URL in `tracking.learn_urls`.
-- Do not hand-edit `freshness` or `fetched.terraform`; `make check` owns them.
+- Do not hand-edit `freshness`, `data/snapshots/` or `fetched.terraform`; `make check` and `make ack` own them.
 - After updating a service from its Learn page, run `make ack SERVICE=<id>`, and set `review.status` to
   `verified` only for facts actually checked against Learn.
 - Currently every entry is `unconfirmed`: it was imported from the first hand-drafted page.
