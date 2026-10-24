@@ -436,6 +436,9 @@
       "docs": [
         {
           "url": "https://learn.microsoft.com/azure/azure-resource-manager/management/overview"
+        },
+        {
+          "url": "https://learn.microsoft.com/azure/azure-resource-manager/management/resource-providers-and-types"
         }
       ],
       "review": {
@@ -485,6 +488,9 @@
       "docs": [
         {
           "url": "https://learn.microsoft.com/azure/cloud-adoption-framework/ready/landing-zone/design-area/resource-org-subscriptions"
+        },
+        {
+          "url": "https://learn.microsoft.com/entra/fundamentals/how-subscriptions-associated-directory"
         }
       ],
       "review": {
@@ -831,6 +837,15 @@
       "docs": [
         {
           "url": "https://learn.microsoft.com/azure/key-vault/general/overview"
+        },
+        {
+          "url": "https://learn.microsoft.com/azure/key-vault/general/rbac-guide"
+        },
+        {
+          "url": "https://learn.microsoft.com/azure/key-vault/general/rbac-migration"
+        },
+        {
+          "url": "https://learn.microsoft.com/azure/key-vault/general/rbac-access-policy"
         }
       ],
       "review": {

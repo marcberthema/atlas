@@ -347,7 +347,8 @@
       "category": "Organization",
       "tracking": {
         "learn_urls": [
-          "https://learn.microsoft.com/azure/azure-resource-manager/management/overview"
+          "https://learn.microsoft.com/azure/azure-resource-manager/management/overview",
+          "https://learn.microsoft.com/azure/azure-resource-manager/management/resource-providers-and-types"
         ],
         "terraform": [
           {
@@ -396,6 +397,14 @@
             "updated_at": "2026-08-06T22:11:00Z",
             "latest_hash": "sha256:dd7c41c16e8cb01e4e6f0a40daf5e715d1aff3487af576b1f7bc7ea4af6251ee",
             "reviewed_hash": "sha256:dd7c41c16e8cb01e4e6f0a40daf5e715d1aff3487af576b1f7bc7ea4af6251ee"
+          },
+          "https://learn.microsoft.com/azure/azure-resource-manager/management/resource-providers-and-types": {
+            "http_status": 200,
+            "ms_date": "2026-02-27T00:00:00Z",
+            "updated_at": "2026-02-27T18:31:00Z",
+            "latest_hash": "sha256:67bc8c03b9cb942098f285fb40e7a82337f9ef7fd4ba465a6e9a9adce38d3d09",
+            "changed_at": "2026-10-24",
+            "reviewed_hash": "sha256:67bc8c03b9cb942098f285fb40e7a82337f9ef7fd4ba465a6e9a9adce38d3d09"
           }
         }
       }
@@ -407,7 +416,8 @@
       "category": "Organization",
       "tracking": {
         "learn_urls": [
-          "https://learn.microsoft.com/azure/cloud-adoption-framework/ready/landing-zone/design-area/resource-org-subscriptions"
+          "https://learn.microsoft.com/azure/cloud-adoption-framework/ready/landing-zone/design-area/resource-org-subscriptions",
+          "https://learn.microsoft.com/entra/fundamentals/how-subscriptions-associated-directory"
         ],
         "terraform": [
           {
@@ -470,6 +480,14 @@
             "updated_at": "2026-10-01T01:04:00Z",
             "latest_hash": "sha256:465fc97aef8ca0898375530faa40a2a3bfc5a09100ce94e1fb185e6bd0a24bdc",
             "reviewed_hash": "sha256:465fc97aef8ca0898375530faa40a2a3bfc5a09100ce94e1fb185e6bd0a24bdc"
+          },
+          "https://learn.microsoft.com/entra/fundamentals/how-subscriptions-associated-directory": {
+            "http_status": 200,
+            "ms_date": "2026-06-19T00:00:00Z",
+            "updated_at": "2026-06-19T22:42:00Z",
+            "latest_hash": "sha256:99d60abe835d0e2ab438561502b95e11196da8f90d5f058ba616235769688335",
+            "changed_at": "2026-10-24",
+            "reviewed_hash": "sha256:99d60abe835d0e2ab438561502b95e11196da8f90d5f058ba616235769688335"
           }
         }
       }
@@ -789,7 +807,10 @@
       "category": "Identity and security",
       "tracking": {
         "learn_urls": [
-          "https://learn.microsoft.com/azure/key-vault/general/overview"
+          "https://learn.microsoft.com/azure/key-vault/general/overview",
+          "https://learn.microsoft.com/azure/key-vault/general/rbac-guide",
+          "https://learn.microsoft.com/azure/key-vault/general/rbac-migration",
+          "https://learn.microsoft.com/azure/key-vault/general/rbac-access-policy"
         ],
         "terraform": [
           {
@@ -887,6 +908,30 @@
             "updated_at": "2026-10-06T17:34:00Z",
             "latest_hash": "sha256:00f909db6d10c669c7e4b34e0e22c670613a7114eeff95fe986802b393847c31",
             "reviewed_hash": "sha256:00f909db6d10c669c7e4b34e0e22c670613a7114eeff95fe986802b393847c31"
+          },
+          "https://learn.microsoft.com/azure/key-vault/general/rbac-guide": {
+            "http_status": 200,
+            "ms_date": "2026-06-16T00:00:00Z",
+            "updated_at": "2026-08-21T17:34:00Z",
+            "latest_hash": "sha256:90cf26f5f867d5c4517c71503d9be9acd97dd90a372f67264eb1de22fcad79cb",
+            "changed_at": "2026-10-24",
+            "reviewed_hash": "sha256:90cf26f5f867d5c4517c71503d9be9acd97dd90a372f67264eb1de22fcad79cb"
+          },
+          "https://learn.microsoft.com/azure/key-vault/general/rbac-migration": {
+            "http_status": 200,
+            "ms_date": "2026-04-10T00:00:00Z",
+            "updated_at": "2026-06-12T22:35:00Z",
+            "latest_hash": "sha256:4e20b40b6d6479e87b110cc94e6f741bc0fc50387f7f9589291bf2561d0d7f71",
+            "changed_at": "2026-10-24",
+            "reviewed_hash": "sha256:4e20b40b6d6479e87b110cc94e6f741bc0fc50387f7f9589291bf2561d0d7f71"
+          },
+          "https://learn.microsoft.com/azure/key-vault/general/rbac-access-policy": {
+            "http_status": 200,
+            "ms_date": "2026-03-24T00:00:00Z",
+            "updated_at": "2026-06-12T22:35:00Z",
+            "latest_hash": "sha256:5a36488da0c21f2a460b17f2e74fea9f4f7eba24d271a6b6aa5204eecc13c2b9",
+            "changed_at": "2026-10-24",
+            "reviewed_hash": "sha256:5a36488da0c21f2a460b17f2e74fea9f4f7eba24d271a6b6aa5204eecc13c2b9"
           }
         }
       }
