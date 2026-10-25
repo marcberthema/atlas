@@ -448,7 +448,7 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         "content": [],
         "compared": null,
         "fallback": null,
-        "note": "",
+        "note": "Not compared: this service uses the Microsoft Graph API (azuread provider), not an ARM spec, so the API-versus-provider method does not apply yet.",
         "changed_at": "2026-10-24"
       }
     },
@@ -483,7 +483,7 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         "changed_at": "2026-10-24"
       },
       "terraform": {
-        "status": "listed",
+        "status": "full",
         "resources": [
           {
             "provider": "azurerm",
@@ -506,7 +506,12 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         "fully_supported_since": "2.54.0",
         "gaps": [],
         "content": [],
-        "compared": null,
+        "compared": {
+          "api_version": "2023-04-01",
+          "provider": "azurerm",
+          "provider_version": "5.11.0",
+          "compared_at": "2026-10-24"
+        },
         "fallback": {
           "provider": "azapi",
           "resource": "azapi_resource",
@@ -519,7 +524,7 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
             }
           ]
         },
-        "note": "",
+        "note": "First pass, not reviewed. A gap means the API accepts the setting and no documented azurerm 5.11.0 argument (in any resource doc) was found; the provider source was not checked and general availability of newer settings is unconfirmed.",
         "changed_at": "2026-10-24"
       }
     },
@@ -559,7 +564,7 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         "changed_at": "2026-10-24"
       },
       "terraform": {
-        "status": "listed",
+        "status": "full",
         "resources": [
           {
             "provider": "azurerm",
@@ -576,7 +581,7 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         "content": [],
         "compared": null,
         "fallback": null,
-        "note": "",
+        "note": "First pass, not reviewed. A gap means the API accepts the setting and no documented azurerm 5.11.0 argument (in any resource doc) was found; the provider source was not checked and general availability of newer settings is unconfirmed.  Not compared against the API spec. azurerm_resource_provider_registration, azurerm_management_lock and the template deployment resources exist; coverage of the rest is unconfirmed.",
         "changed_at": "2026-10-24"
       }
     },
@@ -695,7 +700,7 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         "changed_at": "2026-10-24"
       },
       "terraform": {
-        "status": "listed",
+        "status": "full",
         "resources": [
           {
             "provider": "azurerm",
@@ -723,7 +728,7 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
             }
           ]
         },
-        "note": "",
+        "note": "First pass, not reviewed. A gap means the API accepts the setting and no documented azurerm 5.11.0 argument (in any resource doc) was found; the provider source was not checked and general availability of newer settings is unconfirmed.  Not compared against the API spec (spec path not found by the script). A resource group is name, location, tags and managed-by; unconfirmed.",
         "changed_at": "2026-10-24"
       }
     },
@@ -797,7 +802,7 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         "content": [],
         "compared": null,
         "fallback": null,
-        "note": "",
+        "note": "Not compared: this service uses the Microsoft Graph API (azuread provider), not an ARM spec, so the API-versus-provider method does not apply yet.",
         "changed_at": "2026-10-24"
       }
     },
@@ -913,7 +918,7 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         "changed_at": "2026-10-24"
       },
       "terraform": {
-        "status": "listed",
+        "status": "full",
         "resources": [
           {
             "provider": "azurerm",
@@ -936,7 +941,12 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         "fully_supported_since": "3.31.0",
         "gaps": [],
         "content": [],
-        "compared": null,
+        "compared": {
+          "api_version": "2024-11-30",
+          "provider": "azurerm",
+          "provider_version": "5.11.0",
+          "compared_at": "2026-10-24"
+        },
         "fallback": {
           "provider": "azapi",
           "resource": "azapi_resource",
@@ -949,7 +959,7 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
             }
           ]
         },
-        "note": "",
+        "note": "First pass, not reviewed. A gap means the API accepts the setting and no documented azurerm 5.11.0 argument (in any resource doc) was found; the provider source was not checked and general availability of newer settings is unconfirmed. Federated credentials are azurerm_federated_identity_credential.",
         "changed_at": "2026-10-24"
       }
     },
@@ -1102,7 +1112,7 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         "changed_at": "2026-10-24"
       },
       "terraform": {
-        "status": "listed",
+        "status": "full",
         "resources": [
           {
             "provider": "azurerm",
@@ -1131,9 +1141,23 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         ],
         "first_supported": null,
         "fully_supported_since": null,
-        "gaps": [],
+        "gaps": [
+          {
+            "what": "Pricing enforce",
+            "alternative": "azapi_resource with Microsoft.Security/pricings"
+          },
+          {
+            "what": "Security operator resource id",
+            "alternative": "azapi_resource with Microsoft.Security/pricings"
+          }
+        ],
         "content": [],
-        "compared": null,
+        "compared": {
+          "api_version": "2026-07-01",
+          "provider": "azurerm",
+          "provider_version": "5.11.0",
+          "compared_at": "2026-10-24"
+        },
         "fallback": {
           "provider": "azapi",
           "resource": "azapi_resource",
@@ -1146,7 +1170,7 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
             }
           ]
         },
-        "note": "",
+        "note": "First pass, not reviewed. A gap means the API accepts the setting and no documented azurerm 5.11.0 argument (in any resource doc) was found; the provider source was not checked and general availability of newer settings is unconfirmed. Compared the pricing plan; contacts, settings and automation are separate azurerm resources.",
         "changed_at": "2026-10-24"
       }
     },
@@ -1268,7 +1292,7 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         "changed_at": "2026-10-24"
       },
       "terraform": {
-        "status": "listed",
+        "status": "partial",
         "resources": [
           {
             "provider": "azurerm",
@@ -1281,7 +1305,12 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         ],
         "first_supported": "2.12.0",
         "fully_supported_since": "2.12.0",
-        "gaps": [],
+        "gaps": [
+          {
+            "what": "Advisor configuration (rule settings, excluded resource groups, digests): unconfirmed",
+            "alternative": "azapi_resource with Microsoft.Advisor/configurations"
+          }
+        ],
         "content": [],
         "compared": null,
         "fallback": {
@@ -1296,7 +1325,7 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
             }
           ]
         },
-        "note": "",
+        "note": "First pass, not reviewed. A gap means the API accepts the setting and no documented azurerm 5.11.0 argument (in any resource doc) was found; the provider source was not checked and general availability of newer settings is unconfirmed.  azurerm_advisor_suppression covers suppressions only. Not compared against the API spec.",
         "changed_at": "2026-10-24"
       }
     },
@@ -1329,7 +1358,7 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         "changed_at": "2026-10-24"
       },
       "terraform": {
-        "status": "unknown",
+        "status": "none",
         "resources": [],
         "first_supported": null,
         "fully_supported_since": null,
@@ -1337,7 +1366,7 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         "content": [],
         "compared": null,
         "fallback": null,
-        "note": "A query API rather than a deployable resource, so no azurerm resource exists for running queries. Saved queries are the ARM type Microsoft.ResourceGraph/queries (unconfirmed).",
+        "note": "First pass, not reviewed. A gap means the API accepts the setting and no documented azurerm 5.11.0 argument (in any resource doc) was found; the provider source was not checked and general availability of newer settings is unconfirmed.  No azurerm resource found. Resource Graph is a query service; saved queries via Microsoft.ResourceGraph/queries are unconfirmed.",
         "changed_at": "2026-10-24"
       }
     },
@@ -1588,7 +1617,7 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         "changed_at": "2026-10-24"
       },
       "terraform": {
-        "status": "listed",
+        "status": "full",
         "resources": [
           {
             "provider": "azurerm",
@@ -1625,9 +1654,43 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         ],
         "first_supported": null,
         "fully_supported_since": null,
-        "gaps": [],
+        "gaps": [
+          {
+            "what": "Scheduled events policy",
+            "alternative": "azapi_resource with Microsoft.Compute/virtualMachines"
+          },
+          {
+            "what": "Constrained vCPUs (vCPUsAvailable, vCPUsPerCore)",
+            "alternative": "azapi_resource with Microsoft.Compute/virtualMachines"
+          },
+          {
+            "what": "Processor mode",
+            "alternative": "azapi_resource with Microsoft.Compute/virtualMachines"
+          },
+          {
+            "what": "Require guest provision signal",
+            "alternative": "azapi_resource with Microsoft.Compute/virtualMachines"
+          },
+          {
+            "what": "Per-data-disk IOPS and MBps override",
+            "alternative": "azapi_resource with Microsoft.Compute/virtualMachines"
+          },
+          {
+            "what": "Data disk detach option",
+            "alternative": "azapi_resource with Microsoft.Compute/virtualMachines"
+          },
+          {
+            "what": "Network API version",
+            "alternative": "azapi_resource with Microsoft.Compute/virtualMachines"
+          }
+        ],
         "content": [],
-        "compared": null,
+        "compared": {
+          "api_version": "2026-04-01",
+          "provider": "azurerm",
+          "provider_version": "5.11.0",
+          "compared_at": "2026-10-24"
+        },
         "fallback": {
           "provider": "azapi",
           "resource": "azapi_resource",
@@ -1640,7 +1703,7 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
             }
           ]
         },
-        "note": "",
+        "note": "First pass, not reviewed. A gap means the API accepts the setting and no documented azurerm 5.11.0 argument (in any resource doc) was found; the provider source was not checked and general availability of newer settings is unconfirmed. Compared azurerm_linux_virtual_machine against the API; the Windows resource and sibling resources (extensions, data disk attachments) were searched for matching arguments only.",
         "changed_at": "2026-10-24"
       }
     },
@@ -1675,7 +1738,7 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         "changed_at": "2026-10-24"
       },
       "terraform": {
-        "status": "listed",
+        "status": "full",
         "resources": [
           {
             "provider": "azurerm",
@@ -1696,9 +1759,43 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         ],
         "first_supported": null,
         "fully_supported_since": null,
-        "gaps": [],
+        "gaps": [
+          {
+            "what": "Purchase plan",
+            "alternative": "azapi_resource with Microsoft.Compute/disks"
+          },
+          {
+            "what": "Confidential VM and Elastic SAN creation sources",
+            "alternative": "azapi_resource with Microsoft.Compute/disks"
+          },
+          {
+            "what": "Provisioned bandwidth copy speed",
+            "alternative": "azapi_resource with Microsoft.Compute/disks"
+          },
+          {
+            "what": "Instant access duration",
+            "alternative": "azapi_resource with Microsoft.Compute/disks"
+          },
+          {
+            "what": "Hibernation support",
+            "alternative": "azapi_resource with Microsoft.Compute/disks"
+          },
+          {
+            "what": "Data access auth mode",
+            "alternative": "azapi_resource with Microsoft.Compute/disks"
+          },
+          {
+            "what": "Availability policy",
+            "alternative": "azapi_resource with Microsoft.Compute/disks"
+          }
+        ],
         "content": [],
-        "compared": null,
+        "compared": {
+          "api_version": "2026-03-02",
+          "provider": "azurerm",
+          "provider_version": "5.11.0",
+          "compared_at": "2026-10-24"
+        },
         "fallback": {
           "provider": "azapi",
           "resource": "azapi_resource",
@@ -1711,7 +1808,7 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
             }
           ]
         },
-        "note": "",
+        "note": "First pass, not reviewed. A gap means the API accepts the setting and no documented azurerm 5.11.0 argument (in any resource doc) was found; the provider source was not checked and general availability of newer settings is unconfirmed.",
         "changed_at": "2026-10-24"
       }
     },
@@ -1745,7 +1842,7 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         "changed_at": "2026-10-24"
       },
       "terraform": {
-        "status": "listed",
+        "status": "full",
         "resources": [
           {
             "provider": "azurerm",
@@ -1774,9 +1871,27 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         ],
         "first_supported": "2.0.0",
         "fully_supported_since": "2.11.0",
-        "gaps": [],
+        "gaps": [
+          {
+            "what": "Scheduled events policy",
+            "alternative": "azapi_resource with Microsoft.Compute/virtualMachineScaleSets"
+          },
+          {
+            "what": "Require guest provision signal",
+            "alternative": "azapi_resource with Microsoft.Compute/virtualMachineScaleSets"
+          },
+          {
+            "what": "VM agent platform updates",
+            "alternative": "azapi_resource with Microsoft.Compute/virtualMachineScaleSets"
+          }
+        ],
         "content": [],
-        "compared": null,
+        "compared": {
+          "api_version": "2026-04-01",
+          "provider": "azurerm",
+          "provider_version": "5.11.0",
+          "compared_at": "2026-10-24"
+        },
         "fallback": {
           "provider": "azapi",
           "resource": "azapi_resource",
@@ -1789,7 +1904,7 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
             }
           ]
         },
-        "note": "",
+        "note": "First pass, not reviewed. A gap means the API accepts the setting and no documented azurerm 5.11.0 argument (in any resource doc) was found; the provider source was not checked and general availability of newer settings is unconfirmed. Compared the Linux scale set resource; the Windows and orchestrated resources were searched for matching arguments only.",
         "changed_at": "2026-10-24"
       }
     },
@@ -1822,7 +1937,7 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         "changed_at": "2026-10-24"
       },
       "terraform": {
-        "status": "listed",
+        "status": "full",
         "resources": [
           {
             "provider": "azurerm",
@@ -1859,9 +1974,63 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         ],
         "first_supported": null,
         "fully_supported_since": null,
-        "gaps": [],
+        "gaps": [
+          {
+            "what": "SSH enabled",
+            "alternative": "azapi_resource with Microsoft.Web/sites"
+          },
+          {
+            "what": "DNS configuration",
+            "alternative": "azapi_resource with Microsoft.Web/sites"
+          },
+          {
+            "what": "IP mode",
+            "alternative": "azapi_resource with Microsoft.Web/sites"
+          },
+          {
+            "what": "Slot ramp-up rules",
+            "alternative": "azapi_resource with Microsoft.Web/sites"
+          },
+          {
+            "what": "Platform release channel",
+            "alternative": "azapi_resource with Microsoft.Web/sites"
+          },
+          {
+            "what": "Site-scoped certificates",
+            "alternative": "azapi_resource with Microsoft.Web/sites"
+          },
+          {
+            "what": "Fine-grained outbound VNet routing",
+            "alternative": "azapi_resource with Microsoft.Web/sites"
+          },
+          {
+            "what": "Plan: spot and Hyper-V/Xenon",
+            "alternative": "azapi_resource with Microsoft.Web/sites"
+          },
+          {
+            "what": "Plan: install scripts and registry adapters",
+            "alternative": "azapi_resource with Microsoft.Web/sites"
+          },
+          {
+            "what": "AI integration (MCP servers)",
+            "alternative": "azapi_resource with Microsoft.Web/sites"
+          },
+          {
+            "what": "Push settings",
+            "alternative": "azapi_resource with Microsoft.Web/sites"
+          },
+          {
+            "what": "Maintenance mode",
+            "alternative": "azapi_resource with Microsoft.Web/sites"
+          }
+        ],
         "content": [],
-        "compared": null,
+        "compared": {
+          "api_version": "2026-07-15",
+          "provider": "azurerm",
+          "provider_version": "5.11.0",
+          "compared_at": "2026-10-24"
+        },
         "fallback": {
           "provider": "azapi",
           "resource": "azapi_resource",
@@ -1879,7 +2048,7 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
             }
           ]
         },
-        "note": "",
+        "note": "First pass, not reviewed. A gap means the API accepts the setting and no documented azurerm 5.11.0 argument (in any resource doc) was found; the provider source was not checked and general availability of newer settings is unconfirmed. Compared azurerm_linux_web_app and the service plan. Hosting-plan and site gaps are combined.",
         "changed_at": "2026-10-24"
       }
     },
@@ -1912,7 +2081,7 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         "changed_at": "2026-10-24"
       },
       "terraform": {
-        "status": "listed",
+        "status": "full",
         "resources": [
           {
             "provider": "azurerm",
@@ -1933,9 +2102,39 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         ],
         "first_supported": null,
         "fully_supported_since": null,
-        "gaps": [],
+        "gaps": [
+          {
+            "what": "SSH enabled",
+            "alternative": "azapi_resource with Microsoft.Web/sites"
+          },
+          {
+            "what": "DNS configuration",
+            "alternative": "azapi_resource with Microsoft.Web/sites"
+          },
+          {
+            "what": "IP mode",
+            "alternative": "azapi_resource with Microsoft.Web/sites"
+          },
+          {
+            "what": "Platform release channel",
+            "alternative": "azapi_resource with Microsoft.Web/sites"
+          },
+          {
+            "what": "Site-scoped certificates",
+            "alternative": "azapi_resource with Microsoft.Web/sites"
+          },
+          {
+            "what": "Fine-grained outbound VNet routing",
+            "alternative": "azapi_resource with Microsoft.Web/sites"
+          }
+        ],
         "content": [],
-        "compared": null,
+        "compared": {
+          "api_version": "2026-07-15",
+          "provider": "azurerm",
+          "provider_version": "5.11.0",
+          "compared_at": "2026-10-24"
+        },
         "fallback": {
           "provider": "azapi",
           "resource": "azapi_resource",
@@ -1948,7 +2147,7 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
             }
           ]
         },
-        "note": "",
+        "note": "First pass, not reviewed. A gap means the API accepts the setting and no documented azurerm 5.11.0 argument (in any resource doc) was found; the provider source was not checked and general availability of newer settings is unconfirmed. Compared azurerm_linux_function_app. Flex Consumption has its own resource (azurerm_function_app_flex_consumption); the shared app settings gaps are the same as App Service.",
         "changed_at": "2026-10-24"
       }
     },
@@ -1981,7 +2180,7 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         "changed_at": "2026-10-24"
       },
       "terraform": {
-        "status": "listed",
+        "status": "full",
         "resources": [
           {
             "provider": "azurerm",
@@ -2010,9 +2209,47 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         ],
         "first_supported": "3.43.0",
         "fully_supported_since": "3.103.0",
-        "gaps": [],
+        "gaps": [
+          {
+            "what": "Sticky sessions",
+            "alternative": "azapi_resource with Microsoft.App/containerApps"
+          },
+          {
+            "what": "Java runtime settings",
+            "alternative": "azapi_resource with Microsoft.App/containerApps"
+          },
+          {
+            "what": "Service binds",
+            "alternative": "azapi_resource with Microsoft.App/containerApps"
+          },
+          {
+            "what": "Dapr app health, max concurrency, log level, HTTP buffer sizes, API logging",
+            "alternative": "azapi_resource with Microsoft.App/containerApps"
+          },
+          {
+            "what": "Identity settings lifecycle",
+            "alternative": "azapi_resource with Microsoft.App/containerApps"
+          },
+          {
+            "what": "Environment: OpenTelemetry destinations",
+            "alternative": "azapi_resource with Microsoft.App/containerApps"
+          },
+          {
+            "what": "Environment: peer traffic encryption",
+            "alternative": "azapi_resource with Microsoft.App/containerApps"
+          },
+          {
+            "what": "Environment: ingress limits and timeouts (unconfirmed)",
+            "alternative": "azapi_resource with Microsoft.App/containerApps"
+          }
+        ],
         "content": [],
-        "compared": null,
+        "compared": {
+          "api_version": "2026-07-01",
+          "provider": "azurerm",
+          "provider_version": "5.11.0",
+          "compared_at": "2026-10-24"
+        },
         "fallback": {
           "provider": "azapi",
           "resource": "azapi_resource",
@@ -2030,7 +2267,7 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
             }
           ]
         },
-        "note": "",
+        "note": "First pass, not reviewed. A gap means the API accepts the setting and no documented azurerm 5.11.0 argument (in any resource doc) was found; the provider source was not checked and general availability of newer settings is unconfirmed. Compared the container app and the environment.",
         "changed_at": "2026-10-24"
       }
     },
@@ -2064,7 +2301,7 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         "changed_at": "2026-10-24"
       },
       "terraform": {
-        "status": "listed",
+        "status": "full",
         "resources": [
           {
             "provider": "azurerm",
@@ -2085,9 +2322,59 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         ],
         "first_supported": "1.1.2",
         "fully_supported_since": "1.37.0",
-        "gaps": [],
+        "gaps": [
+          {
+            "what": "Pod identity (deprecated feature)",
+            "alternative": "azapi_resource with Microsoft.ContainerService/managedClusters"
+          },
+          {
+            "what": "Gateway API installation",
+            "alternative": "azapi_resource with Microsoft.ContainerService/managedClusters"
+          },
+          {
+            "what": "Static egress gateway",
+            "alternative": "azapi_resource with Microsoft.ContainerService/managedClusters"
+          },
+          {
+            "what": "Hosted system profile",
+            "alternative": "azapi_resource with Microsoft.ContainerService/managedClusters"
+          },
+          {
+            "what": "Infrastructure encryption",
+            "alternative": "azapi_resource with Microsoft.ContainerService/managedClusters"
+          },
+          {
+            "what": "Secure boot and vTPM on node pools",
+            "alternative": "azapi_resource with Microsoft.ContainerService/managedClusters"
+          },
+          {
+            "what": "Message of the day",
+            "alternative": "azapi_resource with Microsoft.ContainerService/managedClusters"
+          },
+          {
+            "what": "Local DNS profile",
+            "alternative": "azapi_resource with Microsoft.ContainerService/managedClusters"
+          },
+          {
+            "what": "Syslog port",
+            "alternative": "azapi_resource with Microsoft.ContainerService/managedClusters"
+          },
+          {
+            "what": "Kube-state metrics settings",
+            "alternative": "azapi_resource with Microsoft.ContainerService/managedClusters"
+          },
+          {
+            "what": "Node pool SSH access mode",
+            "alternative": "azapi_resource with Microsoft.ContainerService/managedClusters"
+          }
+        ],
         "content": [],
-        "compared": null,
+        "compared": {
+          "api_version": "2026-08-01",
+          "provider": "azurerm",
+          "provider_version": "5.11.0",
+          "compared_at": "2026-10-24"
+        },
         "fallback": {
           "provider": "azapi",
           "resource": "azapi_resource",
@@ -2100,7 +2387,7 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
             }
           ]
         },
-        "note": "",
+        "note": "First pass, not reviewed. A gap means the API accepts the setting and no documented azurerm 5.11.0 argument (in any resource doc) was found; the provider source was not checked and general availability of newer settings is unconfirmed. Compared the cluster; node pools are azurerm_kubernetes_cluster_node_pool.",
         "changed_at": "2026-10-24"
       }
     },
@@ -2216,7 +2503,7 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         "changed_at": "2026-10-24"
       },
       "terraform": {
-        "status": "listed",
+        "status": "full",
         "resources": [
           {
             "provider": "azurerm",
@@ -2237,9 +2524,19 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         ],
         "first_supported": null,
         "fully_supported_since": null,
-        "gaps": [],
+        "gaps": [
+          {
+            "what": "VM protection",
+            "alternative": "azapi_resource with Microsoft.Network/virtualNetworks"
+          }
+        ],
         "content": [],
-        "compared": null,
+        "compared": {
+          "api_version": "2026-03-01",
+          "provider": "azurerm",
+          "provider_version": "5.11.0",
+          "compared_at": "2026-10-24"
+        },
         "fallback": {
           "provider": "azapi",
           "resource": "azapi_resource",
@@ -2252,7 +2549,7 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
             }
           ]
         },
-        "note": "",
+        "note": "First pass, not reviewed. A gap means the API accepts the setting and no documented azurerm 5.11.0 argument (in any resource doc) was found; the provider source was not checked and general availability of newer settings is unconfirmed. Compared the virtual network; subnets and peerings are separate azurerm resources.",
         "changed_at": "2026-10-24"
       }
     },
@@ -2285,7 +2582,7 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         "changed_at": "2026-10-24"
       },
       "terraform": {
-        "status": "listed",
+        "status": "full",
         "resources": [
           {
             "provider": "azurerm",
@@ -2306,9 +2603,31 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         ],
         "first_supported": null,
         "fully_supported_since": null,
-        "gaps": [],
+        "gaps": [
+          {
+            "what": "disableTcpStateTracking",
+            "alternative": "azapi_resource with Microsoft.Network/networkInterfaces"
+          },
+          {
+            "what": "Workload type",
+            "alternative": "azapi_resource with Microsoft.Network/networkInterfaces"
+          },
+          {
+            "what": "NIC type",
+            "alternative": "azapi_resource with Microsoft.Network/networkInterfaces"
+          },
+          {
+            "what": "Migration phase",
+            "alternative": "azapi_resource with Microsoft.Network/networkInterfaces"
+          }
+        ],
         "content": [],
-        "compared": null,
+        "compared": {
+          "api_version": "2026-03-01",
+          "provider": "azurerm",
+          "provider_version": "5.11.0",
+          "compared_at": "2026-10-24"
+        },
         "fallback": {
           "provider": "azapi",
           "resource": "azapi_resource",
@@ -2321,7 +2640,7 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
             }
           ]
         },
-        "note": "",
+        "note": "First pass, not reviewed. A gap means the API accepts the setting and no documented azurerm 5.11.0 argument (in any resource doc) was found; the provider source was not checked and general availability of newer settings is unconfirmed.",
         "changed_at": "2026-10-24"
       }
     },
@@ -2354,7 +2673,7 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         "changed_at": "2026-10-24"
       },
       "terraform": {
-        "status": "listed",
+        "status": "full",
         "resources": [
           {
             "provider": "azurerm",
@@ -2383,9 +2702,19 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         ],
         "first_supported": null,
         "fully_supported_since": null,
-        "gaps": [],
+        "gaps": [
+          {
+            "what": "flushConnection",
+            "alternative": "azapi_resource with Microsoft.Network/networkSecurityGroups"
+          }
+        ],
         "content": [],
-        "compared": null,
+        "compared": {
+          "api_version": "2026-03-01",
+          "provider": "azurerm",
+          "provider_version": "5.11.0",
+          "compared_at": "2026-10-24"
+        },
         "fallback": {
           "provider": "azapi",
           "resource": "azapi_resource",
@@ -2398,7 +2727,7 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
             }
           ]
         },
-        "note": "",
+        "note": "First pass, not reviewed. A gap means the API accepts the setting and no documented azurerm 5.11.0 argument (in any resource doc) was found; the provider source was not checked and general availability of newer settings is unconfirmed. Rules are a separate resource (azurerm_network_security_rule).",
         "changed_at": "2026-10-24"
       }
     },
@@ -2431,7 +2760,7 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         "changed_at": "2026-10-24"
       },
       "terraform": {
-        "status": "listed",
+        "status": "full",
         "resources": [
           {
             "provider": "azurerm",
@@ -2452,9 +2781,27 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         ],
         "first_supported": null,
         "fully_supported_since": null,
-        "gaps": [],
+        "gaps": [
+          {
+            "what": "Delete option",
+            "alternative": "azapi_resource with Microsoft.Network/publicIPAddresses"
+          },
+          {
+            "what": "Migration phase",
+            "alternative": "azapi_resource with Microsoft.Network/publicIPAddresses"
+          },
+          {
+            "what": "Custom DDoS policy",
+            "alternative": "azapi_resource with Microsoft.Network/publicIPAddresses"
+          }
+        ],
         "content": [],
-        "compared": null,
+        "compared": {
+          "api_version": "2026-03-01",
+          "provider": "azurerm",
+          "provider_version": "5.11.0",
+          "compared_at": "2026-10-24"
+        },
         "fallback": {
           "provider": "azapi",
           "resource": "azapi_resource",
@@ -2467,7 +2814,7 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
             }
           ]
         },
-        "note": "",
+        "note": "First pass, not reviewed. A gap means the API accepts the setting and no documented azurerm 5.11.0 argument (in any resource doc) was found; the provider source was not checked and general availability of newer settings is unconfirmed.",
         "changed_at": "2026-10-24"
       }
     },
@@ -2500,7 +2847,7 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         "changed_at": "2026-10-24"
       },
       "terraform": {
-        "status": "listed",
+        "status": "full",
         "resources": [
           {
             "provider": "azurerm",
@@ -2537,9 +2884,19 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         ],
         "first_supported": null,
         "fully_supported_since": null,
-        "gaps": [],
+        "gaps": [
+          {
+            "what": "scope and mode (purpose unconfirmed)",
+            "alternative": "azapi_resource with Microsoft.Network/loadBalancers"
+          }
+        ],
         "content": [],
-        "compared": null,
+        "compared": {
+          "api_version": "2026-03-01",
+          "provider": "azurerm",
+          "provider_version": "5.11.0",
+          "compared_at": "2026-10-24"
+        },
         "fallback": {
           "provider": "azapi",
           "resource": "azapi_resource",
@@ -2552,7 +2909,7 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
             }
           ]
         },
-        "note": "",
+        "note": "First pass, not reviewed. A gap means the API accepts the setting and no documented azurerm 5.11.0 argument (in any resource doc) was found; the provider source was not checked and general availability of newer settings is unconfirmed. Rules, probes and pools are separate azurerm resources.",
         "changed_at": "2026-10-24"
       }
     },
@@ -2588,7 +2945,7 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         "changed_at": "2026-10-24"
       },
       "terraform": {
-        "status": "listed",
+        "status": "full",
         "resources": [
           {
             "provider": "azurerm",
@@ -2625,9 +2982,31 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         ],
         "first_supported": null,
         "fully_supported_since": null,
-        "gaps": [],
+        "gaps": [
+          {
+            "what": "Application Gateway: reserved capacity",
+            "alternative": "azapi_resource with Microsoft.Network/applicationGateways"
+          },
+          {
+            "what": "Application Gateway: load distribution policies",
+            "alternative": "azapi_resource with Microsoft.Network/applicationGateways"
+          },
+          {
+            "what": "Application Gateway: advanced routing maps and condition sets",
+            "alternative": "azapi_resource with Microsoft.Network/applicationGateways"
+          },
+          {
+            "what": "Application Gateway: Entra JWT validation",
+            "alternative": "azapi_resource with Microsoft.Network/applicationGateways"
+          }
+        ],
         "content": [],
-        "compared": null,
+        "compared": {
+          "api_version": "2026-03-01",
+          "provider": "azurerm",
+          "provider_version": "5.11.0",
+          "compared_at": "2026-10-24"
+        },
         "fallback": {
           "provider": "azapi",
           "resource": "azapi_resource",
@@ -2645,7 +3024,7 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
             }
           ]
         },
-        "note": "",
+        "note": "First pass, not reviewed. A gap means the API accepts the setting and no documented azurerm 5.11.0 argument (in any resource doc) was found; the provider source was not checked and general availability of newer settings is unconfirmed. Compared Application Gateway and the Front Door profile (profile: no gaps found); Front Door routes, rules and origins were not compared.",
         "changed_at": "2026-10-24"
       }
     },
@@ -2681,7 +3060,7 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         "changed_at": "2026-10-24"
       },
       "terraform": {
-        "status": "listed",
+        "status": "full",
         "resources": [
           {
             "provider": "azurerm",
@@ -2718,9 +3097,19 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         ],
         "first_supported": null,
         "fully_supported_since": null,
-        "gaps": [],
+        "gaps": [
+          {
+            "what": "Record set metadata",
+            "alternative": "azapi_resource with Microsoft.Network/dnsZones"
+          }
+        ],
         "content": [],
-        "compared": null,
+        "compared": {
+          "api_version": "2018-05-01",
+          "provider": "azurerm",
+          "provider_version": "5.11.0",
+          "compared_at": "2026-10-24"
+        },
         "fallback": {
           "provider": "azapi",
           "resource": "azapi_resource",
@@ -2738,7 +3127,7 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
             }
           ]
         },
-        "note": "",
+        "note": "First pass, not reviewed. A gap means the API accepts the setting and no documented azurerm 5.11.0 argument (in any resource doc) was found; the provider source was not checked and general availability of newer settings is unconfirmed. Compared DNS zones (API 2018-05-01) and Private DNS zones (API 2024-06-01, no gaps); record types are separate azurerm resources.",
         "changed_at": "2026-10-24"
       }
     },
@@ -2772,7 +3161,7 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         "changed_at": "2026-10-24"
       },
       "terraform": {
-        "status": "listed",
+        "status": "full",
         "resources": [
           {
             "provider": "azurerm",
@@ -2785,9 +3174,23 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         ],
         "first_supported": null,
         "fully_supported_since": null,
-        "gaps": [],
+        "gaps": [
+          {
+            "what": "IP version type",
+            "alternative": "azapi_resource with Microsoft.Network/privateEndpoints"
+          },
+          {
+            "what": "Billing SKU",
+            "alternative": "azapi_resource with Microsoft.Network/privateEndpoints"
+          }
+        ],
         "content": [],
-        "compared": null,
+        "compared": {
+          "api_version": "2026-03-01",
+          "provider": "azurerm",
+          "provider_version": "5.11.0",
+          "compared_at": "2026-10-24"
+        },
         "fallback": {
           "provider": "azapi",
           "resource": "azapi_resource",
@@ -2800,7 +3203,7 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
             }
           ]
         },
-        "note": "",
+        "note": "First pass, not reviewed. A gap means the API accepts the setting and no documented azurerm 5.11.0 argument (in any resource doc) was found; the provider source was not checked and general availability of newer settings is unconfirmed. Application security groups are covered by azurerm_private_endpoint_application_security_group_association.",
         "changed_at": "2026-10-24"
       }
     },
@@ -2835,7 +3238,7 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         "changed_at": "2026-10-24"
       },
       "terraform": {
-        "status": "listed",
+        "status": "full",
         "resources": [
           {
             "provider": "azurerm",
@@ -2888,9 +3291,48 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         ],
         "first_supported": null,
         "fully_supported_since": null,
-        "gaps": [],
-        "content": [],
-        "compared": null,
+        "gaps": [
+          {
+            "what": "Zone placement policy",
+            "alternative": "azapi_resource with Microsoft.Storage/storageAccounts"
+          },
+          {
+            "what": "Turbo tier",
+            "alternative": "azapi_resource with Microsoft.Storage/storageAccounts"
+          },
+          {
+            "what": "SMB OAuth",
+            "alternative": "azapi_resource with Microsoft.Storage/storageAccounts"
+          },
+          {
+            "what": "Extended groups",
+            "alternative": "azapi_resource with Microsoft.Storage/storageAccounts"
+          },
+          {
+            "what": "IPv6 endpoint publishing",
+            "alternative": "azapi_resource with Microsoft.Storage/storageAccounts"
+          },
+          {
+            "what": "IPv6 network rules",
+            "alternative": "azapi_resource with Microsoft.Storage/storageAccounts"
+          },
+          {
+            "what": "Data collaboration policy",
+            "alternative": "azapi_resource with Microsoft.Storage/storageAccounts"
+          }
+        ],
+        "content": [
+          {
+            "what": "Blobs, containers, file shares and files, queues, tables and table entities",
+            "how": "azurerm_storage_blob, _container, _share, _share_file, _queue, _table, _table_entity; the data plane API"
+          }
+        ],
+        "compared": {
+          "api_version": "2026-09-01",
+          "provider": "azurerm",
+          "provider_version": "5.11.0",
+          "compared_at": "2026-10-24"
+        },
         "fallback": {
           "provider": "azapi",
           "resource": "azapi_resource",
@@ -2903,7 +3345,7 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
             }
           ]
         },
-        "note": "",
+        "note": "First pass, not reviewed. A gap means the API accepts the setting and no documented azurerm 5.11.0 argument (in any resource doc) was found; the provider source was not checked and general availability of newer settings is unconfirmed. Encryption keys, network rules and static website are separate azurerm resources and count as covered.",
         "changed_at": "2026-10-24"
       }
     },
@@ -2937,7 +3379,7 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         "changed_at": "2026-10-24"
       },
       "terraform": {
-        "status": "listed",
+        "status": "full",
         "resources": [
           {
             "provider": "azurerm",
@@ -2974,9 +3416,43 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         ],
         "first_supported": "1.19.0",
         "fully_supported_since": "2.52.0",
-        "gaps": [],
+        "gaps": [
+          {
+            "what": "Server: IPv6",
+            "alternative": "azapi_resource with Microsoft.Sql/servers"
+          },
+          {
+            "what": "Server: federated client id",
+            "alternative": "azapi_resource with Microsoft.Sql/servers"
+          },
+          {
+            "what": "Database: free offer (useFreeLimit)",
+            "alternative": "azapi_resource with Microsoft.Sql/servers"
+          },
+          {
+            "what": "Database: catalog collation",
+            "alternative": "azapi_resource with Microsoft.Sql/servers"
+          },
+          {
+            "what": "Database: availability zone",
+            "alternative": "azapi_resource with Microsoft.Sql/servers"
+          },
+          {
+            "what": "Database: manual cutover",
+            "alternative": "azapi_resource with Microsoft.Sql/servers"
+          },
+          {
+            "what": "Database: federated client id",
+            "alternative": "azapi_resource with Microsoft.Sql/servers"
+          }
+        ],
         "content": [],
-        "compared": null,
+        "compared": {
+          "api_version": "2025-01-01",
+          "provider": "azurerm",
+          "provider_version": "5.11.0",
+          "compared_at": "2026-10-24"
+        },
         "fallback": {
           "provider": "azapi",
           "resource": "azapi_resource",
@@ -2994,7 +3470,7 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
             }
           ]
         },
-        "note": "",
+        "note": "First pass, not reviewed. A gap means the API accepts the setting and no documented azurerm 5.11.0 argument (in any resource doc) was found; the provider source was not checked and general availability of newer settings is unconfirmed. Compared the server and the database.",
         "changed_at": "2026-10-24"
       }
     },
@@ -3028,7 +3504,7 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         "changed_at": "2026-10-24"
       },
       "terraform": {
-        "status": "listed",
+        "status": "full",
         "resources": [
           {
             "provider": "azurerm",
@@ -3065,9 +3541,27 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         ],
         "first_supported": "2.57.0",
         "fully_supported_since": "2.71.0",
-        "gaps": [],
+        "gaps": [
+          {
+            "what": "Immutable backup",
+            "alternative": "azapi_resource with Microsoft.DBforPostgreSQL/flexibleServers"
+          },
+          {
+            "what": "FIPS mode",
+            "alternative": "azapi_resource with Microsoft.DBforPostgreSQL/flexibleServers"
+          },
+          {
+            "what": "Federated client id for data encryption",
+            "alternative": "azapi_resource with Microsoft.DBforPostgreSQL/flexibleServers"
+          }
+        ],
         "content": [],
-        "compared": null,
+        "compared": {
+          "api_version": "2026-10-01",
+          "provider": "azurerm",
+          "provider_version": "5.11.0",
+          "compared_at": "2026-10-24"
+        },
         "fallback": {
           "provider": "azapi",
           "resource": "azapi_resource",
@@ -3080,7 +3574,7 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
             }
           ]
         },
-        "note": "",
+        "note": "First pass, not reviewed. A gap means the API accepts the setting and no documented azurerm 5.11.0 argument (in any resource doc) was found; the provider source was not checked and general availability of newer settings is unconfirmed.",
         "changed_at": "2026-10-24"
       }
     },
@@ -3114,7 +3608,7 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         "changed_at": "2026-10-24"
       },
       "terraform": {
-        "status": "listed",
+        "status": "full",
         "resources": [
           {
             "provider": "azurerm",
@@ -3143,9 +3637,27 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         ],
         "first_supported": null,
         "fully_supported_since": null,
-        "gaps": [],
+        "gaps": [
+          {
+            "what": "Hierarchical partition key, enforce last level",
+            "alternative": "azapi_resource with Microsoft.DocumentDB/databaseAccounts"
+          },
+          {
+            "what": "Per-region per-partition autoscale",
+            "alternative": "azapi_resource with Microsoft.DocumentDB/databaseAccounts"
+          },
+          {
+            "what": "Cassandra connector",
+            "alternative": "azapi_resource with Microsoft.DocumentDB/databaseAccounts"
+          }
+        ],
         "content": [],
-        "compared": null,
+        "compared": {
+          "api_version": "2026-03-15",
+          "provider": "azurerm",
+          "provider_version": "5.11.0",
+          "compared_at": "2026-10-24"
+        },
         "fallback": {
           "provider": "azapi",
           "resource": "azapi_resource",
@@ -3158,7 +3670,7 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
             }
           ]
         },
-        "note": "",
+        "note": "First pass, not reviewed. A gap means the API accepts the setting and no documented azurerm 5.11.0 argument (in any resource doc) was found; the provider source was not checked and general availability of newer settings is unconfirmed.",
         "changed_at": "2026-10-24"
       }
     },
@@ -3191,7 +3703,7 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         "changed_at": "2026-10-24"
       },
       "terraform": {
-        "status": "listed",
+        "status": "full",
         "resources": [
           {
             "provider": "azurerm",
@@ -3228,9 +3740,35 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         ],
         "first_supported": null,
         "fully_supported_since": null,
-        "gaps": [],
+        "gaps": [
+          {
+            "what": "Zone redundancy",
+            "alternative": "azapi_resource with Microsoft.ServiceBus/namespaces"
+          },
+          {
+            "what": "Alternate name",
+            "alternative": "azapi_resource with Microsoft.ServiceBus/namespaces"
+          },
+          {
+            "what": "Confidential compute",
+            "alternative": "azapi_resource with Microsoft.ServiceBus/namespaces"
+          },
+          {
+            "what": "Geo data replication",
+            "alternative": "azapi_resource with Microsoft.ServiceBus/namespaces"
+          },
+          {
+            "what": "IP address type",
+            "alternative": "azapi_resource with Microsoft.ServiceBus/namespaces"
+          }
+        ],
         "content": [],
-        "compared": null,
+        "compared": {
+          "api_version": "2026-01-01",
+          "provider": "azurerm",
+          "provider_version": "5.11.0",
+          "compared_at": "2026-10-24"
+        },
         "fallback": {
           "provider": "azapi",
           "resource": "azapi_resource",
@@ -3243,7 +3781,7 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
             }
           ]
         },
-        "note": "",
+        "note": "First pass, not reviewed. A gap means the API accepts the setting and no documented azurerm 5.11.0 argument (in any resource doc) was found; the provider source was not checked and general availability of newer settings is unconfirmed.  Five gaps, including geo data replication: closest to partial.",
         "changed_at": "2026-10-24"
       }
     },
@@ -3276,7 +3814,7 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         "changed_at": "2026-10-24"
       },
       "terraform": {
-        "status": "listed",
+        "status": "full",
         "resources": [
           {
             "provider": "azurerm",
@@ -3315,7 +3853,12 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         "fully_supported_since": null,
         "gaps": [],
         "content": [],
-        "compared": null,
+        "compared": {
+          "api_version": "2025-02-15",
+          "provider": "azurerm",
+          "provider_version": "5.11.0",
+          "compared_at": "2026-10-24"
+        },
         "fallback": {
           "provider": "azapi",
           "resource": "azapi_resource",
@@ -3333,7 +3876,7 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
             }
           ]
         },
-        "note": "",
+        "note": "First pass, not reviewed. A gap means the API accepts the setting and no documented azurerm 5.11.0 argument (in any resource doc) was found; the provider source was not checked and general availability of newer settings is unconfirmed. Compared custom topics only; system topics, domains and namespaces were not compared.",
         "changed_at": "2026-10-24"
       }
     },
@@ -3366,7 +3909,7 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         "changed_at": "2026-10-24"
       },
       "terraform": {
-        "status": "listed",
+        "status": "full",
         "resources": [
           {
             "provider": "azurerm",
@@ -3405,7 +3948,12 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         "fully_supported_since": "3.15.0",
         "gaps": [],
         "content": [],
-        "compared": null,
+        "compared": {
+          "api_version": "2023-01-01",
+          "provider": "azurerm",
+          "provider_version": "5.11.0",
+          "compared_at": "2026-10-24"
+        },
         "fallback": {
           "provider": "azapi",
           "resource": "azapi_resource",
@@ -3428,7 +3976,7 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
             }
           ]
         },
-        "note": "",
+        "note": "First pass, not reviewed. A gap means the API accepts the setting and no documented azurerm 5.11.0 argument (in any resource doc) was found; the provider source was not checked and general availability of newer settings is unconfirmed. Compared action groups only; alert rules, diagnostic settings and data collection rules were not compared.",
         "changed_at": "2026-10-24"
       }
     },
@@ -3461,7 +4009,7 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         "changed_at": "2026-10-24"
       },
       "terraform": {
-        "status": "listed",
+        "status": "full",
         "resources": [
           {
             "provider": "azurerm",
@@ -3474,9 +4022,23 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         ],
         "first_supported": null,
         "fully_supported_since": null,
-        "gaps": [],
+        "gaps": [
+          {
+            "what": "Workspace replication",
+            "alternative": "azapi_resource with Microsoft.OperationalInsights/workspaces"
+          },
+          {
+            "what": "Data authorization mode",
+            "alternative": "azapi_resource with Microsoft.OperationalInsights/workspaces"
+          }
+        ],
         "content": [],
-        "compared": null,
+        "compared": {
+          "api_version": "2026-03-01",
+          "provider": "azurerm",
+          "provider_version": "5.11.0",
+          "compared_at": "2026-10-24"
+        },
         "fallback": {
           "provider": "azapi",
           "resource": "azapi_resource",
@@ -3489,7 +4051,7 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
             }
           ]
         },
-        "note": "",
+        "note": "First pass, not reviewed. A gap means the API accepts the setting and no documented azurerm 5.11.0 argument (in any resource doc) was found; the provider source was not checked and general availability of newer settings is unconfirmed. Data export, linked clusters and customer-managed keys are separate azurerm resources.",
         "changed_at": "2026-10-24"
       }
     },
@@ -3522,7 +4084,7 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         "changed_at": "2026-10-24"
       },
       "terraform": {
-        "status": "listed",
+        "status": "full",
         "resources": [
           {
             "provider": "azurerm",
@@ -3535,9 +4097,19 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         ],
         "first_supported": null,
         "fully_supported_since": null,
-        "gaps": [],
+        "gaps": [
+          {
+            "what": "Immediate purge after 30 days",
+            "alternative": "azapi_resource with Microsoft.Insights/components"
+          }
+        ],
         "content": [],
-        "compared": null,
+        "compared": {
+          "api_version": "2020-02-02",
+          "provider": "azurerm",
+          "provider_version": "5.11.0",
+          "compared_at": "2026-10-24"
+        },
         "fallback": {
           "provider": "azapi",
           "resource": "azapi_resource",
@@ -3550,7 +4122,7 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
             }
           ]
         },
-        "note": "",
+        "note": "First pass, not reviewed. A gap means the API accepts the setting and no documented azurerm 5.11.0 argument (in any resource doc) was found; the provider source was not checked and general availability of newer settings is unconfirmed.",
         "changed_at": "2026-10-24"
       }
     },
@@ -3586,7 +4158,7 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         "changed_at": "2026-10-24"
       },
       "terraform": {
-        "status": "listed",
+        "status": "full",
         "resources": [
           {
             "provider": "azurerm",
@@ -3615,9 +4187,47 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         ],
         "first_supported": "3.21.0",
         "fully_supported_since": "3.58.0",
-        "gaps": [],
+        "gaps": [
+          {
+            "what": "Grafana: external snapshots",
+            "alternative": "azapi_resource with Microsoft.Dashboard/grafana"
+          },
+          {
+            "what": "Grafana: viewers can edit",
+            "alternative": "azapi_resource with Microsoft.Dashboard/grafana"
+          },
+          {
+            "what": "Grafana: editors can admin",
+            "alternative": "azapi_resource with Microsoft.Dashboard/grafana"
+          },
+          {
+            "what": "Grafana: CSRF check",
+            "alternative": "azapi_resource with Microsoft.Dashboard/grafana"
+          },
+          {
+            "what": "Grafana: creator can admin",
+            "alternative": "azapi_resource with Microsoft.Dashboard/grafana"
+          },
+          {
+            "what": "Grafana: plugins",
+            "alternative": "azapi_resource with Microsoft.Dashboard/grafana"
+          },
+          {
+            "what": "Grafana: enterprise marketplace plan",
+            "alternative": "azapi_resource with Microsoft.Dashboard/grafana"
+          },
+          {
+            "what": "Grafana: unified alerting screenshots",
+            "alternative": "azapi_resource with Microsoft.Dashboard/grafana"
+          }
+        ],
         "content": [],
-        "compared": null,
+        "compared": {
+          "api_version": "2025-08-01",
+          "provider": "azurerm",
+          "provider_version": "5.11.0",
+          "compared_at": "2026-10-24"
+        },
         "fallback": {
           "provider": "azapi",
           "resource": "azapi_resource",
@@ -3635,7 +4245,7 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
             }
           ]
         },
-        "note": "",
+        "note": "First pass, not reviewed. A gap means the API accepts the setting and no documented azurerm 5.11.0 argument (in any resource doc) was found; the provider source was not checked and general availability of newer settings is unconfirmed. Compared Grafana only; the Azure Monitor workspace (Prometheus) was not compared against the API.",
         "changed_at": "2026-10-24"
       }
     },
@@ -3701,7 +4311,7 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         "content": [],
         "compared": null,
         "fallback": null,
-        "note": "",
+        "note": "Not compared: this service uses the Azure DevOps REST API (azuredevops provider), not an ARM spec, so the API-versus-provider method does not apply yet.",
         "changed_at": "2026-10-24"
       }
     }

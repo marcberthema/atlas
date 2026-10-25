@@ -237,7 +237,11 @@
           "Moving a subscription to another tenant breaks role assignments, so AKS clusters lose functionality, and key vault tenant IDs must be changed."
         ]
       },
-      "manual": {},
+      "manual": {
+        "terraform": {
+          "note": "Not compared: this service uses the Microsoft Graph API (azuread provider), not an ARM spec, so the API-versus-provider method does not apply yet."
+        }
+      },
       "review": {
         "status": "unconfirmed",
         "note": "Verified against Learn on 2026-10-24 (find-tenant-id, how-subscriptions-associated-directory): purpose, trust relationship, facts, three edges. Not verified: the Entra ID edge ('every object lives in a tenant')."
@@ -320,7 +324,18 @@
           "A directory supports 10,000 management groups and a tree up to six levels deep (not counting the root or the subscription level)."
         ]
       },
-      "manual": {},
+      "manual": {
+        "terraform": {
+          "status": "full",
+          "compared": {
+            "api_version": "2023-04-01",
+            "provider": "azurerm",
+            "provider_version": "5.11.0",
+            "compared_at": "2026-10-24"
+          },
+          "note": "First pass, not reviewed. A gap means the API accepts the setting and no documented azurerm 5.11.0 argument (in any resource doc) was found; the provider source was not checked and general availability of newer settings is unconfirmed."
+        }
+      },
       "review": {
         "status": "unconfirmed",
         "note": "Verified against Learn on 2026-10-24 (management-groups/overview): purpose, facts, four edges. Not verified: nothing known; limits can change, recheck on the next stale flag."
@@ -380,7 +395,11 @@
           "Terraform's azurerm provider calls ARM's REST API resource by resource and keeps its own state file. It does not generate ARM templates.",
           "Bicep is an Azure-only language that compiles to an ARM template (JSON), which ARM's deployment engine applies. No state file: Azure itself is the record. Preview changes with what-if.",
           "Both describe desired state, but a deployment is one-shot: nothing keeps reconciling afterward (unlike a Kubernetes controller). Drift is found by re-running plan or what-if, or corrected by Azure Policy effects such as DeployIfNotExists."
-        ]
+        ],
+        "terraform": {
+          "status": "full",
+          "note": "First pass, not reviewed. A gap means the API accepts the setting and no documented azurerm 5.11.0 argument (in any resource doc) was found; the provider source was not checked and general availability of newer settings is unconfirmed.  Not compared against the API spec. azurerm_resource_provider_registration, azurerm_management_lock and the template deployment resources exist; coverage of the rest is unconfirmed."
+        }
       },
       "review": {
         "status": "unconfirmed",
@@ -555,7 +574,11 @@
           "Resources can reference others in different resource groups.",
           "A resource group stores metadata about its resources. Its location is only where that metadata is stored; resources inside can be in other regions.",
           "Locks (read-only or delete) can protect a resource group from accidental deletion or change."
-        ]
+        ],
+        "terraform": {
+          "status": "full",
+          "note": "First pass, not reviewed. A gap means the API accepts the setting and no documented azurerm 5.11.0 argument (in any resource doc) was found; the provider source was not checked and general availability of newer settings is unconfirmed.  Not compared against the API spec (spec path not found by the script). A resource group is name, location, tags and managed-by; unconfirmed."
+        }
       },
       "review": {
         "status": "unconfirmed",
@@ -641,7 +664,11 @@
           "It is a cloud identity and access management service: authentication, policy enforcement and protection for users, devices, apps and resources."
         ]
       },
-      "manual": {},
+      "manual": {
+        "terraform": {
+          "note": "Not compared: this service uses the Microsoft Graph API (azuread provider), not an ARM spec, so the API-versus-provider method does not apply yet."
+        }
+      },
       "review": {
         "status": "unconfirmed",
         "note": "Verified against Learn on 2026-10-24 (entra/fundamentals/whatis): purpose, facts, the tenant edge. Not verified: the diagnostic-logs, Conditional Access, PIM, Azure SQL and Azure DevOps edges, and 'every object lives in a tenant'."
@@ -807,7 +834,18 @@
           "Each managed identity is a special service principal in Entra ID. It has no access until you grant permissions, for example with Azure RBAC role assignments."
         ]
       },
-      "manual": {},
+      "manual": {
+        "terraform": {
+          "status": "full",
+          "compared": {
+            "api_version": "2024-11-30",
+            "provider": "azurerm",
+            "provider_version": "5.11.0",
+            "compared_at": "2026-10-24"
+          },
+          "note": "First pass, not reviewed. A gap means the API accepts the setting and no documented azurerm 5.11.0 argument (in any resource doc) was found; the provider source was not checked and general availability of newer settings is unconfirmed. Federated credentials are azurerm_federated_identity_credential."
+        }
+      },
       "review": {
         "status": "unconfirmed",
         "note": "Verified against Learn on 2026-10-24 (managed-identities-azure-resources/overview, key-vault rbac pages): purpose (reworded: 'rotated by Azure' is not stated), facts, the Entra ID and Key Vault edges. Not verified: the Storage, ACR, Service Bus, SQL, AKS, Automation, Logic Apps, Data Factory and Azure DevOps edges."
@@ -1046,7 +1084,28 @@
           "Parts of Defender for Cloud are moving into the Defender portal; check which portal an article applies to."
         ]
       },
-      "manual": {},
+      "manual": {
+        "terraform": {
+          "status": "full",
+          "gaps": [
+            {
+              "what": "Pricing enforce",
+              "alternative": "azapi_resource with Microsoft.Security/pricings"
+            },
+            {
+              "what": "Security operator resource id",
+              "alternative": "azapi_resource with Microsoft.Security/pricings"
+            }
+          ],
+          "compared": {
+            "api_version": "2026-07-01",
+            "provider": "azurerm",
+            "provider_version": "5.11.0",
+            "compared_at": "2026-10-24"
+          },
+          "note": "First pass, not reviewed. A gap means the API accepts the setting and no documented azurerm 5.11.0 argument (in any resource doc) was found; the provider source was not checked and general availability of newer settings is unconfirmed. Compared the pricing plan; contacts, settings and automation are separate azurerm resources."
+        }
+      },
       "review": {
         "status": "unconfirmed",
         "note": "Verified against Learn on 2026-10-24 (defender-for-cloud-introduction): purpose, facts, five protects edges. Not verified: the Container Registry edge (not found on the page)."
@@ -1211,7 +1270,17 @@
         "purpose": "Recommendations on cost, performance, reliability and security."
       },
       "manual": {
-        "facts": []
+        "facts": [],
+        "terraform": {
+          "status": "partial",
+          "gaps": [
+            {
+              "what": "Advisor configuration (rule settings, excluded resource groups, digests): unconfirmed",
+              "alternative": "azapi_resource with Microsoft.Advisor/configurations"
+            }
+          ],
+          "note": "First pass, not reviewed. A gap means the API accepts the setting and no documented azurerm 5.11.0 argument (in any resource doc) was found; the provider source was not checked and general availability of newer settings is unconfirmed.  azurerm_advisor_suppression covers suppressions only. Not compared against the API spec."
+        }
       },
       "review": {
         "status": "unconfirmed",
@@ -1257,7 +1326,8 @@
       },
       "manual": {
         "terraform": {
-          "note": "A query API rather than a deployable resource, so no azurerm resource exists for running queries. Saved queries are the ARM type Microsoft.ResourceGraph/queries (unconfirmed)."
+          "status": "none",
+          "note": "First pass, not reviewed. A gap means the API accepts the setting and no documented azurerm 5.11.0 argument (in any resource doc) was found; the provider source was not checked and general availability of newer settings is unconfirmed.  No azurerm resource found. Resource Graph is a query service; saved queries via Microsoft.ResourceGraph/queries are unconfirmed."
         }
       },
       "review": {
@@ -1606,6 +1676,46 @@
         "cloud_native": {
           "level": "not",
           "note": "You manage the operating system and instances yourself."
+        },
+        "terraform": {
+          "status": "full",
+          "gaps": [
+            {
+              "what": "Scheduled events policy",
+              "alternative": "azapi_resource with Microsoft.Compute/virtualMachines"
+            },
+            {
+              "what": "Constrained vCPUs (vCPUsAvailable, vCPUsPerCore)",
+              "alternative": "azapi_resource with Microsoft.Compute/virtualMachines"
+            },
+            {
+              "what": "Processor mode",
+              "alternative": "azapi_resource with Microsoft.Compute/virtualMachines"
+            },
+            {
+              "what": "Require guest provision signal",
+              "alternative": "azapi_resource with Microsoft.Compute/virtualMachines"
+            },
+            {
+              "what": "Per-data-disk IOPS and MBps override",
+              "alternative": "azapi_resource with Microsoft.Compute/virtualMachines"
+            },
+            {
+              "what": "Data disk detach option",
+              "alternative": "azapi_resource with Microsoft.Compute/virtualMachines"
+            },
+            {
+              "what": "Network API version",
+              "alternative": "azapi_resource with Microsoft.Compute/virtualMachines"
+            }
+          ],
+          "compared": {
+            "api_version": "2026-04-01",
+            "provider": "azurerm",
+            "provider_version": "5.11.0",
+            "compared_at": "2026-10-24"
+          },
+          "note": "First pass, not reviewed. A gap means the API accepts the setting and no documented azurerm 5.11.0 argument (in any resource doc) was found; the provider source was not checked and general availability of newer settings is unconfirmed. Compared azurerm_linux_virtual_machine against the API; the Windows resource and sibling resources (extensions, data disk attachments) were searched for matching arguments only."
         }
       },
       "review": {
@@ -1682,7 +1792,48 @@
           "Backup options include built-in redundancy (LRS and ZRS), Azure Backup, snapshots and restore points."
         ]
       },
-      "manual": {},
+      "manual": {
+        "terraform": {
+          "status": "full",
+          "gaps": [
+            {
+              "what": "Purchase plan",
+              "alternative": "azapi_resource with Microsoft.Compute/disks"
+            },
+            {
+              "what": "Confidential VM and Elastic SAN creation sources",
+              "alternative": "azapi_resource with Microsoft.Compute/disks"
+            },
+            {
+              "what": "Provisioned bandwidth copy speed",
+              "alternative": "azapi_resource with Microsoft.Compute/disks"
+            },
+            {
+              "what": "Instant access duration",
+              "alternative": "azapi_resource with Microsoft.Compute/disks"
+            },
+            {
+              "what": "Hibernation support",
+              "alternative": "azapi_resource with Microsoft.Compute/disks"
+            },
+            {
+              "what": "Data access auth mode",
+              "alternative": "azapi_resource with Microsoft.Compute/disks"
+            },
+            {
+              "what": "Availability policy",
+              "alternative": "azapi_resource with Microsoft.Compute/disks"
+            }
+          ],
+          "compared": {
+            "api_version": "2026-03-02",
+            "provider": "azurerm",
+            "provider_version": "5.11.0",
+            "compared_at": "2026-10-24"
+          },
+          "note": "First pass, not reviewed. A gap means the API accepts the setting and no documented azurerm 5.11.0 argument (in any resource doc) was found; the provider source was not checked and general availability of newer settings is unconfirmed."
+        }
+      },
       "review": {
         "status": "unconfirmed",
         "note": "Verified against Learn on 2026-10-24 (managed-disks-overview, virtual-machines/overview): purpose, facts, the Azure Backup and VM edges. Not verified: the Key Vault customer-managed key edge."
@@ -1770,6 +1921,30 @@
         "cloud_native": {
           "level": "not",
           "note": "Groups of VMs: you still manage the operating system and instances, even though they scale automatically."
+        },
+        "terraform": {
+          "status": "full",
+          "gaps": [
+            {
+              "what": "Scheduled events policy",
+              "alternative": "azapi_resource with Microsoft.Compute/virtualMachineScaleSets"
+            },
+            {
+              "what": "Require guest provision signal",
+              "alternative": "azapi_resource with Microsoft.Compute/virtualMachineScaleSets"
+            },
+            {
+              "what": "VM agent platform updates",
+              "alternative": "azapi_resource with Microsoft.Compute/virtualMachineScaleSets"
+            }
+          ],
+          "compared": {
+            "api_version": "2026-04-01",
+            "provider": "azurerm",
+            "provider_version": "5.11.0",
+            "compared_at": "2026-10-24"
+          },
+          "note": "First pass, not reviewed. A gap means the API accepts the setting and no documented azurerm 5.11.0 argument (in any resource doc) was found; the provider source was not checked and general availability of newer settings is unconfirmed. Compared the Linux scale set resource; the Windows and orchestrated resources were searched for matching arguments only."
         }
       },
       "review": {
@@ -1873,6 +2048,66 @@
         "cloud_native": {
           "level": "partly",
           "note": "Managed platform for web apps that runs classic and containerised apps; no servers to manage but not built around containers or events."
+        },
+        "terraform": {
+          "status": "full",
+          "gaps": [
+            {
+              "what": "SSH enabled",
+              "alternative": "azapi_resource with Microsoft.Web/sites"
+            },
+            {
+              "what": "DNS configuration",
+              "alternative": "azapi_resource with Microsoft.Web/sites"
+            },
+            {
+              "what": "IP mode",
+              "alternative": "azapi_resource with Microsoft.Web/sites"
+            },
+            {
+              "what": "Slot ramp-up rules",
+              "alternative": "azapi_resource with Microsoft.Web/sites"
+            },
+            {
+              "what": "Platform release channel",
+              "alternative": "azapi_resource with Microsoft.Web/sites"
+            },
+            {
+              "what": "Site-scoped certificates",
+              "alternative": "azapi_resource with Microsoft.Web/sites"
+            },
+            {
+              "what": "Fine-grained outbound VNet routing",
+              "alternative": "azapi_resource with Microsoft.Web/sites"
+            },
+            {
+              "what": "Plan: spot and Hyper-V/Xenon",
+              "alternative": "azapi_resource with Microsoft.Web/sites"
+            },
+            {
+              "what": "Plan: install scripts and registry adapters",
+              "alternative": "azapi_resource with Microsoft.Web/sites"
+            },
+            {
+              "what": "AI integration (MCP servers)",
+              "alternative": "azapi_resource with Microsoft.Web/sites"
+            },
+            {
+              "what": "Push settings",
+              "alternative": "azapi_resource with Microsoft.Web/sites"
+            },
+            {
+              "what": "Maintenance mode",
+              "alternative": "azapi_resource with Microsoft.Web/sites"
+            }
+          ],
+          "compared": {
+            "api_version": "2026-07-15",
+            "provider": "azurerm",
+            "provider_version": "5.11.0",
+            "compared_at": "2026-10-24"
+          },
+          "note": "First pass, not reviewed. A gap means the API accepts the setting and no documented azurerm 5.11.0 argument (in any resource doc) was found; the provider source was not checked and general availability of newer settings is unconfirmed. Compared azurerm_linux_web_app and the service plan. Hosting-plan and site gaps are combined."
         }
       },
       "review": {
@@ -1951,6 +2186,42 @@
         "cloud_native": {
           "level": "native",
           "note": "Serverless and event-driven: no servers to manage, triggers and bindings, scales with events."
+        },
+        "terraform": {
+          "status": "full",
+          "gaps": [
+            {
+              "what": "SSH enabled",
+              "alternative": "azapi_resource with Microsoft.Web/sites"
+            },
+            {
+              "what": "DNS configuration",
+              "alternative": "azapi_resource with Microsoft.Web/sites"
+            },
+            {
+              "what": "IP mode",
+              "alternative": "azapi_resource with Microsoft.Web/sites"
+            },
+            {
+              "what": "Platform release channel",
+              "alternative": "azapi_resource with Microsoft.Web/sites"
+            },
+            {
+              "what": "Site-scoped certificates",
+              "alternative": "azapi_resource with Microsoft.Web/sites"
+            },
+            {
+              "what": "Fine-grained outbound VNet routing",
+              "alternative": "azapi_resource with Microsoft.Web/sites"
+            }
+          ],
+          "compared": {
+            "api_version": "2026-07-15",
+            "provider": "azurerm",
+            "provider_version": "5.11.0",
+            "compared_at": "2026-10-24"
+          },
+          "note": "First pass, not reviewed. A gap means the API accepts the setting and no documented azurerm 5.11.0 argument (in any resource doc) was found; the provider source was not checked and general availability of newer settings is unconfirmed. Compared azurerm_linux_function_app. Flex Consumption has its own resource (azurerm_function_app_flex_consumption); the shared app settings gaps are the same as App Service."
         }
       },
       "review": {
@@ -2044,6 +2315,50 @@
         "cloud_native": {
           "level": "native",
           "note": "Serverless containers with KEDA autoscaling, Dapr and scale to zero."
+        },
+        "terraform": {
+          "status": "full",
+          "gaps": [
+            {
+              "what": "Sticky sessions",
+              "alternative": "azapi_resource with Microsoft.App/containerApps"
+            },
+            {
+              "what": "Java runtime settings",
+              "alternative": "azapi_resource with Microsoft.App/containerApps"
+            },
+            {
+              "what": "Service binds",
+              "alternative": "azapi_resource with Microsoft.App/containerApps"
+            },
+            {
+              "what": "Dapr app health, max concurrency, log level, HTTP buffer sizes, API logging",
+              "alternative": "azapi_resource with Microsoft.App/containerApps"
+            },
+            {
+              "what": "Identity settings lifecycle",
+              "alternative": "azapi_resource with Microsoft.App/containerApps"
+            },
+            {
+              "what": "Environment: OpenTelemetry destinations",
+              "alternative": "azapi_resource with Microsoft.App/containerApps"
+            },
+            {
+              "what": "Environment: peer traffic encryption",
+              "alternative": "azapi_resource with Microsoft.App/containerApps"
+            },
+            {
+              "what": "Environment: ingress limits and timeouts (unconfirmed)",
+              "alternative": "azapi_resource with Microsoft.App/containerApps"
+            }
+          ],
+          "compared": {
+            "api_version": "2026-07-01",
+            "provider": "azurerm",
+            "provider_version": "5.11.0",
+            "compared_at": "2026-10-24"
+          },
+          "note": "First pass, not reviewed. A gap means the API accepts the setting and no documented azurerm 5.11.0 argument (in any resource doc) was found; the provider source was not checked and general availability of newer settings is unconfirmed. Compared the container app and the environment."
         }
       },
       "review": {
@@ -2123,6 +2438,62 @@
         "cloud_native": {
           "level": "native",
           "note": "Managed, CNCF-certified Kubernetes for containerised microservices."
+        },
+        "terraform": {
+          "status": "full",
+          "gaps": [
+            {
+              "what": "Pod identity (deprecated feature)",
+              "alternative": "azapi_resource with Microsoft.ContainerService/managedClusters"
+            },
+            {
+              "what": "Gateway API installation",
+              "alternative": "azapi_resource with Microsoft.ContainerService/managedClusters"
+            },
+            {
+              "what": "Static egress gateway",
+              "alternative": "azapi_resource with Microsoft.ContainerService/managedClusters"
+            },
+            {
+              "what": "Hosted system profile",
+              "alternative": "azapi_resource with Microsoft.ContainerService/managedClusters"
+            },
+            {
+              "what": "Infrastructure encryption",
+              "alternative": "azapi_resource with Microsoft.ContainerService/managedClusters"
+            },
+            {
+              "what": "Secure boot and vTPM on node pools",
+              "alternative": "azapi_resource with Microsoft.ContainerService/managedClusters"
+            },
+            {
+              "what": "Message of the day",
+              "alternative": "azapi_resource with Microsoft.ContainerService/managedClusters"
+            },
+            {
+              "what": "Local DNS profile",
+              "alternative": "azapi_resource with Microsoft.ContainerService/managedClusters"
+            },
+            {
+              "what": "Syslog port",
+              "alternative": "azapi_resource with Microsoft.ContainerService/managedClusters"
+            },
+            {
+              "what": "Kube-state metrics settings",
+              "alternative": "azapi_resource with Microsoft.ContainerService/managedClusters"
+            },
+            {
+              "what": "Node pool SSH access mode",
+              "alternative": "azapi_resource with Microsoft.ContainerService/managedClusters"
+            }
+          ],
+          "compared": {
+            "api_version": "2026-08-01",
+            "provider": "azurerm",
+            "provider_version": "5.11.0",
+            "compared_at": "2026-10-24"
+          },
+          "note": "First pass, not reviewed. A gap means the API accepts the setting and no documented azurerm 5.11.0 argument (in any resource doc) was found; the provider source was not checked and general availability of newer settings is unconfirmed. Compared the cluster; node pools are azurerm_kubernetes_cluster_node_pool."
         }
       },
       "review": {
@@ -2291,7 +2662,23 @@
           "DNS is Azure-provided by default, or custom servers, or private zones linked to the VNet.",
           "Filter traffic between subnets with network security groups and application security groups; override Azure's default routes with route tables.",
           "Virtual networks and subnets span all availability zones in a region. Peering connects virtual networks, and service endpoints extend the network's private address space and identity to Azure services."
-        ]
+        ],
+        "terraform": {
+          "status": "full",
+          "gaps": [
+            {
+              "what": "VM protection",
+              "alternative": "azapi_resource with Microsoft.Network/virtualNetworks"
+            }
+          ],
+          "compared": {
+            "api_version": "2026-03-01",
+            "provider": "azurerm",
+            "provider_version": "5.11.0",
+            "compared_at": "2026-10-24"
+          },
+          "note": "First pass, not reviewed. A gap means the API accepts the setting and no documented azurerm 5.11.0 argument (in any resource doc) was found; the provider source was not checked and general availability of newer settings is unconfirmed. Compared the virtual network; subnets and peerings are separate azurerm resources."
+        }
       },
       "review": {
         "status": "unconfirmed",
@@ -2365,7 +2752,35 @@
         "facts": [
           "Always in exactly one subnet. You pick the subnet when you create it and can change it afterwards.",
           "Holds the private IP; can also hold a public IP, an NSG and load balancer membership."
-        ]
+        ],
+        "terraform": {
+          "status": "full",
+          "gaps": [
+            {
+              "what": "disableTcpStateTracking",
+              "alternative": "azapi_resource with Microsoft.Network/networkInterfaces"
+            },
+            {
+              "what": "Workload type",
+              "alternative": "azapi_resource with Microsoft.Network/networkInterfaces"
+            },
+            {
+              "what": "NIC type",
+              "alternative": "azapi_resource with Microsoft.Network/networkInterfaces"
+            },
+            {
+              "what": "Migration phase",
+              "alternative": "azapi_resource with Microsoft.Network/networkInterfaces"
+            }
+          ],
+          "compared": {
+            "api_version": "2026-03-01",
+            "provider": "azurerm",
+            "provider_version": "5.11.0",
+            "compared_at": "2026-10-24"
+          },
+          "note": "First pass, not reviewed. A gap means the API accepts the setting and no documented azurerm 5.11.0 argument (in any resource doc) was found; the provider source was not checked and general availability of newer settings is unconfirmed."
+        }
       },
       "review": {
         "status": "unconfirmed",
@@ -2449,7 +2864,24 @@
           "A rule matches on source, destination, port, protocol and direction. Sources and destinations can be an IP, a CIDR block, a service tag or an application security group."
         ]
       },
-      "manual": {},
+      "manual": {
+        "terraform": {
+          "status": "full",
+          "gaps": [
+            {
+              "what": "flushConnection",
+              "alternative": "azapi_resource with Microsoft.Network/networkSecurityGroups"
+            }
+          ],
+          "compared": {
+            "api_version": "2026-03-01",
+            "provider": "azurerm",
+            "provider_version": "5.11.0",
+            "compared_at": "2026-10-24"
+          },
+          "note": "First pass, not reviewed. A gap means the API accepts the setting and no documented azurerm 5.11.0 argument (in any resource doc) was found; the provider source was not checked and general availability of newer settings is unconfirmed. Rules are a separate resource (azurerm_network_security_rule)."
+        }
+      },
       "review": {
         "status": "unconfirmed",
         "note": "Verified against Learn on 2026-10-24 (network-security-groups-overview): purpose, priority and rule facts, the VNet edge. Not verified: the NIC-level association edge."
@@ -2522,7 +2954,32 @@
           "Basic SKU public IPs were retired on September 30, 2025; use Standard SKU. For scale sets, use public IP prefixes."
         ]
       },
-      "manual": {},
+      "manual": {
+        "terraform": {
+          "status": "full",
+          "gaps": [
+            {
+              "what": "Delete option",
+              "alternative": "azapi_resource with Microsoft.Network/publicIPAddresses"
+            },
+            {
+              "what": "Migration phase",
+              "alternative": "azapi_resource with Microsoft.Network/publicIPAddresses"
+            },
+            {
+              "what": "Custom DDoS policy",
+              "alternative": "azapi_resource with Microsoft.Network/publicIPAddresses"
+            }
+          ],
+          "compared": {
+            "api_version": "2026-03-01",
+            "provider": "azurerm",
+            "provider_version": "5.11.0",
+            "compared_at": "2026-10-24"
+          },
+          "note": "First pass, not reviewed. A gap means the API accepts the setting and no documented azurerm 5.11.0 argument (in any resource doc) was found; the provider source was not checked and general availability of newer settings is unconfirmed."
+        }
+      },
       "review": {
         "status": "unconfirmed",
         "note": "Verified against Learn on 2026-10-24 (ip-services/public-ip-addresses): purpose, outbound behaviour, Basic SKU retirement, all seven edges (the page lists NICs, load balancers, gateways, NAT, Application Gateway, Firewall and Bastion). Not verified: nothing known."
@@ -2615,7 +3072,24 @@
           "Current SKUs are Standard and Gateway. Basic Load Balancer was retired on September 30, 2025."
         ]
       },
-      "manual": {},
+      "manual": {
+        "terraform": {
+          "status": "full",
+          "gaps": [
+            {
+              "what": "scope and mode (purpose unconfirmed)",
+              "alternative": "azapi_resource with Microsoft.Network/loadBalancers"
+            }
+          ],
+          "compared": {
+            "api_version": "2026-03-01",
+            "provider": "azurerm",
+            "provider_version": "5.11.0",
+            "compared_at": "2026-10-24"
+          },
+          "note": "First pass, not reviewed. A gap means the API accepts the setting and no documented azurerm 5.11.0 argument (in any resource doc) was found; the provider source was not checked and general availability of newer settings is unconfirmed. Rules, probes and pools are separate azurerm resources."
+        }
+      },
       "review": {
         "status": "unconfirmed",
         "note": "Verified against Learn on 2026-10-24 (load-balancer/load-balancer-overview): purpose, facts, Basic retirement, the Public IP edge (via the Public IP page). Not verified: the NIC backend pool edge."
@@ -2714,7 +3188,36 @@
           "Front Door is a global CDN for fast, secure access to web content and APIs. Traffic Manager is the DNS-based alternative when you don't need layer 7 processing."
         ]
       },
-      "manual": {},
+      "manual": {
+        "terraform": {
+          "status": "full",
+          "gaps": [
+            {
+              "what": "Application Gateway: reserved capacity",
+              "alternative": "azapi_resource with Microsoft.Network/applicationGateways"
+            },
+            {
+              "what": "Application Gateway: load distribution policies",
+              "alternative": "azapi_resource with Microsoft.Network/applicationGateways"
+            },
+            {
+              "what": "Application Gateway: advanced routing maps and condition sets",
+              "alternative": "azapi_resource with Microsoft.Network/applicationGateways"
+            },
+            {
+              "what": "Application Gateway: Entra JWT validation",
+              "alternative": "azapi_resource with Microsoft.Network/applicationGateways"
+            }
+          ],
+          "compared": {
+            "api_version": "2026-03-01",
+            "provider": "azurerm",
+            "provider_version": "5.11.0",
+            "compared_at": "2026-10-24"
+          },
+          "note": "First pass, not reviewed. A gap means the API accepts the setting and no documented azurerm 5.11.0 argument (in any resource doc) was found; the provider source was not checked and general availability of newer settings is unconfirmed. Compared Application Gateway and the Front Door profile (profile: no gaps found); Front Door routes, rules and origins were not compared."
+        }
+      },
       "review": {
         "status": "unconfirmed",
         "note": "Verified against Learn on 2026-10-24 (application-gateway/overview, frontdoor/front-door-overview): purpose, facts, v1 retirement (as stated on the page), the AKS edge. Not verified: the Key Vault, App Service and Virtual Machines edges."
@@ -2821,7 +3324,24 @@
           "DNS Private Resolver lets on-premises and Azure query each other's private zones without VM-based DNS servers. Traffic Manager is a separate DNS-based load balancer."
         ]
       },
-      "manual": {},
+      "manual": {
+        "terraform": {
+          "status": "full",
+          "gaps": [
+            {
+              "what": "Record set metadata",
+              "alternative": "azapi_resource with Microsoft.Network/dnsZones"
+            }
+          ],
+          "compared": {
+            "api_version": "2018-05-01",
+            "provider": "azurerm",
+            "provider_version": "5.11.0",
+            "compared_at": "2026-10-24"
+          },
+          "note": "First pass, not reviewed. A gap means the API accepts the setting and no documented azurerm 5.11.0 argument (in any resource doc) was found; the provider source was not checked and general availability of newer settings is unconfirmed. Compared DNS zones (API 2018-05-01) and Private DNS zones (API 2024-06-01, no gaps); record types are separate azurerm resources."
+        }
+      },
       "review": {
         "status": "unconfirmed",
         "note": "Verified against Learn on 2026-10-24 (dns-overview, private-dns-overview): purpose, facts, the VNet edge. Not verified: the Private Endpoint edge (zone resolves to the private IP)."
@@ -2893,7 +3413,27 @@
           "Creates a NIC with a private IP in your subnet.",
           "Needs a private DNS zone so the service name resolves to that IP.",
           "Connections are approved automatically or manually depending on your RBAC permissions on the target; a manual one stays Pending until the resource owner approves."
-        ]
+        ],
+        "terraform": {
+          "status": "full",
+          "gaps": [
+            {
+              "what": "IP version type",
+              "alternative": "azapi_resource with Microsoft.Network/privateEndpoints"
+            },
+            {
+              "what": "Billing SKU",
+              "alternative": "azapi_resource with Microsoft.Network/privateEndpoints"
+            }
+          ],
+          "compared": {
+            "api_version": "2026-03-01",
+            "provider": "azurerm",
+            "provider_version": "5.11.0",
+            "compared_at": "2026-10-24"
+          },
+          "note": "First pass, not reviewed. A gap means the API accepts the setting and no documented azurerm 5.11.0 argument (in any resource doc) was found; the provider source was not checked and general availability of newer settings is unconfirmed. Application security groups are covered by azurerm_private_endpoint_application_security_group_association."
+        }
       },
       "review": {
         "status": "unconfirmed",
@@ -3009,7 +3549,53 @@
           "Common uses: Terraform state, boot diagnostics, Functions state, logs.",
           "Standard general-purpose v2 is the recommended type for most scenarios (blobs, files, queues, tables). Premium types exist for block blobs, file shares and page blobs, for high transaction rates or low latency.",
           "Redundancy options include locally redundant (LRS), zone-redundant (ZRS), geo-redundant (GRS, RA-GRS) and geo-zone-redundant (GZRS, RA-GZRS); the options available depend on the account type."
-        ]
+        ],
+        "terraform": {
+          "status": "full",
+          "gaps": [
+            {
+              "what": "Zone placement policy",
+              "alternative": "azapi_resource with Microsoft.Storage/storageAccounts"
+            },
+            {
+              "what": "Turbo tier",
+              "alternative": "azapi_resource with Microsoft.Storage/storageAccounts"
+            },
+            {
+              "what": "SMB OAuth",
+              "alternative": "azapi_resource with Microsoft.Storage/storageAccounts"
+            },
+            {
+              "what": "Extended groups",
+              "alternative": "azapi_resource with Microsoft.Storage/storageAccounts"
+            },
+            {
+              "what": "IPv6 endpoint publishing",
+              "alternative": "azapi_resource with Microsoft.Storage/storageAccounts"
+            },
+            {
+              "what": "IPv6 network rules",
+              "alternative": "azapi_resource with Microsoft.Storage/storageAccounts"
+            },
+            {
+              "what": "Data collaboration policy",
+              "alternative": "azapi_resource with Microsoft.Storage/storageAccounts"
+            }
+          ],
+          "content": [
+            {
+              "what": "Blobs, containers, file shares and files, queues, tables and table entities",
+              "how": "azurerm_storage_blob, _container, _share, _share_file, _queue, _table, _table_entity; the data plane API"
+            }
+          ],
+          "compared": {
+            "api_version": "2026-09-01",
+            "provider": "azurerm",
+            "provider_version": "5.11.0",
+            "compared_at": "2026-10-24"
+          },
+          "note": "First pass, not reviewed. A gap means the API accepts the setting and no documented azurerm 5.11.0 argument (in any resource doc) was found; the provider source was not checked and general availability of newer settings is unconfirmed. Encryption keys, network rules and static website are separate azurerm resources and count as covered."
+        }
       },
       "review": {
         "status": "unconfirmed",
@@ -3109,7 +3695,48 @@
           "Serverless compute (vCore model) scales compute automatically with workload and bills per second. A free tier is available."
         ]
       },
-      "manual": {},
+      "manual": {
+        "terraform": {
+          "status": "full",
+          "gaps": [
+            {
+              "what": "Server: IPv6",
+              "alternative": "azapi_resource with Microsoft.Sql/servers"
+            },
+            {
+              "what": "Server: federated client id",
+              "alternative": "azapi_resource with Microsoft.Sql/servers"
+            },
+            {
+              "what": "Database: free offer (useFreeLimit)",
+              "alternative": "azapi_resource with Microsoft.Sql/servers"
+            },
+            {
+              "what": "Database: catalog collation",
+              "alternative": "azapi_resource with Microsoft.Sql/servers"
+            },
+            {
+              "what": "Database: availability zone",
+              "alternative": "azapi_resource with Microsoft.Sql/servers"
+            },
+            {
+              "what": "Database: manual cutover",
+              "alternative": "azapi_resource with Microsoft.Sql/servers"
+            },
+            {
+              "what": "Database: federated client id",
+              "alternative": "azapi_resource with Microsoft.Sql/servers"
+            }
+          ],
+          "compared": {
+            "api_version": "2025-01-01",
+            "provider": "azurerm",
+            "provider_version": "5.11.0",
+            "compared_at": "2026-10-24"
+          },
+          "note": "First pass, not reviewed. A gap means the API accepts the setting and no documented azurerm 5.11.0 argument (in any resource doc) was found; the provider source was not checked and general availability of newer settings is unconfirmed. Compared the server and the database."
+        }
+      },
       "review": {
         "status": "unconfirmed",
         "note": "Verified against Learn on 2026-10-24 (azure-sql/database/sql-database-paas-overview): purpose (this entry covers Azure SQL Database; SQL Managed Instance is a separate tier 2 service), facts. Not verified: the managed identity, Key Vault, Log Analytics, Entra ID and Data Factory edges."
@@ -3203,7 +3830,32 @@
           "Private access: inside an Azure virtual network the server is reachable only through private IP addresses."
         ]
       },
-      "manual": {},
+      "manual": {
+        "terraform": {
+          "status": "full",
+          "gaps": [
+            {
+              "what": "Immutable backup",
+              "alternative": "azapi_resource with Microsoft.DBforPostgreSQL/flexibleServers"
+            },
+            {
+              "what": "FIPS mode",
+              "alternative": "azapi_resource with Microsoft.DBforPostgreSQL/flexibleServers"
+            },
+            {
+              "what": "Federated client id for data encryption",
+              "alternative": "azapi_resource with Microsoft.DBforPostgreSQL/flexibleServers"
+            }
+          ],
+          "compared": {
+            "api_version": "2026-10-01",
+            "provider": "azurerm",
+            "provider_version": "5.11.0",
+            "compared_at": "2026-10-24"
+          },
+          "note": "First pass, not reviewed. A gap means the API accepts the setting and no documented azurerm 5.11.0 argument (in any resource doc) was found; the provider source was not checked and general availability of newer settings is unconfirmed."
+        }
+      },
       "review": {
         "status": "unconfirmed",
         "note": "Verified against Learn on 2026-10-24 (postgresql/flexible-server/overview): purpose, facts, the VNet edge. Not verified: the delegated-subnet detail and the Log Analytics edge."
@@ -3287,7 +3939,32 @@
           "Integrated vector and hybrid search stores embeddings next to operational data."
         ]
       },
-      "manual": {},
+      "manual": {
+        "terraform": {
+          "status": "full",
+          "gaps": [
+            {
+              "what": "Hierarchical partition key, enforce last level",
+              "alternative": "azapi_resource with Microsoft.DocumentDB/databaseAccounts"
+            },
+            {
+              "what": "Per-region per-partition autoscale",
+              "alternative": "azapi_resource with Microsoft.DocumentDB/databaseAccounts"
+            },
+            {
+              "what": "Cassandra connector",
+              "alternative": "azapi_resource with Microsoft.DocumentDB/databaseAccounts"
+            }
+          ],
+          "compared": {
+            "api_version": "2026-03-15",
+            "provider": "azurerm",
+            "provider_version": "5.11.0",
+            "compared_at": "2026-10-24"
+          },
+          "note": "First pass, not reviewed. A gap means the API accepts the setting and no documented azurerm 5.11.0 argument (in any resource doc) was found; the provider source was not checked and general availability of newer settings is unconfirmed."
+        }
+      },
       "review": {
         "status": "unconfirmed",
         "note": "Verified against Learn on 2026-10-24 (cosmos-db/introduction): purpose (vector database added), facts. Not verified: the Log Analytics edge."
@@ -3380,7 +4057,40 @@
           "Transactions allow once-only processing semantics: results become visible downstream only after the input message is settled."
         ]
       },
-      "manual": {},
+      "manual": {
+        "terraform": {
+          "status": "full",
+          "gaps": [
+            {
+              "what": "Zone redundancy",
+              "alternative": "azapi_resource with Microsoft.ServiceBus/namespaces"
+            },
+            {
+              "what": "Alternate name",
+              "alternative": "azapi_resource with Microsoft.ServiceBus/namespaces"
+            },
+            {
+              "what": "Confidential compute",
+              "alternative": "azapi_resource with Microsoft.ServiceBus/namespaces"
+            },
+            {
+              "what": "Geo data replication",
+              "alternative": "azapi_resource with Microsoft.ServiceBus/namespaces"
+            },
+            {
+              "what": "IP address type",
+              "alternative": "azapi_resource with Microsoft.ServiceBus/namespaces"
+            }
+          ],
+          "compared": {
+            "api_version": "2026-01-01",
+            "provider": "azurerm",
+            "provider_version": "5.11.0",
+            "compared_at": "2026-10-24"
+          },
+          "note": "First pass, not reviewed. A gap means the API accepts the setting and no documented azurerm 5.11.0 argument (in any resource doc) was found; the provider source was not checked and general availability of newer settings is unconfirmed.  Five gaps, including geo data replication: closest to partial."
+        }
+      },
       "review": {
         "status": "unconfirmed",
         "note": "Verified against Learn on 2026-10-24 (service-bus-messaging/service-bus-messaging-overview): purpose, facts. Not verified: all edges: RBAC and managed identity roles, Event Grid, Functions, Logic Apps."
@@ -3478,7 +4188,18 @@
           "Push delivery sends events to webhooks and Azure services; an event subscription defines the handler or destination."
         ]
       },
-      "manual": {},
+      "manual": {
+        "terraform": {
+          "status": "full",
+          "compared": {
+            "api_version": "2025-02-15",
+            "provider": "azurerm",
+            "provider_version": "5.11.0",
+            "compared_at": "2026-10-24"
+          },
+          "note": "First pass, not reviewed. A gap means the API accepts the setting and no documented azurerm 5.11.0 argument (in any resource doc) was found; the provider source was not checked and general availability of newer settings is unconfirmed. Compared custom topics only; system topics, domains and namespaces were not compared."
+        }
+      },
       "review": {
         "status": "unconfirmed",
         "note": "Verified against Learn on 2026-10-24 (event-grid/overview): purpose (reworded: it is a publish-subscribe service), facts. Not verified: all edges: Storage blob events, and Functions, Service Bus and Event Hubs as handlers (the page only mentions Functions and Event Hubs in tutorial links)."
@@ -3581,7 +4302,18 @@
           "Application Insights is its application performance monitoring feature, built on OpenTelemetry."
         ]
       },
-      "manual": {},
+      "manual": {
+        "terraform": {
+          "status": "full",
+          "compared": {
+            "api_version": "2023-01-01",
+            "provider": "azurerm",
+            "provider_version": "5.11.0",
+            "compared_at": "2026-10-24"
+          },
+          "note": "First pass, not reviewed. A gap means the API accepts the setting and no documented azurerm 5.11.0 argument (in any resource doc) was found; the provider source was not checked and general availability of newer settings is unconfirmed. Compared action groups only; alert rules, diagnostic settings and data collection rules were not compared."
+        }
+      },
       "review": {
         "status": "unconfirmed",
         "note": "Verified against Learn on 2026-10-24 (azure-monitor/fundamentals/overview): purpose (reworded), facts, three containment edges. Not verified: the Event Hubs edge."
@@ -3648,6 +4380,26 @@
         "cloud_native": {
           "level": "partly",
           "note": "Managed log store and KQL query tool that serves any kind of workload."
+        },
+        "terraform": {
+          "status": "full",
+          "gaps": [
+            {
+              "what": "Workspace replication",
+              "alternative": "azapi_resource with Microsoft.OperationalInsights/workspaces"
+            },
+            {
+              "what": "Data authorization mode",
+              "alternative": "azapi_resource with Microsoft.OperationalInsights/workspaces"
+            }
+          ],
+          "compared": {
+            "api_version": "2026-03-01",
+            "provider": "azurerm",
+            "provider_version": "5.11.0",
+            "compared_at": "2026-10-24"
+          },
+          "note": "First pass, not reviewed. A gap means the API accepts the setting and no documented azurerm 5.11.0 argument (in any resource doc) was found; the provider source was not checked and general availability of newer settings is unconfirmed. Data export, linked clusters and customer-managed keys are separate azurerm resources."
         }
       },
       "review": {
@@ -3716,6 +4468,22 @@
         "cloud_native": {
           "level": "partly",
           "note": "OpenTelemetry-based APM that works for classic and cloud-native apps alike."
+        },
+        "terraform": {
+          "status": "full",
+          "gaps": [
+            {
+              "what": "Immediate purge after 30 days",
+              "alternative": "azapi_resource with Microsoft.Insights/components"
+            }
+          ],
+          "compared": {
+            "api_version": "2020-02-02",
+            "provider": "azurerm",
+            "provider_version": "5.11.0",
+            "compared_at": "2026-10-24"
+          },
+          "note": "First pass, not reviewed. A gap means the API accepts the setting and no documented azurerm 5.11.0 argument (in any resource doc) was found; the provider source was not checked and general availability of newer settings is unconfirmed."
         }
       },
       "review": {
@@ -3810,6 +4578,50 @@
         "cloud_native": {
           "level": "native",
           "note": "Managed versions of the Prometheus and Grafana open-source projects, aimed at Kubernetes metrics."
+        },
+        "terraform": {
+          "status": "full",
+          "gaps": [
+            {
+              "what": "Grafana: external snapshots",
+              "alternative": "azapi_resource with Microsoft.Dashboard/grafana"
+            },
+            {
+              "what": "Grafana: viewers can edit",
+              "alternative": "azapi_resource with Microsoft.Dashboard/grafana"
+            },
+            {
+              "what": "Grafana: editors can admin",
+              "alternative": "azapi_resource with Microsoft.Dashboard/grafana"
+            },
+            {
+              "what": "Grafana: CSRF check",
+              "alternative": "azapi_resource with Microsoft.Dashboard/grafana"
+            },
+            {
+              "what": "Grafana: creator can admin",
+              "alternative": "azapi_resource with Microsoft.Dashboard/grafana"
+            },
+            {
+              "what": "Grafana: plugins",
+              "alternative": "azapi_resource with Microsoft.Dashboard/grafana"
+            },
+            {
+              "what": "Grafana: enterprise marketplace plan",
+              "alternative": "azapi_resource with Microsoft.Dashboard/grafana"
+            },
+            {
+              "what": "Grafana: unified alerting screenshots",
+              "alternative": "azapi_resource with Microsoft.Dashboard/grafana"
+            }
+          ],
+          "compared": {
+            "api_version": "2025-08-01",
+            "provider": "azurerm",
+            "provider_version": "5.11.0",
+            "compared_at": "2026-10-24"
+          },
+          "note": "First pass, not reviewed. A gap means the API accepts the setting and no documented azurerm 5.11.0 argument (in any resource doc) was found; the provider source was not checked and general availability of newer settings is unconfirmed. Compared Grafana only; the Azure Monitor workspace (Prometheus) was not compared against the API."
         }
       },
       "review": {
@@ -3895,7 +4707,10 @@
         "facts": [
           "A separate service from the Azure resource model (unconfirmed).",
           "Five services: Boards (work tracking), Repos (Git or TFVC), Pipelines (CI/CD to any cloud or on-premises), Test Plans and Artifacts (NuGet, npm, Maven, Python and Universal packages)."
-        ]
+        ],
+        "terraform": {
+          "note": "Not compared: this service uses the Azure DevOps REST API (azuredevops provider), not an ARM spec, so the API-versus-provider method does not apply yet."
+        }
       },
       "review": {
         "status": "unconfirmed",
