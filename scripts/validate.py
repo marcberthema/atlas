@@ -47,6 +47,10 @@ def main():
         for r in s["fetched"].get("terraform", {}).get("resources", []):
             if r["exists"] is False:
                 warn.append(f"terraform resource not found: {r['type']} ({i})")
+    for s in data["services"]:
+        extra = set(s["manual"].get("terraform", {})) - {"status", "gaps", "content", "compared", "note"}
+        if extra:
+            bad.append(f"unknown manual.terraform key {sorted(extra)}: {s['id']}")
     levels = {c["level"] for c in data["cloud_native_scale"]}
     for s in data["services"]:
         cn = model.deep_merge(s["fetched"], s["manual"]).get("cloud_native")

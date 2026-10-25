@@ -71,7 +71,7 @@ Versions are **provider** versions (azurerm, azuread, azuredevops, azapi), not T
 
 | Status | Rule |
 |---|---|
-| `full` | Set only by a human: `manual.terraform.status`. |
+| `full` | Set only by a human: `manual.terraform.status`. Shown as `full*` when `gaps` is non-empty. |
 | `partial` | `manual.terraform.gaps` is non-empty, or some tracked resources do not exist in the latest docs. |
 | `listed` | Every tracked resource exists, but nobody has confirmed the whole service is covered. |
 | `azapi-only` | No tracked resource exists but an ARM type is tracked, so use `azapi_resource`. |
@@ -81,5 +81,19 @@ Versions are **provider** versions (azurerm, azuread, azuredevops, azapi), not T
 `since` on a resource is the earliest provider version whose changelog lists it as a new resource or data source.
 `null` means no such entry was found: it predates the changelogs, or was logged in another format. `first_supported`
 and `fully_supported_since` are only set when every found resource has a `since`.
+
+### How Terraform coverage is judged
+
+Compare the configuration the Azure REST API accepts for the service (the OpenAPI spec in `Azure/azure-rest-api-specs`)
+with what the provider resource accepts (its documented arguments):
+
+- `full`: every configurable setting can be set through the provider.
+- `full*`: `full` with a few `gaps`: the common uses are covered and the rest only through the API. The user decides when a gap is minor.
+- `partial`: a meaningful part of the settings can only be set through the API; each goes in `gaps` with the azapi alternative.
+- `none` / `azapi-only`: the provider has no resource for the service.
+
+End-user actions (backup, restore, purge, recover, rotate now) are not configuration and never count as gaps.
+Content you can manage in the service (secrets, keys, items in a store) is not a gap either: it goes in `content` as
+"you can also manage this with ...". `compared` records the API version and provider version the judgement is based on.
 
 `gaps` entries are `{ "what": "...", "alternative": "..." }`, for example a feature that needs `azapi_resource`.

@@ -89,6 +89,8 @@ def resolve_terraform(data, svc, merged):
         "first_supported": min(sinces, key=version_key) if sinces and all_since else None,
         "fully_supported_since": max(sinces, key=version_key) if sinces and all_since else None,
         "gaps": gaps,
+        "content": manual.get("content", []),
+        "compared": manual.get("compared"),
         "fallback": fallback,
         "note": manual.get("note", ""),
         "changed_at": svc["fetched"].get("terraform", {}).get("changed_at"),
