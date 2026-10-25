@@ -464,7 +464,24 @@
           "Not tied to a region: one subscription can hold resources from many regions, and resource groups can organise them by region."
         ]
       },
-      "manual": {},
+      "manual": {
+        "terraform": {
+          "status": "full",
+          "gaps": [
+            {
+              "what": "Reseller id, subscription tenant id and owner id when creating the alias",
+              "alternative": "azapi_resource with Microsoft.Subscription/aliases"
+            }
+          ],
+          "compared": {
+            "api_version": "2021-10-01",
+            "provider": "azurerm",
+            "provider_version": "5.11.0",
+            "compared_at": "2026-10-24"
+          },
+          "note": "Gaps mean the API accepts the setting and the azurerm resource docs list no matching argument; the provider source was not checked. Management group placement is a separate resource (azurerm_management_group_subscription_association), so it is not a gap."
+        }
+      },
       "review": {
         "status": "unconfirmed",
         "note": "Verified against Learn on 2026-10-24 (cloud-adoption-framework subscriptions, arm/overview, how-subscriptions-associated-directory): purpose, facts, five edges. Not verified: the Cost Management, Resource Graph, Lighthouse and Azure DevOps edges."
@@ -705,7 +722,17 @@
           "RBAC answers 'who may do what?'. Azure Policy mainly answers 'what is allowed to exist, and how must it be configured?', though policy rules can also look at who makes a request. Full RBAC access does not bypass policy.",
           "A role assignment is its own ARM resource, stored at a scope, so one group assignment can cover many resources. That is why RBAC scales better than per-resource lists.",
           "RBAC is additive: effective permissions are the sum of all assignments that apply. If a deny assignment applies, access is blocked before role assignments are considered."
-        ]
+        ],
+        "terraform": {
+          "status": "full",
+          "compared": {
+            "api_version": "2022-04-01",
+            "provider": "azurerm",
+            "provider_version": "5.11.0",
+            "compared_at": "2026-10-24"
+          },
+          "note": "Role assignments and role definitions compared; every writable property has an azurerm argument."
+        }
       },
       "review": {
         "status": "unconfirmed",
@@ -1107,7 +1134,24 @@
           "Supports budgets, anomaly and scheduled alerts, tag inheritance, cost allocation rules and scheduled exports to a storage account."
         ]
       },
-      "manual": {},
+      "manual": {
+        "terraform": {
+          "status": "full",
+          "gaps": [
+            {
+              "what": "Budget category (Usage budgets)",
+              "alternative": "azapi_resource with Microsoft.Consumption/budgets"
+            }
+          ],
+          "compared": {
+            "api_version": "2026-06-01",
+            "provider": "azurerm",
+            "provider_version": "5.11.0",
+            "compared_at": "2026-10-24"
+          },
+          "note": "Gaps mean the API accepts the setting and the azurerm resource docs list no matching argument; the provider source was not checked. Only the subscription budget resource was compared."
+        }
+      },
       "review": {
         "status": "unconfirmed",
         "note": "Verified against Learn on 2026-10-24 (cost-management-billing/costs/overview-cost-management): purpose, scopes, features. Not verified: nothing known; Management groups are not supported for some Microsoft Customer Agreement subscriptions (per the management groups page), worth a fact later."
@@ -1325,7 +1369,27 @@
           "Assigned at a management group, subscription, resource group or individual resource, and inherited downward; specific scopes can be excluded. It only applies to the resource types and properties its rule matches.",
           "Evaluated when a resource is created or updated, when a policy is newly assigned or changed at a scope, and on a compliance cycle every 24 hours. Effects set the response: deny, log, alter the resource before or after the change, deploy related resources, or block actions. Existing non-compliant resources are not deleted; remediation can fix them.",
           "If a Terraform apply fails with RequestDisallowedByPolicy, read the policy name in the error before debugging the code."
-        ]
+        ],
+        "terraform": {
+          "status": "full",
+          "gaps": [
+            {
+              "what": "Policy definition versions and external evaluation enforcement settings",
+              "alternative": "azapi_resource with Microsoft.Authorization/policyDefinitions"
+            },
+            {
+              "what": "Policy assignment definition version, assignment type and self-serve exemption settings",
+              "alternative": "azapi_resource with Microsoft.Authorization/policyAssignments"
+            }
+          ],
+          "compared": {
+            "api_version": "2026-07-01",
+            "provider": "azurerm",
+            "provider_version": "5.11.0",
+            "compared_at": "2026-10-24"
+          },
+          "note": "Gaps mean the API accepts the setting and the azurerm resource docs list no matching argument; the provider source was not checked. Compared policy definitions and the subscription-scope assignment; whether the newer settings are generally available is unconfirmed."
+        }
       },
       "review": {
         "status": "unconfirmed",
@@ -1421,7 +1485,27 @@
         "purpose": "Back up VMs, disks, files, blobs and databases."
       },
       "manual": {
-        "facts": []
+        "facts": [],
+        "terraform": {
+          "status": "full",
+          "gaps": [
+            {
+              "what": "Recovery Services vault: soft delete state and retention, cross-subscription restore, source scan, cost management granularity",
+              "alternative": "azapi_resource with Microsoft.RecoveryServices/vaults"
+            },
+            {
+              "what": "Backup vault: replicated regions, alert setting for all job failures, cross-subscription restore (sibling resources not checked)",
+              "alternative": "azapi_resource with Microsoft.DataProtection/backupVaults"
+            }
+          ],
+          "compared": {
+            "api_version": "2026-07-01",
+            "provider": "azurerm",
+            "provider_version": "5.11.0",
+            "compared_at": "2026-10-24"
+          },
+          "note": "Gaps mean the API accepts the setting and the azurerm resource docs list no matching argument; the provider source was not checked. Resource guard and customer-managed key for the Backup vault are covered by sibling resources (azurerm_data_protection_resource_guard, azurerm_recovery_services_vault_resource_guard_association, azurerm_data_protection_backup_vault_customer_managed_key), so they are not gaps."
+        }
       },
       "review": {
         "status": "unconfirmed",
@@ -2114,7 +2198,24 @@
           "ACR tasks can build images in Azure on demand or from triggers such as base image updates or Git commits."
         ]
       },
-      "manual": {},
+      "manual": {
+        "terraform": {
+          "status": "full",
+          "gaps": [
+            {
+              "what": "Trust policy (content trust)",
+              "alternative": "azapi_resource with Microsoft.ContainerRegistry/registries"
+            }
+          ],
+          "compared": {
+            "api_version": "2025-11-01",
+            "provider": "azurerm",
+            "provider_version": "5.11.0",
+            "compared_at": "2026-10-24"
+          },
+          "note": "Gaps mean the API accepts the setting and the azurerm resource docs list no matching argument; the provider source was not checked. "
+        }
+      },
       "review": {
         "status": "unconfirmed",
         "note": "Verified against Learn on 2026-10-24 (container-registry-intro): purpose, facts, the AKS edge. Not verified: the RBAC and managed identity (AcrPull, AcrPush), Defender, Private Endpoint and Azure DevOps edges."
