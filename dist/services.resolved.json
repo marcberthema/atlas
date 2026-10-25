@@ -873,7 +873,7 @@
         "changed_at": "2026-10-24"
       },
       "terraform": {
-        "status": "partial",
+        "status": "full",
         "resources": [
           {
             "provider": "azurerm",

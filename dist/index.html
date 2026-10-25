@@ -978,7 +978,7 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
         "changed_at": "2026-10-24"
       },
       "terraform": {
-        "status": "partial",
+        "status": "full",
         "resources": [
           {
             "provider": "azurerm",
@@ -5202,8 +5202,12 @@ document.getElementById('note').textContent='Generated from data/services.json. 
 const chips=document.getElementById('chips');
 chips.innerHTML=tiersShown.map(t=>'<button class="chip" type="button" data-t="'+t+'" aria-pressed="true">'+esc(D.tiers.find(x=>x.tier===t).label)+' <small>('+D.services.filter(s=>s.tier===t).length+')</small></button>').join('');
 
+function tfLab(t){
+  const l=TFLABEL[t.status];
+  return t.status==='full'&&t.gaps.length?['Terraform: full*',l[1]]:l;
+}
 function badges(s){
-  const tf=TFLABEL[s.terraform.status],fr=FRLABEL[s.freshness.status];
+  const tf=tfLab(s.terraform),fr=FRLABEL[s.freshness.status];
   return '<div class="badges"><span class="badge '+tf[1]+'">'+tf[0]+'</span><span class="badge '+fr[1]+'">'+fr[0]+'</span>'+
     (CNBADGE[s.cloud_native.level]?'<span class="badge '+CNBADGE[s.cloud_native.level][1]+'">'+CNBADGE[s.cloud_native.level][0]+'</span>':'')+
     (s.review.status==='unconfirmed'?'<span class="badge warn">unconfirmed</span>':'')+'</div>';
@@ -5256,14 +5260,14 @@ function relGroup(id,dir,ty){
     '<button type="button" class="rel" data-t="'+N[o].tier+'" data-id="'+o+'"><b>'+esc(N[o].name)+'</b>'+(note?'<small>'+esc(note)+'</small>':'')+'</button>').join('')+'</div>';
 }
 function tfBlock(s){
-  const t=s.terraform,lab=TFLABEL[t.status];
+  const t=s.terraform,lab=tfLab(t);
   let h='<h4>Terraform</h4><div class="tf"><span class="badge '+lab[1]+'">'+lab[0]+'</span>';
   if(t.changed_at)h+=' <small>checked '+esc(t.changed_at)+'</small>';
   if(t.first_supported)h+=' <small>· first added in provider version '+esc(t.first_supported)+'</small>';
   if(t.resources.length)h+='<ul>'+t.resources.map(r=>
     '<li><a href="'+safeUrl(r.docs_url)+'" target="_blank" rel="noopener"><code>'+esc(r.type)+'</code></a> <small>'+(r.kind==='data_source'?'data source · ':'')+esc(r.provider)+
     (r.exists===false?' · <b>not found in latest docs</b>':r.since?' · since '+esc(r.since):r.exists?' · no “new” entry in changelogs (predates them or logged differently)':'')+'</small></li>').join('')+'</ul>';
-  if(t.gaps.length)h+='<b>Not covered:</b><ul>'+t.gaps.map(g=>'<li>'+esc(g.what)+(g.alternative?' <small>→ '+esc(g.alternative)+'</small>':'')+'</li>').join('')+'</ul>';
+  if(t.gaps.length)h+='<b>'+(t.status==='full'?'* Not covered (the common uses are):':'Not covered:')+'</b><ul>'+t.gaps.map(g=>'<li>'+esc(g.what)+(g.alternative?' <small>→ '+esc(g.alternative)+'</small>':'')+'</li>').join('')+'</ul>';
   if(t.content.length)h+='<b>Btw, content you can manage:</b><ul>'+t.content.map(c=>'<li>'+esc(c.what)+' <small>→ '+esc(c.how)+'</small></li>').join('')+'</ul>';
   if(t.compared)h+='<div><small>Compared '+esc(t.compared.compared_at)+': API '+esc(t.compared.api_version)+' against '+esc(t.compared.provider)+' '+esc(t.compared.provider_version)+'.</small></div>';
   if(t.fallback)h+='<div>Anything without a dedicated resource: <a href="'+safeUrl(t.fallback.docs_url)+'" target="_blank" rel="noopener"><code>azapi_resource</code></a> with ARM type '+

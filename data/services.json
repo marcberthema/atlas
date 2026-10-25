@@ -908,7 +908,8 @@
             "provider_version": "5.11.0",
             "compared_at": "2026-10-24"
           },
-          "note": "End-user actions (backup, restore, purge, recover) are not configuration and are not counted. Two API-only vault fields have no azurerm argument: createMode (recover a soft-deleted vault, an end-user action) and enableSoftDelete (whether it can still be changed is unconfirmed). Private endpoint connections are configured through the Private Endpoint service."
+          "note": "End-user actions (backup, restore, purge, recover) are not configuration and are not counted. Two API-only vault fields have no azurerm argument: createMode (recover a soft-deleted vault, an end-user action) and enableSoftDelete (whether it can still be changed is unconfirmed). Private endpoint connections are configured through the Private Endpoint service.",
+          "status": "full"
         }
       },
       "review": {
