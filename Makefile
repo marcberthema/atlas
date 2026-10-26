@@ -1,5 +1,5 @@
 PY ?= python3
-TOPICS := azure gitops
+TOPICS := $(shell $(PY) shared/atlas.py ids)
 
 .PHONY: help validate build serve clean
 
@@ -8,6 +8,7 @@ help:  ## List the targets
 	@echo "  make <topic>-<target>  run a topic's own target, e.g. azure-check, azure-ack SERVICE=key-vault, azure-stale"
 
 validate:  ## Validate every topic, and check no verbatim source text is tracked
+	$(PY) shared/atlas.py check
 	@! git ls-files | grep -E '/(snapshots|review)/' || { echo "snapshots or review files are tracked: they must stay local"; exit 1; }
 	@for t in $(TOPICS); do $(MAKE) --no-print-directory -C topics/$$t validate || exit 1; done
 
@@ -21,7 +22,7 @@ serve: build  ## Build and serve dist/ on http://localhost:8000
 clean:  ## Remove generated output
 	rm -rf dist
 
-# make azure-check, make gitops-build, ...
+# make azure-check, make gitops-build, ... (add a rule here when a topic is published)
 azure-%:
 	$(MAKE) -C topics/azure $*
 gitops-%:
