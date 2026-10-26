@@ -14,7 +14,7 @@ DIST = atlas.DIST / "gitops"
 
 def main():
     data = json.loads(DATA.read_text(encoding="utf-8"))
-    assert data.get("title") and isinstance(data.get("sections"), list), "gitops.json needs a title and a sections list"
+    assert data.get("title") and isinstance(data.get("entries"), list), "gitops.json needs a title and an entries list"
     DIST.mkdir(parents=True, exist_ok=True)
     page = TEMPLATE.read_text(encoding="utf-8")
     marker = "/*__DATA__*/"
@@ -22,7 +22,7 @@ def main():
     # "</" would end the script element early
     page = atlas.apply(page.replace(marker, json.dumps(data, ensure_ascii=False).replace("</", "<\\/")), "gitops")
     (DIST / "index.html").write_text(page, encoding="utf-8")
-    print(f"built dist/gitops/index.html ({len(data['sections'])} sections)")
+    print(f"built dist/gitops/index.html ({len(data['entries'])} entries)")
 
 
 if __name__ == "__main__":
