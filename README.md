@@ -33,4 +33,5 @@ under `topics/<id>/`.
 ## Publish
 
 A Cloudflare Worker with static assets named `atlas` serves `dist/` at atlas.marcberthelette.com (`wrangler.jsonc`). It is
-not connected to git: after a merge to `main`, run `make deploy` (validate, build, `wrangler deploy`). `dist/` is committed. The daily GitHub Action (`.github/workflows/daily-check.yml`) refreshes the Azure topic and commits.
+not connected to git. `.github/workflows/deploy.yml` runs `wrangler deploy` when a commit on `main` changes `dist/` (and after the
+daily check commits one). It needs the repo secrets `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID`. `make deploy` does the same by hand. The daily GitHub Action (`.github/workflows/daily-check.yml`) refreshes the Azure topic and commits.
