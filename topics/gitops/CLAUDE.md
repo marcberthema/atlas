@@ -16,5 +16,5 @@ Every entry must record the version analysed (`version.analysed`, its release da
 See the root `CLAUDE.md`. `started` is only `confirmed` when an announcement or release gives the date, not when it is a
 repository creation date.
 
-Refreshing: latest releases come from `gh api repos/<owner>/<repo>/releases/latest`, CNCF levels from cncf.io/projects/<name>.
-Update `checked`, `version` and the facts that changed together.
+Refreshing: `make check` lists what changed (releases, archived repositories, CNCF levels; `LINKS=1` for source links) and writes nothing.
+Review each difference, then update `checked`, `version` and the facts that changed together. Add a `track` to every new entry.

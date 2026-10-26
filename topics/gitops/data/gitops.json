@@ -23,6 +23,11 @@
       "id": "config",
       "label": "Helm, Kustomize and alternatives",
       "about": "Tools that turn a package or a set of patches into Kubernetes manifests."
+    },
+    {
+      "id": "secrets",
+      "label": "Secrets",
+      "about": "Ways to keep secrets out of Git in plain text and still deploy them with GitOps."
     }
   ],
   "entries": [
@@ -48,6 +53,9 @@
         "analysed": "v1.0.0",
         "released": "2021-10-08",
         "checked": "2026-10-26"
+      },
+      "track": {
+        "github": "open-gitops/documents"
       },
       "sections": [
         {
@@ -108,6 +116,10 @@
         "released": "2026-10-20",
         "docs": "stable docs",
         "checked": "2026-10-26"
+      },
+      "track": {
+        "github": "argoproj/argo-cd",
+        "cncf": "argo"
       },
       "sections": [
         {
@@ -232,7 +244,9 @@
         "kargo",
         "argocd-image-updater",
         "helm",
-        "kustomize"
+        "kustomize",
+        "sealed-secrets",
+        "external-secrets"
       ],
       "notes": [
         "Origin date: the first GitHub release is 2018-03-13 and a Red Hat and Intuit press release says Intuit open sourced it in January 2018. An engineer interview says March 2018. Unconfirmed.",
@@ -383,6 +397,10 @@
         "docs": "fluxcd.io docs, v2.10",
         "checked": "2026-10-26"
       },
+      "track": {
+        "github": "fluxcd/flux2",
+        "cncf": "flux"
+      },
       "sections": [
         {
           "title": "Controllers and objects",
@@ -446,7 +464,8 @@
         "flux-v1",
         "flux-operator",
         "flagger",
-        "weave-gitops"
+        "weave-gitops",
+        "sops"
       ],
       "notes": [
         "Whether Flux core has a web UI is unconfirmed here. Flux Operator, a separate project, adds one.",
@@ -524,6 +543,9 @@
         "docs": "docs v0.16",
         "checked": "2026-10-26"
       },
+      "track": {
+        "github": "rancher/fleet"
+      },
       "sections": [
         {
           "title": "How it works",
@@ -584,6 +606,9 @@
         "docs": "migration page",
         "checked": "2026-10-26"
       },
+      "track": {
+        "github": "fluxcd/flux"
+      },
       "sections": [
         {
           "title": "Status",
@@ -630,6 +655,10 @@
         "released": "2023-12-06",
         "docs": "GitHub releases",
         "checked": "2026-10-26"
+      },
+      "track": {
+        "github": "weaveworks/weave-gitops",
+        "tag": "^v\\d+\\.\\d+\\.\\d+$"
       },
       "sections": [
         {
@@ -679,6 +708,9 @@
         "docs": "GitHub README",
         "checked": "2026-10-26"
       },
+      "track": {
+        "github": "GoogleContainerTools/config-sync"
+      },
       "sections": [
         {
           "title": "Notes",
@@ -721,6 +753,10 @@
         "released": "2026-07-20",
         "docs": "GitHub release",
         "checked": "2026-10-26"
+      },
+      "track": {
+        "github": "kubevela/kubevela",
+        "cncf": "kubevela"
       },
       "sections": [
         {
@@ -770,6 +806,9 @@
         "docs": "fluxoperator.dev",
         "checked": "2026-10-26"
       },
+      "track": {
+        "github": "controlplaneio-fluxcd/flux-operator"
+      },
       "sections": [
         {
           "title": "Notes",
@@ -813,6 +852,10 @@
         "released": "2026-10-12",
         "docs": "stable docs",
         "checked": "2026-10-26"
+      },
+      "track": {
+        "github": "argoproj/argo-rollouts",
+        "cncf": "argo"
       },
       "sections": [
         {
@@ -870,6 +913,10 @@
         "docs": "docs.flagger.app",
         "checked": "2026-10-26"
       },
+      "track": {
+        "github": "fluxcd/flagger",
+        "cncf": "flux"
+      },
       "sections": [
         {
           "title": "How it works",
@@ -925,6 +972,9 @@
         "docs": "kargo.io",
         "checked": "2026-10-26"
       },
+      "track": {
+        "github": "akuity/kargo"
+      },
       "sections": [
         {
           "title": "What it does",
@@ -973,6 +1023,9 @@
         "docs": "GitHub release",
         "checked": "2026-10-26"
       },
+      "track": {
+        "github": "argoproj-labs/argocd-image-updater"
+      },
       "sections": [
         {
           "title": "Notes",
@@ -1015,6 +1068,11 @@
         "docs": "helm.sh docs (some pages not yet updated for Helm 4)",
         "checked": "2026-10-26"
       },
+      "track": {
+        "github": "helm/helm",
+        "tag": "^v4\\.",
+        "cncf": "helm"
+      },
       "sections": [
         {
           "title": "Concepts",
@@ -1027,7 +1085,7 @@
           "title": "Commands",
           "items": [
             "helm install <release> <chart> (or --generate-name), helm upgrade, helm rollback <release> <revision>, helm uninstall (--keep-history keeps the record), helm list, helm history, helm status.",
-            "helm show values, helm get values, helm create, helm lint, helm package. helm template renders without installing. The page read does not describe template, --dry-run or pull.",
+            "helm show values, helm get values, helm create, helm lint, helm package. helm template renders locally and prints the result. See Render and upgrade flags.",
             "--wait holds the command until pods are ready, PVCs are bound and Services have IPs, up to --timeout (default 5m0s). After the timeout the release is marked FAILED."
           ]
         },
@@ -1055,6 +1113,55 @@
             "Go templates plus the Sprig library, over 60 functions. Values are read from .Values, and .Release.Name is the release name.",
             "Pipelines: .Values.favorite.drink | repeat 5 | quote. The piped value is the last argument. quote the strings you read from values. default gives a fallback for computed values.",
             "lookup reads live cluster objects and returns empty when nothing matches. It does not run in --dry-run, so test it with --dry-run=server."
+          ]
+        },
+        {
+          "title": "Built-in objects",
+          "items": [
+            "Release: Name, Namespace, IsInstall, IsUpgrade, Revision (starts at 1, goes up on each upgrade or rollback), Service (always Helm).",
+            "Values: from values.yaml and the files and flags you pass. Chart: the fields of Chart.yaml, such as .Chart.Name and .Chart.Version.",
+            "Files: reads non-template files of the chart (Get, GetBytes, Glob, Lines, AsSecrets, AsConfig). Capabilities: APIVersions.Has, KubeVersion, HelmVersion. Template: Name and BasePath of the current template."
+          ]
+        },
+        {
+          "title": "Named templates",
+          "items": [
+            "define creates a named template. It prints nothing until a template or include call renders it. Put a {{/* comment */}} above each define.",
+            "Template names are global and the last one loaded wins. Prefix the name with the chart name, for example mychart.labels. A version in the name helps between chart versions.",
+            "Files in templates/ that start with _ are not rendered as manifests. _helpers.tpl is the usual place for helpers.",
+            "A named template only sees what you pass. Call it with . to give it the top-level scope. Inside it, $ is that passed-in scope.",
+            "template is an action, so its output cannot be piped. include is a function and can be piped, as in {{- include \"mychart.app\" . | nindent 4 }}. The docs call include preferable."
+          ]
+        },
+        {
+          "title": "Flow control and whitespace",
+          "items": [
+            "if / else if / else, closed by end. False is: boolean false, zero, an empty string, nil, and an empty map, slice, tuple, dict or array. Everything else is true.",
+            "with sets . to a value and skips the block when it is empty. Inside it, . cannot reach parent objects, so use $.Release.Name.",
+            "range loops over a list and sets . to each item. $ always refers to the root scope.",
+            "{{- trims whitespace on the left, -}} on the right, and newlines count as whitespace. The space after the dash matters: {{- 3 }} prints 3, {{-3 }} prints -3. indent and nindent are an alternative to managing spaces by hand."
+          ]
+        },
+        {
+          "title": "Common patterns",
+          "items": [
+            "required fails rendering with your message when a value is empty: required \"A valid foo is required!\" .Values.foo. The tips page recommends it for values that must be set.",
+            "tpl evaluates a string as a template, for template strings passed in as values.",
+            "include with toYaml and nindent puts a block of YAML at the right indent: {{- include \"toYaml\" $value | nindent 2 }}.",
+            "Quote strings with quote, but not integers, which can break parsing in Kubernetes. Env var values are the exception and must be strings.",
+            "Roll a Deployment when a ConfigMap changes: add a checksum/config annotation using sha256sum of the ConfigMap's rendered output. This replaces the --recreate-pods flag, which is deprecated.",
+            "helm.sh/resource-policy: keep stops Helm deleting a resource on uninstall, upgrade or rollback. The resource is then orphaned.",
+            "Templates run again on every upgrade, so random output (for example a generated password) differs each time and updates the resource."
+          ]
+        },
+        {
+          "title": "Render and upgrade flags",
+          "items": [
+            "helm template renders locally. Anything normally looked up in the cluster is faked, and server-side checks such as API support are skipped. -s/--show-only renders chosen templates, --include-crds adds CRDs, --api-versions and --kube-version set Capabilities, --set, --set-string, --set-json, --set-file and -f supply values.",
+            "--dry-run takes none, client or server. server validates against the cluster and needs connectivity.",
+            "helm upgrade --install installs when there is no release. --rollback-on-failure (formerly --atomic) rolls back on failure. --wait takes a strategy: watcher, hookOnly or legacy. A bare --wait means watcher and the default is hookOnly. --timeout applies to each Kubernetes operation, default 5m0s.",
+            "--reuse-values keeps the previous release's values and ignores new chart defaults. --reset-values uses the chart defaults. --reset-then-reuse-values resets to the new chart's defaults and then reapplies the previous release's values.",
+            "--force-replace replaces resources and --force-conflicts takes over fields in server-side apply (--force is the old name). --history-max defaults to 10. --server-side takes true, false or auto (default auto). --cleanup-on-fail deletes resources created by a failed upgrade."
           ]
         },
         {
@@ -1118,7 +1225,7 @@
       ],
       "notes": [
         "Start date is the repository creation date. The release date for 4.0.0 is on GitHub as 2025-11-12 and in the announcement as 2025-11-12.",
-        "Not covered by the pages read: --atomic, --dry-run and helm template details, named templates, include, tpl, required, toYaml, and flow control. Add them from the template guide pages."
+        "The registries page says it is not yet fully updated for Helm 4. Flags are read from the Helm 4.3.1 command pages. Helm 3 names (--atomic, --force) still work with a warning."
       ],
       "sources": [
         {
@@ -1161,6 +1268,30 @@
         {
           "label": "helm/helm releases",
           "url": "https://github.com/helm/helm/releases"
+        },
+        {
+          "label": "Named templates",
+          "url": "https://helm.sh/docs/chart_template_guide/named_templates/"
+        },
+        {
+          "label": "Flow control",
+          "url": "https://helm.sh/docs/chart_template_guide/control_structures/"
+        },
+        {
+          "label": "Built-in objects",
+          "url": "https://helm.sh/docs/chart_template_guide/builtin_objects/"
+        },
+        {
+          "label": "Chart tips and tricks",
+          "url": "https://helm.sh/docs/howto/charts_tips_and_tricks/"
+        },
+        {
+          "label": "helm template",
+          "url": "https://helm.sh/docs/helm/helm_template/"
+        },
+        {
+          "label": "helm upgrade",
+          "url": "https://helm.sh/docs/helm/helm_upgrade/"
         }
       ]
     },
@@ -1188,6 +1319,10 @@
         "released": "2026-10-08",
         "docs": "kubectl.docs.kubernetes.io and kubernetes.io task page",
         "checked": "2026-10-26"
+      },
+      "track": {
+        "github": "kubernetes-sigs/kustomize",
+        "tag": "^kustomize/"
       },
       "sections": [
         {
@@ -1325,6 +1460,9 @@
         "docs": "GitHub README (updated May 2025)",
         "checked": "2026-10-26"
       },
+      "track": {
+        "github": "helmfile/helmfile"
+      },
       "sections": [
         {
           "title": "What it does",
@@ -1374,6 +1512,10 @@
         "released": "2026-10-19",
         "docs": "carvel.dev; kapp-controller v0.60.10 (2026-10-20)",
         "checked": "2026-10-26"
+      },
+      "track": {
+        "github": "carvel-dev/ytt",
+        "cncf": "carvel"
       },
       "sections": [
         {
@@ -1442,6 +1584,9 @@
         "docs": "jsonnet.org",
         "checked": "2026-10-26"
       },
+      "track": {
+        "github": "google/jsonnet"
+      },
       "sections": [
         {
           "title": "Notes",
@@ -1494,6 +1639,9 @@
         "docs": "tanka.dev",
         "checked": "2026-10-26"
       },
+      "track": {
+        "github": "grafana/tanka"
+      },
       "sections": [
         {
           "title": "Notes",
@@ -1541,6 +1689,9 @@
         "docs": "GitHub README",
         "checked": "2026-10-26"
       },
+      "track": {
+        "github": "ksonnet/ksonnet"
+      },
       "sections": [
         {
           "title": "Status",
@@ -1583,6 +1734,10 @@
         "released": "2026-09-25",
         "docs": "GitHub README",
         "checked": "2026-10-26"
+      },
+      "track": {
+        "github": "kptdev/kpt",
+        "tag": "^v\\d"
       },
       "sections": [
         {
@@ -1628,6 +1783,9 @@
         "docs": "cdk8s.io",
         "checked": "2026-10-26"
       },
+      "track": {
+        "github": "cdk8s-team/cdk8s-core"
+      },
       "sections": [
         {
           "title": "Notes",
@@ -1672,6 +1830,9 @@
         "released": "2026-10-21",
         "docs": "timoni.sh",
         "checked": "2026-10-26"
+      },
+      "track": {
+        "github": "stefanprodan/timoni"
       },
       "sections": [
         {
@@ -1724,6 +1885,10 @@
         "docs": "kcl-lang.io",
         "checked": "2026-10-26"
       },
+      "track": {
+        "github": "kcl-lang/kcl",
+        "cncf": "kcl"
+      },
       "sections": [
         {
           "title": "Notes",
@@ -1745,6 +1910,311 @@
         {
           "label": "kcl-lang/kcl",
           "url": "https://github.com/kcl-lang/kcl"
+        }
+      ]
+    },
+    {
+      "id": "sealed-secrets",
+      "name": "Sealed Secrets",
+      "group": "secrets",
+      "level": "overview",
+      "summary": "Encrypt a Secret with a public key and commit the SealedSecret. Only the controller in the cluster can decrypt it.",
+      "status": "active",
+      "started": {
+        "date": "2017-05-29",
+        "basis": "GitHub repository created",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "Not a CNCF project. Hosted in the bitnami GitHub organisation."
+      },
+      "license": "Apache-2.0",
+      "maintainer": "Bitnami (from the GitHub organisation)",
+      "version": {
+        "name": "Sealed Secrets",
+        "analysed": "v0.41.2",
+        "released": "2026-10-26",
+        "docs": "GitHub README",
+        "checked": "2026-10-26"
+      },
+      "track": {
+        "github": "bitnami/sealed-secrets",
+        "tag": "^v\\d"
+      },
+      "sections": [
+        {
+          "title": "How it works",
+          "items": [
+            "A cluster-side controller and a CLI, kubeseal. kubeseal encrypts a Secret with the controller's public certificate (asymmetric). The result is a SealedSecret custom resource with spec.encryptedData.",
+            "The controller unseals it into a normal Secret that it owns, so deleting the SealedSecret deletes the Secret. The public certificate is not secret and can be saved with --fetch-cert and used offline with --cert.",
+            "Scopes: strict (default, bound to name and namespace), namespace-wide, cluster-wide."
+          ]
+        },
+        {
+          "title": "Keys",
+          "items": [
+            "A new sealing key is created every 30 days by default (--key-renew-period, 0 disables). Old keys are kept so old SealedSecrets still decrypt. kubeseal --re-encrypt re-seals with the latest key.",
+            "Renewing the sealing key does not rotate the secret values. If a key leaks, change the secrets.",
+            "Back up the private keys (Secrets labelled sealedsecrets.bitnami.com/sealed-secrets-key). Without them, a lost cluster means lost data. kubeseal --recovery-unseal decrypts with backed-up keys."
+          ]
+        },
+        {
+          "title": "GitOps",
+          "items": [
+            "Argo CD's secret-management docs name Sealed Secrets as a recommended in-cluster approach. Nothing else about Flux or Argo CD integration was researched."
+          ]
+        }
+      ],
+      "notes": [
+        "The README says only the latest version is supported for production. No maintenance notice was on the page read, and nothing was checked about Bitnami and Broadcom changes."
+      ],
+      "sources": [
+        {
+          "label": "bitnami-labs/sealed-secrets README",
+          "url": "https://github.com/bitnami-labs/sealed-secrets"
+        },
+        {
+          "label": "Argo CD: secret management",
+          "url": "https://argo-cd.readthedocs.io/en/stable/operator-manual/secret-management/"
+        }
+      ]
+    },
+    {
+      "id": "external-secrets",
+      "name": "External Secrets Operator",
+      "group": "secrets",
+      "level": "overview",
+      "summary": "Reads secrets from an external store and writes them as Kubernetes Secrets. Git holds only the reference, never the value.",
+      "status": "active",
+      "started": {
+        "date": "2020-11-17",
+        "basis": "GitHub repository created",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "sandbox",
+        "text": "Accepted 2022-07-26, sandbox. No incubation date on the page."
+      },
+      "license": "Apache-2.0",
+      "maintainer": "Community. Started by GoDaddy; External Secrets Inc. and Pento also maintain it.",
+      "version": {
+        "name": "External Secrets Operator",
+        "analysed": "v2.14.0",
+        "released": "2026-10-23",
+        "docs": "external-secrets.io docs",
+        "checked": "2026-10-26"
+      },
+      "track": {
+        "github": "external-secrets/external-secrets",
+        "tag": "^v\\d",
+        "cncf": "external-secrets"
+      },
+      "sections": [
+        {
+          "title": "How it works",
+          "items": [
+            "ExternalSecret, SecretStore and ClusterSecretStore are the core resources. The docs navigation also lists ClusterExternalSecret, PushSecret and ClusterPushSecret.",
+            "Providers named on the page: AWS Secrets Manager, HashiCorp Vault, Google Secret Manager, Azure Key Vault, IBM Cloud Secrets Manager, CyberArk, Pulumi ESC, and many more.",
+            "Argo CD's docs name it as a recommended in-cluster approach."
+          ]
+        }
+      ],
+      "notes": [
+        "Refresh interval and sync details were not on the page read. The latest GitHub release is a Helm chart tag, so the version is the latest v-tag, v2.14.0."
+      ],
+      "sources": [
+        {
+          "label": "External Secrets Operator",
+          "url": "https://external-secrets.io/latest/"
+        },
+        {
+          "label": "CNCF: External Secrets",
+          "url": "https://www.cncf.io/projects/external-secrets/"
+        },
+        {
+          "label": "external-secrets/external-secrets",
+          "url": "https://github.com/external-secrets/external-secrets"
+        }
+      ]
+    },
+    {
+      "id": "sops",
+      "name": "SOPS",
+      "group": "secrets",
+      "level": "overview",
+      "summary": "An editor and encryptor for files in YAML, JSON, ENV, INI and binary. Commit the encrypted file and decrypt it where it is deployed.",
+      "status": "active",
+      "started": {
+        "date": "2015",
+        "basis": "the site says it started at Mozilla in 2015; the repository was created 2015-08-13",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "sandbox",
+        "text": "Accepted 2023-05-17, sandbox."
+      },
+      "license": "MPL-2.0",
+      "maintainer": "A group of maintainers (it started at Mozilla)",
+      "version": {
+        "name": "SOPS",
+        "analysed": "v3.13.3",
+        "released": "2026-07-23",
+        "docs": "getsops.io docs",
+        "checked": "2026-10-26"
+      },
+      "track": {
+        "github": "getsops/sops",
+        "cncf": "sops"
+      },
+      "sections": [
+        {
+          "title": "What it is",
+          "items": [
+            "Encrypts with AWS KMS, GCP KMS, Azure Key Vault, HuaweiCloud KMS, age and PGP. Within a major version the file format from 1.0 is kept.",
+            "How it chooses what to encrypt (values or keys) was not on the page read. The Flux guide uses an encrypted_regex of ^(data|stringData)$ in .sops.yaml creation_rules, so only those fields are encrypted."
+          ]
+        },
+        {
+          "title": "With Flux",
+          "items": [
+            "Kustomization spec.decryption with provider sops. The private key is a Secret in flux-system: sops-age (key name ends in .agekey), sops-gpg or sops-hcvault (key name sops.vault-token).",
+            "For AWS or GCP KMS no secretRef is needed. Bind an IAM role to the kustomize-controller service account.",
+            "source-controller pulls, kustomize-controller decrypts with SOPS and applies. Do not apply the encrypted file with kubectl.",
+            "If a patch adds plaintext fields that match encrypted_regex, decryption can fail. Keep secret values in the encrypted file."
+          ]
+        },
+        {
+          "title": "With Argo CD",
+          "items": [
+            "Not built in and not researched here. Argo CD's docs list plugins that inject secrets during rendering as the discouraged approach."
+          ]
+        }
+      ],
+      "notes": [
+        "Start year only: the site gives 2015 without a date."
+      ],
+      "sources": [
+        {
+          "label": "SOPS docs",
+          "url": "https://getsops.io/docs/"
+        },
+        {
+          "label": "Flux: SOPS guide",
+          "url": "https://fluxcd.io/flux/guides/mozilla-sops/"
+        },
+        {
+          "label": "CNCF: SOPS",
+          "url": "https://www.cncf.io/projects/sops/"
+        },
+        {
+          "label": "getsops/sops",
+          "url": "https://github.com/getsops/sops"
+        }
+      ]
+    },
+    {
+      "id": "secrets-store-csi",
+      "name": "Secrets Store CSI Driver",
+      "group": "secrets",
+      "level": "overview",
+      "summary": "Mounts secrets, keys and certificates from an external store into a pod as a volume, using a SecretProviderClass.",
+      "status": "active",
+      "started": {
+        "date": "2019-01-03",
+        "basis": "GitHub repository created",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "Not a CNCF project. Hosted in kubernetes-sigs."
+      },
+      "license": "Apache-2.0",
+      "maintainer": "Kubernetes SIGs (the page does not name the SIG)",
+      "version": {
+        "name": "Secrets Store CSI Driver",
+        "analysed": "v1.6.1",
+        "released": "2026-09-09",
+        "docs": "secrets-store-csi-driver.sigs.k8s.io",
+        "checked": "2026-10-26"
+      },
+      "track": {
+        "github": "kubernetes-sigs/secrets-store-csi-driver"
+      },
+      "sections": [
+        {
+          "title": "How it works",
+          "items": [
+            "The driver is secrets-store.csi.k8s.io. A SecretProviderClass says which provider and which secrets. Pods mount them through a CSI inline volume.",
+            "Providers listed: Akeyless, AWS, Azure, Conjur, GCP, OpenBao, Vault.",
+            "Stable: several providers, SecretProviderClass, inline volume, several secret objects in one volume, Linux and Windows. Alpha: auto rotation and syncing to Kubernetes Secrets.",
+            "A patch release about monthly, and the latest two minor versions are supported.",
+            "Argo CD's docs name it as a recommended in-cluster approach."
+          ]
+        }
+      ],
+      "notes": [
+        "The alpha labels come from the project page and may be out of date. Not checked against the release notes."
+      ],
+      "sources": [
+        {
+          "label": "Secrets Store CSI Driver",
+          "url": "https://secrets-store-csi-driver.sigs.k8s.io/"
+        },
+        {
+          "label": "kubernetes-sigs/secrets-store-csi-driver",
+          "url": "https://github.com/kubernetes-sigs/secrets-store-csi-driver"
+        }
+      ]
+    },
+    {
+      "id": "argocd-vault-plugin",
+      "name": "Argo CD Vault Plugin",
+      "group": "secrets",
+      "level": "ref",
+      "summary": "Retrieves secrets from a secret manager and injects them into manifests while Argo CD renders them. The approach Argo CD discourages.",
+      "status": "inactive",
+      "started": {
+        "date": "2020-10-12",
+        "basis": "GitHub repository created",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "Hosted in argoproj-labs. Not a CNCF project of its own."
+      },
+      "license": "Apache-2.0",
+      "version": {
+        "name": "argocd-vault-plugin",
+        "analysed": "v1.18.1",
+        "released": "2024-06-07",
+        "docs": "GitHub README",
+        "checked": "2026-10-26"
+      },
+      "track": {
+        "github": "argoproj-labs/argocd-vault-plugin"
+      },
+      "sections": [
+        {
+          "title": "Status",
+          "items": [
+            "Works without an operator or CRD and can inject into Deployments and ConfigMaps as well as Secrets. Supports HashiCorp Vault, IBM Cloud Secrets Manager, AWS Secrets Manager and others.",
+            "Argo CD's docs say they strongly caution against rendering secrets. Argo CD must then read the secrets and Redis caches them in plaintext. It stays supported but gets no new features.",
+            "No deprecation notice is on the README. The last release is 2024-06-07 and the last repository push was 2024-12-18, so inactive is a judgement."
+          ]
+        }
+      ],
+      "notes": [
+        "Inactive is judged from the release history, not stated by the project."
+      ],
+      "sources": [
+        {
+          "label": "argoproj-labs/argocd-vault-plugin",
+          "url": "https://github.com/argoproj-labs/argocd-vault-plugin"
+        },
+        {
+          "label": "Argo CD: secret management",
+          "url": "https://argo-cd.readthedocs.io/en/stable/operator-manual/secret-management/"
         }
       ]
     }
@@ -1933,6 +2403,52 @@
             "Packages edited by functions.",
             "Packages with a Kptfile.",
             "Inventory-based pruning."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "secrets",
+      "title": "Secrets in GitOps",
+      "about": "Where the secret lives and where it becomes a Kubernetes Secret.",
+      "columns": [
+        "What Git holds",
+        "Where it is decrypted or fetched"
+      ],
+      "rows": [
+        {
+          "entry": "sealed-secrets",
+          "cells": [
+            "A SealedSecret, encrypted with the controller's public key.",
+            "The controller in the cluster."
+          ]
+        },
+        {
+          "entry": "external-secrets",
+          "cells": [
+            "An ExternalSecret that points at the store. No value.",
+            "The operator reads the external store and writes a Secret."
+          ]
+        },
+        {
+          "entry": "sops",
+          "cells": [
+            "The file with its values encrypted.",
+            "Flux's kustomize-controller, when applying. For Argo CD not researched."
+          ]
+        },
+        {
+          "entry": "secrets-store-csi",
+          "cells": [
+            "A SecretProviderClass that points at the store. No value.",
+            "The CSI driver mounts the secret into the pod."
+          ]
+        },
+        {
+          "entry": "argocd-vault-plugin",
+          "cells": [
+            "Manifests with placeholders.",
+            "Argo CD's repository server, while rendering. Discouraged."
           ]
         }
       ]

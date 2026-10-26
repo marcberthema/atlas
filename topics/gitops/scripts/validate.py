@@ -51,6 +51,11 @@ def main():
             bad.append(f"started needs date, basis and confirmed: {i}")
         if s.get("confirmed") and not DATE.match(s.get("date", "")):
             bad.append(f"started is confirmed but not a full date: {i}")
+        t = e.get("track")
+        if not t:
+            warn.append(f"no track (the update check skips it): {i}")
+        elif not re.match(r"^[\w.-]+/[\w.-]+$", t.get("github", "")):
+            bad.append(f"track.github needs owner/repo: {i}")
         for src in e.get("sources", []):
             if not src.get("label") or not src.get("url", "").startswith("https://"):
                 bad.append(f"source needs a label and an https url: {i}")
