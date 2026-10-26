@@ -250,7 +250,8 @@
       ],
       "notes": [
         "Origin date: the first GitHub release is 2018-03-13 and a Red Hat and Intuit press release says Intuit open sourced it in January 2018. An engineer interview says March 2018. Unconfirmed.",
-        "The docs pages show no Argo CD version. They are the stable docs read on 2026-10-26, when the latest release was v3.5.6."
+        "The docs pages show no Argo CD version. They are the stable docs read on 2026-10-26, when the latest release was v3.5.6.",
+        "To do, once a test Argo CD is running: compare the API (/swagger-ui on the server) with the CLI commands and the web UI, to list what only one of them can do. Known so far: argocd admin works on the cluster directly, not through the API server; the web terminal is a UI feature (off by default) with no CLI command named in its docs. Everything else is unconfirmed."
       ],
       "sources": [
         {
