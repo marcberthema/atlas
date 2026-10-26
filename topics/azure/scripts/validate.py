@@ -56,6 +56,10 @@ def main():
         cn = model.deep_merge(s["fetched"], s["manual"]).get("cloud_native")
         if cn and (cn.get("level") not in levels or not cn.get("note")):
             bad.append(f"cloud_native needs a level from the scale and a note: {s['id']}")
+    for s in data["services"]:
+        dated = [u for u, f in s["freshness"].get("sources", {}).items() if f.get("ms_date") or f.get("updated_at")]
+        if not dated:
+            warn.append(f"no source page with a date, so no version is shown: {s['id']}")
     cost_levels = {c["level"] for c in data["cost_scale"]}
     for s in data["services"]:
         c = model.deep_merge(s["fetched"], s["manual"]).get("cost")

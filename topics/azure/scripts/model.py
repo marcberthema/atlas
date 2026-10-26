@@ -4,6 +4,7 @@ import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
+SITE = ROOT.parent.parent  # the Atlas repo root: shared/, topics.json, dist/
 DATA = ROOT / "data" / "services.json"
 
 TF_KINDS = {"resource": "resources", "data_source": "data-sources"}
@@ -94,6 +95,7 @@ def resolve_terraform(data, svc, merged):
         "fallback": fallback,
         "note": manual.get("note", ""),
         "changed_at": svc["fetched"].get("terraform", {}).get("changed_at"),
+        "provider_versions": {p: providers[p]["latest_version"] for p in sorted({t["provider"] for t in tracked} | ({"azapi"} if arm_types else set()))},
     }
 
 
@@ -111,7 +113,8 @@ def resolve(data):
             "facts": merged.get("facts", []),
             "cloud_native": merged.get("cloud_native", {"level": "unrated", "note": ""}),
             "cost": merged.get("cost", {"level": "unrated", "confirmed": False, "note": "", "billed": "", "sources": [], "checked_at": None}),
-            "docs": [{"url": u} for u in svc["tracking"]["learn_urls"]],
+            "docs": [{"url": u, "page_date": (fresh["sources"].get(u, {}).get("ms_date") or "")[:10] or None,
+                      "published": (fresh["sources"].get(u, {}).get("updated_at") or "")[:10] or None} for u in svc["tracking"]["learn_urls"]],
             "review": svc["review"],
             "freshness": {"status": fresh["status"], "changed_at": fresh["changed_at"]},
             "terraform": resolve_terraform(data, svc, merged),

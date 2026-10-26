@@ -1,4 +1,4 @@
-name: Daily check
+name: Daily check (azure topic)
 
 on:
   schedule:
@@ -17,14 +17,14 @@ jobs:
         with:
           python-version: "3.12"
       - name: Check Learn pages and Terraform support
-        run: make check
+        run: make azure-check
       - name: Validate and rebuild
         run: make build
       - name: Summary
         run: |
           python3 - <<'EOF' >> "$GITHUB_STEP_SUMMARY"
           import json
-          d = json.load(open("dist/services.resolved.json"))
+          d = json.load(open("dist/azure/services.resolved.json"))
           print("### Services needing attention")
           for s in d["services"]:
               if s["freshness"]["status"] in ("stale", "error"):
@@ -34,6 +34,6 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data dist
+          git add topics/azure/data dist
           git diff --cached --quiet || git commit -m "Daily check: update freshness and Terraform status"
           git push

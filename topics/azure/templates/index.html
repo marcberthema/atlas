@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Azure Services Map</title>
+<title>Azure with Terraform - Atlas</title>
 <style>
 :root{
   --bg:#fff;--fg:#111;--mut:#555;--acc:#1a3c5e;--rule:#d5dde5;--card:#f6f8fa;
@@ -13,6 +13,7 @@
   --ok:#4caf50;--warn:#d4a72c;--bad:#ef5350;
 }}
 *{box-sizing:border-box}
+/*__BANNER_CSS__*/
 body{font:16px/1.45 system-ui,sans-serif;background:var(--bg);color:var(--fg);margin:0;padding:16px;max-width:1100px;margin-inline:auto}
 h1{font-size:1.4rem;color:var(--acc);margin:0 0 2px}
 .sub{color:var(--mut);margin:0 0 12px;font-size:.95rem}
@@ -82,6 +83,7 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
 .mode button[aria-pressed=true]{background:var(--acc);color:var(--bg);font-weight:600}
 [data-mode=simple] .full{display:none!important}
 </style></head><body>
+<!--__BANNER__-->
 <div class="top">
   <h1>Azure Services Map</h1>
   <div class="mode" id="mode" role="group" aria-label="Switch view"><button type="button" data-m="simple" aria-pressed="true">Simple</button><button type="button" data-m="full" aria-pressed="false">Full</button></div>
@@ -230,6 +232,14 @@ function costBlock(x){
     '<p><small>Checked '+esc(c.checked_at)+(c.confirmed?'':' · not verified against the source yet')+
     c.sources.map(u=>' · <a href="'+safeUrl(u)+'" target="_blank" rel="noopener">'+esc(u.replace(/^https:\/\/(learn\.microsoft\.com|azure\.microsoft\.com)\//,''))+'</a>').join('')+'</small></p></div>';
 }
+function basedOn(x){
+  const t=x.terraform,pv=Object.entries(t.provider_versions).map(([p,v])=>p+' '+v).join(', ');
+  const tf=t.compared?'Terraform: '+t.compared.provider+' '+t.compared.provider_version+' against API '+t.compared.api_version+', compared '+t.compared.compared_at
+    :(pv&&(t.resources.length||t.fallback)?'Terraform: latest provider versions when checked: '+pv:'');
+  const pages=x.docs.map(d=>'<a href="'+safeUrl(d.url)+'" target="_blank" rel="noopener">'+esc(d.url.replace('https://learn.microsoft.com/',''))+'</a> <small>'+
+    (d.page_date?'page dated '+esc(d.page_date):'page date unknown')+(d.published&&d.published!==d.page_date?', published '+esc(d.published):'')+'</small>').join('<br>');
+  return pages||tf?'<h4>Based on</h4><div>'+pages+(pages&&tf?'<br>':'')+(tf?'<small>'+esc(tf)+'</small>':'')+'</div>':'';
+}
 function cnLine(x){
   const c=CN[x.cloud_native.level];
   return c?'<p><b>'+esc(c.label)+'.</b> '+esc(x.cloud_native.note)+'</p>':'';
@@ -241,7 +251,7 @@ function show(){
     head='<h3 id="dtitle">'+esc(x.name)+'</h3><div class="meta">'+esc(x.category)+' · '+TIER[x.tier]+'</div><p class="empty">Not documented yet: only the '+TIER[x.tier]+' tier is in scope. Shown because it is related to a service that is.</p>';
   }else{
     const facts=x.facts.length?'<ul class="facts">'+x.facts.map(f=>'<li>'+esc(f)+'</li>').join('')+'</ul>':'';
-    const docs=x.docs.length?'<h4>Microsoft Learn</h4><div>'+x.docs.map(d=>'<a href="'+safeUrl(d.url)+'" target="_blank" rel="noopener">'+esc(d.url.replace('https://learn.microsoft.com/',''))+'</a>').join('<br>')+'</div>':'';
+    const docs=basedOn(x);
     head='<h3 id="dtitle">'+esc(x.name)+'</h3><div class="meta">'+esc(x.category)+' · '+TIER[x.tier]+'</div><div>'+esc(x.purpose)+'</div>'+badges(x)+costBlock(x)+'<div class="full">'+cnLine(x)+facts+tfBlock(x)+'</div>'+docs+
       (x.review.status==='unconfirmed'?'<p class="warn full">'+esc(x.review.note)+'</p>':'');
   }

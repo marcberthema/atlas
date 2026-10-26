@@ -340,13 +340,19 @@
       },
       "docs": [
         {
-          "url": "https://learn.microsoft.com/entra/fundamentals/how-to-find-tenant"
+          "url": "https://learn.microsoft.com/entra/fundamentals/how-to-find-tenant",
+          "page_date": "2025-01-14",
+          "published": "2026-04-09"
         },
         {
-          "url": "https://learn.microsoft.com/entra/fundamentals/how-subscriptions-associated-directory"
+          "url": "https://learn.microsoft.com/entra/fundamentals/how-subscriptions-associated-directory",
+          "page_date": "2026-06-19",
+          "published": "2026-06-19"
         },
         {
-          "url": "https://learn.microsoft.com/entra/fundamentals/licensing"
+          "url": "https://learn.microsoft.com/entra/fundamentals/licensing",
+          "page_date": "2026-06-18",
+          "published": "2026-07-28"
         }
       ],
       "review": {
@@ -384,7 +390,11 @@
         "compared": null,
         "fallback": null,
         "note": "Not compared: this service uses the Microsoft Graph API (azuread provider), not an ARM spec, so the API-versus-provider method does not apply yet.",
-        "changed_at": "2026-10-24"
+        "changed_at": "2026-10-24",
+        "provider_versions": {
+          "azuread": "3.10.0",
+          "azurerm": "5.11.0"
+        }
       }
     },
     {
@@ -414,7 +424,9 @@
       },
       "docs": [
         {
-          "url": "https://learn.microsoft.com/azure/governance/management-groups/overview"
+          "url": "https://learn.microsoft.com/azure/governance/management-groups/overview",
+          "page_date": "2024-07-18",
+          "published": "2025-07-21"
         }
       ],
       "review": {
@@ -468,7 +480,11 @@
           ]
         },
         "note": "First pass, not reviewed. A gap means the API accepts the setting and no documented azurerm 5.11.0 argument (in any resource doc) was found; the provider source was not checked and general availability of newer settings is unconfirmed.",
-        "changed_at": "2026-10-24"
+        "changed_at": "2026-10-24",
+        "provider_versions": {
+          "azapi": "2.13.0",
+          "azurerm": "5.11.0"
+        }
       }
     },
     {
@@ -502,10 +518,14 @@
       },
       "docs": [
         {
-          "url": "https://learn.microsoft.com/azure/azure-resource-manager/management/overview"
+          "url": "https://learn.microsoft.com/azure/azure-resource-manager/management/overview",
+          "page_date": "2026-08-04",
+          "published": "2026-08-06"
         },
         {
-          "url": "https://learn.microsoft.com/azure/azure-resource-manager/management/resource-providers-and-types"
+          "url": "https://learn.microsoft.com/azure/azure-resource-manager/management/resource-providers-and-types",
+          "page_date": "2026-02-27",
+          "published": "2026-02-27"
         }
       ],
       "review": {
@@ -535,7 +555,10 @@
         "compared": null,
         "fallback": null,
         "note": "First pass, not reviewed. A gap means the API accepts the setting and no documented azurerm 5.11.0 argument (in any resource doc) was found; the provider source was not checked and general availability of newer settings is unconfirmed.  Not compared against the API spec. azurerm_resource_provider_registration, azurerm_management_lock and the template deployment resources exist; coverage of the rest is unconfirmed.",
-        "changed_at": "2026-10-24"
+        "changed_at": "2026-10-24",
+        "provider_versions": {
+          "azurerm": "5.11.0"
+        }
       }
     },
     {
@@ -564,10 +587,14 @@
       },
       "docs": [
         {
-          "url": "https://learn.microsoft.com/azure/cloud-adoption-framework/ready/landing-zone/design-area/resource-org-subscriptions"
+          "url": "https://learn.microsoft.com/azure/cloud-adoption-framework/ready/landing-zone/design-area/resource-org-subscriptions",
+          "page_date": "2025-12-19",
+          "published": "2026-10-01"
         },
         {
-          "url": "https://learn.microsoft.com/entra/fundamentals/how-subscriptions-associated-directory"
+          "url": "https://learn.microsoft.com/entra/fundamentals/how-subscriptions-associated-directory",
+          "page_date": "2026-06-19",
+          "published": "2026-06-19"
         }
       ],
       "review": {
@@ -626,7 +653,11 @@
           ]
         },
         "note": "Gaps mean the API accepts the setting and the azurerm resource docs list no matching argument; the provider source was not checked. Management group placement is a separate resource (azurerm_management_group_subscription_association), so it is not a gap.",
-        "changed_at": "2026-10-24"
+        "changed_at": "2026-10-24",
+        "provider_versions": {
+          "azapi": "2.13.0",
+          "azurerm": "5.11.0"
+        }
       }
     },
     {
@@ -657,7 +688,9 @@
       },
       "docs": [
         {
-          "url": "https://learn.microsoft.com/azure/azure-resource-manager/management/manage-resource-groups-portal"
+          "url": "https://learn.microsoft.com/azure/azure-resource-manager/management/manage-resource-groups-portal",
+          "page_date": "2026-02-27",
+          "published": "2026-03-04"
         }
       ],
       "review": {
@@ -698,7 +731,11 @@
           ]
         },
         "note": "First pass, not reviewed. A gap means the API accepts the setting and no documented azurerm 5.11.0 argument (in any resource doc) was found; the provider source was not checked and general availability of newer settings is unconfirmed.  Not compared against the API spec (spec path not found by the script). A resource group is name, location, tags and managed-by; unconfirmed.",
-        "changed_at": "2026-10-24"
+        "changed_at": "2026-10-24",
+        "provider_versions": {
+          "azapi": "2.13.0",
+          "azurerm": "5.11.0"
+        }
       }
     },
     {
@@ -728,10 +765,14 @@
       },
       "docs": [
         {
-          "url": "https://learn.microsoft.com/entra/fundamentals/whatis"
+          "url": "https://learn.microsoft.com/entra/fundamentals/whatis",
+          "page_date": "2026-06-18",
+          "published": "2026-09-08"
         },
         {
-          "url": "https://learn.microsoft.com/entra/fundamentals/licensing"
+          "url": "https://learn.microsoft.com/entra/fundamentals/licensing",
+          "page_date": "2026-06-18",
+          "published": "2026-07-28"
         }
       ],
       "review": {
@@ -785,7 +826,10 @@
         "compared": null,
         "fallback": null,
         "note": "Not compared: this service uses the Microsoft Graph API (azuread provider), not an ARM spec, so the API-versus-provider method does not apply yet.",
-        "changed_at": "2026-10-24"
+        "changed_at": "2026-10-24",
+        "provider_versions": {
+          "azuread": "3.10.0"
+        }
       }
     },
     {
@@ -818,10 +862,14 @@
       },
       "docs": [
         {
-          "url": "https://learn.microsoft.com/azure/role-based-access-control/overview"
+          "url": "https://learn.microsoft.com/azure/role-based-access-control/overview",
+          "page_date": "2024-03-12",
+          "published": "2025-10-15"
         },
         {
-          "url": "https://learn.microsoft.com/entra/fundamentals/licensing"
+          "url": "https://learn.microsoft.com/entra/fundamentals/licensing",
+          "page_date": "2026-06-18",
+          "published": "2026-07-28"
         }
       ],
       "review": {
@@ -880,7 +928,11 @@
           ]
         },
         "note": "Role assignments and role definitions compared; every writable property has an azurerm argument.",
-        "changed_at": "2026-10-24"
+        "changed_at": "2026-10-24",
+        "provider_versions": {
+          "azapi": "2.13.0",
+          "azurerm": "5.11.0"
+        }
       }
     },
     {
@@ -911,10 +963,14 @@
       },
       "docs": [
         {
-          "url": "https://learn.microsoft.com/entra/identity/managed-identities-azure-resources/overview"
+          "url": "https://learn.microsoft.com/entra/identity/managed-identities-azure-resources/overview",
+          "page_date": "2025-08-19",
+          "published": "2026-06-15"
         },
         {
-          "url": "https://learn.microsoft.com/entra/fundamentals/licensing"
+          "url": "https://learn.microsoft.com/entra/fundamentals/licensing",
+          "page_date": "2026-06-18",
+          "published": "2026-07-28"
         }
       ],
       "review": {
@@ -968,7 +1024,11 @@
           ]
         },
         "note": "First pass, not reviewed. A gap means the API accepts the setting and no documented azurerm 5.11.0 argument (in any resource doc) was found; the provider source was not checked and general availability of newer settings is unconfirmed. Federated credentials are azurerm_federated_identity_credential.",
-        "changed_at": "2026-10-24"
+        "changed_at": "2026-10-24",
+        "provider_versions": {
+          "azapi": "2.13.0",
+          "azurerm": "5.11.0"
+        }
       }
     },
     {
@@ -998,16 +1058,24 @@
       },
       "docs": [
         {
-          "url": "https://learn.microsoft.com/azure/key-vault/general/overview"
+          "url": "https://learn.microsoft.com/azure/key-vault/general/overview",
+          "page_date": "2026-09-22",
+          "published": "2026-10-06"
         },
         {
-          "url": "https://learn.microsoft.com/azure/key-vault/general/rbac-guide"
+          "url": "https://learn.microsoft.com/azure/key-vault/general/rbac-guide",
+          "page_date": "2026-06-16",
+          "published": "2026-08-21"
         },
         {
-          "url": "https://learn.microsoft.com/azure/key-vault/general/rbac-migration"
+          "url": "https://learn.microsoft.com/azure/key-vault/general/rbac-migration",
+          "page_date": "2026-04-10",
+          "published": "2026-06-12"
         },
         {
-          "url": "https://learn.microsoft.com/azure/key-vault/general/rbac-access-policy"
+          "url": "https://learn.microsoft.com/azure/key-vault/general/rbac-access-policy",
+          "page_date": "2026-03-24",
+          "published": "2026-06-12"
         }
       ],
       "review": {
@@ -1095,7 +1163,11 @@
           ]
         },
         "note": "End-user actions (backup, restore, purge, recover) are not configuration and are not counted. Two API-only vault fields have no azurerm argument: createMode (recover a soft-deleted vault, an end-user action) and enableSoftDelete (whether it can still be changed is unconfirmed). Private endpoint connections are configured through the Private Endpoint service.",
-        "changed_at": "2026-10-24"
+        "changed_at": "2026-10-24",
+        "provider_versions": {
+          "azapi": "2.13.0",
+          "azurerm": "5.11.0"
+        }
       }
     },
     {
@@ -1126,10 +1198,14 @@
       },
       "docs": [
         {
-          "url": "https://learn.microsoft.com/azure/defender-for-cloud/defender-for-cloud-introduction"
+          "url": "https://learn.microsoft.com/azure/defender-for-cloud/defender-for-cloud-introduction",
+          "page_date": "2026-08-10",
+          "published": "2026-08-10"
         },
         {
-          "url": "https://learn.microsoft.com/azure/defender-for-cloud/concept-cloud-security-posture-management"
+          "url": "https://learn.microsoft.com/azure/defender-for-cloud/concept-cloud-security-posture-management",
+          "page_date": "2026-09-11",
+          "published": "2026-09-30"
         }
       ],
       "review": {
@@ -1200,7 +1276,11 @@
           ]
         },
         "note": "First pass, not reviewed. A gap means the API accepts the setting and no documented azurerm 5.11.0 argument (in any resource doc) was found; the provider source was not checked and general availability of newer settings is unconfirmed. Compared the pricing plan; contacts, settings and automation are separate azurerm resources.",
-        "changed_at": "2026-10-24"
+        "changed_at": "2026-10-24",
+        "provider_versions": {
+          "azapi": "2.13.0",
+          "azurerm": "5.11.0"
+        }
       }
     },
     {
@@ -1230,7 +1310,9 @@
       },
       "docs": [
         {
-          "url": "https://learn.microsoft.com/azure/cost-management-billing/costs/overview-cost-management"
+          "url": "https://learn.microsoft.com/azure/cost-management-billing/costs/overview-cost-management",
+          "page_date": "2025-06-27",
+          "published": "2026-05-14"
         }
       ],
       "review": {
@@ -1302,7 +1384,11 @@
           ]
         },
         "note": "Gaps mean the API accepts the setting and the azurerm resource docs list no matching argument; the provider source was not checked. Only the subscription budget resource was compared.",
-        "changed_at": "2026-10-24"
+        "changed_at": "2026-10-24",
+        "provider_versions": {
+          "azapi": "2.13.0",
+          "azurerm": "5.11.0"
+        }
       }
     },
     {
@@ -1329,7 +1415,9 @@
       },
       "docs": [
         {
-          "url": "https://learn.microsoft.com/azure/advisor/advisor-overview"
+          "url": "https://learn.microsoft.com/azure/advisor/advisor-overview",
+          "page_date": "2024-12-02",
+          "published": "2026-05-18"
         }
       ],
       "review": {
@@ -1375,7 +1463,11 @@
           ]
         },
         "note": "First pass, not reviewed. A gap means the API accepts the setting and no documented azurerm 5.11.0 argument (in any resource doc) was found; the provider source was not checked and general availability of newer settings is unconfirmed.  azurerm_advisor_suppression covers suppressions only. Not compared against the API spec.",
-        "changed_at": "2026-10-24"
+        "changed_at": "2026-10-24",
+        "provider_versions": {
+          "azapi": "2.13.0",
+          "azurerm": "5.11.0"
+        }
       }
     },
     {
@@ -1403,7 +1495,9 @@
       },
       "docs": [
         {
-          "url": "https://learn.microsoft.com/azure/governance/resource-graph/overview"
+          "url": "https://learn.microsoft.com/azure/governance/resource-graph/overview",
+          "page_date": "2024-06-18",
+          "published": "2026-08-19"
         }
       ],
       "review": {
@@ -1424,7 +1518,8 @@
         "compared": null,
         "fallback": null,
         "note": "First pass, not reviewed. A gap means the API accepts the setting and no documented azurerm 5.11.0 argument (in any resource doc) was found; the provider source was not checked and general availability of newer settings is unconfirmed.  No azurerm resource found. Resource Graph is a query service; saved queries via Microsoft.ResourceGraph/queries are unconfirmed.",
-        "changed_at": "2026-10-24"
+        "changed_at": "2026-10-24",
+        "provider_versions": {}
       }
     },
     {
@@ -1454,7 +1549,9 @@
       },
       "docs": [
         {
-          "url": "https://learn.microsoft.com/azure/governance/policy/overview"
+          "url": "https://learn.microsoft.com/azure/governance/policy/overview",
+          "page_date": "2025-03-04",
+          "published": "2026-07-08"
         }
       ],
       "review": {
@@ -1546,7 +1643,11 @@
           ]
         },
         "note": "Gaps mean the API accepts the setting and the azurerm resource docs list no matching argument; the provider source was not checked. Compared policy definitions and the subscription-scope assignment; whether the newer settings are generally available is unconfirmed.",
-        "changed_at": "2026-10-24"
+        "changed_at": "2026-10-24",
+        "provider_versions": {
+          "azapi": "2.13.0",
+          "azurerm": "5.11.0"
+        }
       }
     },
     {
@@ -1571,7 +1672,9 @@
       },
       "docs": [
         {
-          "url": "https://learn.microsoft.com/azure/backup/backup-overview"
+          "url": "https://learn.microsoft.com/azure/backup/backup-overview",
+          "page_date": "2026-09-16",
+          "published": "2026-09-16"
         }
       ],
       "review": {
@@ -1655,7 +1758,11 @@
           ]
         },
         "note": "Gaps mean the API accepts the setting and the azurerm resource docs list no matching argument; the provider source was not checked. Resource guard and customer-managed key for the Backup vault are covered by sibling resources (azurerm_data_protection_resource_guard, azurerm_recovery_services_vault_resource_guard_association, azurerm_data_protection_backup_vault_customer_managed_key), so they are not gaps.",
-        "changed_at": "2026-10-24"
+        "changed_at": "2026-10-24",
+        "provider_versions": {
+          "azapi": "2.13.0",
+          "azurerm": "5.11.0"
+        }
       }
     },
     {
@@ -1688,7 +1795,9 @@
       },
       "docs": [
         {
-          "url": "https://learn.microsoft.com/azure/virtual-machines/overview"
+          "url": "https://learn.microsoft.com/azure/virtual-machines/overview",
+          "page_date": "2025-03-27",
+          "published": "2026-08-03"
         }
       ],
       "review": {
@@ -1787,7 +1896,11 @@
           ]
         },
         "note": "First pass, not reviewed. A gap means the API accepts the setting and no documented azurerm 5.11.0 argument (in any resource doc) was found; the provider source was not checked and general availability of newer settings is unconfirmed. Compared azurerm_linux_virtual_machine against the API; the Windows resource and sibling resources (extensions, data disk attachments) were searched for matching arguments only.",
-        "changed_at": "2026-10-24"
+        "changed_at": "2026-10-24",
+        "provider_versions": {
+          "azapi": "2.13.0",
+          "azurerm": "5.11.0"
+        }
       }
     },
     {
@@ -1819,7 +1932,9 @@
       },
       "docs": [
         {
-          "url": "https://learn.microsoft.com/azure/virtual-machines/managed-disks-overview"
+          "url": "https://learn.microsoft.com/azure/virtual-machines/managed-disks-overview",
+          "page_date": "2026-08-20",
+          "published": "2026-08-20"
         }
       ],
       "review": {
@@ -1902,7 +2017,11 @@
           ]
         },
         "note": "First pass, not reviewed. A gap means the API accepts the setting and no documented azurerm 5.11.0 argument (in any resource doc) was found; the provider source was not checked and general availability of newer settings is unconfirmed.",
-        "changed_at": "2026-10-24"
+        "changed_at": "2026-10-24",
+        "provider_versions": {
+          "azapi": "2.13.0",
+          "azurerm": "5.11.0"
+        }
       }
     },
     {
@@ -1933,7 +2052,9 @@
       },
       "docs": [
         {
-          "url": "https://learn.microsoft.com/azure/virtual-machine-scale-sets/overview"
+          "url": "https://learn.microsoft.com/azure/virtual-machine-scale-sets/overview",
+          "page_date": "2026-05-19",
+          "published": "2026-06-24"
         }
       ],
       "review": {
@@ -2008,7 +2129,11 @@
           ]
         },
         "note": "First pass, not reviewed. A gap means the API accepts the setting and no documented azurerm 5.11.0 argument (in any resource doc) was found; the provider source was not checked and general availability of newer settings is unconfirmed. Compared the Linux scale set resource; the Windows and orchestrated resources were searched for matching arguments only.",
-        "changed_at": "2026-10-24"
+        "changed_at": "2026-10-24",
+        "provider_versions": {
+          "azapi": "2.13.0",
+          "azurerm": "5.11.0"
+        }
       }
     },
     {
@@ -2040,10 +2165,14 @@
       },
       "docs": [
         {
-          "url": "https://learn.microsoft.com/azure/app-service/overview"
+          "url": "https://learn.microsoft.com/azure/app-service/overview",
+          "page_date": "2026-08-18",
+          "published": "2026-08-18"
         },
         {
-          "url": "https://learn.microsoft.com/azure/app-service/overview-hosting-plans"
+          "url": "https://learn.microsoft.com/azure/app-service/overview-hosting-plans",
+          "page_date": "2026-08-24",
+          "published": "2026-08-31"
         }
       ],
       "review": {
@@ -2167,7 +2296,11 @@
           ]
         },
         "note": "First pass, not reviewed. A gap means the API accepts the setting and no documented azurerm 5.11.0 argument (in any resource doc) was found; the provider source was not checked and general availability of newer settings is unconfirmed. Compared azurerm_linux_web_app and the service plan. Hosting-plan and site gaps are combined.",
-        "changed_at": "2026-10-24"
+        "changed_at": "2026-10-24",
+        "provider_versions": {
+          "azapi": "2.13.0",
+          "azurerm": "5.11.0"
+        }
       }
     },
     {
@@ -2198,10 +2331,14 @@
       },
       "docs": [
         {
-          "url": "https://learn.microsoft.com/azure/azure-functions/functions-overview"
+          "url": "https://learn.microsoft.com/azure/azure-functions/functions-overview",
+          "page_date": "2026-09-04",
+          "published": "2026-09-21"
         },
         {
-          "url": "https://learn.microsoft.com/azure/azure-functions/flex-consumption-plan"
+          "url": "https://learn.microsoft.com/azure/azure-functions/flex-consumption-plan",
+          "page_date": "2026-09-15",
+          "published": "2026-09-30"
         }
       ],
       "review": {
@@ -2280,7 +2417,11 @@
           ]
         },
         "note": "First pass, not reviewed. A gap means the API accepts the setting and no documented azurerm 5.11.0 argument (in any resource doc) was found; the provider source was not checked and general availability of newer settings is unconfirmed. Compared azurerm_linux_function_app. Flex Consumption has its own resource (azurerm_function_app_flex_consumption); the shared app settings gaps are the same as App Service.",
-        "changed_at": "2026-10-24"
+        "changed_at": "2026-10-24",
+        "provider_versions": {
+          "azapi": "2.13.0",
+          "azurerm": "5.11.0"
+        }
       }
     },
     {
@@ -2311,10 +2452,14 @@
       },
       "docs": [
         {
-          "url": "https://learn.microsoft.com/azure/container-apps/overview"
+          "url": "https://learn.microsoft.com/azure/container-apps/overview",
+          "page_date": "2026-07-07",
+          "published": "2026-07-07"
         },
         {
-          "url": "https://learn.microsoft.com/azure/container-apps/billing"
+          "url": "https://learn.microsoft.com/azure/container-apps/billing",
+          "page_date": "2025-12-09",
+          "published": "2026-03-25"
         }
       ],
       "review": {
@@ -2414,7 +2559,11 @@
           ]
         },
         "note": "First pass, not reviewed. A gap means the API accepts the setting and no documented azurerm 5.11.0 argument (in any resource doc) was found; the provider source was not checked and general availability of newer settings is unconfirmed. Compared the container app and the environment.",
-        "changed_at": "2026-10-24"
+        "changed_at": "2026-10-24",
+        "provider_versions": {
+          "azapi": "2.13.0",
+          "azurerm": "5.11.0"
+        }
       }
     },
     {
@@ -2448,16 +2597,24 @@
       },
       "docs": [
         {
-          "url": "https://learn.microsoft.com/azure/aks/what-is-aks"
+          "url": "https://learn.microsoft.com/azure/aks/what-is-aks",
+          "page_date": "2026-05-26",
+          "published": "2026-10-20"
         },
         {
-          "url": "https://learn.microsoft.com/azure/aks/free-standard-pricing-tiers"
+          "url": "https://learn.microsoft.com/azure/aks/free-standard-pricing-tiers",
+          "page_date": "2026-07-06",
+          "published": "2026-10-20"
         },
         {
-          "url": "https://learn.microsoft.com/azure/aks/use-system-pools"
+          "url": "https://learn.microsoft.com/azure/aks/use-system-pools",
+          "page_date": "2026-04-30",
+          "published": "2026-10-20"
         },
         {
-          "url": "https://learn.microsoft.com/azure/aks/start-stop-cluster"
+          "url": "https://learn.microsoft.com/azure/aks/start-stop-cluster",
+          "page_date": "2026-07-21",
+          "published": "2026-07-21"
         }
       ],
       "review": {
@@ -2556,7 +2713,11 @@
           ]
         },
         "note": "First pass, not reviewed. A gap means the API accepts the setting and no documented azurerm 5.11.0 argument (in any resource doc) was found; the provider source was not checked and general availability of newer settings is unconfirmed. Compared the cluster; node pools are azurerm_kubernetes_cluster_node_pool.",
-        "changed_at": "2026-10-24"
+        "changed_at": "2026-10-24",
+        "provider_versions": {
+          "azapi": "2.13.0",
+          "azurerm": "5.11.0"
+        }
       }
     },
     {
@@ -2588,10 +2749,14 @@
       },
       "docs": [
         {
-          "url": "https://learn.microsoft.com/azure/container-registry/container-registry-intro"
+          "url": "https://learn.microsoft.com/azure/container-registry/container-registry-intro",
+          "page_date": "2026-02-11",
+          "published": "2026-06-12"
         },
         {
-          "url": "https://learn.microsoft.com/azure/container-registry/container-registry-skus"
+          "url": "https://learn.microsoft.com/azure/container-registry/container-registry-skus",
+          "page_date": "2026-10-15",
+          "published": "2026-10-16"
         }
       ],
       "review": {
@@ -2650,7 +2815,11 @@
           ]
         },
         "note": "Gaps mean the API accepts the setting and the azurerm resource docs list no matching argument; the provider source was not checked. ",
-        "changed_at": "2026-10-24"
+        "changed_at": "2026-10-24",
+        "provider_versions": {
+          "azapi": "2.13.0",
+          "azurerm": "5.11.0"
+        }
       }
     },
     {
@@ -2683,7 +2852,9 @@
       },
       "docs": [
         {
-          "url": "https://learn.microsoft.com/azure/virtual-network/virtual-networks-overview"
+          "url": "https://learn.microsoft.com/azure/virtual-network/virtual-networks-overview",
+          "page_date": "2025-07-17",
+          "published": "2026-02-13"
         }
       ],
       "review": {
@@ -2742,7 +2913,11 @@
           ]
         },
         "note": "First pass, not reviewed. A gap means the API accepts the setting and no documented azurerm 5.11.0 argument (in any resource doc) was found; the provider source was not checked and general availability of newer settings is unconfirmed. Compared the virtual network; subnets and peerings are separate azurerm resources.",
-        "changed_at": "2026-10-24"
+        "changed_at": "2026-10-24",
+        "provider_versions": {
+          "azapi": "2.13.0",
+          "azurerm": "5.11.0"
+        }
       }
     },
     {
@@ -2770,7 +2945,9 @@
       },
       "docs": [
         {
-          "url": "https://learn.microsoft.com/azure/virtual-network/virtual-network-network-interface"
+          "url": "https://learn.microsoft.com/azure/virtual-network/virtual-network-network-interface",
+          "page_date": "2025-07-28",
+          "published": "2025-10-08"
         }
       ],
       "review": {
@@ -2841,7 +3018,11 @@
           ]
         },
         "note": "First pass, not reviewed. A gap means the API accepts the setting and no documented azurerm 5.11.0 argument (in any resource doc) was found; the provider source was not checked and general availability of newer settings is unconfirmed.",
-        "changed_at": "2026-10-24"
+        "changed_at": "2026-10-24",
+        "provider_versions": {
+          "azapi": "2.13.0",
+          "azurerm": "5.11.0"
+        }
       }
     },
     {
@@ -2869,7 +3050,9 @@
       },
       "docs": [
         {
-          "url": "https://learn.microsoft.com/azure/virtual-network/network-security-groups-overview"
+          "url": "https://learn.microsoft.com/azure/virtual-network/network-security-groups-overview",
+          "page_date": "2025-07-15",
+          "published": "2025-10-23"
         }
       ],
       "review": {
@@ -2936,7 +3119,11 @@
           ]
         },
         "note": "First pass, not reviewed. A gap means the API accepts the setting and no documented azurerm 5.11.0 argument (in any resource doc) was found; the provider source was not checked and general availability of newer settings is unconfirmed. Rules are a separate resource (azurerm_network_security_rule).",
-        "changed_at": "2026-10-24"
+        "changed_at": "2026-10-24",
+        "provider_versions": {
+          "azapi": "2.13.0",
+          "azurerm": "5.11.0"
+        }
       }
     },
     {
@@ -2966,7 +3153,9 @@
       },
       "docs": [
         {
-          "url": "https://learn.microsoft.com/azure/virtual-network/ip-services/public-ip-addresses"
+          "url": "https://learn.microsoft.com/azure/virtual-network/ip-services/public-ip-addresses",
+          "page_date": "2025-02-04",
+          "published": "2026-02-25"
         }
       ],
       "review": {
@@ -3033,7 +3222,11 @@
           ]
         },
         "note": "First pass, not reviewed. A gap means the API accepts the setting and no documented azurerm 5.11.0 argument (in any resource doc) was found; the provider source was not checked and general availability of newer settings is unconfirmed.",
-        "changed_at": "2026-10-24"
+        "changed_at": "2026-10-24",
+        "provider_versions": {
+          "azapi": "2.13.0",
+          "azurerm": "5.11.0"
+        }
       }
     },
     {
@@ -3063,10 +3256,14 @@
       },
       "docs": [
         {
-          "url": "https://learn.microsoft.com/azure/load-balancer/load-balancer-overview"
+          "url": "https://learn.microsoft.com/azure/load-balancer/load-balancer-overview",
+          "page_date": "2026-07-07",
+          "published": "2026-08-21"
         },
         {
-          "url": "https://learn.microsoft.com/azure/load-balancer/skus"
+          "url": "https://learn.microsoft.com/azure/load-balancer/skus",
+          "page_date": "2024-06-27",
+          "published": "2026-05-04"
         }
       ],
       "review": {
@@ -3141,7 +3338,11 @@
           ]
         },
         "note": "First pass, not reviewed. A gap means the API accepts the setting and no documented azurerm 5.11.0 argument (in any resource doc) was found; the provider source was not checked and general availability of newer settings is unconfirmed. Rules, probes and pools are separate azurerm resources.",
-        "changed_at": "2026-10-24"
+        "changed_at": "2026-10-24",
+        "provider_versions": {
+          "azapi": "2.13.0",
+          "azurerm": "5.11.0"
+        }
       }
     },
     {
@@ -3169,10 +3370,14 @@
       },
       "docs": [
         {
-          "url": "https://learn.microsoft.com/azure/application-gateway/overview"
+          "url": "https://learn.microsoft.com/azure/application-gateway/overview",
+          "page_date": "2026-09-10",
+          "published": "2026-09-10"
         },
         {
-          "url": "https://learn.microsoft.com/azure/frontdoor/front-door-overview"
+          "url": "https://learn.microsoft.com/azure/frontdoor/front-door-overview",
+          "page_date": "2026-08-28",
+          "published": "2026-09-01"
         }
       ],
       "review": {
@@ -3264,7 +3469,11 @@
           ]
         },
         "note": "First pass, not reviewed. A gap means the API accepts the setting and no documented azurerm 5.11.0 argument (in any resource doc) was found; the provider source was not checked and general availability of newer settings is unconfirmed. Compared Application Gateway and the Front Door profile (profile: no gaps found); Front Door routes, rules and origins were not compared.",
-        "changed_at": "2026-10-24"
+        "changed_at": "2026-10-24",
+        "provider_versions": {
+          "azapi": "2.13.0",
+          "azurerm": "5.11.0"
+        }
       }
     },
     {
@@ -3292,10 +3501,14 @@
       },
       "docs": [
         {
-          "url": "https://learn.microsoft.com/azure/dns/dns-overview"
+          "url": "https://learn.microsoft.com/azure/dns/dns-overview",
+          "page_date": "2026-07-28",
+          "published": "2026-08-05"
         },
         {
-          "url": "https://learn.microsoft.com/azure/dns/private-dns-overview"
+          "url": "https://learn.microsoft.com/azure/dns/private-dns-overview",
+          "page_date": "2025-12-16",
+          "published": "2026-10-01"
         }
       ],
       "review": {
@@ -3375,7 +3588,11 @@
           ]
         },
         "note": "First pass, not reviewed. A gap means the API accepts the setting and no documented azurerm 5.11.0 argument (in any resource doc) was found; the provider source was not checked and general availability of newer settings is unconfirmed. Compared DNS zones (API 2018-05-01) and Private DNS zones (API 2024-06-01, no gaps); record types are separate azurerm resources.",
-        "changed_at": "2026-10-24"
+        "changed_at": "2026-10-24",
+        "provider_versions": {
+          "azapi": "2.13.0",
+          "azurerm": "5.11.0"
+        }
       }
     },
     {
@@ -3404,7 +3621,9 @@
       },
       "docs": [
         {
-          "url": "https://learn.microsoft.com/azure/private-link/private-endpoint-overview"
+          "url": "https://learn.microsoft.com/azure/private-link/private-endpoint-overview",
+          "page_date": "2026-08-11",
+          "published": "2026-08-11"
         }
       ],
       "review": {
@@ -3459,7 +3678,11 @@
           ]
         },
         "note": "First pass, not reviewed. A gap means the API accepts the setting and no documented azurerm 5.11.0 argument (in any resource doc) was found; the provider source was not checked and general availability of newer settings is unconfirmed. Application security groups are covered by azurerm_private_endpoint_application_security_group_association.",
-        "changed_at": "2026-10-24"
+        "changed_at": "2026-10-24",
+        "provider_versions": {
+          "azapi": "2.13.0",
+          "azurerm": "5.11.0"
+        }
       }
     },
     {
@@ -3492,10 +3715,14 @@
       },
       "docs": [
         {
-          "url": "https://learn.microsoft.com/azure/storage/common/storage-account-overview"
+          "url": "https://learn.microsoft.com/azure/storage/common/storage-account-overview",
+          "page_date": "2026-07-16",
+          "published": "2026-10-16"
         },
         {
-          "url": "https://learn.microsoft.com/azure/storage/common/storage-plan-manage-costs"
+          "url": "https://learn.microsoft.com/azure/storage/common/storage-plan-manage-costs",
+          "page_date": "2025-10-01",
+          "published": "2026-08-25"
         }
       ],
       "review": {
@@ -3615,7 +3842,11 @@
           ]
         },
         "note": "First pass, not reviewed. A gap means the API accepts the setting and no documented azurerm 5.11.0 argument (in any resource doc) was found; the provider source was not checked and general availability of newer settings is unconfirmed. Encryption keys, network rules and static website are separate azurerm resources and count as covered.",
-        "changed_at": "2026-10-24"
+        "changed_at": "2026-10-24",
+        "provider_versions": {
+          "azapi": "2.13.0",
+          "azurerm": "5.11.0"
+        }
       }
     },
     {
@@ -3647,10 +3878,14 @@
       },
       "docs": [
         {
-          "url": "https://learn.microsoft.com/azure/azure-sql/database/sql-database-paas-overview"
+          "url": "https://learn.microsoft.com/azure/azure-sql/database/sql-database-paas-overview",
+          "page_date": "2026-10-13",
+          "published": "2026-10-21"
         },
         {
-          "url": "https://learn.microsoft.com/azure/azure-sql/database/free-offer"
+          "url": "https://learn.microsoft.com/azure/azure-sql/database/free-offer",
+          "page_date": "2026-10-12",
+          "published": "2026-10-21"
         }
       ],
       "review": {
@@ -3754,7 +3989,11 @@
           ]
         },
         "note": "First pass, not reviewed. A gap means the API accepts the setting and no documented azurerm 5.11.0 argument (in any resource doc) was found; the provider source was not checked and general availability of newer settings is unconfirmed. Compared the server and the database.",
-        "changed_at": "2026-10-24"
+        "changed_at": "2026-10-24",
+        "provider_versions": {
+          "azapi": "2.13.0",
+          "azurerm": "5.11.0"
+        }
       }
     },
     {
@@ -3785,7 +4024,9 @@
       },
       "docs": [
         {
-          "url": "https://learn.microsoft.com/azure/postgresql/flexible-server/overview"
+          "url": "https://learn.microsoft.com/azure/postgresql/flexible-server/overview",
+          "page_date": "2026-01-09",
+          "published": "2026-09-05"
         }
       ],
       "review": {
@@ -3868,7 +4109,11 @@
           ]
         },
         "note": "First pass, not reviewed. A gap means the API accepts the setting and no documented azurerm 5.11.0 argument (in any resource doc) was found; the provider source was not checked and general availability of newer settings is unconfirmed.",
-        "changed_at": "2026-10-24"
+        "changed_at": "2026-10-24",
+        "provider_versions": {
+          "azapi": "2.13.0",
+          "azurerm": "5.11.0"
+        }
       }
     },
     {
@@ -3900,10 +4145,14 @@
       },
       "docs": [
         {
-          "url": "https://learn.microsoft.com/azure/cosmos-db/introduction"
+          "url": "https://learn.microsoft.com/azure/cosmos-db/introduction",
+          "page_date": "2026-06-08",
+          "published": "2026-06-15"
         },
         {
-          "url": "https://learn.microsoft.com/azure/cosmos-db/free-tier"
+          "url": "https://learn.microsoft.com/azure/cosmos-db/free-tier",
+          "page_date": "2025-06-24",
+          "published": "2026-04-27"
         }
       ],
       "review": {
@@ -3978,7 +4227,11 @@
           ]
         },
         "note": "First pass, not reviewed. A gap means the API accepts the setting and no documented azurerm 5.11.0 argument (in any resource doc) was found; the provider source was not checked and general availability of newer settings is unconfirmed.",
-        "changed_at": "2026-10-24"
+        "changed_at": "2026-10-24",
+        "provider_versions": {
+          "azapi": "2.13.0",
+          "azurerm": "5.11.0"
+        }
       }
     },
     {
@@ -4008,7 +4261,9 @@
       },
       "docs": [
         {
-          "url": "https://learn.microsoft.com/azure/service-bus-messaging/service-bus-messaging-overview"
+          "url": "https://learn.microsoft.com/azure/service-bus-messaging/service-bus-messaging-overview",
+          "page_date": "2026-03-13",
+          "published": "2026-08-31"
         }
       ],
       "review": {
@@ -4099,7 +4354,11 @@
           ]
         },
         "note": "First pass, not reviewed. A gap means the API accepts the setting and no documented azurerm 5.11.0 argument (in any resource doc) was found; the provider source was not checked and general availability of newer settings is unconfirmed.  Five gaps, including geo data replication: closest to partial.",
-        "changed_at": "2026-10-24"
+        "changed_at": "2026-10-24",
+        "provider_versions": {
+          "azapi": "2.13.0",
+          "azurerm": "5.11.0"
+        }
       }
     },
     {
@@ -4127,7 +4386,9 @@
       },
       "docs": [
         {
-          "url": "https://learn.microsoft.com/azure/event-grid/overview"
+          "url": "https://learn.microsoft.com/azure/event-grid/overview",
+          "page_date": "2026-07-23",
+          "published": "2026-07-23"
         }
       ],
       "review": {
@@ -4202,7 +4463,11 @@
           ]
         },
         "note": "First pass, not reviewed. A gap means the API accepts the setting and no documented azurerm 5.11.0 argument (in any resource doc) was found; the provider source was not checked and general availability of newer settings is unconfirmed. Compared custom topics only; system topics, domains and namespaces were not compared.",
-        "changed_at": "2026-10-24"
+        "changed_at": "2026-10-24",
+        "provider_versions": {
+          "azapi": "2.13.0",
+          "azurerm": "5.11.0"
+        }
       }
     },
     {
@@ -4233,10 +4498,14 @@
       },
       "docs": [
         {
-          "url": "https://learn.microsoft.com/azure/azure-monitor/fundamentals/overview"
+          "url": "https://learn.microsoft.com/azure/azure-monitor/fundamentals/overview",
+          "page_date": "2026-06-14",
+          "published": "2026-10-09"
         },
         {
-          "url": "https://learn.microsoft.com/azure/azure-monitor/fundamentals/cost-usage"
+          "url": "https://learn.microsoft.com/azure/azure-monitor/fundamentals/cost-usage",
+          "page_date": "2026-08-07",
+          "published": "2026-09-22"
         }
       ],
       "review": {
@@ -4316,7 +4585,11 @@
           ]
         },
         "note": "First pass, not reviewed. A gap means the API accepts the setting and no documented azurerm 5.11.0 argument (in any resource doc) was found; the provider source was not checked and general availability of newer settings is unconfirmed. Compared action groups only; alert rules, diagnostic settings and data collection rules were not compared.",
-        "changed_at": "2026-10-24"
+        "changed_at": "2026-10-24",
+        "provider_versions": {
+          "azapi": "2.13.0",
+          "azurerm": "5.11.0"
+        }
       }
     },
     {
@@ -4346,10 +4619,14 @@
       },
       "docs": [
         {
-          "url": "https://learn.microsoft.com/azure/azure-monitor/logs/log-analytics-overview"
+          "url": "https://learn.microsoft.com/azure/azure-monitor/logs/log-analytics-overview",
+          "page_date": "2026-07-19",
+          "published": "2026-07-20"
         },
         {
-          "url": "https://learn.microsoft.com/azure/azure-monitor/logs/cost-logs"
+          "url": "https://learn.microsoft.com/azure/azure-monitor/logs/cost-logs",
+          "page_date": "2026-09-02",
+          "published": "2026-09-21"
         }
       ],
       "review": {
@@ -4404,7 +4681,11 @@
           ]
         },
         "note": "First pass, not reviewed. A gap means the API accepts the setting and no documented azurerm 5.11.0 argument (in any resource doc) was found; the provider source was not checked and general availability of newer settings is unconfirmed. Data export, linked clusters and customer-managed keys are separate azurerm resources.",
-        "changed_at": "2026-10-24"
+        "changed_at": "2026-10-24",
+        "provider_versions": {
+          "azapi": "2.13.0",
+          "azurerm": "5.11.0"
+        }
       }
     },
     {
@@ -4434,10 +4715,14 @@
       },
       "docs": [
         {
-          "url": "https://learn.microsoft.com/azure/azure-monitor/app/app-insights-overview"
+          "url": "https://learn.microsoft.com/azure/azure-monitor/app/app-insights-overview",
+          "page_date": "2025-11-14",
+          "published": "2026-10-09"
         },
         {
-          "url": "https://learn.microsoft.com/azure/azure-monitor/logs/cost-logs"
+          "url": "https://learn.microsoft.com/azure/azure-monitor/logs/cost-logs",
+          "page_date": "2026-09-02",
+          "published": "2026-09-21"
         }
       ],
       "review": {
@@ -4488,7 +4773,11 @@
           ]
         },
         "note": "First pass, not reviewed. A gap means the API accepts the setting and no documented azurerm 5.11.0 argument (in any resource doc) was found; the provider source was not checked and general availability of newer settings is unconfirmed.",
-        "changed_at": "2026-10-24"
+        "changed_at": "2026-10-24",
+        "provider_versions": {
+          "azapi": "2.13.0",
+          "azurerm": "5.11.0"
+        }
       }
     },
     {
@@ -4518,13 +4807,19 @@
       },
       "docs": [
         {
-          "url": "https://learn.microsoft.com/azure/azure-monitor/metrics/prometheus-metrics-overview"
+          "url": "https://learn.microsoft.com/azure/azure-monitor/metrics/prometheus-metrics-overview",
+          "page_date": "2026-07-07",
+          "published": "2026-07-07"
         },
         {
-          "url": "https://learn.microsoft.com/azure/managed-grafana/overview"
+          "url": "https://learn.microsoft.com/azure/managed-grafana/overview",
+          "page_date": "2026-06-24",
+          "published": "2026-06-29"
         },
         {
-          "url": "https://learn.microsoft.com/azure/azure-monitor/fundamentals/cost-usage"
+          "url": "https://learn.microsoft.com/azure/azure-monitor/fundamentals/cost-usage",
+          "page_date": "2026-08-07",
+          "published": "2026-09-22"
         }
       ],
       "review": {
@@ -4624,7 +4919,11 @@
           ]
         },
         "note": "First pass, not reviewed. A gap means the API accepts the setting and no documented azurerm 5.11.0 argument (in any resource doc) was found; the provider source was not checked and general availability of newer settings is unconfirmed. Compared Grafana only; the Azure Monitor workspace (Prometheus) was not compared against the API.",
-        "changed_at": "2026-10-24"
+        "changed_at": "2026-10-24",
+        "provider_versions": {
+          "azapi": "2.13.0",
+          "azurerm": "5.11.0"
+        }
       }
     },
     {
@@ -4655,10 +4954,14 @@
       },
       "docs": [
         {
-          "url": "https://learn.microsoft.com/azure/devops/user-guide/what-is-azure-devops"
+          "url": "https://learn.microsoft.com/azure/devops/user-guide/what-is-azure-devops",
+          "page_date": "2026-02-17",
+          "published": "2026-05-08"
         },
         {
-          "url": "https://learn.microsoft.com/azure/devops/pipelines/licensing/concurrent-jobs"
+          "url": "https://learn.microsoft.com/azure/devops/pipelines/licensing/concurrent-jobs",
+          "page_date": "2026-06-19",
+          "published": "2026-06-22"
         }
       ],
       "review": {
@@ -4704,7 +5007,10 @@
         "compared": null,
         "fallback": null,
         "note": "Not compared: this service uses the Azure DevOps REST API (azuredevops provider), not an ARM spec, so the API-versus-provider method does not apply yet.",
-        "changed_at": "2026-10-24"
+        "changed_at": "2026-10-24",
+        "provider_versions": {
+          "azuredevops": "1.16.0"
+        }
       }
     }
   ],
