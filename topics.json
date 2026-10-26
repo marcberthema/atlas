@@ -3,6 +3,6 @@
   "tagline": "A personal knowledge base: collected references, generated from JSON into static pages.",
   "topics": [
     {"id": "azure", "label": "Azure with Terraform", "description": "What an Azure service provides, what it needs, what it costs and how to build it with Terraform."},
-    {"id": "gitops", "label": "GitOps", "description": "Argo CD and GitOps: concepts, patterns and how they fit together."}
+    {"id": "gitops", "label": "GitOps", "description": "GitOps principles, Argo CD in depth, Flux and other operators, and Helm, Kustomize and their alternatives."}
   ]
 }

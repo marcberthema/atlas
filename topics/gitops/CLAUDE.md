@@ -5,9 +5,16 @@ Rules for this topic. The site-wide rules are in the repo root `CLAUDE.md`. Run 
 Same shape as the other topics: `data/gitops.json` is the only place content lives, `scripts/build.py` turns it into
 `../../dist/gitops/index.html` with `templates/index.html`. Python 3 standard library only.
 
-The data format is a placeholder (`title`, `intro`, `sections`). Design the real one with the user when the first content
-is collected, and write it down in a `docs/data-model.md` here. Content collected with AI help goes into the JSON with
-its source URL. Say "unconfirmed" when it can't be verified.
+`data/gitops.json` holds `groups`, `entries` and `comparisons`. See `docs/data-model.md` for the format. `scripts/validate.py` (`make validate`)
+checks it. Content collected with AI help goes into the JSON with its source URLs. Say "unconfirmed" in `notes` when it can't be verified.
 
-Every entry must record the version of the tool analysed (Argo CD version, for example) and the page must show it. See the
-root `CLAUDE.md`.
+Scope: open source or free tools only. Argo CD is the main subject, then Flux, then short references for other operators
+(name, start date, status). Helm and Kustomize are covered in depth, with short references for alternatives. A paid product
+is left out unless it is an alternative that is a CNCF project.
+
+Every entry must record the version analysed (`version.analysed`, its release date and the check date) and the page shows it.
+See the root `CLAUDE.md`. `started` is only `confirmed` when an announcement or release gives the date, not when it is a
+repository creation date.
+
+Refreshing: `make check` lists what changed (releases, archived repositories, CNCF levels; `LINKS=1` for source links) and writes nothing.
+Review each difference, then update `checked`, `version` and the facts that changed together. Add a `track` to every new entry.
