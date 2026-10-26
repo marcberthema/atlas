@@ -14,6 +14,7 @@ layers already merged, Terraform status derived) or merge the layers yourself wi
 | `edge_types` | `type`, `out` and `in` wording, `meaning`. Edge `[A, requires, B]` reads "A requires B". |
 | `edge_group_order` | Order of relationship groups on a card. |
 | `cloud_native_scale` | The levels (`native`, `partly`, `not`) with a label and the criteria for each. |
+| `cost_scale` | The cost levels (`free`, `free-tier`, `trial`, `partial`, `paid`) with a label and description. |
 | `comparisons` | Groups of services that solve the same problem: `id`, `title`, `question`, `status`, `note`, and `members` (`services`, `audience`, `choose_when`). |
 | `terraform_providers` | Per provider: registry namespace and name, `latest_version`, `changed_at`, `docs_url`. `azapi` is the fallback. |
 | `services` | Full entries (below). |
@@ -25,8 +26,8 @@ layers already merged, Terraform status derived) or merge the layers yourself wi
 | Field | Written by | Meaning |
 |---|---|---|
 | `tracking` | human | Inputs to the check: `learn_urls`, `terraform` (provider, kind `resource`/`data_source`, type), `arm_types`. |
-| `fetched` | pipeline or AI ingestion | Content from Microsoft or the registry: `purpose`, `facts`, and `terraform.resources` (`type`, `exists`, `since`), `terraform.arm_types`. |
-| `manual` | human | Overrides. Allowed keys: `purpose`, `facts`, `cloud_native` (`level`, `note`), `terraform` (`gaps`, `note`, `status`). |
+| `fetched` | pipeline or AI ingestion | Content from Microsoft or the registry: `purpose`, `facts`, `cost`, and `terraform.resources` (`type`, `exists`, `since`), `terraform.arm_types`. |
+| `manual` | human | Overrides. Allowed keys: `purpose`, `facts`, `cost`, `cloud_native` (`level`, `note`), `terraform` (`gaps`, `note`, `status`). |
 | `review` | human | `status` `unconfirmed` or `verified`, plus a note. |
 | `freshness` | pipeline | `status`, `changed_at`, and per Learn URL: `http_status`, `ms_date`, `updated_at`, `latest_hash`, `reviewed_hash`. |
 
@@ -35,6 +36,14 @@ layers already merged, Terraform status derived) or merge the layers yourself wi
 `cloud_native.level` is one of the levels in `cloud_native_scale`, with a one-line `note`. It is a human judgement
 against the scale's criteria, not a Microsoft label, so it lives in `manual` and is only set after the user confirms.
 A service with no rating resolves to `unrated`.
+
+### Cost
+
+`cost` answers "can I try this without paying?" with a `level` from `cost_scale`, a one-line `note` (what is free and its
+limits), `billed` (what still costs money), `sources` (https urls), `checked_at`, and `confirmed`. `confirmed` is `true` only when
+the claim was read on the source page; otherwise it is `false` and the page shows a `?`. Pricing pages on azure.microsoft.com
+are often not readable by the checker, so the free services page and Learn are the usual sources. Learn urls used for a cost
+also go in `tracking.learn_urls`. Free offers change often: re-check `checked_at` before relying on a limit.
 
 ### Merge rule
 

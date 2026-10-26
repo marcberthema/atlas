@@ -198,7 +198,8 @@
       "tracking": {
         "learn_urls": [
           "https://learn.microsoft.com/entra/fundamentals/how-to-find-tenant",
-          "https://learn.microsoft.com/entra/fundamentals/how-subscriptions-associated-directory"
+          "https://learn.microsoft.com/entra/fundamentals/how-subscriptions-associated-directory",
+          "https://learn.microsoft.com/entra/fundamentals/licensing"
         ],
         "terraform": [
           {
@@ -235,7 +236,17 @@
           "A tenant is the directory that holds the identities used to sign in and get access. Every Azure subscription trusts exactly one tenant and relies on it to authenticate and authorize users, services and devices.",
           "The person who creates a tenant becomes Global Administrator. A subscription owner who joins their subscription to an existing tenant does not.",
           "Moving a subscription to another tenant breaks role assignments, so AKS clusters lose functionality, and key vault tenant IDs must be changed."
-        ]
+        ],
+        "cost": {
+          "level": "free",
+          "confirmed": true,
+          "note": "The tenant and the Entra ID Free edition come with any Microsoft cloud subscription.",
+          "billed": "P1, P2 and governance features are paid add-ons.",
+          "sources": [
+            "https://learn.microsoft.com/entra/fundamentals/licensing"
+          ],
+          "checked_at": "2026-10-26"
+        }
       },
       "manual": {
         "terraform": {
@@ -248,7 +259,7 @@
       },
       "freshness": {
         "status": "current",
-        "changed_at": "2026-10-24",
+        "changed_at": "2026-10-26",
         "sources": {
           "https://learn.microsoft.com/entra/fundamentals/how-to-find-tenant": {
             "changed_at": "2026-10-24",
@@ -265,6 +276,14 @@
             "latest_hash": "sha256:99d60abe835d0e2ab438561502b95e11196da8f90d5f058ba616235769688335",
             "changed_at": "2026-10-24",
             "reviewed_hash": "sha256:99d60abe835d0e2ab438561502b95e11196da8f90d5f058ba616235769688335"
+          },
+          "https://learn.microsoft.com/entra/fundamentals/licensing": {
+            "http_status": 200,
+            "ms_date": "2026-06-18T00:00:00Z",
+            "updated_at": "2026-07-28T07:37:00Z",
+            "latest_hash": "sha256:e762247b342233d6707e4583038cfa85ff116f463784ec880918dc1888d75400",
+            "changed_at": "2026-10-26",
+            "reviewed_hash": "sha256:e762247b342233d6707e4583038cfa85ff116f463784ec880918dc1888d75400"
           }
         }
       }
@@ -322,7 +341,15 @@
           "Each directory has one root management group, named 'Tenant root group' by default, with an ID equal to the tenant ID. It can't be moved or deleted, and new subscriptions land in it by default.",
           "No one has access to the root management group by default; a Global Administrator must elevate access first.",
           "A directory supports 10,000 management groups and a tree up to six levels deep (not counting the root or the subscription level)."
-        ]
+        ],
+        "cost": {
+          "level": "free",
+          "confirmed": false,
+          "note": "No charge documented for management groups themselves (unconfirmed).",
+          "billed": "",
+          "sources": [],
+          "checked_at": "2026-10-26"
+        }
       },
       "manual": {
         "terraform": {
@@ -385,7 +412,17 @@
           ],
           "changed_at": "2026-10-24"
         },
-        "purpose": "The control plane every tool (portal, CLI, Terraform) talks to."
+        "purpose": "The control plane every tool (portal, CLI, Terraform) talks to.",
+        "cost": {
+          "level": "free",
+          "confirmed": true,
+          "note": "Listed as free on the Azure free services page.",
+          "billed": "",
+          "sources": [
+            "https://azure.microsoft.com/pricing/purchase-options/azure-account"
+          ],
+          "checked_at": "2026-10-26"
+        }
       },
       "manual": {
         "facts": [
@@ -481,7 +518,15 @@
           "A unit of management, billing and scale, and a boundary for quota, governance, security and identity controls.",
           "Trusts exactly one tenant.",
           "Not tied to a region: one subscription can hold resources from many regions, and resource groups can organise them by region."
-        ]
+        ],
+        "cost": {
+          "level": "free",
+          "confirmed": false,
+          "note": "A subscription itself has no charge, the resources in it do (unconfirmed).",
+          "billed": "Everything created inside it.",
+          "sources": [],
+          "checked_at": "2026-10-26"
+        }
       },
       "manual": {
         "terraform": {
@@ -565,7 +610,15 @@
           ],
           "changed_at": "2026-10-24"
         },
-        "purpose": "A container for resources that share a lifecycle."
+        "purpose": "A container for resources that share a lifecycle.",
+        "cost": {
+          "level": "free",
+          "confirmed": false,
+          "note": "A resource group itself has no charge, the resources in it do (unconfirmed).",
+          "billed": "Everything created inside it.",
+          "sources": [],
+          "checked_at": "2026-10-26"
+        }
       },
       "manual": {
         "facts": [
@@ -606,7 +659,8 @@
       "category": "Identity and security",
       "tracking": {
         "learn_urls": [
-          "https://learn.microsoft.com/entra/fundamentals/whatis"
+          "https://learn.microsoft.com/entra/fundamentals/whatis",
+          "https://learn.microsoft.com/entra/fundamentals/licensing"
         ],
         "terraform": [
           {
@@ -662,7 +716,17 @@
         "facts": [
           "Entra ID is the foundational product of the wider Microsoft Entra family. Every tenant is automatically an Entra tenant, so Microsoft 365, Azure and Dynamics 365 subscribers already use it.",
           "It is a cloud identity and access management service: authentication, policy enforcement and protection for users, devices, apps and resources."
-        ]
+        ],
+        "cost": {
+          "level": "free-tier",
+          "confirmed": true,
+          "note": "Entra ID Free is included with Azure. Built-in role use and security defaults are free.",
+          "billed": "Conditional Access and custom roles need P1. PIM and ID Protection need P2.",
+          "sources": [
+            "https://learn.microsoft.com/entra/fundamentals/licensing"
+          ],
+          "checked_at": "2026-10-26"
+        }
       },
       "manual": {
         "terraform": {
@@ -675,7 +739,7 @@
       },
       "freshness": {
         "status": "current",
-        "changed_at": "2026-10-24",
+        "changed_at": "2026-10-26",
         "sources": {
           "https://learn.microsoft.com/entra/fundamentals/whatis": {
             "changed_at": "2026-10-24",
@@ -684,6 +748,14 @@
             "updated_at": "2026-09-08T17:35:00Z",
             "latest_hash": "sha256:c1af532b5b26222bfc52c7f8645427f8f4068f67c1db69539e861ea0b542fa59",
             "reviewed_hash": "sha256:c1af532b5b26222bfc52c7f8645427f8f4068f67c1db69539e861ea0b542fa59"
+          },
+          "https://learn.microsoft.com/entra/fundamentals/licensing": {
+            "http_status": 200,
+            "ms_date": "2026-06-18T00:00:00Z",
+            "updated_at": "2026-07-28T07:37:00Z",
+            "latest_hash": "sha256:e762247b342233d6707e4583038cfa85ff116f463784ec880918dc1888d75400",
+            "changed_at": "2026-10-26",
+            "reviewed_hash": "sha256:e762247b342233d6707e4583038cfa85ff116f463784ec880918dc1888d75400"
           }
         }
       }
@@ -695,7 +767,8 @@
       "category": "Identity and security",
       "tracking": {
         "learn_urls": [
-          "https://learn.microsoft.com/azure/role-based-access-control/overview"
+          "https://learn.microsoft.com/azure/role-based-access-control/overview",
+          "https://learn.microsoft.com/entra/fundamentals/licensing"
         ],
         "terraform": [
           {
@@ -740,7 +813,17 @@
           ],
           "changed_at": "2026-10-24"
         },
-        "purpose": "Grant a role to an identity at a given scope."
+        "purpose": "Grant a role to an identity at a given scope.",
+        "cost": {
+          "level": "free",
+          "confirmed": false,
+          "note": "No charge documented for Azure role assignments (unconfirmed).",
+          "billed": "Eligible and time-bound assignments through PIM need Entra ID P2 or Governance licences.",
+          "sources": [
+            "https://learn.microsoft.com/entra/fundamentals/licensing"
+          ],
+          "checked_at": "2026-10-26"
+        }
       },
       "manual": {
         "facts": [
@@ -767,7 +850,7 @@
       },
       "freshness": {
         "status": "current",
-        "changed_at": "2026-10-24",
+        "changed_at": "2026-10-26",
         "sources": {
           "https://learn.microsoft.com/azure/role-based-access-control/overview": {
             "changed_at": "2026-10-24",
@@ -776,6 +859,14 @@
             "updated_at": "2025-10-15T22:11:00Z",
             "latest_hash": "sha256:911caf54e528a1067789705b4c3f78bb96c75e8bc49ba300659d046fc5dc82da",
             "reviewed_hash": "sha256:911caf54e528a1067789705b4c3f78bb96c75e8bc49ba300659d046fc5dc82da"
+          },
+          "https://learn.microsoft.com/entra/fundamentals/licensing": {
+            "http_status": 200,
+            "ms_date": "2026-06-18T00:00:00Z",
+            "updated_at": "2026-07-28T07:37:00Z",
+            "latest_hash": "sha256:e762247b342233d6707e4583038cfa85ff116f463784ec880918dc1888d75400",
+            "changed_at": "2026-10-26",
+            "reviewed_hash": "sha256:e762247b342233d6707e4583038cfa85ff116f463784ec880918dc1888d75400"
           }
         }
       }
@@ -787,7 +878,8 @@
       "category": "Identity and security",
       "tracking": {
         "learn_urls": [
-          "https://learn.microsoft.com/entra/identity/managed-identities-azure-resources/overview"
+          "https://learn.microsoft.com/entra/identity/managed-identities-azure-resources/overview",
+          "https://learn.microsoft.com/entra/fundamentals/licensing"
         ],
         "terraform": [
           {
@@ -832,7 +924,17 @@
           "System-assigned: created with one resource and deleted with it. User-assigned: a standalone resource that can be assigned to many resources. Microsoft recommends user-assigned for Microsoft services.",
           "You don't manage credentials, and they aren't accessible to you; code gets a token from Entra ID through MSAL or the Azure.Identity SDK.",
           "Each managed identity is a special service principal in Entra ID. It has no access until you grant permissions, for example with Azure RBAC role assignments."
-        ]
+        ],
+        "cost": {
+          "level": "free",
+          "confirmed": true,
+          "note": "No licence needed and no extra cost.",
+          "billed": "",
+          "sources": [
+            "https://learn.microsoft.com/entra/fundamentals/licensing"
+          ],
+          "checked_at": "2026-10-26"
+        }
       },
       "manual": {
         "terraform": {
@@ -852,7 +954,7 @@
       },
       "freshness": {
         "status": "current",
-        "changed_at": "2026-10-24",
+        "changed_at": "2026-10-26",
         "sources": {
           "https://learn.microsoft.com/entra/identity/managed-identities-azure-resources/overview": {
             "changed_at": "2026-10-24",
@@ -861,6 +963,14 @@
             "updated_at": "2026-06-15T17:40:00Z",
             "latest_hash": "sha256:062e78f969e0f08041fca5a990fa36a97e2d6d31a8cfc5212da733c1d010d3c6",
             "reviewed_hash": "sha256:062e78f969e0f08041fca5a990fa36a97e2d6d31a8cfc5212da733c1d010d3c6"
+          },
+          "https://learn.microsoft.com/entra/fundamentals/licensing": {
+            "http_status": 200,
+            "ms_date": "2026-06-18T00:00:00Z",
+            "updated_at": "2026-07-28T07:37:00Z",
+            "latest_hash": "sha256:e762247b342233d6707e4583038cfa85ff116f463784ec880918dc1888d75400",
+            "changed_at": "2026-10-26",
+            "reviewed_hash": "sha256:e762247b342233d6707e4583038cfa85ff116f463784ec880918dc1888d75400"
           }
         }
       }
@@ -951,7 +1061,15 @@
           "Access policies exist only at the vault level. RBAC roles can be assigned at management group, subscription, resource group, vault, or an individual key, secret or certificate. One vault per application per environment, with roles at vault scope, is recommended over per-object assignments.",
           "Contributor is a management role, but in access-policy mode Contributor and Key Vault Contributor can grant themselves data access by editing an access policy. Read secrets with an RBAC data role such as Key Vault Secrets User, and limit who holds Contributor.",
           "Setting the RBAC permission model invalidates all access policies and can cause outages if equivalent roles are not assigned. Create the role assignments first, then switch and test."
-        ]
+        ],
+        "cost": {
+          "level": "paid",
+          "confirmed": false,
+          "note": "No free tier found. Billed per operation, so a small lab costs cents (unconfirmed).",
+          "billed": "Operations, certificates, HSM keys.",
+          "sources": [],
+          "checked_at": "2026-10-26"
+        }
       },
       "manual": {
         "terraform": {
@@ -1027,7 +1145,8 @@
       "category": "Identity and security",
       "tracking": {
         "learn_urls": [
-          "https://learn.microsoft.com/azure/defender-for-cloud/defender-for-cloud-introduction"
+          "https://learn.microsoft.com/azure/defender-for-cloud/defender-for-cloud-introduction",
+          "https://learn.microsoft.com/azure/defender-for-cloud/concept-cloud-security-posture-management"
         ],
         "terraform": [
           {
@@ -1082,7 +1201,17 @@
           "A Cloud Native Application Protection Platform (CNAPP): posture management (CSPM), workload protection (CWPP) and DevSecOps in one service.",
           "Workload protection is enabled as separate plans per resource type, such as Defender for Storage, SQL, Key Vault and containers.",
           "Parts of Defender for Cloud are moving into the Defender portal; check which portal an article applies to."
-        ]
+        ],
+        "cost": {
+          "level": "free-tier",
+          "confirmed": true,
+          "note": "Foundational CSPM is free: secure score, recommendations, asset inventory.",
+          "billed": "Defender CSPM and every workload protection plan.",
+          "sources": [
+            "https://learn.microsoft.com/azure/defender-for-cloud/concept-cloud-security-posture-management"
+          ],
+          "checked_at": "2026-10-26"
+        }
       },
       "manual": {
         "terraform": {
@@ -1112,7 +1241,7 @@
       },
       "freshness": {
         "status": "current",
-        "changed_at": "2026-10-24",
+        "changed_at": "2026-10-26",
         "sources": {
           "https://learn.microsoft.com/azure/defender-for-cloud/defender-for-cloud-introduction": {
             "changed_at": "2026-10-24",
@@ -1121,6 +1250,14 @@
             "updated_at": "2026-08-10T22:36:00Z",
             "latest_hash": "sha256:0da5d1d89f38d97b2502ef28a14a4945707f1e262d7bd0f7bd2fac5185a8abdf",
             "reviewed_hash": "sha256:0da5d1d89f38d97b2502ef28a14a4945707f1e262d7bd0f7bd2fac5185a8abdf"
+          },
+          "https://learn.microsoft.com/azure/defender-for-cloud/concept-cloud-security-posture-management": {
+            "http_status": 200,
+            "ms_date": "2026-09-11T00:00:00Z",
+            "updated_at": "2026-09-30T17:37:00Z",
+            "latest_hash": "sha256:1f788c076fb5d1f62e2b0e563cb15c009d5c061a2aee436a7224a498a9f0dfcb",
+            "changed_at": "2026-10-26",
+            "reviewed_hash": "sha256:1f788c076fb5d1f62e2b0e563cb15c009d5c061a2aee436a7224a498a9f0dfcb"
           }
         }
       }
@@ -1191,7 +1328,17 @@
         "facts": [
           "Available to anyone with access to a billing account, subscription, resource group or management group.",
           "Supports budgets, anomaly and scheduled alerts, tag inheritance, cost allocation rules and scheduled exports to a storage account."
-        ]
+        ],
+        "cost": {
+          "level": "free",
+          "confirmed": true,
+          "note": "Listed as free on the Azure free services page.",
+          "billed": "",
+          "sources": [
+            "https://azure.microsoft.com/pricing/purchase-options/azure-account"
+          ],
+          "checked_at": "2026-10-26"
+        }
       },
       "manual": {
         "terraform": {
@@ -1267,7 +1414,17 @@
           ],
           "changed_at": "2026-10-24"
         },
-        "purpose": "Recommendations on cost, performance, reliability and security."
+        "purpose": "Recommendations on cost, performance, reliability and security.",
+        "cost": {
+          "level": "free",
+          "confirmed": true,
+          "note": "Listed as free (unlimited) on the Azure free services page.",
+          "billed": "",
+          "sources": [
+            "https://azure.microsoft.com/pricing/purchase-options/azure-account"
+          ],
+          "checked_at": "2026-10-26"
+        }
       },
       "manual": {
         "facts": [],
@@ -1322,7 +1479,15 @@
         "facts": [
           "Queries use a language based on Kusto Query Language (KQL). You get results only for resources you have at least read permission on.",
           "Typical uses: filter, group and sort resources by property, explore resources for governance, assess the effect of policies, and query changes to resource properties."
-        ]
+        ],
+        "cost": {
+          "level": "free",
+          "confirmed": false,
+          "note": "No charge documented for queries (unconfirmed).",
+          "billed": "",
+          "sources": [],
+          "checked_at": "2026-10-26"
+        }
       },
       "manual": {
         "terraform": {
@@ -1431,7 +1596,15 @@
           ],
           "changed_at": "2026-10-24"
         },
-        "purpose": "Enforce and audit rules on resources."
+        "purpose": "Enforce and audit rules on resources.",
+        "cost": {
+          "level": "free",
+          "confirmed": false,
+          "note": "No charge documented for Azure policy on Azure resources (unconfirmed).",
+          "billed": "",
+          "sources": [],
+          "checked_at": "2026-10-26"
+        }
       },
       "manual": {
         "facts": [
@@ -1552,7 +1725,15 @@
           ],
           "changed_at": "2026-10-24"
         },
-        "purpose": "Back up VMs, disks, files, blobs and databases."
+        "purpose": "Back up VMs, disks, files, blobs and databases.",
+        "cost": {
+          "level": "paid",
+          "confirmed": false,
+          "note": "No free tier found (unconfirmed).",
+          "billed": "Protected instances and backup storage.",
+          "sources": [],
+          "checked_at": "2026-10-26"
+        }
       },
       "manual": {
         "facts": [],
@@ -1663,7 +1844,17 @@
           ],
           "changed_at": "2026-10-24"
         },
-        "purpose": "General-purpose virtual servers you manage."
+        "purpose": "General-purpose virtual servers you manage.",
+        "cost": {
+          "level": "trial",
+          "confirmed": true,
+          "note": "750 hours a month each of B1s, B2pts v2 and B2ats v2 for 12 months, new customers only.",
+          "billed": "Anything else and everything after 12 months. Disks and public IPs are separate entries.",
+          "sources": [
+            "https://azure.microsoft.com/pricing/purchase-options/azure-account"
+          ],
+          "checked_at": "2026-10-26"
+        }
       },
       "manual": {
         "facts": [
@@ -1790,7 +1981,17 @@
           "A disk is a separate resource: you can detach a data disk from one VM and attach it to another.",
           "You don't manage a storage account for managed disks; Azure handles it in the background.",
           "Backup options include built-in redundancy (LRS and ZRS), Azure Backup, snapshots and restore points."
-        ]
+        ],
+        "cost": {
+          "level": "paid",
+          "confirmed": false,
+          "note": "Not on the free services list. Billed on provisioned size (unconfirmed).",
+          "billed": "Provisioned size, snapshots.",
+          "sources": [
+            "https://azure.microsoft.com/pricing/purchase-options/azure-account"
+          ],
+          "checked_at": "2026-10-26"
+        }
       },
       "manual": {
         "terraform": {
@@ -1915,7 +2116,17 @@
           "Instance count can grow or shrink with demand or a schedule, and VMs are spread across availability zones or fault domains.",
           "Two orchestration modes: Flexible (the unified VM experience) and Uniform.",
           "Works with Azure Load Balancer for layer 4 and Application Gateway for layer 7 traffic."
-        ]
+        ],
+        "cost": {
+          "level": "partial",
+          "confirmed": true,
+          "note": "No extra cost for the scale set itself.",
+          "billed": "The VM instances, network and storage it uses.",
+          "sources": [
+            "https://learn.microsoft.com/azure/virtual-machine-scale-sets/overview"
+          ],
+          "checked_at": "2026-10-26"
+        }
       },
       "manual": {
         "cloud_native": {
@@ -1973,7 +2184,8 @@
       "category": "Compute and containers",
       "tracking": {
         "learn_urls": [
-          "https://learn.microsoft.com/azure/app-service/overview"
+          "https://learn.microsoft.com/azure/app-service/overview",
+          "https://learn.microsoft.com/azure/app-service/overview-hosting-plans"
         ],
         "terraform": [
           {
@@ -2042,7 +2254,19 @@
         "facts": [
           "Runs web apps, mobile back ends and REST APIs on a managed platform. Stacks: .NET, Java, Node.js, Python and PHP, on Windows and Linux, or any container as a custom container.",
           "Virtual Network integration secures ingress and egress; App Service environments give full isolation with dedicated networking and VMs."
-        ]
+        ],
+        "cost": {
+          "level": "free-tier",
+          "confirmed": true,
+          "note": "Free plan: up to 10 apps, 1 GB storage, 60 CPU minutes a day, no custom domain.",
+          "billed": "Shared, Basic and above, App Service domains and certificates.",
+          "sources": [
+            "https://learn.microsoft.com/azure/app-service/overview-hosting-plans",
+            "https://learn.microsoft.com/azure/azure-resource-manager/management/azure-subscription-service-limits",
+            "https://azure.microsoft.com/pricing/purchase-options/azure-account"
+          ],
+          "checked_at": "2026-10-26"
+        }
       },
       "manual": {
         "cloud_native": {
@@ -2116,7 +2340,7 @@
       },
       "freshness": {
         "status": "current",
-        "changed_at": "2026-10-24",
+        "changed_at": "2026-10-26",
         "sources": {
           "https://learn.microsoft.com/azure/app-service/overview": {
             "changed_at": "2026-10-24",
@@ -2125,6 +2349,14 @@
             "updated_at": "2026-08-18T22:40:00Z",
             "latest_hash": "sha256:7ebf4eb2d21dfe3b0789d44f7a6fc3aabb1b8a326a56f276ac104f9f572e66c3",
             "reviewed_hash": "sha256:7ebf4eb2d21dfe3b0789d44f7a6fc3aabb1b8a326a56f276ac104f9f572e66c3"
+          },
+          "https://learn.microsoft.com/azure/app-service/overview-hosting-plans": {
+            "http_status": 200,
+            "ms_date": "2026-08-24T00:00:00Z",
+            "updated_at": "2026-08-31T22:26:00Z",
+            "latest_hash": "sha256:308b590ab86c19507ff82631459ae122632054ed7795e2fa911126f46dcce455",
+            "changed_at": "2026-10-26",
+            "reviewed_hash": "sha256:308b590ab86c19507ff82631459ae122632054ed7795e2fa911126f46dcce455"
           }
         }
       }
@@ -2136,7 +2368,8 @@
       "category": "Compute and containers",
       "tracking": {
         "learn_urls": [
-          "https://learn.microsoft.com/azure/azure-functions/functions-overview"
+          "https://learn.microsoft.com/azure/azure-functions/functions-overview",
+          "https://learn.microsoft.com/azure/azure-functions/flex-consumption-plan"
         ],
         "terraform": [
           {
@@ -2180,7 +2413,18 @@
         "facts": [
           "Serverless: you don't deploy or maintain servers. Event-driven triggers and bindings connect functions to other services without extra code.",
           "Durable Functions chain functions into event-driven workflows."
-        ]
+        ],
+        "cost": {
+          "level": "free-tier",
+          "confirmed": true,
+          "note": "Flex Consumption has a monthly free grant of executions and GB-seconds. The free services page lists 1 million requests.",
+          "billed": "Always-ready instances have no free grant. Premium and Dedicated plans are billed. Amounts: see the pricing page.",
+          "sources": [
+            "https://learn.microsoft.com/azure/azure-functions/flex-consumption-plan",
+            "https://azure.microsoft.com/pricing/purchase-options/azure-account"
+          ],
+          "checked_at": "2026-10-26"
+        }
       },
       "manual": {
         "cloud_native": {
@@ -2230,7 +2474,7 @@
       },
       "freshness": {
         "status": "current",
-        "changed_at": "2026-10-24",
+        "changed_at": "2026-10-26",
         "sources": {
           "https://learn.microsoft.com/azure/azure-functions/functions-overview": {
             "changed_at": "2026-10-24",
@@ -2239,6 +2483,14 @@
             "updated_at": "2026-09-21T22:12:00Z",
             "latest_hash": "sha256:1f0d9566f35fce7877e06b0d416fedaf3bc45960cfc0ee90832b029d5352d806",
             "reviewed_hash": "sha256:1f0d9566f35fce7877e06b0d416fedaf3bc45960cfc0ee90832b029d5352d806"
+          },
+          "https://learn.microsoft.com/azure/azure-functions/flex-consumption-plan": {
+            "http_status": 200,
+            "ms_date": "2026-09-15T00:00:00Z",
+            "updated_at": "2026-09-30T11:34:00Z",
+            "latest_hash": "sha256:5f3807aa79654ceb1c540cc090baf146700afa81ff86b7dc3c9eb4dcd29c85bb",
+            "changed_at": "2026-10-26",
+            "reviewed_hash": "sha256:5f3807aa79654ceb1c540cc090baf146700afa81ff86b7dc3c9eb4dcd29c85bb"
           }
         }
       }
@@ -2250,7 +2502,8 @@
       "category": "Compute and containers",
       "tracking": {
         "learn_urls": [
-          "https://learn.microsoft.com/azure/container-apps/overview"
+          "https://learn.microsoft.com/azure/container-apps/overview",
+          "https://learn.microsoft.com/azure/container-apps/billing"
         ],
         "terraform": [
           {
@@ -2309,7 +2562,18 @@
         "facts": [
           "Serverless platform for containers: you don't manage servers or orchestrate containers yourself. Autoscaling uses any KEDA-supported scaler, and most apps can scale to zero.",
           "Runs containers from any registry, public or private. Dapr is built in for microservices, and you can provide an existing virtual network when creating the environment."
-        ]
+        ],
+        "cost": {
+          "level": "free-tier",
+          "confirmed": true,
+          "note": "Consumption plan, per subscription each month: 180,000 vCPU-seconds, 360,000 GiB-seconds, 2 million requests.",
+          "billed": "Usage beyond that, the Dedicated plan, and charges for private endpoints and planned maintenance.",
+          "sources": [
+            "https://learn.microsoft.com/azure/container-apps/billing",
+            "https://azure.microsoft.com/pricing/purchase-options/azure-account"
+          ],
+          "checked_at": "2026-10-26"
+        }
       },
       "manual": {
         "cloud_native": {
@@ -2367,7 +2631,7 @@
       },
       "freshness": {
         "status": "current",
-        "changed_at": "2026-10-24",
+        "changed_at": "2026-10-26",
         "sources": {
           "https://learn.microsoft.com/azure/container-apps/overview": {
             "changed_at": "2026-10-24",
@@ -2376,6 +2640,14 @@
             "updated_at": "2026-07-07T22:18:00Z",
             "latest_hash": "sha256:b0ee03fb18ccdc113d9bea2f32fb6827070dd3a6b657c852a160ed8b61b9a250",
             "reviewed_hash": "sha256:b0ee03fb18ccdc113d9bea2f32fb6827070dd3a6b657c852a160ed8b61b9a250"
+          },
+          "https://learn.microsoft.com/azure/container-apps/billing": {
+            "http_status": 200,
+            "ms_date": "2025-12-09T00:00:00Z",
+            "updated_at": "2026-03-25T22:12:00Z",
+            "latest_hash": "sha256:e50f1d057866d085273d26a2a571fc7bd679afbc2f1c54a7bca1f99d5600a05c",
+            "changed_at": "2026-10-26",
+            "reviewed_hash": "sha256:e50f1d057866d085273d26a2a571fc7bd679afbc2f1c54a7bca1f99d5600a05c"
           }
         }
       }
@@ -2387,7 +2659,10 @@
       "category": "Compute and containers",
       "tracking": {
         "learn_urls": [
-          "https://learn.microsoft.com/azure/aks/what-is-aks"
+          "https://learn.microsoft.com/azure/aks/what-is-aks",
+          "https://learn.microsoft.com/azure/aks/free-standard-pricing-tiers",
+          "https://learn.microsoft.com/azure/aks/use-system-pools",
+          "https://learn.microsoft.com/azure/aks/start-stop-cluster"
         ],
         "terraform": [
           {
@@ -2432,7 +2707,20 @@
           "Azure creates and manages the control plane for you at no cost. AKS is CNCF-certified.",
           "Two modes: Automatic (fully managed, production-ready defaults, Azure handles nodes, scaling, security, monitoring and upgrades; recommended for most teams) and Standard (full control of cluster configuration and node pools).",
           "In Automatic, Managed Prometheus, Container Insights and Azure Monitor dashboards with Grafana are on by default."
-        ]
+        ],
+        "cost": {
+          "level": "partial",
+          "confirmed": true,
+          "note": "Free tier: no charge for cluster management (up to 1,000 nodes, no uptime SLA). Stopping a cluster stops node and control plane compute costs.",
+          "billed": "Nodes (system pools need at least two, B-series not supported), disks, load balancer, public IPs. Standard and Premium tiers.",
+          "sources": [
+            "https://learn.microsoft.com/azure/aks/free-standard-pricing-tiers",
+            "https://learn.microsoft.com/azure/aks/use-system-pools",
+            "https://learn.microsoft.com/azure/aks/start-stop-cluster",
+            "https://azure.microsoft.com/pricing/purchase-options/azure-account"
+          ],
+          "checked_at": "2026-10-26"
+        }
       },
       "manual": {
         "cloud_native": {
@@ -2502,7 +2790,7 @@
       },
       "freshness": {
         "status": "current",
-        "changed_at": "2026-10-24",
+        "changed_at": "2026-10-26",
         "sources": {
           "https://learn.microsoft.com/azure/aks/what-is-aks": {
             "changed_at": "2026-10-24",
@@ -2511,6 +2799,30 @@
             "updated_at": "2026-10-20T22:04:00Z",
             "latest_hash": "sha256:b7a92e19b0b666c4cfaf3b92ac395d38b721d4a16f3c51b3bf24f012608766f1",
             "reviewed_hash": "sha256:b7a92e19b0b666c4cfaf3b92ac395d38b721d4a16f3c51b3bf24f012608766f1"
+          },
+          "https://learn.microsoft.com/azure/aks/free-standard-pricing-tiers": {
+            "http_status": 200,
+            "ms_date": "2026-07-06T00:00:00Z",
+            "updated_at": "2026-10-20T22:04:00Z",
+            "latest_hash": "sha256:0214772127526849ca966666ec0ef3ff2135ac52c96aff4fbb2b37282dd364e8",
+            "changed_at": "2026-10-26",
+            "reviewed_hash": "sha256:0214772127526849ca966666ec0ef3ff2135ac52c96aff4fbb2b37282dd364e8"
+          },
+          "https://learn.microsoft.com/azure/aks/use-system-pools": {
+            "http_status": 200,
+            "ms_date": "2026-04-30T00:00:00Z",
+            "updated_at": "2026-10-20T22:04:00Z",
+            "latest_hash": "sha256:85d31fdb595f6a45f7f70d4221702e03c6cb65363d18ae098daa0bea9bc4b0cc",
+            "changed_at": "2026-10-26",
+            "reviewed_hash": "sha256:85d31fdb595f6a45f7f70d4221702e03c6cb65363d18ae098daa0bea9bc4b0cc"
+          },
+          "https://learn.microsoft.com/azure/aks/start-stop-cluster": {
+            "http_status": 200,
+            "ms_date": "2026-07-21T00:00:00Z",
+            "updated_at": "2026-07-21T11:02:00Z",
+            "latest_hash": "sha256:f89e7048f3d0b9b7300d24c6ece320eb172abe88896727da62ccc7e2c3fbd125",
+            "changed_at": "2026-10-26",
+            "reviewed_hash": "sha256:f89e7048f3d0b9b7300d24c6ece320eb172abe88896727da62ccc7e2c3fbd125"
           }
         }
       }
@@ -2522,7 +2834,8 @@
       "category": "Compute and containers",
       "tracking": {
         "learn_urls": [
-          "https://learn.microsoft.com/azure/container-registry/container-registry-intro"
+          "https://learn.microsoft.com/azure/container-registry/container-registry-intro",
+          "https://learn.microsoft.com/azure/container-registry/container-registry-skus"
         ],
         "terraform": [
           {
@@ -2567,7 +2880,18 @@
           "Managed registry based on Docker; stores container images and related artifacts such as Helm charts.",
           "Three tiers: Basic, Standard and Premium. Premium adds geo-replication.",
           "ACR tasks can build images in Azure on demand or from triggers such as base image updates or Git commits."
-        ]
+        ],
+        "cost": {
+          "level": "trial",
+          "confirmed": true,
+          "note": "12 months: 1 Standard registry with 100 GB of storage, new customers only. No permanent free tier.",
+          "billed": "Daily rate per registry (Basic includes 10 GiB), extra storage, Premium features.",
+          "sources": [
+            "https://learn.microsoft.com/azure/container-registry/container-registry-skus",
+            "https://azure.microsoft.com/pricing/purchase-options/azure-account"
+          ],
+          "checked_at": "2026-10-26"
+        }
       },
       "manual": {
         "terraform": {
@@ -2593,7 +2917,7 @@
       },
       "freshness": {
         "status": "current",
-        "changed_at": "2026-10-24",
+        "changed_at": "2026-10-26",
         "sources": {
           "https://learn.microsoft.com/azure/container-registry/container-registry-intro": {
             "changed_at": "2026-10-24",
@@ -2602,6 +2926,14 @@
             "updated_at": "2026-06-12T06:03:00Z",
             "latest_hash": "sha256:4180506a08b0beb3de2ba62dfe69c06139855254a9477251d1ade48db359a3a7",
             "reviewed_hash": "sha256:4180506a08b0beb3de2ba62dfe69c06139855254a9477251d1ade48db359a3a7"
+          },
+          "https://learn.microsoft.com/azure/container-registry/container-registry-skus": {
+            "http_status": 200,
+            "ms_date": "2026-10-15T00:00:00Z",
+            "updated_at": "2026-10-16T17:05:00Z",
+            "latest_hash": "sha256:7f059c0a6c4c4a2f47ba5cca72db7adece37bab38c4865842193ef3a7ed916bf",
+            "changed_at": "2026-10-26",
+            "reviewed_hash": "sha256:7f059c0a6c4c4a2f47ba5cca72db7adece37bab38c4865842193ef3a7ed916bf"
           }
         }
       }
@@ -2653,7 +2985,17 @@
           ],
           "changed_at": "2026-10-24"
         },
-        "purpose": "Your private network in Azure: resources communicate with each other, the internet and on-premises networks."
+        "purpose": "Your private network in Azure: resources communicate with each other, the internet and on-premises networks.",
+        "cost": {
+          "level": "free",
+          "confirmed": true,
+          "note": "No charge for using a virtual network.",
+          "billed": "Peering, gateways and other attached products have their own prices.",
+          "sources": [
+            "https://learn.microsoft.com/azure/virtual-network/virtual-networks-overview"
+          ],
+          "checked_at": "2026-10-26"
+        }
       },
       "manual": {
         "facts": [
@@ -2746,7 +3088,15 @@
           ],
           "changed_at": "2026-10-24"
         },
-        "purpose": "Lets a VM communicate with the internet, Azure and on-premises resources."
+        "purpose": "Lets a VM communicate with the internet, Azure and on-premises resources.",
+        "cost": {
+          "level": "free",
+          "confirmed": false,
+          "note": "No charge documented for a NIC (unconfirmed).",
+          "billed": "The public IP and the VM it attaches to.",
+          "sources": [],
+          "checked_at": "2026-10-26"
+        }
       },
       "manual": {
         "facts": [
@@ -2862,7 +3212,15 @@
         "facts": [
           "Rules have a priority from 100 to 4096; lower numbers run first and processing stops at the first match. Azure's default rules have the lowest priority, so your rules always run first.",
           "A rule matches on source, destination, port, protocol and direction. Sources and destinations can be an IP, a CIDR block, a service tag or an application security group."
-        ]
+        ],
+        "cost": {
+          "level": "free",
+          "confirmed": false,
+          "note": "No charge documented for NSGs (unconfirmed).",
+          "billed": "",
+          "sources": [],
+          "checked_at": "2026-10-26"
+        }
       },
       "manual": {
         "terraform": {
@@ -2952,7 +3310,17 @@
         "facts": [
           "A resource without a public IP can still go outbound: Azure assigns an available dynamic address that isn't dedicated to you.",
           "Basic SKU public IPs were retired on September 30, 2025; use Standard SKU. For scale sets, use public IP prefixes."
-        ]
+        ],
+        "cost": {
+          "level": "paid",
+          "confirmed": true,
+          "note": "Public IPv4 addresses have a nominal charge. Public IPv6 addresses have none. Basic SKU retired 2025-09-30.",
+          "billed": "Every IPv4 address, including idle ones.",
+          "sources": [
+            "https://learn.microsoft.com/azure/virtual-network/ip-services/public-ip-addresses"
+          ],
+          "checked_at": "2026-10-26"
+        }
       },
       "manual": {
         "terraform": {
@@ -3006,7 +3374,8 @@
       "category": "Networking",
       "tracking": {
         "learn_urls": [
-          "https://learn.microsoft.com/azure/load-balancer/load-balancer-overview"
+          "https://learn.microsoft.com/azure/load-balancer/load-balancer-overview",
+          "https://learn.microsoft.com/azure/load-balancer/skus"
         ],
         "terraform": [
           {
@@ -3070,7 +3439,17 @@
         "facts": [
           "Public load balancers handle internet-facing inbound and outbound traffic; internal ones balance private traffic inside a virtual network.",
           "Current SKUs are Standard and Gateway. Basic Load Balancer was retired on September 30, 2025."
-        ]
+        ],
+        "cost": {
+          "level": "paid",
+          "confirmed": false,
+          "note": "Basic SKU retired 2025-09-30. Standard is billed, no free tier found.",
+          "billed": "Rules and data processed (pricing page not read).",
+          "sources": [
+            "https://learn.microsoft.com/azure/load-balancer/skus"
+          ],
+          "checked_at": "2026-10-26"
+        }
       },
       "manual": {
         "terraform": {
@@ -3096,7 +3475,7 @@
       },
       "freshness": {
         "status": "current",
-        "changed_at": "2026-10-24",
+        "changed_at": "2026-10-26",
         "sources": {
           "https://learn.microsoft.com/azure/load-balancer/load-balancer-overview": {
             "changed_at": "2026-10-24",
@@ -3105,6 +3484,14 @@
             "updated_at": "2026-08-21T05:10:00Z",
             "latest_hash": "sha256:370195ec394b8469f5d840e7b0758743597a80c6bf5f0d84a4a287405f2e85a3",
             "reviewed_hash": "sha256:370195ec394b8469f5d840e7b0758743597a80c6bf5f0d84a4a287405f2e85a3"
+          },
+          "https://learn.microsoft.com/azure/load-balancer/skus": {
+            "http_status": 200,
+            "ms_date": "2024-06-27T00:00:00Z",
+            "updated_at": "2026-05-04T11:13:00Z",
+            "latest_hash": "sha256:54e8a1f7ba0ee09417241ebca946b684f8b90c6c5f2fa057c9dc5dec3cc967bd",
+            "changed_at": "2026-10-26",
+            "reviewed_hash": "sha256:54e8a1f7ba0ee09417241ebca946b684f8b90c6c5f2fa057c9dc5dec3cc967bd"
           }
         }
       }
@@ -3186,7 +3573,15 @@
         "facts": [
           "Application Gateway works at OSI layer 7: TLS termination, autoscaling, zone redundancy and an optional Web Application Firewall. Use v2; the v1 SKUs retired on April 28, 2026.",
           "Front Door is a global CDN for fast, secure access to web content and APIs. Traffic Manager is the DNS-based alternative when you don't need layer 7 processing."
-        ]
+        ],
+        "cost": {
+          "level": "paid",
+          "confirmed": false,
+          "note": "No free tier found (unconfirmed).",
+          "billed": "Hourly gateway or base fee plus usage.",
+          "sources": [],
+          "checked_at": "2026-10-26"
+        }
       },
       "manual": {
         "terraform": {
@@ -3322,7 +3717,15 @@
         "facts": [
           "Public DNS hosts internet-facing domains. Private DNS resolves names inside virtual networks without a custom DNS server.",
           "DNS Private Resolver lets on-premises and Azure query each other's private zones without VM-based DNS servers. Traffic Manager is a separate DNS-based load balancer."
-        ]
+        ],
+        "cost": {
+          "level": "paid",
+          "confirmed": false,
+          "note": "No free tier found. Billed per zone and per query (unconfirmed).",
+          "billed": "Zones and queries.",
+          "sources": [],
+          "checked_at": "2026-10-26"
+        }
       },
       "manual": {
         "terraform": {
@@ -3406,7 +3809,15 @@
           ],
           "changed_at": "2026-10-24"
         },
-        "purpose": "A network interface with a private IP in your virtual network that connects privately to a service powered by Private Link."
+        "purpose": "A network interface with a private IP in your virtual network that connects privately to a service powered by Private Link.",
+        "cost": {
+          "level": "paid",
+          "confirmed": false,
+          "note": "No free tier found. Billed per hour plus data processed (unconfirmed).",
+          "billed": "Hourly charge and data.",
+          "sources": [],
+          "checked_at": "2026-10-26"
+        }
       },
       "manual": {
         "facts": [
@@ -3461,7 +3872,8 @@
       "category": "Storage and databases",
       "tracking": {
         "learn_urls": [
-          "https://learn.microsoft.com/azure/storage/common/storage-account-overview"
+          "https://learn.microsoft.com/azure/storage/common/storage-account-overview",
+          "https://learn.microsoft.com/azure/storage/common/storage-plan-manage-costs"
         ],
         "terraform": [
           {
@@ -3541,7 +3953,18 @@
           ],
           "changed_at": "2026-10-24"
         },
-        "purpose": "Blob, Files, Queue and Table storage under one account."
+        "purpose": "Blob, Files, Queue and Table storage under one account.",
+        "cost": {
+          "level": "paid",
+          "confirmed": true,
+          "note": "No free tier. The account has no base fee: you pay per GB stored, per operation and for some transfers, so a tiny lab costs cents.",
+          "billed": "Data, operations, transfer between regions, SFTP, encryption scopes.",
+          "sources": [
+            "https://learn.microsoft.com/azure/storage/common/storage-plan-manage-costs",
+            "https://azure.microsoft.com/pricing/purchase-options/azure-account"
+          ],
+          "checked_at": "2026-10-26"
+        }
       },
       "manual": {
         "facts": [
@@ -3603,7 +4026,7 @@
       },
       "freshness": {
         "status": "current",
-        "changed_at": "2026-10-24",
+        "changed_at": "2026-10-26",
         "sources": {
           "https://learn.microsoft.com/azure/storage/common/storage-account-overview": {
             "changed_at": "2026-10-24",
@@ -3612,6 +4035,14 @@
             "updated_at": "2026-10-16T22:20:00Z",
             "latest_hash": "sha256:fb6f5f9b266a8432891f36bbf4b3aba087b892f241823625e833ccf20d2a7529",
             "reviewed_hash": "sha256:fb6f5f9b266a8432891f36bbf4b3aba087b892f241823625e833ccf20d2a7529"
+          },
+          "https://learn.microsoft.com/azure/storage/common/storage-plan-manage-costs": {
+            "http_status": 200,
+            "ms_date": "2025-10-01T00:00:00Z",
+            "updated_at": "2026-08-25T02:03:00Z",
+            "latest_hash": "sha256:6530452b7c4bea0e6ce5fde311f1cf0824dcc34f72eab85c572fff5f541480af",
+            "changed_at": "2026-10-26",
+            "reviewed_hash": "sha256:6530452b7c4bea0e6ce5fde311f1cf0824dcc34f72eab85c572fff5f541480af"
           }
         }
       }
@@ -3623,7 +4054,8 @@
       "category": "Storage and databases",
       "tracking": {
         "learn_urls": [
-          "https://learn.microsoft.com/azure/azure-sql/database/sql-database-paas-overview"
+          "https://learn.microsoft.com/azure/azure-sql/database/sql-database-paas-overview",
+          "https://learn.microsoft.com/azure/azure-sql/database/free-offer"
         ],
         "terraform": [
           {
@@ -3693,7 +4125,18 @@
           "Fully managed: built-in high availability and backups, and no patching or upgrading. The newest SQL Server capabilities often arrive in Azure SQL Database first.",
           "Two purchasing models: vCore (choose vCores, memory and storage) and DTU (bundled compute, memory and I/O). Hyperscale is the recommended vCore service tier, scaling to 128 TB.",
           "Serverless compute (vCore model) scales compute automatically with workload and bills per second. A free tier is available."
-        ]
+        ],
+        "cost": {
+          "level": "free-tier",
+          "confirmed": true,
+          "note": "Per database, each month: 100,000 vCore seconds, 32 GB data, 32 GB backup. Up to 10 General Purpose databases per subscription, no SLA.",
+          "billed": "Choose AutoPause at the limit to stay free. BillOverUsage keeps it online at serverless rates and can't be switched back.",
+          "sources": [
+            "https://learn.microsoft.com/azure/azure-sql/database/free-offer",
+            "https://azure.microsoft.com/pricing/purchase-options/azure-account"
+          ],
+          "checked_at": "2026-10-26"
+        }
       },
       "manual": {
         "terraform": {
@@ -3743,7 +4186,7 @@
       },
       "freshness": {
         "status": "current",
-        "changed_at": "2026-10-24",
+        "changed_at": "2026-10-26",
         "sources": {
           "https://learn.microsoft.com/azure/azure-sql/database/sql-database-paas-overview": {
             "changed_at": "2026-10-24",
@@ -3752,6 +4195,14 @@
             "updated_at": "2026-10-21T17:40:00Z",
             "latest_hash": "sha256:83126e049e49721a7e056aea48fd81cd2e4ba028a1fd19c4798c80ad136daf38",
             "reviewed_hash": "sha256:83126e049e49721a7e056aea48fd81cd2e4ba028a1fd19c4798c80ad136daf38"
+          },
+          "https://learn.microsoft.com/azure/azure-sql/database/free-offer": {
+            "http_status": 200,
+            "ms_date": "2026-10-12T00:00:00Z",
+            "updated_at": "2026-10-21T17:40:00Z",
+            "latest_hash": "sha256:06ff9b88c85779257b7372a5f0de005464d7dd1996d8e5e4f1c4683e3b2fbd6c",
+            "changed_at": "2026-10-26",
+            "reviewed_hash": "sha256:06ff9b88c85779257b7372a5f0de005464d7dd1996d8e5e4f1c4683e3b2fbd6c"
           }
         }
       }
@@ -3828,7 +4279,17 @@
           "Fully managed PostgreSQL with granular control over configuration. Compute and storage are separated.",
           "High availability within one availability zone or zone-redundant across zones: a warm standby with synchronous replication. Zone-redundant HA is not available in every region.",
           "Private access: inside an Azure virtual network the server is reachable only through private IP addresses."
-        ]
+        ],
+        "cost": {
+          "level": "trial",
+          "confirmed": true,
+          "note": "12 months: 750 hours a month of Burstable B1MS, 32 GB storage, 32 GB backup, new customers only.",
+          "billed": "Anything else and everything after 12 months.",
+          "sources": [
+            "https://azure.microsoft.com/pricing/purchase-options/azure-account"
+          ],
+          "checked_at": "2026-10-26"
+        }
       },
       "manual": {
         "terraform": {
@@ -3882,7 +4343,8 @@
       "category": "Storage and databases",
       "tracking": {
         "learn_urls": [
-          "https://learn.microsoft.com/azure/cosmos-db/introduction"
+          "https://learn.microsoft.com/azure/cosmos-db/introduction",
+          "https://learn.microsoft.com/azure/cosmos-db/free-tier"
         ],
         "terraform": [
           {
@@ -3937,7 +4399,18 @@
           "Turnkey global distribution with multi-region writes (99.999% SLA) and automatic failover. APIs: NoSQL, MongoDB, Apache Cassandra, Apache Gremlin and Table.",
           "Throughput models include provisioned, autoscale and serverless. A lifetime free tier gives 1000 RU/s and 25 GB.",
           "Integrated vector and hybrid search stores embeddings next to operational data."
-        ]
+        ],
+        "cost": {
+          "level": "free-tier",
+          "confirmed": true,
+          "note": "1,000 RU/s and 25 GB for the life of the account. One per subscription, opt in when creating it, not for serverless accounts.",
+          "billed": "Throughput and storage beyond that.",
+          "sources": [
+            "https://learn.microsoft.com/azure/cosmos-db/free-tier",
+            "https://azure.microsoft.com/pricing/purchase-options/azure-account"
+          ],
+          "checked_at": "2026-10-26"
+        }
       },
       "manual": {
         "terraform": {
@@ -3971,7 +4444,7 @@
       },
       "freshness": {
         "status": "current",
-        "changed_at": "2026-10-24",
+        "changed_at": "2026-10-26",
         "sources": {
           "https://learn.microsoft.com/azure/cosmos-db/introduction": {
             "changed_at": "2026-10-24",
@@ -3980,6 +4453,14 @@
             "updated_at": "2026-06-15T22:16:00Z",
             "latest_hash": "sha256:a3591170c564b26138fcf1e9476dee30e40342c7e581474accecd71d504f2bb3",
             "reviewed_hash": "sha256:a3591170c564b26138fcf1e9476dee30e40342c7e581474accecd71d504f2bb3"
+          },
+          "https://learn.microsoft.com/azure/cosmos-db/free-tier": {
+            "http_status": 200,
+            "ms_date": "2025-06-24T00:00:00Z",
+            "updated_at": "2026-04-27T13:06:00Z",
+            "latest_hash": "sha256:acd7dfc2f28540c02c0b7829cb42c509b49585fe109a139983f87928e1852a86",
+            "changed_at": "2026-10-26",
+            "reviewed_hash": "sha256:acd7dfc2f28540c02c0b7829cb42c509b49585fe109a139983f87928e1852a86"
           }
         }
       }
@@ -4055,7 +4536,17 @@
         "facts": [
           "Decouples applications and services. Features: load balancing with competing consumers, topics and subscriptions, atomic transactions and message sessions for strict ordering.",
           "Transactions allow once-only processing semantics: results become visible downstream only after the input message is settled."
-        ]
+        ],
+        "cost": {
+          "level": "paid",
+          "confirmed": false,
+          "note": "Not on the free services list (unconfirmed).",
+          "billed": "",
+          "sources": [
+            "https://azure.microsoft.com/pricing/purchase-options/azure-account"
+          ],
+          "checked_at": "2026-10-26"
+        }
       },
       "manual": {
         "terraform": {
@@ -4186,7 +4677,15 @@
         "facts": [
           "Two core features: MQTT messaging (v3.1.1 and v5) for IoT clients, and data distribution over HTTP with push and pull delivery.",
           "Push delivery sends events to webhooks and Azure services; an event subscription defines the handler or destination."
-        ]
+        ],
+        "cost": {
+          "level": "free-tier",
+          "confirmed": false,
+          "note": "Basic tier: first 100,000 operations a month free (from the pricing page, not verified).",
+          "billed": "Operations beyond that. Standard namespaces have separate allowances.",
+          "sources": [],
+          "checked_at": "2026-10-26"
+        }
       },
       "manual": {
         "terraform": {
@@ -4226,7 +4725,8 @@
       "category": "Observability",
       "tracking": {
         "learn_urls": [
-          "https://learn.microsoft.com/azure/azure-monitor/fundamentals/overview"
+          "https://learn.microsoft.com/azure/azure-monitor/fundamentals/overview",
+          "https://learn.microsoft.com/azure/azure-monitor/fundamentals/cost-usage"
         ],
         "terraform": [
           {
@@ -4300,7 +4800,18 @@
         "facts": [
           "Collects logs and metrics from Azure resources (including Entra ID audit logs) plus OpenTelemetry and Prometheus metrics for VMs and Kubernetes. The same data platform also serves Defender for Cloud and Microsoft Sentinel.",
           "Application Insights is its application performance monitoring feature, built on OpenTelemetry."
-        ]
+        ],
+        "cost": {
+          "level": "free-tier",
+          "confirmed": true,
+          "note": "Platform metrics and the activity log are free, so is alerting on the activity log.",
+          "billed": "Log ingestion and retention, metric alerts, web tests, Prometheus samples.",
+          "sources": [
+            "https://learn.microsoft.com/azure/azure-monitor/fundamentals/cost-usage",
+            "https://azure.microsoft.com/pricing/purchase-options/azure-account"
+          ],
+          "checked_at": "2026-10-26"
+        }
       },
       "manual": {
         "terraform": {
@@ -4320,7 +4831,7 @@
       },
       "freshness": {
         "status": "current",
-        "changed_at": "2026-10-24",
+        "changed_at": "2026-10-26",
         "sources": {
           "https://learn.microsoft.com/azure/azure-monitor/fundamentals/overview": {
             "changed_at": "2026-10-24",
@@ -4329,6 +4840,14 @@
             "updated_at": "2026-10-09T22:14:00Z",
             "latest_hash": "sha256:32b549d7f3178c029dedae9a1081334f10c5b223a6fcf4c6c33d823fd7060c78",
             "reviewed_hash": "sha256:32b549d7f3178c029dedae9a1081334f10c5b223a6fcf4c6c33d823fd7060c78"
+          },
+          "https://learn.microsoft.com/azure/azure-monitor/fundamentals/cost-usage": {
+            "http_status": 200,
+            "ms_date": "2026-08-07T00:00:00Z",
+            "updated_at": "2026-09-22T06:04:00Z",
+            "latest_hash": "sha256:9e141adf45c01d96751bb3108dd24ad9624f270989236771a70aaee2f84335ad",
+            "changed_at": "2026-10-26",
+            "reviewed_hash": "sha256:9e141adf45c01d96751bb3108dd24ad9624f270989236771a70aaee2f84335ad"
           }
         }
       }
@@ -4340,7 +4859,8 @@
       "category": "Observability",
       "tracking": {
         "learn_urls": [
-          "https://learn.microsoft.com/azure/azure-monitor/logs/log-analytics-overview"
+          "https://learn.microsoft.com/azure/azure-monitor/logs/log-analytics-overview",
+          "https://learn.microsoft.com/azure/azure-monitor/logs/cost-logs"
         ],
         "terraform": [
           {
@@ -4370,7 +4890,17 @@
           ],
           "changed_at": "2026-10-24"
         },
-        "purpose": "The tool for querying logs in the Azure Monitor Logs store; data lives in Log Analytics workspaces."
+        "purpose": "The tool for querying logs in the Azure Monitor Logs store; data lives in Log Analytics workspaces.",
+        "cost": {
+          "level": "free-tier",
+          "confirmed": false,
+          "note": "Some tables are free (AzureActivity, Heartbeat, Usage, Operation). The pricing page is said to include 5 GB a month per billing account, not verified.",
+          "billed": "Ingestion and retention beyond that. Basic and Auxiliary tables also charge for queries.",
+          "sources": [
+            "https://learn.microsoft.com/azure/azure-monitor/logs/cost-logs"
+          ],
+          "checked_at": "2026-10-26"
+        }
       },
       "manual": {
         "facts": [
@@ -4408,7 +4938,7 @@
       },
       "freshness": {
         "status": "current",
-        "changed_at": "2026-10-24",
+        "changed_at": "2026-10-26",
         "sources": {
           "https://learn.microsoft.com/azure/azure-monitor/logs/log-analytics-overview": {
             "changed_at": "2026-10-24",
@@ -4417,6 +4947,14 @@
             "updated_at": "2026-07-20T12:04:00Z",
             "latest_hash": "sha256:8fb25818a1826209766e51e37c5d28e9cbc1e2e9873581e2e0ca926af0e72e97",
             "reviewed_hash": "sha256:8fb25818a1826209766e51e37c5d28e9cbc1e2e9873581e2e0ca926af0e72e97"
+          },
+          "https://learn.microsoft.com/azure/azure-monitor/logs/cost-logs": {
+            "http_status": 200,
+            "ms_date": "2026-09-02T00:00:00Z",
+            "updated_at": "2026-09-21T22:11:00Z",
+            "latest_hash": "sha256:8cd4373dd9fc73746a9e0870955efb05ac0e9f2df1f7f276bfb87653fd4a0b77",
+            "changed_at": "2026-10-26",
+            "reviewed_hash": "sha256:8cd4373dd9fc73746a9e0870955efb05ac0e9f2df1f7f276bfb87653fd4a0b77"
           }
         }
       }
@@ -4428,7 +4966,8 @@
       "category": "Observability",
       "tracking": {
         "learn_urls": [
-          "https://learn.microsoft.com/azure/azure-monitor/app/app-insights-overview"
+          "https://learn.microsoft.com/azure/azure-monitor/app/app-insights-overview",
+          "https://learn.microsoft.com/azure/azure-monitor/logs/cost-logs"
         ],
         "terraform": [
           {
@@ -4462,7 +5001,17 @@
         "facts": [
           "A feature of Azure Monitor. OpenTelemetry (a vendor-neutral standard) is the way to instrument supported apps, with distros for .NET, Node.js, Python and Java.",
           "Views include failures, to identify and analyze failures and minimize downtime."
-        ]
+        ],
+        "cost": {
+          "level": "free-tier",
+          "confirmed": false,
+          "note": "Billed through its Log Analytics workspace, so the same allowance applies (not verified).",
+          "billed": "Ingestion and retention, standard web tests.",
+          "sources": [
+            "https://learn.microsoft.com/azure/azure-monitor/logs/cost-logs"
+          ],
+          "checked_at": "2026-10-26"
+        }
       },
       "manual": {
         "cloud_native": {
@@ -4492,7 +5041,7 @@
       },
       "freshness": {
         "status": "current",
-        "changed_at": "2026-10-24",
+        "changed_at": "2026-10-26",
         "sources": {
           "https://learn.microsoft.com/azure/azure-monitor/app/app-insights-overview": {
             "changed_at": "2026-10-24",
@@ -4501,6 +5050,14 @@
             "updated_at": "2026-10-09T22:14:00Z",
             "latest_hash": "sha256:a6b2367dc7fd5d01c0ab87f82169fe00ae6b59442c5422cc4f1b936dcc4e7cca",
             "reviewed_hash": "sha256:a6b2367dc7fd5d01c0ab87f82169fe00ae6b59442c5422cc4f1b936dcc4e7cca"
+          },
+          "https://learn.microsoft.com/azure/azure-monitor/logs/cost-logs": {
+            "http_status": 200,
+            "ms_date": "2026-09-02T00:00:00Z",
+            "updated_at": "2026-09-21T22:11:00Z",
+            "latest_hash": "sha256:8cd4373dd9fc73746a9e0870955efb05ac0e9f2df1f7f276bfb87653fd4a0b77",
+            "changed_at": "2026-10-26",
+            "reviewed_hash": "sha256:8cd4373dd9fc73746a9e0870955efb05ac0e9f2df1f7f276bfb87653fd4a0b77"
           }
         }
       }
@@ -4513,7 +5070,8 @@
       "tracking": {
         "learn_urls": [
           "https://learn.microsoft.com/azure/azure-monitor/metrics/prometheus-metrics-overview",
-          "https://learn.microsoft.com/azure/managed-grafana/overview"
+          "https://learn.microsoft.com/azure/managed-grafana/overview",
+          "https://learn.microsoft.com/azure/azure-monitor/fundamentals/cost-usage"
         ],
         "terraform": [
           {
@@ -4572,7 +5130,17 @@
         "facts": [
           "Fully supports PromQL and comes with preconfigured alerts, rules and dashboards. Native integration with AKS and with Azure Managed Grafana or Azure Monitor dashboards with Grafana.",
           "The only requirement is an Azure Monitor workspace, which stores the Prometheus metrics. There is no direct cost for the service or the workspace; pricing is on ingestion and query."
-        ]
+        ],
+        "cost": {
+          "level": "paid",
+          "confirmed": false,
+          "note": "No free tier found. Prometheus is billed per sample ingested and queried. Data is kept 18 months at no extra charge.",
+          "billed": "Samples, queries, Grafana workspace (unconfirmed).",
+          "sources": [
+            "https://learn.microsoft.com/azure/azure-monitor/fundamentals/cost-usage"
+          ],
+          "checked_at": "2026-10-26"
+        }
       },
       "manual": {
         "cloud_native": {
@@ -4630,7 +5198,7 @@
       },
       "freshness": {
         "status": "current",
-        "changed_at": "2026-10-24",
+        "changed_at": "2026-10-26",
         "sources": {
           "https://learn.microsoft.com/azure/azure-monitor/metrics/prometheus-metrics-overview": {
             "changed_at": "2026-10-24",
@@ -4647,6 +5215,14 @@
             "updated_at": "2026-06-29T17:15:00Z",
             "latest_hash": "sha256:f1a5990f1a1789f8386ccc02818627aea1cf7b4b5e8b4715e452cff0c032f84b",
             "reviewed_hash": "sha256:f1a5990f1a1789f8386ccc02818627aea1cf7b4b5e8b4715e452cff0c032f84b"
+          },
+          "https://learn.microsoft.com/azure/azure-monitor/fundamentals/cost-usage": {
+            "http_status": 200,
+            "ms_date": "2026-08-07T00:00:00Z",
+            "updated_at": "2026-09-22T06:04:00Z",
+            "latest_hash": "sha256:9e141adf45c01d96751bb3108dd24ad9624f270989236771a70aaee2f84335ad",
+            "changed_at": "2026-10-26",
+            "reviewed_hash": "sha256:9e141adf45c01d96751bb3108dd24ad9624f270989236771a70aaee2f84335ad"
           }
         }
       }
@@ -4658,7 +5234,8 @@
       "category": "Developer tools and delivery",
       "tracking": {
         "learn_urls": [
-          "https://learn.microsoft.com/azure/devops/user-guide/what-is-azure-devops"
+          "https://learn.microsoft.com/azure/devops/user-guide/what-is-azure-devops",
+          "https://learn.microsoft.com/azure/devops/pipelines/licensing/concurrent-jobs"
         ],
         "terraform": [
           {
@@ -4701,7 +5278,18 @@
           "changed_at": "2026-10-24"
         },
         "purpose": "Repos, pipelines, boards, test plans and artifacts for planning, building and delivering software.",
-        "facts": []
+        "facts": [],
+        "cost": {
+          "level": "free-tier",
+          "confirmed": true,
+          "note": "Free for 5 users with unlimited private Git repos. Pipelines: 1 Microsoft-hosted job, 1,800 minutes a month (billing must be linked to an Azure subscription), plus 1 self-hosted job.",
+          "billed": "More users, more parallel jobs, Artifacts storage beyond its allowance (unconfirmed).",
+          "sources": [
+            "https://learn.microsoft.com/azure/devops/pipelines/licensing/concurrent-jobs",
+            "https://azure.microsoft.com/pricing/purchase-options/azure-account"
+          ],
+          "checked_at": "2026-10-26"
+        }
       },
       "manual": {
         "facts": [
@@ -4718,7 +5306,7 @@
       },
       "freshness": {
         "status": "current",
-        "changed_at": "2026-10-24",
+        "changed_at": "2026-10-26",
         "sources": {
           "https://learn.microsoft.com/azure/devops/user-guide/what-is-azure-devops": {
             "changed_at": "2026-10-24",
@@ -4727,6 +5315,14 @@
             "updated_at": "2026-05-08T17:05:00Z",
             "latest_hash": "sha256:dff62e9a5f81cb5630bd1533b31ae194aedfc1aade8e8d5ad9453580f4abb2fb",
             "reviewed_hash": "sha256:dff62e9a5f81cb5630bd1533b31ae194aedfc1aade8e8d5ad9453580f4abb2fb"
+          },
+          "https://learn.microsoft.com/azure/devops/pipelines/licensing/concurrent-jobs": {
+            "http_status": 200,
+            "ms_date": "2026-06-19T00:00:00Z",
+            "updated_at": "2026-06-22T19:59:00Z",
+            "latest_hash": "sha256:fd3702535375a00337a3d8d1b060335cd0dfa71eda0e2b2c34f3bf86dc9a04b6",
+            "changed_at": "2026-10-26",
+            "reviewed_hash": "sha256:fd3702535375a00337a3d8d1b060335cd0dfa71eda0e2b2c34f3bf86dc9a04b6"
           }
         }
       }
@@ -6351,6 +6947,33 @@
           "choose_when": "You need Kubernetes itself. Azure manages the control plane; you manage the node pools."
         }
       ]
+    }
+  ],
+  "cost_scale": [
+    {
+      "level": "free",
+      "label": "Free",
+      "description": "No charge for the service itself. Things you attach to it may cost money."
+    },
+    {
+      "level": "free-tier",
+      "label": "Free tier",
+      "description": "A permanent free tier or monthly allowance. Free within its limits, billed beyond them."
+    },
+    {
+      "level": "trial",
+      "label": "Free for 12 months",
+      "description": "Free only for new Azure customers during the first 12 months (or on the free credit), billed afterwards."
+    },
+    {
+      "level": "partial",
+      "label": "Service free, resources not",
+      "description": "The service layer is free but running anything on it needs billed resources."
+    },
+    {
+      "level": "paid",
+      "label": "Paid",
+      "description": "No free option found. Usage-based services can still cost only cents for a small lab."
     }
   ]
 }

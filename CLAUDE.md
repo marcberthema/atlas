@@ -78,6 +78,8 @@ overrides, always win), `review`, `freshness` (written by the pipeline). Rules:
   `full` is a human judgement set in `manual.terraform.status`; the pipeline can only prove a resource exists
   (`listed`). Record real gaps in `manual.terraform.gaps` with the azapi alternative; `full` with gaps shows as `full*` (common uses covered). Judge by comparing the API spec with the azurerm docs (see `docs/data-model.md`); secrets, keys and other content go in `content`, not `gaps`. Name resource types
   exactly as in the registry.
+- **Cost:** `fetched.cost` says whether a service can be tried for free (`cost_scale` in the data). Set `confirmed` to `true`
+  only for claims read on the source page. Free offers change often, so never add a limit from memory.
 - **Accuracy over completeness.** Do not add a fact or edge from memory when unsure. Verify against
   Microsoft Learn (learn.microsoft.com) and say "unconfirmed" in the note if it can't be verified.
   Retirement dates change often; always check the official retirement announcement before adding one.
