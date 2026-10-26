@@ -24,6 +24,12 @@ make azure-check   # any topic target: make <topic>-<target>
 
 Python 3 standard library only. Every page works from `file://`.
 
+## Drafting ideas
+
+Add an entry to `topics.json` with `"draft": true` to note a topic idea (`id`, `label`, and any notes you like). Drafts are
+skipped by the banner, the landing page and the build, so they never reach `dist/`. Remove `draft` once the topic exists
+under `topics/<id>/`.
+
 ## Publish
 
 Cloudflare Pages connected to this repo: no build command, output directory `dist`. `dist/` is committed, so a merge to

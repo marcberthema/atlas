@@ -16,6 +16,12 @@ topics.json + shared/ -> the top banner on every page and the landing page, dist
 - Each topic owns its `data/`, `scripts/`, `templates/`, `docs/` and its own `CLAUDE.md` with the topic's rules. Read it
   before working in a topic.
 - `topics.json` is the topic registry (name, tagline, topics). The banner and the landing page are built from it.
+  An entry with `"draft": true` is an idea, not a topic: it needs only `id` and `label`, may carry any extra keys
+  (`description`, `notes`, ...), is never built or shown, and has no folder. To publish it, remove `draft`, add a
+  `description`, create `topics/<id>/` and add its `<topic>-%` rule to the root `Makefile`. `make validate` checks all of this.
+  The user writes ideas there to say what to work on next: read the drafts when asked what is next.
+  The repo itself is public, so drafts are visible on GitHub even though they never reach `dist/`: keep them as general as the
+  rest (no employer or client material).
 - `shared/atlas.py` renders the banner. A template carries `<!--__BANNER__-->` after `<body>` and `/*__BANNER_CSS__*/` in
   its style block; the topic build fills both. `shared/build_site.py` builds `dist/index.html`.
 - AI generates content into the JSON files. Python checks for updates and builds the pages. Neither the look nor the stack
