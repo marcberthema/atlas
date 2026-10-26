@@ -1,7 +1,7 @@
 PY ?= python3
 TOPICS := $(shell $(PY) shared/atlas.py ids)
 
-.PHONY: help validate build serve clean
+.PHONY: help validate build serve deploy clean
 
 help:  ## List the targets
 	@grep -E '^[a-z-]+:.*## ' $(MAKEFILE_LIST) | awk -F':.*## ' '{printf "  make %-14s %s\n", $$1, $$2}'
@@ -18,6 +18,9 @@ build:  ## Build every topic and the landing page into dist/
 
 serve: build  ## Build and serve dist/ on http://localhost:8000
 	$(PY) -m http.server 8000 --directory dist
+
+deploy: validate build  ## Validate, build and deploy dist/ to atlas.marcberthelette.com with wrangler
+	wrangler deploy
 
 clean:  ## Remove generated output
 	rm -rf dist

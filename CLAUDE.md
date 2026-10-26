@@ -1,7 +1,7 @@
 # Atlas
 
 A personal knowledge base: a collection of references to look things up in, not Q&A. Each topic is a set of facts kept in
-JSON, generated into static HTML. Published on Cloudflare Pages under marcberthelette.com; only `dist/` is exposed.
+JSON, generated into static HTML. Published as a Cloudflare Worker with static assets at atlas.marcberthelette.com; only `dist/` is exposed.
 Built with AI assistance. Topics now: Azure with Terraform, GitOps.
 
 ---
@@ -26,7 +26,7 @@ topics.json + shared/ -> the top banner on every page and the landing page, dist
   its style block; the topic build fills both. `shared/build_site.py` builds `dist/index.html`.
 - AI generates content into the JSON files. Python checks for updates and builds the pages. Neither the look nor the stack
   of a page may require changing the data.
-- `dist/` is generated and committed. Cloudflare Pages has no build command and `dist` as its output directory.
+- `dist/` is generated and committed. Deploy with `make deploy` (wrangler, one Worker named `atlas` serving `dist/`); there is no build on Cloudflare.
 - Adding a topic: create `topics/<id>/` (data, scripts/build.py, templates/index.html, Makefile, CLAUDE.md), add it to
   `topics.json` and to `TOPICS` and the pattern rules in the root `Makefile`.
 
@@ -61,6 +61,7 @@ make help        # all targets
 make validate    # every topic
 make build       # every topic and the landing page into dist/
 make serve       # build and serve dist/ on http://localhost:8000
+make deploy      # validate, build, wrangler deploy to atlas.marcberthelette.com
 make azure-check # run any target of a topic: make <topic>-<target>
 ```
 
