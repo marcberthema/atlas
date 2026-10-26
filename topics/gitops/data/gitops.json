@@ -1112,7 +1112,8 @@
           "items": [
             "Go templates plus the Sprig library, over 60 functions. Values are read from .Values, and .Release.Name is the release name.",
             "Pipelines: .Values.favorite.drink | repeat 5 | quote. The piped value is the last argument. quote the strings you read from values. default gives a fallback for computed values.",
-            "lookup reads live cluster objects and returns empty when nothing matches. It does not run in --dry-run, so test it with --dry-run=server."
+            "lookup reads live cluster objects and returns empty when nothing matches. It does not run in --dry-run, so test it with --dry-run=server.",
+            "The full function list is on Helm's Template Function List page (linked in Sources). Many of its functions come from Sprig, and Helm removes Sprig's env and expandenv on purpose."
           ]
         },
         {
@@ -1292,6 +1293,10 @@
         {
           "label": "helm upgrade",
           "url": "https://helm.sh/docs/helm/helm_upgrade/"
+        },
+        {
+          "label": "Template function list",
+          "url": "https://helm.sh/docs/chart_template_guide/function_list/"
         }
       ]
     },
