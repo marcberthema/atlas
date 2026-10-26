@@ -94,7 +94,6 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
     <div class="chips" id="chips" role="group" aria-label="Show or hide tiers"></div>
     <div class="tools">
       <input type="search" id="q" placeholder="Filter by name, purpose or category (full view: also Terraform resources)" aria-label="Filter services">
-      <select id="cn" class="full" aria-label="Filter by cloud native rating"></select>
     </div>
     <p class="count" id="count" aria-live="polite"></p>
   </div>
@@ -5874,8 +5873,6 @@ D.edges.forEach(e=>{
 });
 
 const out=document.getElementById('out'),q=document.getElementById('q'),count=document.getElementById('count');
-const cnSel=document.getElementById('cn');
-cnSel.innerHTML='<option value="">Cloud native: any</option>'+D.cloud_native_scale.map(c=>'<option value="'+c.level+'">'+esc(c.label)+'</option>').join('')+'<option value="unrated">Not rated yet</option>';
 const tiersShown=D.scope.tiers;
 const on={};tiersShown.forEach(t=>on[t]=true);
 const subEl=document.getElementById('sub');
@@ -5900,7 +5897,7 @@ function haystack(s){return [s.name,s.purpose,s.category].concat(MODE==='full'?s
 function render(){
   const f=q.value.trim().toLowerCase();let shown=0,html='';
   for(const cat of D.categories){
-    const items=D.services.filter(s=>s.category===cat&&on[s.tier]&&(MODE==='simple'||!cnSel.value||s.cloud_native.level===cnSel.value)&&(!f||haystack(s).includes(f))).sort((a,b)=>a.tier-b.tier);
+    const items=D.services.filter(s=>s.category===cat&&on[s.tier]&&(!f||haystack(s).includes(f))).sort((a,b)=>a.tier-b.tier);
     if(!items.length)continue;shown+=items.length;
     html+='<h2>'+esc(cat)+'</h2><div class="grid">'+items.map(s=>
       '<button type="button" class="svc" data-t="'+s.tier+'" data-id="'+s.id+'"><b>'+esc(s.name)+'<span class="tag">'+TIER[s.tier]+'</span></b><span>'+esc(s.purpose)+'</span>'+badges(s)+'</button>').join('')+'</div>';
@@ -5913,7 +5910,6 @@ chips.addEventListener('click',e=>{
   const t=+b.dataset.t;on[t]=!on[t];b.setAttribute('aria-pressed',on[t]);render();
 });
 q.addEventListener('input',render);
-cnSel.addEventListener('change',render);
 
 // Compare view: services that solve the same problem, side by side.
 const cmpView=document.getElementById('cmpview');

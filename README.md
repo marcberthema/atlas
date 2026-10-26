@@ -30,7 +30,7 @@ or write your own front end against that file.
 
 The page has two views of the same data, switched with the Simple / Full button (the choice is remembered). Simple is the
 default: tier chips, search, purpose, requires and required by, Learn links. Full adds Terraform status, freshness and review
-badges, the cloud native rating and filter, and the Compare tab. The format is in [docs/data-model.md](docs/data-model.md).
+badges, the cloud native rating (the filter is parked until the data is more complete), and the Compare tab. The format is in [docs/data-model.md](docs/data-model.md).
 
 ## Pipeline
 
