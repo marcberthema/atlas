@@ -46,6 +46,7 @@ button:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
 .badge.warn{color:var(--warn);border-color:var(--warn)}
 .badge.bad{color:var(--bad);border-color:var(--bad)}
 .empty{color:var(--mut);padding:16px 0}
+.cost p{margin:4px 0 0}
 .tabs{display:flex;gap:8px;margin-bottom:8px}
 .tab{font:inherit;color:var(--fg);background:transparent;border:0;border-bottom:3px solid transparent;padding:4px 10px;cursor:pointer}
 .tab[aria-selected=true]{border-bottom-color:var(--acc);color:var(--acc);font-weight:600}
@@ -124,6 +125,8 @@ const FRLABEL={current:['docs current','ok'],stale:['docs changed','warn'],unrev
 
 const CN={};D.cloud_native_scale.forEach(c=>CN[c.level]=c);
 const CNBADGE={native:['cloud native','ok'],partly:['partly cloud native','warn'],not:['not cloud native','']};
+const COSTCLS={free:'ok','free-tier':'ok',trial:'warn',partial:'warn',paid:''};
+const CS={};D.cost_scale.forEach(c=>CS[c.level]=c);
 const N={};
 D.services.forEach(s=>N[s.id]=s);
 D.stubs.forEach(s=>N[s.id]={...s,stub:true,purpose:'',facts:[]});
@@ -147,11 +150,15 @@ function tfLab(t){
   const l=TFLABEL[t.status];
   return t.status==='full'&&t.gaps.length?['Terraform: full*',l[1]]:l;
 }
+function costBadge(s){
+  const c=CS[s.cost.level];
+  return c?'<span class="badge '+COSTCLS[c.level]+'"'+(s.cost.confirmed?'':' title="Not verified against the source yet"')+'>'+esc(c.label)+(s.cost.confirmed?'':' ?')+'</span>':'';
+}
 function badges(s){
   const tf=tfLab(s.terraform),fr=FRLABEL[s.freshness.status];
-  return '<div class="badges full"><span class="badge '+tf[1]+'">'+tf[0]+'</span><span class="badge '+fr[1]+'">'+fr[0]+'</span>'+
-    (CNBADGE[s.cloud_native.level]?'<span class="badge '+CNBADGE[s.cloud_native.level][1]+'">'+CNBADGE[s.cloud_native.level][0]+'</span>':'')+
-    (s.review.status==='unconfirmed'?'<span class="badge warn">unconfirmed</span>':'')+'</div>';
+  return '<div class="badges">'+costBadge(s)+'<span class="badge full '+tf[1]+'">'+tf[0]+'</span><span class="badge full '+fr[1]+'">'+fr[0]+'</span>'+
+    (CNBADGE[s.cloud_native.level]?'<span class="badge full '+CNBADGE[s.cloud_native.level][1]+'">'+CNBADGE[s.cloud_native.level][0]+'</span>':'')+
+    (s.review.status==='unconfirmed'?'<span class="badge full warn">unconfirmed</span>':'')+'</div>';
 }
 function haystack(s){return [s.name,s.purpose,s.category].concat(MODE==='full'?s.terraform.resources.map(r=>r.type):[]).join(' ').toLowerCase()}
 
@@ -215,6 +222,14 @@ function tfBlock(s){
   if(t.note)h+='<div>'+esc(t.note)+'</div>';
   return h+'</div>';
 }
+function costBlock(x){
+  const c=x.cost,sc=CS[c.level];
+  if(!sc)return '';
+  return '<h4>Cost</h4><div class="cost"><span class="badge '+COSTCLS[c.level]+'">'+esc(sc.label)+'</span>'+
+    '<p>'+esc(c.note)+'</p>'+(c.billed?'<p><b>Billed:</b> '+esc(c.billed)+'</p>':'')+
+    '<p><small>Checked '+esc(c.checked_at)+(c.confirmed?'':' · not verified against the source yet')+
+    c.sources.map(u=>' · <a href="'+safeUrl(u)+'" target="_blank" rel="noopener">'+esc(u.replace(/^https:\/\/(learn\.microsoft\.com|azure\.microsoft\.com)\//,''))+'</a>').join('')+'</small></p></div>';
+}
 function cnLine(x){
   const c=CN[x.cloud_native.level];
   return c?'<p><b>'+esc(c.label)+'.</b> '+esc(x.cloud_native.note)+'</p>':'';
@@ -227,7 +242,7 @@ function show(){
   }else{
     const facts=x.facts.length?'<ul class="facts">'+x.facts.map(f=>'<li>'+esc(f)+'</li>').join('')+'</ul>':'';
     const docs=x.docs.length?'<h4>Microsoft Learn</h4><div>'+x.docs.map(d=>'<a href="'+safeUrl(d.url)+'" target="_blank" rel="noopener">'+esc(d.url.replace('https://learn.microsoft.com/',''))+'</a>').join('<br>')+'</div>':'';
-    head='<h3 id="dtitle">'+esc(x.name)+'</h3><div class="meta">'+esc(x.category)+' · '+TIER[x.tier]+'</div><div>'+esc(x.purpose)+'</div>'+badges(x)+'<div class="full">'+cnLine(x)+facts+tfBlock(x)+'</div>'+docs+
+    head='<h3 id="dtitle">'+esc(x.name)+'</h3><div class="meta">'+esc(x.category)+' · '+TIER[x.tier]+'</div><div>'+esc(x.purpose)+'</div>'+badges(x)+costBlock(x)+'<div class="full">'+cnLine(x)+facts+tfBlock(x)+'</div>'+docs+
       (x.review.status==='unconfirmed'?'<p class="warn full">'+esc(x.review.note)+'</p>':'');
   }
   const groups=D.edge_group_order.filter(g=>MODE==='full'||g.type==='requires').map(g=>relGroup(id,g.direction,g.type)).join('');

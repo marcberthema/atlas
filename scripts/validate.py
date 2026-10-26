@@ -8,7 +8,7 @@ FRESHNESS = {"unreviewed", "current", "stale", "error"}
 REVIEW = {"unconfirmed", "verified"}
 EDGE_STATUS = {"unconfirmed", "verified"}
 TF_KINDS = set(model.TF_KINDS)
-MANUAL_KEYS = {"purpose", "facts", "cloud_native", "terraform"}
+MANUAL_KEYS = {"purpose", "facts", "cloud_native", "terraform", "cost"}
 
 
 def main():
@@ -56,6 +56,15 @@ def main():
         cn = model.deep_merge(s["fetched"], s["manual"]).get("cloud_native")
         if cn and (cn.get("level") not in levels or not cn.get("note")):
             bad.append(f"cloud_native needs a level from the scale and a note: {s['id']}")
+    cost_levels = {c["level"] for c in data["cost_scale"]}
+    for s in data["services"]:
+        c = model.deep_merge(s["fetched"], s["manual"]).get("cost")
+        if not c:
+            warn.append(f"no cost entry: {s['id']}")
+        elif c.get("level") not in cost_levels or not c.get("note") or not c.get("checked_at") or not isinstance(c.get("confirmed"), bool):
+            bad.append(f"cost needs a level from the scale, a note, checked_at and confirmed: {s['id']}")
+        elif not all(u.startswith("https://") for u in c.get("sources", [])):
+            bad.append(f"cost sources must be https urls: {s['id']}")
     service_ids = {s["id"] for s in data["services"]}
     for c in data["comparisons"]:
         for m in c["members"]:
