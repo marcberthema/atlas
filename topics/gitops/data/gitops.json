@@ -1082,6 +1082,15 @@
           ]
         },
         {
+          "title": "Typical use",
+          "items": [
+            "Alone: helm install with a published chart and a values file, for software someone else maintains. Or one chart of your own with a values file per environment.",
+            "With Kustomize: patch the output of a chart that has no value for what you need. Flux HelmRelease postRenderers apply Kustomize patches after Helm renders. Kustomize's own helmCharts field needs --enable-helm and covers a subset of Helm.",
+            "With Argo CD: it renders the chart with helm template and manages the lifecycle itself, so helm list does not show its applications. With Flux: the HelmRelease performs a real Helm release.",
+            "Choose Helm for packaging, defaults, release history and rollback. Choose Kustomize to vary plain YAML between environments without templates."
+          ]
+        },
+        {
           "title": "Commands",
           "items": [
             "helm install <release> <chart> (or --generate-name), helm upgrade, helm rollback <release> <revision>, helm uninstall (--keep-history keeps the record), helm list, helm history, helm status.",
@@ -1226,7 +1235,8 @@
       ],
       "notes": [
         "Start date is the repository creation date. The release date for 4.0.0 is on GitHub as 2025-11-12 and in the announcement as 2025-11-12.",
-        "The registries page says it is not yet fully updated for Helm 4. Flags are read from the Helm 4.3.1 command pages. Helm 3 names (--atomic, --force) still work with a warning."
+        "The registries page says it is not yet fully updated for Helm 4. Flags are read from the Helm 4.3.1 command pages. Helm 3 names (--atomic, --force) still work with a warning.",
+        "Typical use: the choice between Helm and Kustomize is common practice, not a rule stated by a page read here."
       ],
       "sources": [
         {
