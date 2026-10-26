@@ -37,6 +37,13 @@ layers already merged, Terraform status derived) or merge the layers yourself wi
 against the scale's criteria, not a Microsoft label, so it lives in `manual` and is only set after the user confirms.
 A service with no rating resolves to `unrated`.
 
+### Version analysed
+
+The detail panel shows a "Sources" section built from the resolved JSON, with a link for every page used: for each tracked Learn page its `page_date` (the
+article's `ms.date`) and `published` (when Learn last published it), and for Terraform either `compared` (provider version, API
+version and date) or the latest provider versions in `terraform.provider_versions`. pricing and free-offer pages from `cost.sources`, and the Terraform Registry pages. `make validate` warns when a service has no
+dated source page.
+
 ### Cost
 
 `cost` answers "can I try this without paying?" with a `level` from `cost_scale`, a one-line `note` (what is free and its
