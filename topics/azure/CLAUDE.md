@@ -86,7 +86,7 @@ overrides, always win), `review`, `freshness` (written by the pipeline). Rules:
 - **Keep text short and plain.** One line per service purpose. Facts only where a common confusion exists
   (RBAC versus Policy, Key Vault access policy versus RBAC, and so on).
 - **Public and general only.** See the root `CLAUDE.md`: nothing is ever based on a current or past employer or client, only public Azure knowledge.
-- **Version visible.** Each detail panel has a "Based on" section: the Learn pages with their dates and the Terraform provider
+- **Version visible.** Each detail panel has a "Sources" section: a link for every page used, the Learn pages with their dates, and the Terraform provider
   and API versions. Keep `tracking.learn_urls` and `manual.terraform.compared` accurate so it stays true.
 - **Style:** match the existing code. Same naming, same comment density.
 

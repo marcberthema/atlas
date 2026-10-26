@@ -18,6 +18,8 @@
 .atlas a{color:var(--fg);text-decoration:none;padding:4px 12px;border-radius:8px;border:1px solid transparent}
 .atlas a:hover{border-color:var(--rule)}
 .atlas a:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+.atlas-foot{border-top:1px solid var(--rule);margin-top:28px;padding-top:10px;color:var(--mut);font-size:.85rem}
+.atlas-foot p{margin:0 0 4px}
 .atlas .home{font-weight:700;color:var(--acc);margin-right:6px}
 .atlas a[aria-current=page]{background:var(--acc);color:var(--bg);font-weight:600}
 
@@ -55,6 +57,7 @@ button:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
 .badge.bad{color:var(--bad);border-color:var(--bad)}
 .empty{color:var(--mut);padding:16px 0}
 .cost p{margin:4px 0 0}
+ul.src{margin:2px 0 8px;padding-left:20px}
 .tabs{display:flex;gap:8px;margin-bottom:8px}
 .tab{font:inherit;color:var(--fg);background:transparent;border:0;border-bottom:3px solid transparent;padding:4px 10px;cursor:pointer}
 .tab[aria-selected=true]{border-bottom-color:var(--acc);color:var(--acc);font-weight:600}
@@ -120,6 +123,7 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
   <div class="db" id="dbody"></div>
 </dialog>
 
+<footer class="atlas-foot"><p>Everything here is collected with AI assistance from public sources, and it changes. Always check the real source (the links and dates on each entry) before relying on it. Entries marked <b>?</b> or "unconfirmed" haven't been verified yet.</p><p>This is a personal project, not an official resource of Microsoft, HashiCorp, Argo CD or any other product named here.</p></footer>
 <script id="data" type="application/json">{
   "schema_version": 1,
   "scope": {
@@ -6779,15 +6783,23 @@ function costBlock(x){
   return '<h4>Cost</h4><div class="cost"><span class="badge '+COSTCLS[c.level]+'">'+esc(sc.label)+'</span>'+
     '<p>'+esc(c.note)+'</p>'+(c.billed?'<p><b>Billed:</b> '+esc(c.billed)+'</p>':'')+
     '<p><small>Checked '+esc(c.checked_at)+(c.confirmed?'':' · not verified against the source yet')+
-    c.sources.map(u=>' · <a href="'+safeUrl(u)+'" target="_blank" rel="noopener">'+esc(u.replace(/^https:\/\/(learn\.microsoft\.com|azure\.microsoft\.com)\//,''))+'</a>').join('')+'</small></p></div>';
+    '</small></p></div>';
 }
 function basedOn(x){
   const t=x.terraform,pv=Object.entries(t.provider_versions).map(([p,v])=>p+' '+v).join(', ');
   const tf=t.compared?'Terraform: '+t.compared.provider+' '+t.compared.provider_version+' against API '+t.compared.api_version+', compared '+t.compared.compared_at
     :(pv&&(t.resources.length||t.fallback)?'Terraform: latest provider versions when checked: '+pv:'');
-  const pages=x.docs.map(d=>'<a href="'+safeUrl(d.url)+'" target="_blank" rel="noopener">'+esc(d.url.replace('https://learn.microsoft.com/',''))+'</a> <small>'+
-    (d.page_date?'page dated '+esc(d.page_date):'page date unknown')+(d.published&&d.published!==d.page_date?', published '+esc(d.published):'')+'</small>').join('<br>');
-  return pages||tf?'<h4>Based on</h4><div>'+pages+(pages&&tf?'<br>':'')+(tf?'<small>'+esc(tf)+'</small>':'')+'</div>':'';
+  const link=(u,label,note)=>'<li><a href="'+safeUrl(u)+'" target="_blank" rel="noopener">'+label+'</a>'+(note?' <small>'+esc(note)+'</small>':'')+'</li>';
+  const group=(title,items)=>items.length?'<b>'+title+'</b><ul class="src">'+items.join('')+'</ul>':'';
+  const seen=new Set(x.docs.map(d=>d.url));
+  const learn=x.docs.map(d=>link(d.url,esc(d.url.replace('https://learn.microsoft.com/','')),
+    (d.page_date?'page dated '+d.page_date:'page date unknown')+(d.published&&d.published!==d.page_date?', published '+d.published:'')));
+  const other=x.cost.sources.filter(u=>!seen.has(u)).map(u=>link(u,esc(u.replace(/^https:\/\//,'')),''));
+  const reg=t.resources.map(r=>link(r.docs_url,'<code>'+esc(r.type)+'</code>',(r.kind==='data_source'?'data source · ':'')+esc(r.provider)));
+  if(t.fallback)reg.push(link(t.fallback.docs_url,'<code>azapi_resource</code>','azapi'));
+  if(t.compared)reg.push(link('https://github.com/Azure/azure-rest-api-specs','Azure REST API specs','API '+t.compared.api_version));
+  const body=group('Microsoft Learn',learn)+group('Pricing and free offers',other)+group('Terraform',reg)+(tf?'<small>'+esc(tf)+'</small>':'');
+  return body?'<h4>Sources</h4><div>'+body+'</div>':'';
 }
 function cnLine(x){
   const c=CN[x.cloud_native.level];

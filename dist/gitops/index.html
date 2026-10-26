@@ -10,6 +10,8 @@
 .atlas a{color:var(--fg);text-decoration:none;padding:4px 12px;border-radius:8px;border:1px solid transparent}
 .atlas a:hover{border-color:var(--rule)}
 .atlas a:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+.atlas-foot{border-top:1px solid var(--rule);margin-top:28px;padding-top:10px;color:var(--mut);font-size:.85rem}
+.atlas-foot p{margin:0 0 4px}
 .atlas .home{font-weight:700;color:var(--acc);margin-right:6px}
 .atlas a[aria-current=page]{background:var(--acc);color:var(--bg);font-weight:600}
 
@@ -31,4 +33,5 @@ document.getElementById('title').textContent=D.title;
 document.getElementById('intro').textContent=D.intro;
 document.getElementById('out').innerHTML=D.sections.map(s=>'<h2>'+esc(s.title)+'</h2>').join('')||'<p class="empty">Nothing collected yet.</p>';
 </script>
+<footer class="atlas-foot"><p>Everything here is collected with AI assistance from public sources, and it changes. Always check the real source (the links and dates on each entry) before relying on it. Entries marked <b>?</b> or "unconfirmed" haven't been verified yet.</p><p>This is a personal project, not an official resource of Microsoft, HashiCorp, Argo CD or any other product named here.</p></footer>
 </body></html>

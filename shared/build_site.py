@@ -13,7 +13,7 @@ def main():
         for t in reg["topics"])
     page = (page.replace("__NAME__", html.escape(reg["name"])).replace("__TAGLINE__", html.escape(reg["tagline"]))
                 .replace("<!--__TOPICS__-->", cards)
-                .replace(atlas.BANNER_MARK, atlas.banner(None, "")).replace(atlas.CSS_MARK, atlas.CSS))
+                .replace(atlas.BANNER_MARK, atlas.banner(None, "")).replace(atlas.CSS_MARK, atlas.CSS).replace(atlas.FOOTER_MARK, atlas.FOOTER))
     atlas.DIST.mkdir(exist_ok=True)
     (atlas.DIST / "index.html").write_text(page, encoding="utf-8")
     print(f"built dist/index.html ({len(reg['topics'])} topics)")

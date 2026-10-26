@@ -39,9 +39,9 @@ A service with no rating resolves to `unrated`.
 
 ### Version analysed
 
-The detail panel shows a "Based on" section built from the resolved JSON: for each tracked Learn page its `page_date` (the
+The detail panel shows a "Sources" section built from the resolved JSON, with a link for every page used: for each tracked Learn page its `page_date` (the
 article's `ms.date`) and `published` (when Learn last published it), and for Terraform either `compared` (provider version, API
-version and date) or the latest provider versions in `terraform.provider_versions`. `make validate` warns when a service has no
+version and date) or the latest provider versions in `terraform.provider_versions`. pricing and free-offer pages from `cost.sources`, and the Terraform Registry pages. `make validate` warns when a service has no
 dated source page.
 
 ### Cost
