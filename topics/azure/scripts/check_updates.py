@@ -22,7 +22,7 @@ from datetime import datetime, timezone
 
 import model
 
-UA = {"User-Agent": "azure-services-map-check (https://github.com)"}
+UA = {"User-Agent": "atlas-check (https://github.com)"}
 RAW = "https://raw.githubusercontent.com/{}/main/{}"
 CHANGELOGS = {
     "azurerm": [RAW.format("hashicorp/terraform-provider-azurerm", f) for f in
