@@ -16,6 +16,8 @@ Learn + Terraform Registry  ->  data/services.json  ->  scripts/build.py  ->  di
 - `dist/services.resolved.json` is the stable contract for any front end (layers merged, Terraform status derived).
 - `templates/index.html` is the view. It reads only the resolved JSON. Changing the look or the tech stack must
   never require touching the data or the scripts.
+  It holds two views of the same data, Simple (default) and Full, toggled in the page. Elements only the Full view
+  needs carry the `full` class.
 - `scripts/` is Python 3, standard library only. No pip dependencies.
 - `azure-services.html` is the original single-file page. Frozen reference: do not edit or build on it.
 

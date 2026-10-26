@@ -26,7 +26,11 @@ Python 3 standard library only. `dist/index.html` works from `file://`.
 ## Change the look or the stack
 
 Everything the page shows comes from `dist/services.resolved.json`. Edit `templates/index.html` for a new look,
-or write your own front end against that file. The format is in [docs/data-model.md](docs/data-model.md).
+or write your own front end against that file.
+
+The page has two views of the same data, switched with the Simple / Full button (the choice is remembered). Simple is the
+default: tier chips, search, purpose, requires and required by, Learn links. Full adds Terraform status, freshness and review
+badges, the cloud native rating and filter, and the Compare tab. The format is in [docs/data-model.md](docs/data-model.md).
 
 ## Pipeline
 
