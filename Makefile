@@ -30,3 +30,7 @@ azure-%:
 	$(MAKE) -C topics/azure $*
 gitops-%:
 	$(MAKE) -C topics/gitops $*
+identity-%:
+	$(MAKE) -C topics/identity $*
+certificates-%:
+	$(MAKE) -C topics/certificates $*
