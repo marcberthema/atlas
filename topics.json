@@ -5,6 +5,8 @@
     {"id": "azure", "label": "Azure with Terraform", "description": "What an Azure service provides, what it needs, what it costs and how to build it with Terraform."},
     {"id": "gitops", "label": "GitOps", "description": "GitOps principles, Argo CD in depth, Flux and other operators, and Helm, Kustomize and their alternatives."},
     {"id": "identity", "label": "Identity providers", "description": "Single sign-on and the protocols behind it (OIDC, SAML, LDAP, Kerberos, SCIM), open source identity providers, and how Argo CD and Kubernetes use one."},
-    {"id": "certificates", "label": "Certificates", "description": "X.509 and TLS basics, ACME and Let's Encrypt, private CAs, cert-manager and Kubernetes, and OpenSSL commands to inspect and troubleshoot."}
+    {"id": "certificates", "label": "Certificates", "description": "X.509 and TLS basics, ACME and Let's Encrypt, private CAs, cert-manager and Kubernetes, and OpenSSL commands to inspect and troubleshoot."},
+    {"id": "topologies", "label": "Enterprise topologies", "draft": true, "notes": "How systems talk to each other: hub-and-spoke, mesh, tree, bus, ring and where each shows up (clusters, networks, messaging, databases)."},
+    {"id": "patterns", "label": "Architecture and design patterns", "draft": true, "notes": "Structure and responsibility: MVC, layered, hexagonal, microservices and similar."}
   ]
 }
