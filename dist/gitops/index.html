@@ -23,7 +23,7 @@ h2{font-size:1.05rem;color:var(--acc);margin:20px 0 2px;border-bottom:1px solid 
 .about{color:var(--mut);font-size:.9rem;margin:0 0 6px}
 .bar{position:sticky;top:0;background:var(--bg);padding:8px 0;border-bottom:1px solid var(--rule);z-index:2}
 input[type=search]{font:inherit;width:100%;padding:8px 10px;border:1px solid var(--rule);border-radius:8px;background:var(--card);color:var(--fg)}
-.tabs{display:flex;gap:8px;margin-bottom:8px}
+.tabs{display:flex;gap:4px;margin-bottom:8px;flex-wrap:wrap}
 .tab{font:inherit;color:var(--fg);background:transparent;border:0;border-bottom:3px solid transparent;padding:4px 10px;cursor:pointer}
 .tab[aria-selected=true]{border-bottom-color:var(--acc);color:var(--acc);font-weight:600}
 button:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
@@ -39,6 +39,8 @@ button.nm{font:inherit;font-weight:600;color:var(--acc);background:none;border:0
 .badge.bad{color:var(--bad);border-color:var(--bad)}
 .q{color:var(--warn);font-weight:700;cursor:help}
 .empty{color:var(--mut);padding:16px 0}
+.pg{padding-top:4px}
+
 .cmp th:first-child,.cmp td:first-child{white-space:nowrap}
 dialog{width:min(820px,calc(100vw - 24px));max-height:calc(100vh - 24px);border:1px solid var(--rule);border-radius:12px;background:var(--bg);color:var(--fg);padding:0}
 dialog::backdrop{background:rgba(0,0,0,.5)}
@@ -63,7 +65,7 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
 <p class="sub" id="intro"></p>
 <div class="note" id="scope"></div>
 <div class="bar">
-  <div class="tabs" role="tablist"><button class="tab" role="tab" data-v="entries" aria-selected="true">Entries</button><button class="tab" role="tab" data-v="compare" aria-selected="false">Compare</button></div>
+  <div class="tabs" role="tablist" id="tabs"></div>
   <input type="search" id="q" placeholder="Search name or text" aria-label="Search">
 </div>
 <main id="out"></main>
@@ -75,7 +77,18 @@ const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',
 const $=id=>document.getElementById(id);
 const byId=Object.fromEntries(D.entries.map(e=>[e.id,e]));
 const STATUS={active:'ok',inactive:'warn',archived:'bad'};
-let view='entries';
+// One tab per product, in this order. Everything else is listed on the Other tools tab.
+const TABS=[
+  {id:'opengitops',label:'GitOps principles'},
+  {id:'argo-cd',label:'Argo CD'},
+  {id:'flux',label:'Flux'},
+  {id:'helm',label:'Helm'},
+  {id:'kustomize',label:'Kustomize'},
+  {id:'others',label:'Other tools'},
+  {id:'compare',label:'Compare'}
+];
+const OWN=new Set(TABS.map(t=>t.id));
+let view=TABS[0].id;
 $('title').textContent=D.title;
 $('intro').textContent=D.intro;
 $('scope').textContent=D.scope+' Checked '+D.checked+'. Every entry shows the version it was analysed against.';
@@ -88,7 +101,7 @@ const nameBtn=e=>'<button class="nm" type="button" data-id="'+esc(e.id)+'">'+esc
 
 function entries(f){
   return D.groups.map(g=>{
-    const rows=D.entries.filter(e=>e.group===g.id&&(!f||text(e).includes(f)));
+    const rows=D.entries.filter(e=>e.group===g.id&&!OWN.has(e.id)&&(!f||text(e).includes(f)));
     if(!rows.length)return '';
     return '<h2>'+esc(g.label)+'</h2><p class="about">'+esc(g.about)+'</p><div class="wrap"><table><thead><tr><th>Name</th><th>Started</th><th>Status</th><th>CNCF</th><th>Version analysed</th><th>Licence</th></tr></thead><tbody>'
       +rows.map(e=>'<tr><td>'+nameBtn(e)+'<small>'+esc(e.summary)+'</small></td><td>'+started(e)+'</td><td><span class="badge '+STATUS[e.status]+'">'+esc(e.status)+'</span></td><td>'+cncf(e)+'</td><td>'+latest(e)+'</td><td>'+esc(e.license)+'</td></tr>').join('')
@@ -106,7 +119,17 @@ function compare(f){
 
 function render(){
   const f=$('q').value.trim().toLowerCase();
-  $('out').innerHTML=view==='entries'?entries(f):compare(f);
+  const list=view==='others'||view==='compare';
+  $('q').style.display=list?'':'none';
+  $('out').innerHTML=view==='others'?entries(f):view==='compare'?compare(f):'<div class="pg">'+detail(byId[view])+'</div>';
+}
+
+function tab(id,push){
+  view=id;
+  document.querySelectorAll('.tab').forEach(x=>x.setAttribute('aria-selected',x.dataset.v===id));
+  render();
+  window.scrollTo(0,0);
+  if(push!==false)history.replaceState(null,'',byId[id]?'#'+id:location.pathname);
 }
 
 function link(id){return byId[id]?'<a href="#'+esc(id)+'" data-id="'+esc(id)+'">'+esc(byId[id].name)+'</a>':''}
@@ -130,6 +153,7 @@ function detail(e){
 
 function open(id,push){
   const e=byId[id];if(!e)return;
+  if(OWN.has(id)){if($('dlg').open)$('dlg').close();tab(id,push);return;}
   $('dt').textContent=e.name;$('db').innerHTML=detail(e);
   if(!$('dlg').open)$('dlg').showModal();
   $('db').scrollTop=0;$('dlg').scrollTop=0;
@@ -141,14 +165,11 @@ document.addEventListener('click',ev=>{
   if(t){ev.preventDefault();open(t.dataset.id);}
 });
 $('close').onclick=()=>$('dlg').close();
-$('dlg').addEventListener('close',()=>history.replaceState(null,'',location.pathname));
+$('dlg').addEventListener('close',()=>{if(!OWN.has(view)||!byId[view])history.replaceState(null,'',location.pathname);else history.replaceState(null,'','#'+view);});
 $('q').addEventListener('input',render);
-document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{
-  view=b.dataset.v;
-  document.querySelectorAll('.tab').forEach(x=>x.setAttribute('aria-selected',x===b));
-  render();
-});
-render();
+$('tabs').innerHTML=TABS.map(t=>'<button class="tab" role="tab" data-v="'+t.id+'" aria-selected="false">'+esc(t.label)+'</button>').join('');
+document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>tab(b.dataset.v));
+tab(TABS[0].id,false);
 if(location.hash)open(decodeURIComponent(location.hash.slice(1)),false);
 </script>
 <footer class="atlas-foot"><p>Everything here is collected with AI assistance from public sources, and it changes. Always check the real source (the links and dates on each entry) before relying on it. Entries marked <b>?</b> or "unconfirmed" haven't been verified yet.</p><p>This is a personal project, not an official resource of Microsoft, HashiCorp, Argo CD or any other product named here.</p></footer>
