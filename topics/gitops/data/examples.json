@@ -1,0 +1,217 @@
+{
+  "https://argo-cd.readthedocs.io/en/stable/getting_started/ | argocd account update-password": {
+    "body": "argocd account update-password",
+    "fetched": "2026-10-27",
+    "checked": "2026-10-27"
+  },
+  "https://argo-cd.readthedocs.io/en/stable/getting_started/ | argocd admin initial-password": {
+    "body": "argocd admin initial-password -n argocd",
+    "fetched": "2026-10-27",
+    "checked": "2026-10-27"
+  },
+  "https://argo-cd.readthedocs.io/en/stable/getting_started/ | argocd app create guestbook": {
+    "body": "argocd app create guestbook --repo https://github.com/argoproj/argocd-example-apps.git --path guestbook --dest-server https://kubernetes.default.svc --dest-namespace default",
+    "fetched": "2026-10-27",
+    "checked": "2026-10-27"
+  },
+  "https://argo-cd.readthedocs.io/en/stable/getting_started/ | argocd app sync guestbook": {
+    "body": "argocd app sync guestbook",
+    "fetched": "2026-10-27",
+    "checked": "2026-10-27"
+  },
+  "https://argo-cd.readthedocs.io/en/stable/getting_started/ | argocd login <ARGOCD_SERVER>": {
+    "body": "argocd login <ARGOCD_SERVER>",
+    "fetched": "2026-10-27",
+    "checked": "2026-10-27"
+  },
+  "https://argo-cd.readthedocs.io/en/stable/getting_started/ | kubectl create namespace argocd": {
+    "body": "kubectl create namespace argocd\nkubectl apply -n argocd --server-side --force-conflicts -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml",
+    "fetched": "2026-10-27",
+    "checked": "2026-10-27"
+  },
+  "https://argo-cd.readthedocs.io/en/stable/getting_started/ | kubectl port-forward svc/argocd-server": {
+    "body": "kubectl port-forward svc/argocd-server -n argocd 8080:443",
+    "fetched": "2026-10-27",
+    "checked": "2026-10-27"
+  },
+  "https://argo-cd.readthedocs.io/en/stable/operator-manual/applicationset/Generators-List/ | kind: ApplicationSet\nmetadata:\n  name: guestbook": {
+    "body": "apiVersion: argoproj.io/v1alpha1\nkind: ApplicationSet\nmetadata:\n  name: guestbook\n  namespace: argocd\nspec:\n  goTemplate: true\n  goTemplateOptions: [\"missingkey=error\"]\n  generators:\n  - list:\n      elements:\n      - cluster: engineering-dev\n        url: https://kubernetes.default.svc\n      # - cluster: engineering-prod\n      #   url: https://kubernetes.default.svc\n  template:\n    metadata:\n      name: '{{.cluster}}-guestbook'\n    spec:\n      project: \"my-project\"\n      source:\n        repoURL: https://github.com/argoproj/argo-cd.git\n        targetRevision: HEAD\n        path: applicationset/examples/list-generator/guestbook/{{.cluster}}\n      destination:\n        server: '{{.url}}'\n        namespace: guestbook",
+    "fetched": "2026-10-27",
+    "checked": "2026-10-27"
+  },
+  "https://argo-cd.readthedocs.io/en/stable/operator-manual/declarative-setup/ | chart: sealed-secrets": {
+    "body": "apiVersion: argoproj.io/v1alpha1\nkind: Application\nmetadata:\n  name: sealed-secrets\n  namespace: argocd\nspec:\n  project: default\n  source:\n    chart: sealed-secrets\n    repoURL: https://bitnami-labs.github.io/sealed-secrets\n    targetRevision: 1.16.1\n    helm:\n      releaseName: sealed-secrets\n  destination:\n    server: \"https://kubernetes.default.svc\"\n    namespace: kubeseal",
+    "fetched": "2026-10-27",
+    "checked": "2026-10-27"
+  },
+  "https://argo-cd.readthedocs.io/en/stable/operator-manual/declarative-setup/ | name: guestbook\n  namespace: argocd\nspec:\n  project: default": {
+    "body": "apiVersion: argoproj.io/v1alpha1\nkind: Application\nmetadata:\n  name: guestbook\n  namespace: argocd\nspec:\n  project: default\n  source:\n    repoURL: https://github.com/argoproj/argocd-example-apps.git\n    targetRevision: HEAD\n    path: guestbook\n  destination:\n    server: https://kubernetes.default.svc\n    namespace: guestbook",
+    "fetched": "2026-10-27",
+    "checked": "2026-10-27"
+  },
+  "https://argo-cd.readthedocs.io/en/stable/operator-manual/notifications/ | kubectl patch app <my-app>": {
+    "body": "kubectl patch app <my-app> -n argocd -p '{\"metadata\": {\"annotations\": {\"notifications.argoproj.io/subscribe.on-sync-succeeded.slack\":\"<my-channel>\"}}}' --type merge",
+    "fetched": "2026-10-27",
+    "checked": "2026-10-27"
+  },
+  "https://argo-cd.readthedocs.io/en/stable/operator-manual/rbac/ | p, my-org:team-alpha, applications, sync": {
+    "body": "apiVersion: v1\nkind: ConfigMap\nmetadata:\n  name: argocd-rbac-cm\n  namespace: argocd\n  labels:\n    app.kubernetes.io/name: argocd-rbac-cm\n    app.kubernetes.io/part-of: argocd\ndata:\n  policy.csv: |\n    p, my-org:team-alpha, applications, sync, my-project/*, allow\n    g, my-org:team-beta, role:admin\n    g, user@example.org, role:admin\n    g, admin, role:admin\n    g, role:admin, role:readonly\n  policy.default: role:readonly\n  scopes: '[groups, email]'",
+    "fetched": "2026-10-27",
+    "checked": "2026-10-27"
+  },
+  "https://argo-cd.readthedocs.io/en/stable/user-guide/auto_sync/ | prune: true": {
+    "body": "spec:\n  syncPolicy:\n    automated:\n      prune: true",
+    "fetched": "2026-10-27",
+    "checked": "2026-10-27"
+  },
+  "https://argo-cd.readthedocs.io/en/stable/user-guide/auto_sync/ | selfHeal: true": {
+    "body": "spec:\n  syncPolicy:\n    automated:\n      selfHeal: true",
+    "fetched": "2026-10-27",
+    "checked": "2026-10-27"
+  },
+  "https://argo-cd.readthedocs.io/en/stable/user-guide/diffing/ | - /spec/replicas": {
+    "body": "spec:\n  ignoreDifferences:\n    - group: apps\n      kind: Deployment\n      jsonPointers:\n        - /spec/replicas",
+    "fetched": "2026-10-27",
+    "checked": "2026-10-27"
+  },
+  "https://argo-cd.readthedocs.io/en/stable/user-guide/helm/ | - values-production.yaml": {
+    "body": "source:\n  helm:\n    valueFiles:\n    - values-production.yaml",
+    "fetched": "2026-10-27",
+    "checked": "2026-10-27"
+  },
+  "https://argo-cd.readthedocs.io/en/stable/user-guide/kustomize/ | name: kustomize-inline-guestbook": {
+    "body": "apiVersion: argoproj.io/v1alpha1\nkind: Application\nmetadata:\n  name: kustomize-inline-guestbook\n  namespace: argocd\n  finalizers:\n    - resources-finalizer.argocd.argoproj.io\nspec:\n  destination:\n    namespace: test1\n    server: https://kubernetes.default.svc\n  project: default\n  source:\n    path: kustomize-guestbook\n    repoURL: https://github.com/argoproj/argocd-example-apps.git\n    targetRevision: master\n    kustomize:\n      patches:\n        - target:\n            kind: Deployment\n            name: guestbook-ui\n          patch: |-\n            - op: replace\n              path: /spec/template/spec/containers/0/ports/0/containerPort\n              value: 443",
+    "fetched": "2026-10-27",
+    "checked": "2026-10-27"
+  },
+  "https://argo-cd.readthedocs.io/en/stable/user-guide/projects/ | sourceNamespaces: []": {
+    "body": "apiVersion: argoproj.io/v1alpha1\nkind: AppProject\nmetadata:\n  name: default\nspec:\n  sourceRepos: []\n  sourceNamespaces: []\n  destinations: []\n  namespaceResourceBlacklist:\n  - group: '*'\n    kind: '*'",
+    "fetched": "2026-10-27",
+    "checked": "2026-10-27"
+  },
+  "https://argo-cd.readthedocs.io/en/stable/user-guide/sync-waves/ | argocd.argoproj.io/hook: PreSync": {
+    "body": "metadata:\n  annotations:\n    argocd.argoproj.io/hook: PreSync",
+    "fetched": "2026-10-27",
+    "checked": "2026-10-27"
+  },
+  "https://argo-cd.readthedocs.io/en/stable/user-guide/sync-waves/ | argocd.argoproj.io/sync-wave: \"5\"": {
+    "body": "metadata:\n  annotations:\n    argocd.argoproj.io/sync-wave: \"5\"",
+    "fetched": "2026-10-27",
+    "checked": "2026-10-27"
+  },
+  "https://fluxcd.io/flux/components/helm/helmreleases/ | kind: HelmRelease\nmetadata:\n  name: podinfo": {
+    "body": "apiVersion: helm.toolkit.fluxcd.io/v2\nkind: HelmRelease\nmetadata:\n  name: podinfo\n  namespace: default\nspec:\n  interval: 10m\n  chart:\n    kind: OCIRepository\n    spec:\n      interval: 10m\n      url: oci://ghcr.io/stefanprodan/charts/podinfo\n      ref:\n        semver: \">= 6.0.0\"\n  values:\n    replicaCount: 2",
+    "fetched": "2026-10-27",
+    "checked": "2026-10-27"
+  },
+  "https://fluxcd.io/flux/components/kustomize/kustomizations/ | healthCheckExprs:": {
+    "body": "apiVersion: kustomize.toolkit.fluxcd.io/v1\nkind: Kustomization\nmetadata:\n  name: sealed-secrets\n  namespace: flux-system\nspec:\n  interval: 5m\n  path: ./path/to/sealed/secrets\n  prune: true\n  sourceRef:\n    kind: GitRepository\n    name: flux-system\n  timeout: 1m\n  wait: true # Tells the controller to wait for all resources to be ready by performing health checks.\n  healthCheckExprs:\n    - apiVersion: bitnami.com/v1alpha1\n      kind: SealedSecret\n      failed: status.conditions.filter(e, e.type == 'Synced').all(e, e.status == 'False')\n      current: status.conditions.filter(e, e.type == 'Synced').all(e, e.status == 'True')",
+    "fetched": "2026-10-27",
+    "checked": "2026-10-27"
+  },
+  "https://fluxcd.io/flux/components/kustomize/kustomizations/ | interval: 10m": {
+    "body": "apiVersion: source.toolkit.fluxcd.io/v1\nkind: GitRepository\nmetadata:\n  name: podinfo\n  namespace: default\nspec:\n  interval: 5m\n  url: https://github.com/stefanprodan/podinfo\n  ref:\n    branch: master\n---\napiVersion: kustomize.toolkit.fluxcd.io/v1\nkind: Kustomization\nmetadata:\n  name: podinfo\n  namespace: default\nspec:\n  interval: 10m\n  targetNamespace: default\n  sourceRef:\n    kind: GitRepository\n    name: podinfo\n  path: \"./kustomize\"\n  prune: true\n  timeout: 1m",
+    "fetched": "2026-10-27",
+    "checked": "2026-10-27"
+  },
+  "https://fluxcd.io/flux/installation/bootstrap/github/ | flux bootstrap github": {
+    "body": "flux bootstrap github \\\n  --token-auth \\\n  --owner=my-github-organization \\\n  --repository=my-repository \\\n  --branch=main \\\n  --path=clusters/my-cluster",
+    "fetched": "2026-10-27",
+    "checked": "2026-10-27"
+  },
+  "https://helm.sh/docs/chart_template_guide/getting_started/ | helm create mychart": {
+    "body": "$ helm create mychart\nCreating mychart",
+    "fetched": "2026-10-27",
+    "checked": "2026-10-27"
+  },
+  "https://helm.sh/docs/chart_template_guide/getting_started/ | name: {{ .Release.Name }}-configmap": {
+    "body": "apiVersion: v1\nkind: ConfigMap\nmetadata:\n  name: {{ .Release.Name }}-configmap\ndata:\n  myvalue: \"Hello World\"",
+    "fetched": "2026-10-27",
+    "checked": "2026-10-27"
+  },
+  "https://helm.sh/docs/chart_template_guide/values_files/ | favoriteDrink: coffee": {
+    "body": "favoriteDrink: coffee",
+    "fetched": "2026-10-27",
+    "checked": "2026-10-27"
+  },
+  "https://helm.sh/docs/intro/using_helm/ | echo '{mariadb.auth.database": {
+    "body": "$ echo '{mariadb.auth.database: user0db, mariadb.auth.username: user0}' > values.yaml\n$ helm install -f values.yaml bitnami/wordpress --generate-name",
+    "fetched": "2026-10-27",
+    "checked": "2026-10-27"
+  },
+  "https://helm.sh/docs/intro/using_helm/ | helm get values happy-panda": {
+    "body": "$ helm get values happy-panda\nmariadb:\n  auth:\n    username: user1",
+    "fetched": "2026-10-27",
+    "checked": "2026-10-27"
+  },
+  "https://helm.sh/docs/intro/using_helm/ | helm install happy-panda bitnami/wordpress": {
+    "body": "$ helm install happy-panda bitnami/wordpress\nNAME: happy-panda\nLAST DEPLOYED: Tue Jan 26 10:27:17 2021\nNAMESPACE: default\nSTATUS: deployed\nREVISION: 1\nNOTES:\n** Please be patient while the chart is being deployed **\n\nYour WordPress site can be accessed through the following DNS name from within your cluster:\n\n    happy-panda-wordpress.default.svc.cluster.local (port 80)\n\nTo access your WordPress site from outside the cluster follow the steps below:\n\n1. Get the WordPress URL by running these commands:\n\n  NOTE: It may take a few minutes for the LoadBalancer IP to be available.\n        Watch the status with: 'kubectl get svc --namespace default -w happy-panda-wordpress'\n\n   export SERVICE_IP=$(kubectl get svc --namespace default happy-panda-wordpress --template \"{{ range (index .status.loadBalancer.ingress 0) }}{{.}}{{ end }}\")\n   echo \"WordPress URL: http://$SERVICE_IP/\"\n   echo \"WordPress Admin URL: http://$SERVICE_IP/admin\"\n\n2. Open a browser and access WordPress using the obtained URL.\n\n3. Login with the following credentials below to see your blog:\n\n  echo Username: user\n  echo Password: $(kubectl get secret --namespace default happy-panda-wordpress -o jsonpath=\"{.data.wordpress-password}\" | base64 --decode)",
+    "fetched": "2026-10-27",
+    "checked": "2026-10-27"
+  },
+  "https://helm.sh/docs/intro/using_helm/ | helm rollback happy-panda 1": {
+    "body": "$ helm rollback happy-panda 1",
+    "fetched": "2026-10-27",
+    "checked": "2026-10-27"
+  },
+  "https://helm.sh/docs/intro/using_helm/ | helm search hub wordpress": {
+    "body": "$ helm search hub wordpress\nURL                                                 CHART VERSION APP VERSION DESCRIPTION\nhttps://hub.helm.sh/charts/bitnami/wordpress        7.6.7         5.2.4       Web publishing platform for building blogs and ...\nhttps://hub.helm.sh/charts/presslabs/wordpress-...  v0.6.3        v0.6.3      Presslabs WordPress Operator Helm Chart\nhttps://hub.helm.sh/charts/presslabs/wordpress-...  v0.7.1        v0.7.1      A Helm chart for deploying a WordPress site on ...",
+    "fetched": "2026-10-27",
+    "checked": "2026-10-27"
+  },
+  "https://helm.sh/docs/intro/using_helm/ | helm uninstall happy-panda": {
+    "body": "$ helm uninstall happy-panda",
+    "fetched": "2026-10-27",
+    "checked": "2026-10-27"
+  },
+  "https://helm.sh/docs/intro/using_helm/ | helm upgrade -f panda.yaml happy-panda bitnami/wordpress": {
+    "body": "$ helm upgrade -f panda.yaml happy-panda bitnami/wordpress",
+    "fetched": "2026-10-27",
+    "checked": "2026-10-27"
+  },
+  "https://helm.sh/docs/topics/charts/ | dependencies:\n  - name: apache": {
+    "body": "dependencies:\n  - name: apache\n    version: 1.2.3\n    repository: https://example.com/charts\n  - name: mysql\n    version: 3.2.1\n    repository: https://another.example.com/charts",
+    "fetched": "2026-10-27",
+    "checked": "2026-10-27"
+  },
+  "https://helm.sh/docs/topics/charts/ | wordpress/": {
+    "body": "wordpress/\n  Chart.yaml          # A YAML file containing information about the chart\n  LICENSE             # OPTIONAL: A plain text file containing the license for the chart\n  README.md           # OPTIONAL: A human-readable README file\n  values.yaml         # The default configuration values for this chart\n  values.schema.json  # OPTIONAL: A JSON Schema for imposing a structure on the values.yaml file\n  charts/             # A directory containing any charts upon which this chart depends.\n  crds/               # Custom Resource Definitions\n  templates/          # A directory of templates that, when combined with values,\n                      # will generate valid Kubernetes manifest files.\n  templates/NOTES.txt # OPTIONAL: A plain text file containing short usage notes",
+    "fetched": "2026-10-27",
+    "checked": "2026-10-27"
+  },
+  "https://helm.sh/docs/topics/charts_hooks/ | \"helm.sh/hook\": post-install": {
+    "body": "annotations:\n  \"helm.sh/hook\": post-install",
+    "fetched": "2026-10-27",
+    "checked": "2026-10-27"
+  },
+  "https://helm.sh/docs/topics/registries/ | helm push mychart": {
+    "body": "$ helm push mychart-0.1.0.tgz oci://localhost:5000/helm-charts\nPushed: localhost:5000/helm-charts/mychart:0.1.0\nDigest: sha256:ec5f08ee7be8b557cd1fc5ae1a0ac985e8538da7c93f51a51eff4b277509a723",
+    "fetched": "2026-10-27",
+    "checked": "2026-10-27"
+  },
+  "https://kubectl.docs.kubernetes.io/guides/introduction/kustomize/ | kustomize build ~/someApp/overlays/production | kubectl apply": {
+    "body": "kustomize build ~/someApp/overlays/production | kubectl apply -f -",
+    "fetched": "2026-10-27",
+    "checked": "2026-10-27"
+  },
+  "https://kubectl.docs.kubernetes.io/guides/introduction/kustomize/ | ├── base": {
+    "body": "~/someApp\n├── base\n│   ├── deployment.yaml\n│   ├── kustomization.yaml\n│   └── service.yaml\n└── overlays\n    ├── development\n    │   ├── cpu_count.yaml\n    │   ├── kustomization.yaml\n    │   └── replica_count.yaml\n    └── production\n        ├── cpu_count.yaml\n        ├── kustomization.yaml\n        └── replica_count.yaml",
+    "fetched": "2026-10-27",
+    "checked": "2026-10-27"
+  },
+  "https://kubectl.docs.kubernetes.io/references/kustomize/kustomization/patches/ | labelSelector: \"env=dev\"\n    annotationSelector": {
+    "body": "apiVersion: kustomize.config.k8s.io/v1beta1\nkind: Kustomization\n\npatches:\n- path: patch.yaml\n  target:\n    group: apps\n    version: v1\n    kind: Deployment\n    name: deploy.*\n    labelSelector: \"env=dev\"\n    annotationSelector: \"zone=west\"\n- patch: |-\n    - op: replace\n      path: /some/existing/path\n      value: new value    \n  target:\n    kind: MyKind\n    labelSelector: \"env=dev\"",
+    "fetched": "2026-10-27",
+    "checked": "2026-10-27"
+  },
+  "https://kubernetes.io/docs/tasks/manage-kubernetes-objects/kustomization/ | kubectl apply -k <kustomization_directory>": {
+    "body": "kubectl apply -k <kustomization_directory>",
+    "fetched": "2026-10-27",
+    "checked": "2026-10-27"
+  },
+  "https://kubernetes.io/docs/tasks/manage-kubernetes-objects/kustomization/ | kubectl kustomize <kustomization_directory>": {
+    "body": "kubectl kustomize <kustomization_directory>",
+    "fetched": "2026-10-27",
+    "checked": "2026-10-27"
+  }
+}

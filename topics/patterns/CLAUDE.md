@@ -18,3 +18,7 @@ The page has one tab per main entry (the `TABS` list in `templates/index.html`, 
 
 Refreshing: `make check` lists what changed for the entries that have a `track` (releases, archived repositories, CNCF levels; `LINKS=1` for source and link urls) and writes nothing.
 Review each difference, then update `checked`, `version` and the facts that changed together. Add a `track` to every entry that has a GitHub repository and releases.
+
+Page: this topic uses the shared page (`shared/topic.html`). Its tabs are in `templates/view.json`. Tab entries use the learning layout (parts, steps,
+tables, callouts, cards, diagrams, fetched code examples: see `topics/gitops/docs/data-model.md`); short entries are flat. When converting an entry, keep
+every fact and check nothing was dropped. Examples are fetched by reference (`make examples`), never pasted. Check diagrams in a browser after editing one.

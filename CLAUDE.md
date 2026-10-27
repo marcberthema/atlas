@@ -22,6 +22,9 @@ topics.json + shared/ -> the top banner on every page and the landing page, dist
   The user writes ideas there to say what to work on next: read the drafts when asked what is next.
   The repo itself is public, so drafts are visible on GitHub even though they never reach `dist/`: keep them as general as the
   rest (no employer or client material).
+- Every topic except Azure uses one shared page: `shared/topic.html` (look and script), `shared/build_topic.py`, `shared/learning.py` (checks)
+  and `shared/examples.py` (code examples fetched from the docs). A topic keeps its data, its `templates/view.json` (title and tabs)
+  and a three line `scripts/build.py`. See `topics/gitops/docs/data-model.md` for the entry format (parts, tables, callouts, code, diagrams).
 - `shared/atlas.py` renders the banner. A template carries `<!--__BANNER__-->` after `<body>` and `/*__BANNER_CSS__*/` in
   its style block; the topic build fills both. `shared/build_site.py` builds `dist/index.html`.
 - AI generates content into the JSON files. Python checks for updates and builds the pages. Neither the look nor the stack
@@ -42,6 +45,10 @@ work from `file://`: relative links that name `index.html`, no absolute paths, n
   company I work or worked for, a client, or any confidential material: no internal names, architectures, region counts,
   team structures, tools choices, incidents or conventions, not even rephrased or "anonymised". If something would only be
   known from that experience, it does not go in. No credentials, tokens, account or subscription ids either.
+- **Centralise, don't copy.** Atlas gathers knowledge in one place and points to where it lives. Summarise in short plain sentences and link
+  the page. Code examples are not pasted into the data: a script fetches them from the source page by a match string into a generated cache
+  (see `topics/gitops/scripts/examples.py`), shows them unchanged, and `make check` reports when they change upstream. Never stitch or edit an
+  example: show the official snippets as they are, several from one page in their order at most.
 - **Every source is linked.** An entry links to each page it was written from, so a reader can check it. The footer disclaimer
   (`shared/atlas.py`) is on every page; a template must keep its `<!--__FOOTER__-->` marker.
 - **The version analysed is always visible.** Every documented thing records which version of it was analysed, and the page

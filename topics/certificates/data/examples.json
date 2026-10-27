@@ -1,0 +1,92 @@
+{
+  "https://cert-manager.io/docs/concepts/certificate/ | kind: Certificate\nmetadata:\n  name: example-com": {
+    "body": "apiVersion: cert-manager.io/v1\nkind: Certificate\nmetadata:\n  name: example-com\n  namespace: sandbox\nspec:\n  secretName: example-com-tls\n  dnsNames:\n    - example.com\n  issuerRef:\n    name: ca-issuer\n    kind: Issuer\n\n\n  duration: 2160h # 90d\n  renewBefore: 360h # 15d\n\n\n  renewal:\n    policy: RenewBefore\n    windows:\n      - cron: \"0 2 * * 1-5\"\n        timezone: America/Denver\n        windowDuration: 2h",
+    "fetched": "2026-10-27",
+    "checked": "2026-10-27"
+  },
+  "https://cert-manager.io/docs/configuration/acme/ | curl -fsSL https://acme-staging-v02.api.letsencrypt.org/directory": {
+    "body": "curl -fsSL https://acme-staging-v02.api.letsencrypt.org/directory",
+    "fetched": "2026-10-27",
+    "checked": "2026-10-27"
+  },
+  "https://cert-manager.io/docs/configuration/acme/ | name: letsencrypt-staging": {
+    "body": "apiVersion: cert-manager.io/v1\nkind: ClusterIssuer\nmetadata:\n  name: letsencrypt-staging\nspec:\n  acme:\n    ...\n    solvers:\n    - dns01:\n        cloudflare:\n          email: user@example.com\n          apiKeySecretRef:\n            name: cloudflare-apikey-secret\n            key: apikey\n      selector:\n        dnsZones:\n        - 'example.com'",
+    "fetched": "2026-10-27",
+    "checked": "2026-10-27"
+  },
+  "https://cert-manager.io/docs/installation/helm/ | helm install \\\n  cert-manager oci://quay.io/jetstack/charts/cert-manager \\": {
+    "body": "helm install \\\n  cert-manager oci://quay.io/jetstack/charts/cert-manager \\\n  --version v1.21.3 \\\n  --namespace cert-manager \\\n  --create-namespace \\\n  --set crds.enabled=true",
+    "fetched": "2026-10-27",
+    "checked": "2026-10-27"
+  },
+  "https://cert-manager.io/docs/usage/ingress/ | cert-manager.io/cluster-issuer": {
+    "body": "apiVersion: networking.k8s.io/v1\nkind: Ingress\nmetadata:\n  annotations:\n    # add an annotation indicating the issuer to use.\n    cert-manager.io/cluster-issuer: nameOfClusterIssuer\n  name: myIngress\n  namespace: myIngress\nspec:\n  rules:\n  - host: example.com\n    http:\n      paths:\n      - pathType: Prefix\n        path: /\n        backend:\n          service:\n            name: myservice\n            port:\n              number: 80\n  tls: # < placing a host in the TLS config will determine what ends up in the cert's subjectAltNames\n  - hosts:\n    - example.com\n    secretName: myingress-cert # < cert-manager will store the created certificate in this secret.",
+    "fetched": "2026-10-27",
+    "checked": "2026-10-27"
+  },
+  "https://docs.openssl.org/master/man1/openssl-pkcs12/ | openssl pkcs12 -export -in cert.pem -inkey key.pem -out file.p12": {
+    "body": "openssl pkcs12 -export -in cert.pem -inkey key.pem -out file.p12 -legacy",
+    "fetched": "2026-10-27",
+    "checked": "2026-10-27"
+  },
+  "https://docs.openssl.org/master/man1/openssl-req/ | openssl req -x509 -newkey rsa:2048 -keyout key.pem -out req.pem": {
+    "body": "openssl req -x509 -newkey rsa:2048 -keyout key.pem -out req.pem",
+    "fetched": "2026-10-27",
+    "checked": "2026-10-27"
+  },
+  "https://docs.openssl.org/master/man1/openssl-s_client/ | -tls1_3": {
+    "body": "openssl s_client -connect <server address>:443 -tls1_3\n                 -sess_out /path/to/tls_session_params_file\n                 -ign_eof </dev/null",
+    "fetched": "2026-10-27",
+    "checked": "2026-10-27"
+  },
+  "https://docs.openssl.org/master/man1/openssl-s_client/ | openssl s_client -connect servername:443": {
+    "body": "openssl s_client -connect servername:443",
+    "fetched": "2026-10-27",
+    "checked": "2026-10-27"
+  },
+  "https://docs.openssl.org/master/man1/openssl-x509/ | openssl x509 -in cert.pem -noout -ext subjectAltName": {
+    "body": "openssl x509 -in cert.pem -noout -ext subjectAltName",
+    "fetched": "2026-10-27",
+    "checked": "2026-10-27"
+  },
+  "https://docs.openssl.org/master/man1/openssl-x509/ | openssl x509 -in cert.pem -noout -serial": {
+    "body": "openssl x509 -in cert.pem -noout -serial",
+    "fetched": "2026-10-27",
+    "checked": "2026-10-27"
+  },
+  "https://docs.openssl.org/master/man1/openssl-x509/ | openssl x509 -in cert.pem -noout -subject": {
+    "body": "openssl x509 -in cert.pem -noout -subject",
+    "fetched": "2026-10-27",
+    "checked": "2026-10-27"
+  },
+  "https://docs.openssl.org/master/man1/openssl-x509/ | openssl x509 -in cert.pem -noout -text": {
+    "body": "openssl x509 -in cert.pem -noout -text",
+    "fetched": "2026-10-27",
+    "checked": "2026-10-27"
+  },
+  "https://docs.openssl.org/master/man1/openssl-x509/ | openssl x509 -sha1 -in cert.pem -noout -fingerprint": {
+    "body": "openssl x509 -sha1 -in cert.pem -noout -fingerprint",
+    "fetched": "2026-10-27",
+    "checked": "2026-10-27"
+  },
+  "https://kubernetes.io/docs/reference/access-authn-authz/certificate-signing-requests/ | kind: CertificateSigningRequest": {
+    "body": "apiVersion: certificates.k8s.io/v1\nkind: CertificateSigningRequest\n...\nstatus:\n  certificate: \"LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JS...\"",
+    "fetched": "2026-10-27",
+    "checked": "2026-10-27"
+  },
+  "https://kubernetes.io/docs/reference/access-authn-authz/certificate-signing-requests/ | kubectl certificate approve <certificate-signing-request-name>": {
+    "body": "kubectl certificate approve <certificate-signing-request-name>",
+    "fetched": "2026-10-27",
+    "checked": "2026-10-27"
+  },
+  "https://kubernetes.io/docs/reference/access-authn-authz/certificate-signing-requests/ | kubectl certificate deny <certificate-signing-request-name>": {
+    "body": "kubectl certificate deny <certificate-signing-request-name>",
+    "fetched": "2026-10-27",
+    "checked": "2026-10-27"
+  },
+  "https://kubernetes.io/docs/tasks/administer-cluster/kubeadm/kubeadm-certs/ | kubeadm certs check-expiration": {
+    "body": "kubeadm certs check-expiration",
+    "fetched": "2026-10-27",
+    "checked": "2026-10-27"
+  }
+}

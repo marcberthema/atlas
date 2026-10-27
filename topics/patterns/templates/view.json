@@ -1,0 +1,33 @@
+{
+  "title": "Architecture and design patterns",
+  "tabs": [
+    {
+      "id": "layered",
+      "label": "Layered"
+    },
+    {
+      "id": "mvc",
+      "label": "MVC"
+    },
+    {
+      "id": "hexagonal",
+      "label": "Hexagonal"
+    },
+    {
+      "id": "microservices",
+      "label": "Microservices"
+    },
+    {
+      "id": "event-driven",
+      "label": "Event-driven"
+    },
+    {
+      "id": "others",
+      "label": "All patterns"
+    },
+    {
+      "id": "compare",
+      "label": "Compare"
+    }
+  ]
+}

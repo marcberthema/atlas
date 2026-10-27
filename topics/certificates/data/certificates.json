@@ -98,37 +98,191 @@
       ],
       "sections": [
         {
-          "title": "Structure of a certificate (RFC 5280)",
+          "title": "In one minute",
+          "part": "overview",
+          "icon": "eye",
           "items": [
-            "A certificate has three fields: tbsCertificate (the part that is signed), signatureAlgorithm and signatureValue. tbsCertificate holds version, serialNumber, signature, issuer, validity, subject, subjectPublicKeyInfo and extensions.",
-            "The serial number is a positive integer, unique per issuer, at most 20 octets. Version 3 is required when extensions are present.",
-            "Validity dates use UTCTime until 2049 and GeneralizedTime from 2050. A certificate with no expiry uses 99991231235959Z."
+            "A certificate binds a name to a public key and is signed by an issuer. A chain of such signatures up to a trusted root is what lets a client trust a server.",
+            {
+              "type": "diagram",
+              "alt": "A leaf certificate for a website is signed by an intermediate CA, which is signed by a root CA. The client's trust store holds the root. The server sends the leaf and the intermediate.",
+              "caption": "A chain of trust. The client needs the root in its trust store and the intermediates from the server.",
+              "w": 720,
+              "h": 250,
+              "nodes": [
+                {
+                  "id": "root",
+                  "x": 110,
+                  "y": 125,
+                  "w": 150,
+                  "h": 50,
+                  "label": "Root CA",
+                  "sub": "in the trust store",
+                  "kind": "store"
+                },
+                {
+                  "id": "int",
+                  "x": 360,
+                  "y": 125,
+                  "w": 150,
+                  "h": 50,
+                  "label": "Intermediate CA",
+                  "sub": "signed by the root"
+                },
+                {
+                  "id": "leaf",
+                  "x": 610,
+                  "y": 125,
+                  "w": 150,
+                  "h": 50,
+                  "label": "Leaf certificate",
+                  "sub": "the server's name",
+                  "kind": "hub"
+                },
+                {
+                  "id": "srv",
+                  "x": 570,
+                  "y": 215,
+                  "w": 240,
+                  "h": 28,
+                  "label": "Server sends leaf + intermediate",
+                  "kind": "ext"
+                }
+              ],
+              "links": [
+                {
+                  "from": "root",
+                  "to": "int",
+                  "label": "signs",
+                  "arrow": "to"
+                },
+                {
+                  "from": "int",
+                  "to": "leaf",
+                  "label": "signs",
+                  "arrow": "to"
+                }
+              ]
+            }
           ]
         },
         {
-          "title": "Extensions and names",
+          "title": "Key ideas",
+          "part": "overview",
+          "icon": "grid",
           "items": [
+            {
+              "type": "cards",
+              "cards": [
+                {
+                  "icon": "file",
+                  "title": "Certificate",
+                  "text": "Three fields: `tbsCertificate` (the part that is signed), `signatureAlgorithm` and `signatureValue`."
+                },
+                {
+                  "icon": "key",
+                  "title": "Names",
+                  "text": "The subject name can be in the subject field, the subjectAltName extension, or both. Put every host name in subjectAltName."
+                },
+                {
+                  "icon": "layers",
+                  "title": "Chain",
+                  "text": "From the server certificate through intermediates to a trust anchor in the client's trust store."
+                },
+                {
+                  "icon": "clock",
+                  "title": "Validity",
+                  "text": "Dates in the certificate. Lifetimes are getting shorter: see Run it."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Read one",
+          "part": "use",
+          "step": 1,
+          "icon": "play",
+          "items": [
+            {
+              "type": "code",
+              "title": "Print a certificate, its subjectAltName and its subject",
+              "lang": "shell",
+              "match": [
+                "openssl x509 -in cert.pem -noout -text",
+                "openssl x509 -in cert.pem -noout -ext subjectAltName",
+                "openssl x509 -in cert.pem -noout -subject"
+              ],
+              "source": {
+                "label": "openssl x509",
+                "url": "https://docs.openssl.org/master/man1/openssl-x509/"
+              }
+            },
+            "More ways to read, test and fix certificates are in [Inspect and troubleshoot](#troubleshooting)."
+          ]
+        },
+        {
+          "title": "What is inside (RFC 5280)",
+          "part": "use",
+          "step": 2,
+          "icon": "file",
+          "items": [
+            "A `tbsCertificate` holds version, serialNumber, signature, issuer, validity, subject, subjectPublicKeyInfo and extensions. The signature covers the DER-encoded `tbsCertificate`.",
+            "The serial number is a positive integer, unique per issuer, at most 20 octets. Version 3 is required when extensions are present.",
+            "Validity dates use UTCTime until 2049 and GeneralizedTime from 2050. A certificate with no expiry uses `99991231235959Z`.",
             "Each extension is marked critical or non-critical, and a system must reject a certificate with a critical extension it does not recognise.",
-            "CAs must support key identifiers, basic constraints, key usage and certificate policies. If keyCertSign is set in key usage, basic constraints must say cA.",
-            "The subject name can be in the subject field, the subjectAltName extension, or both. If the subject carries only SAN identities such as an email or a URI, the subject is empty and subjectAltName must be critical.",
-            "The emailAddress attribute in the subject is deprecated in favour of an rfc822Name in subjectAltName."
+            "CAs must support key identifiers, basic constraints, key usage and certificate policies. If `keyCertSign` is set in key usage, basic constraints must say `cA`.",
+            "If the subject carries only SAN identities such as an email or a URI, the subject is empty and `subjectAltName` must be critical. The `emailAddress` attribute in the subject is deprecated in favour of an `rfc822Name` in `subjectAltName`."
           ]
         },
         {
           "title": "Chains, trust and revocation",
+          "part": "use",
+          "step": 3,
+          "icon": "shield",
           "items": [
             "A client builds a chain from the server certificate through intermediates to a trust anchor in its trust store. OpenSSL does not ship a default set of trust anchors: you give it one. Intermediates you supply are used to build a path but are not trust anchors.",
-            "Chain building fails with \"unable to get local issuer certificate\" when the trust store has neither the root nor an unbroken chain to it. See Inspect and troubleshoot.",
+            {
+              "type": "callout",
+              "kind": "gotcha",
+              "text": "Chain building fails with \"unable to get local issuer certificate\" when the trust store has neither the root nor an unbroken chain to it. See Inspect and troubleshoot."
+            },
             "A CRL is a signed, time-stamped list of revoked certificates by serial number. The profile does not require CRLs: OCSP and other mechanisms are allowed.",
             "Short lifetimes make revocation less necessary: OpenBao's PKI docs say short TTLs keep CRLs short."
           ]
         },
         {
           "title": "Lifetimes are getting shorter",
+          "part": "run",
+          "icon": "clock",
           "items": [
-            "CA/Browser Forum ballot SC-081v3 (voting ended 2025-04-11) reduces the maximum TLS certificate validity from 398 days to 47 days, and domain validation data reuse for SANs from 398 days to 10 days. The ballot says the reductions are proposed to start in March 2026 and finish in March 2029.",
-            "Let's Encrypt moves its default profile to 64-day certificates on 2027-02-10 and 45-day certificates on 2028-02-16, from 90 days today. See ACME and Let's Encrypt.",
-            "Short lifetimes make automatic renewal necessary, so use ACME or an operator such as cert-manager."
+            {
+              "type": "table",
+              "columns": [
+                "Source",
+                "What it says"
+              ],
+              "rows": [
+                [
+                  "CA/Browser Forum ballot SC-081v3 (voting ended 2025-04-11)",
+                  "Maximum TLS certificate validity goes from 398 days to 47 days, and domain validation data reuse for SANs from 398 days to 10 days. Reductions are proposed to start in March 2026 and finish in March 2029"
+                ],
+                [
+                  "Let's Encrypt",
+                  "Default profile moves to 64-day certificates on 2027-02-10 and 45-day certificates on 2028-02-16, from 90 days today"
+                ]
+              ]
+            },
+            {
+              "type": "callout",
+              "kind": "tip",
+              "text": "Short lifetimes make automatic renewal necessary, so use [ACME](#acme) or an operator such as [cert-manager](#cert-manager).",
+              "title": "What to do"
+            },
+            {
+              "text": "The ballot page states only the eventual 47-day and 10-day figures and March 2026 to March 2029. The intermediate steps (200 and 100 days) are not on the page, so they are not listed.",
+              "unconfirmed": "Not on the ballot page read."
+            }
           ]
         }
       ],
@@ -206,27 +360,129 @@
       ],
       "sections": [
         {
-          "title": "Versions",
+          "title": "In one minute",
+          "part": "overview",
+          "icon": "eye",
           "items": [
-            "TLS 1.3 is RFC 8446 (August 2018). It obsoletes RFC 5246 (TLS 1.2).",
-            "RFC 8996 (March 2021, BCP 195) deprecates TLS 1.0 and TLS 1.1, and DTLS 1.0: \"TLS 1.0 MUST NOT be used\". DTLS 1.2 is not deprecated. TLS 1.2 is the minimum recommended version and TLS 1.3 is current."
+            "TLS is the protocol that uses certificates to encrypt and authenticate a connection. TLS 1.3 is current. TLS 1.0 and 1.1 are deprecated.",
+            {
+              "type": "diagram",
+              "alt": "The TLS 1.3 handshake takes one round trip: ClientHello from the client, then ServerHello, EncryptedExtensions, Certificate, CertificateVerify and Finished from the server, then Finished from the client. Application data follows.",
+              "caption": "TLS 1.3 handshake, one round trip. Everything after ServerHello is encrypted.",
+              "w": 720,
+              "h": 260,
+              "nodes": [
+                {
+                  "id": "c",
+                  "x": 110,
+                  "y": 130,
+                  "w": 140,
+                  "h": 44,
+                  "label": "Client",
+                  "kind": "ext"
+                },
+                {
+                  "id": "s",
+                  "x": 610,
+                  "y": 130,
+                  "w": 150,
+                  "h": 44,
+                  "label": "Server",
+                  "sub": "presents a certificate",
+                  "kind": "hub"
+                }
+              ],
+              "links": [
+                {
+                  "from": "c",
+                  "to": "s",
+                  "label": "ClientHello (SNI)",
+                  "arrow": "to",
+                  "dy": -34
+                },
+                {
+                  "from": "s",
+                  "to": "c",
+                  "label": "ServerHello, EncryptedExtensions, Certificate, CertificateVerify, Finished",
+                  "arrow": "to",
+                  "dashed": true,
+                  "dy": 40
+                },
+                {
+                  "from": "c",
+                  "to": "s",
+                  "label": "Finished, then application data",
+                  "arrow": "to",
+                  "dy": 80
+                }
+              ]
+            }
           ]
         },
         {
-          "title": "TLS 1.3 handshake",
+          "title": "Versions",
+          "part": "overview",
+          "icon": "list",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Version",
+                "Status"
+              ],
+              "rows": [
+                [
+                  "TLS 1.3 (RFC 8446, August 2018)",
+                  "current. Obsoletes RFC 5246 (TLS 1.2)"
+                ],
+                [
+                  "TLS 1.2",
+                  "minimum recommended version"
+                ],
+                [
+                  "TLS 1.0, 1.1 (RFC 8996, March 2021, BCP 195)",
+                  "\"TLS 1.0 MUST NOT be used\". DTLS 1.0 is deprecated too, DTLS 1.2 is not"
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "title": "What happens in the handshake",
+          "part": "use",
+          "step": 1,
+          "icon": "sync",
           "items": [
             "Messages: ClientHello and ServerHello, then EncryptedExtensions, an optional CertificateRequest, Certificate, CertificateVerify and Finished. Everything after ServerHello is encrypted.",
             "The full handshake takes one round trip. Key exchange is (EC)DHE, PSK-only, or PSK with (EC)DHE.",
-            "0-RTT: a client with a shared PSK can send early data in its first flight. That data is not forward secret and the RFC states there is no guarantee against replay between connections.",
-            "Removed: static RSA and static Diffie-Hellman suites, compression, DSA, custom DHE groups, renegotiation and non-AEAD ciphers."
+            {
+              "type": "callout",
+              "kind": "gotcha",
+              "text": "0-RTT: a client with a shared PSK can send early data in its first flight. That data is not forward secret and the RFC states there is no guarantee against replay between connections.",
+              "title": "0-RTT early data"
+            },
+            "Removed in TLS 1.3: static RSA and static Diffie-Hellman suites, compression, DSA, custom DHE groups, renegotiation and non-AEAD ciphers."
           ]
         },
         {
           "title": "Certificates in the handshake",
+          "part": "use",
+          "step": 2,
+          "icon": "key",
           "items": [
-            "The server always authenticates with a certificate. Client authentication is optional: the server asks with CertificateRequest and the client replies with its own Certificate, CertificateVerify and Finished. That is mutual TLS (mTLS).",
-            "The client sends the name it wants in the SNI extension, so one address can serve several certificates. openssl s_client sets SNI from -connect when it is a DNS name, or from -servername.",
-            "The certificate must name the host in its subjectAltName. See X.509 and PKI."
+            "The server always authenticates with a certificate. Client authentication is optional: the server asks with `CertificateRequest` and the client replies with its own Certificate, CertificateVerify and Finished. That is mutual TLS (mTLS).",
+            "The client sends the name it wants in the SNI extension, so one address can serve several certificates. `openssl s_client` sets SNI from `-connect` when it is a DNS name, or from `-servername`.",
+            "The certificate must name the host in its `subjectAltName`. See [X.509 and PKI](#x509).",
+            {
+              "type": "code",
+              "title": "Connect and use TLS 1.3",
+              "lang": "shell",
+              "match": "-tls1_3",
+              "source": {
+                "label": "openssl s_client",
+                "url": "https://docs.openssl.org/master/man1/openssl-s_client/"
+              }
+            }
           ]
         }
       ],
@@ -407,36 +663,259 @@
       ],
       "sections": [
         {
-          "title": "Protocol (RFC 8555)",
+          "title": "In one minute",
+          "part": "overview",
+          "icon": "eye",
           "items": [
-            "Objects: account (contacts and the account public key), order (a request for a certificate: pending, ready, processing, valid, invalid), authorization (permission to act for an identifier), challenge (a proof of control) and the certificate itself.",
-            "One directory URL is all a client needs. It returns JSON mapping newNonce, newAccount, newOrder, newAuthz, revokeCert and keyChange to URLs.",
-            "Requests are signed as a flattened JWS with the account key and sent as application/jose+json. Fetching data uses POST-as-GET. Every server response carries a single-use Replay-Nonce, and a rejected nonce returns badNonce with a fresh one.",
-            "The RFC defines the http-01 and dns-01 challenges. Revocation is a signed request to revokeCert."
+            "ACME (RFC 8555) lets software prove it controls a domain and get a certificate automatically. Let's Encrypt, run by the nonprofit Internet Security Research Group, is the best known free ACME CA: anyone who owns a domain name can get a trusted certificate at zero cost.",
+            {
+              "type": "diagram",
+              "alt": "The ACME client creates an account and an order, receives a challenge, proves control of the domain by an HTTP file or a DNS record, finalizes the order and downloads the certificate.",
+              "caption": "An ACME order.",
+              "w": 720,
+              "h": 260,
+              "nodes": [
+                {
+                  "id": "cl",
+                  "x": 110,
+                  "y": 130,
+                  "w": 170,
+                  "h": 50,
+                  "label": "ACME client",
+                  "sub": "certbot, cert-manager...",
+                  "kind": "hub"
+                },
+                {
+                  "id": "ca",
+                  "x": 610,
+                  "y": 130,
+                  "w": 150,
+                  "h": 50,
+                  "label": "ACME CA",
+                  "sub": "Let's Encrypt, step-ca...",
+                  "kind": "hub"
+                },
+                {
+                  "id": "dom",
+                  "x": 360,
+                  "y": 225,
+                  "w": 170,
+                  "h": 36,
+                  "label": "Your domain",
+                  "kind": "ext"
+                }
+              ],
+              "links": [
+                {
+                  "from": "cl",
+                  "to": "ca",
+                  "label": "1 account, new order",
+                  "arrow": "to",
+                  "dy": -48
+                },
+                {
+                  "from": "ca",
+                  "to": "cl",
+                  "label": "2 challenge",
+                  "arrow": "to",
+                  "dashed": true,
+                  "dy": -30
+                },
+                {
+                  "from": "cl",
+                  "to": "dom",
+                  "label": "3 publish proof",
+                  "arrow": "to"
+                },
+                {
+                  "from": "ca",
+                  "to": "dom",
+                  "label": "4 CA checks it",
+                  "arrow": "to"
+                },
+                {
+                  "from": "cl",
+                  "to": "ca",
+                  "label": "5 finalize, download certificate",
+                  "arrow": "to",
+                  "dy": 44
+                }
+              ]
+            }
           ]
         },
         {
-          "title": "Challenge types (Let's Encrypt docs)",
+          "title": "Key ideas",
+          "part": "overview",
+          "icon": "grid",
           "items": [
-            "HTTP-01: port 80 must be reachable. It cannot issue wildcard certificates, and with several web servers the file must be available on all of them. The simplest to automate.",
-            "DNS-01: a TXT record at _acme-challenge. Needed for wildcard certificates, works for servers not exposed to the internet, but needs a DNS provider API and storing its credentials is risky. It cannot validate IP addresses.",
-            "TLS-ALPN-01: port 443. Described as not suitable for most people. Client support is limited and it cannot validate wildcards."
+            {
+              "type": "cards",
+              "cards": [
+                {
+                  "icon": "key",
+                  "title": "Account",
+                  "text": "Holds contact details and the account public key. Statuses: valid, deactivated, revoked."
+                },
+                {
+                  "icon": "file",
+                  "title": "Order",
+                  "text": "A request for a certificate: pending, ready, processing, valid, invalid."
+                },
+                {
+                  "icon": "shield",
+                  "title": "Authorization and challenge",
+                  "text": "Permission to act for an identifier, and a proof of control. The RFC defines `http-01` and `dns-01`."
+                },
+                {
+                  "icon": "globe",
+                  "title": "Directory",
+                  "text": "One URL is all a client needs. It maps `newNonce`, `newAccount`, `newOrder`, `newAuthz`, `revokeCert` and `keyChange` to URLs."
+                }
+              ]
+            }
           ]
         },
         {
-          "title": "Let's Encrypt",
+          "title": "Pick a challenge",
+          "part": "use",
+          "step": 1,
+          "icon": "list",
           "items": [
-            "Run by the Internet Security Research Group (ISRG), a nonprofit. Anyone who owns a domain name can get a trusted certificate at zero cost.",
-            "Certificates are valid for 90 days today. 2026-05-13: the tlsserver profile issues 45-day certificates (opt in). 2027-02-10: the default classic profile moves to 64 days. 2028-02-16: classic moves to 45 days. A shortlived profile with 6-day certificates is opt in. Dates apply to new certificates.",
-            "Staging directory: https://acme-staging-v02.api.letsencrypt.org/directory. Production: https://acme-v02.api.letsencrypt.org/directory. Use staging while testing because its limits are significantly higher.",
-            "Rate limits: 300 new orders per account per 3 hours, 50 certificates per registered domain per 7 days, 5 duplicate certificates (same set of names) per 7 days, 5 authorization failures per identifier per hour, 10 new accounts per IP address per 3 hours."
+            {
+              "type": "table",
+              "columns": [
+                "Challenge",
+                "Where",
+                "Wildcard",
+                "Needs"
+              ],
+              "rows": [
+                [
+                  "HTTP-01",
+                  "port 80 on the web server",
+                  "no",
+                  "Port 80 reachable. With several servers the file must be on all of them. The simplest to automate"
+                ],
+                [
+                  "DNS-01",
+                  "a TXT record at `_acme-challenge`",
+                  "yes",
+                  "A DNS provider with an API. Storing its credentials on a web server is risky. Cannot validate IP addresses. Works for servers not exposed to the internet"
+                ],
+                [
+                  "TLS-ALPN-01",
+                  "port 443",
+                  "no",
+                  "Client support is limited. Described as not suitable for most people"
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Try it against staging",
+          "part": "use",
+          "step": 2,
+          "icon": "play",
+          "items": [
+            {
+              "type": "code",
+              "title": "Staging directory",
+              "lang": "shell",
+              "match": "curl -fsSL https://acme-staging-v02.api.letsencrypt.org/directory",
+              "source": {
+                "label": "cert-manager ACME configuration",
+                "url": "https://cert-manager.io/docs/configuration/acme/"
+              }
+            },
+            "Production: `https://acme-v02.api.letsencrypt.org/directory`. Use staging while testing because its limits are significantly higher."
           ]
         },
         {
           "title": "Clients",
+          "part": "use",
+          "step": 3,
+          "icon": "download",
           "items": [
             "certbot, acme.sh and lego are standalone ACME clients. Caddy has ACME built in. cert-manager is the Kubernetes one. step-ca is an ACME server for a private CA, and Boulder is an ACME-based CA written in Go.",
-            "ZeroSSL is Caddy's fallback CA when Let's Encrypt fails."
+            "ZeroSSL is Caddy's fallback CA when Let's Encrypt fails.",
+            "See [cert-manager](#cert-manager) for Kubernetes."
+          ]
+        },
+        {
+          "title": "Protocol details (RFC 8555)",
+          "part": "run",
+          "icon": "wrench",
+          "items": [
+            "Requests are signed as a flattened JWS with the account key and sent as `application/jose+json`. Fetching data uses POST-as-GET. Every server response carries a single-use `Replay-Nonce`, and a rejected nonce returns `badNonce` with a fresh one.",
+            "The RFC defines the `http-01` and `dns-01` challenges. Revocation is a signed request to `revokeCert`."
+          ]
+        },
+        {
+          "title": "Let's Encrypt lifetimes and limits",
+          "part": "run",
+          "icon": "clock",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "When",
+                "What changes"
+              ],
+              "rows": [
+                [
+                  "today",
+                  "Certificates are valid for 90 days"
+                ],
+                [
+                  "2026-05-13",
+                  "The `tlsserver` profile issues 45-day certificates (opt in)"
+                ],
+                [
+                  "2027-02-10",
+                  "The default `classic` profile moves to 64 days"
+                ],
+                [
+                  "2028-02-16",
+                  "`classic` moves to 45 days"
+                ],
+                [
+                  "opt in",
+                  "A `shortlived` profile with 6-day certificates"
+                ]
+              ],
+              "caption": "Dates apply to new certificates."
+            },
+            {
+              "type": "table",
+              "columns": [
+                "Limit",
+                "Value"
+              ],
+              "rows": [
+                [
+                  "New orders per account",
+                  "300 per 3 hours"
+                ],
+                [
+                  "Certificates per registered domain",
+                  "50 per 7 days"
+                ],
+                [
+                  "Duplicate certificates (same set of names)",
+                  "5 per 7 days"
+                ],
+                [
+                  "Authorization failures per identifier per hour",
+                  "5"
+                ],
+                [
+                  "New accounts per IP address",
+                  "10 per 3 hours"
+                ]
+              ]
+            }
           ]
         }
       ],
@@ -1309,52 +1788,294 @@
       ],
       "sections": [
         {
-          "title": "What it does",
+          "title": "In one minute",
+          "part": "overview",
+          "icon": "eye",
           "items": [
-            "\"Creates TLS certificates for workloads in your Kubernetes or OpenShift cluster\" and renews them before they expire.",
-            "Issuers: ACME (Let's Encrypt), CA (private PKI), HashiCorp Vault, CyberArk Certificate Manager (the URLs say venafi), SelfSigned, and external issuers.",
-            "The Certificate resource stores the key and certificate in a Kubernetes Secret, which a pod mounts or an Ingress controller reads. With csi-driver, csi-driver-spiffe or istio-csr the key is generated on demand and never stored in a Secret.",
-            "Related projects: trust-manager, approver-policy, and the webhook and CA Injector components."
+            "cert-manager is a Kubernetes operator that \"creates TLS certificates for workloads in your Kubernetes or OpenShift cluster\" and renews them before they expire. It is a CNCF graduated project.",
+            {
+              "type": "diagram",
+              "alt": "An Ingress with an issuer annotation makes cert-manager create a Certificate. The Certificate creates a CertificateRequest, which for ACME creates an Order and a Challenge. The result is stored in a Secret that the Ingress uses.",
+              "caption": "The resource chain for an ACME certificate.",
+              "w": 720,
+              "h": 230,
+              "nodes": [
+                {
+                  "id": "ing",
+                  "x": 70,
+                  "y": 70,
+                  "w": 110,
+                  "h": 36,
+                  "label": "Ingress",
+                  "sub": "optional"
+                },
+                {
+                  "id": "cert",
+                  "x": 230,
+                  "y": 70,
+                  "w": 120,
+                  "h": 36,
+                  "label": "Certificate",
+                  "kind": "hub"
+                },
+                {
+                  "id": "cr",
+                  "x": 390,
+                  "y": 70,
+                  "w": 150,
+                  "h": 36,
+                  "label": "CertificateRequest"
+                },
+                {
+                  "id": "ord",
+                  "x": 550,
+                  "y": 70,
+                  "w": 90,
+                  "h": 36,
+                  "label": "Order"
+                },
+                {
+                  "id": "chal",
+                  "x": 665,
+                  "y": 70,
+                  "w": 90,
+                  "h": 36,
+                  "label": "Challenge"
+                },
+                {
+                  "id": "iss",
+                  "x": 230,
+                  "y": 170,
+                  "w": 160,
+                  "h": 36,
+                  "label": "Issuer or ClusterIssuer",
+                  "sub": "ACME, CA, Vault, ...",
+                  "kind": "ext"
+                },
+                {
+                  "id": "sec",
+                  "x": 470,
+                  "y": 170,
+                  "w": 160,
+                  "h": 36,
+                  "label": "Secret",
+                  "sub": "tls.crt, tls.key",
+                  "kind": "store"
+                }
+              ],
+              "links": [
+                {
+                  "from": "ing",
+                  "to": "cert",
+                  "label": "creates",
+                  "arrow": "to"
+                },
+                {
+                  "from": "cert",
+                  "to": "cr",
+                  "arrow": "to"
+                },
+                {
+                  "from": "cr",
+                  "to": "ord",
+                  "arrow": "to"
+                },
+                {
+                  "from": "ord",
+                  "to": "chal",
+                  "arrow": "to"
+                },
+                {
+                  "from": "cert",
+                  "to": "iss",
+                  "arrow": "to",
+                  "dashed": true
+                },
+                {
+                  "from": "cert",
+                  "to": "sec",
+                  "label": "stores",
+                  "arrow": "to",
+                  "dy": 18
+                }
+              ]
+            }
           ]
         },
         {
-          "title": "Install",
+          "title": "Key ideas",
+          "part": "overview",
+          "icon": "grid",
           "items": [
-            "Helm, from the OCI registry (recommended, the source of truth, published immediately on release): helm install cert-manager oci://quay.io/jetstack/charts/cert-manager --version v1.21.3 --namespace cert-manager --create-namespace --set crds.enabled=true.",
-            "Or the legacy repository (helm repo add jetstack https://charts.jetstack.io), updated a few hours later. Or kubectl apply, or continuous deployment (GitOps).",
-            "Install it once. Do not embed cert-manager as a subchart, because it manages cluster-scoped resources."
+            {
+              "type": "cards",
+              "cards": [
+                {
+                  "icon": "key",
+                  "title": "Issuer, ClusterIssuer",
+                  "text": "Where certificates come from. An Issuer works in one namespace, a ClusterIssuer cluster-wide. Types: ACME (Let's Encrypt), CA (private PKI), HashiCorp Vault, CyberArk Certificate Manager (the URLs say venafi), SelfSigned, and external issuers."
+                },
+                {
+                  "icon": "file",
+                  "title": "Certificate",
+                  "text": "What you want: names, duration, issuer. cert-manager keeps the key and certificate in a Secret."
+                },
+                {
+                  "icon": "sync",
+                  "title": "Renewal",
+                  "text": "Renews before expiry, at 2/3 of the lifetime by default."
+                },
+                {
+                  "icon": "layers",
+                  "title": "Related projects",
+                  "text": "trust-manager, approver-policy, the webhook and CA Injector. csi-driver, csi-driver-spiffe or istio-csr generate the key on demand and never store it in a Secret."
+                }
+              ]
+            }
           ]
         },
         {
-          "title": "Resources",
+          "title": "Install it",
+          "part": "use",
+          "step": 1,
+          "icon": "download",
           "items": [
-            "Chain for ACME: Ingress (optional), Certificate, CertificateRequest, Order, Challenge.",
-            "Issuer works in one namespace, ClusterIssuer cluster-wide. The Certificate's issuerRef kind defaults to Issuer.",
-            "Certificate: secretName and issuerRef are required. dnsNames lists the SANs. duration defaults to 90 days (2160h). Renewal happens at 2/3 of the lifetime by default. privateKey.rotationPolicy is Always by default from v1.18.0.",
-            "The Secret holds tls.crt (certificate and chain), tls.key and ca.crt (not present with ACME). A change to names, usages, duration or issuerRef triggers reissuance. cmctl renew forces it. Deleting the Secret is not recommended."
+            {
+              "type": "code",
+              "title": "Install with Helm from the OCI registry",
+              "lang": "shell",
+              "match": "helm install \\\n  cert-manager oci://quay.io/jetstack/charts/cert-manager \\",
+              "source": {
+                "label": "Install with Helm",
+                "url": "https://cert-manager.io/docs/installation/helm/"
+              }
+            },
+            "The OCI registry is recommended and is the source of truth, published immediately on release. The legacy repository (`helm repo add jetstack https://charts.jetstack.io`) is updated a few hours later. You can also use `kubectl apply`, or continuous deployment (GitOps).",
+            {
+              "type": "callout",
+              "kind": "gotcha",
+              "text": "Install it once. Do not embed cert-manager as a subchart, because it manages cluster-scoped resources."
+            }
           ]
         },
         {
-          "title": "ACME issuer",
+          "title": "Create an issuer",
+          "part": "use",
+          "step": 2,
+          "icon": "key",
           "items": [
-            "spec.acme has email, server (the ACME directory URL), privateKeySecretRef (the account key Secret) and solvers.",
-            "Solvers use http01 (for example ingress.ingressClassName: nginx) or dns01 with a provider such as cloudflare or cloudDNS. The docs list ACMEDNS, Akamai, AzureDNS, DigitalOcean, RFC-2136, Route53 and Webhook as well.",
-            "Test with the staging server https://acme-staging-v02.api.letsencrypt.org/directory first."
+            "`spec.acme` has `email`, `server` (the ACME directory URL), `privateKeySecretRef` (the account key Secret) and `solvers`.",
+            "Solvers use `http01` (for example `ingress.ingressClassName: nginx`) or `dns01` with a provider such as `cloudflare` or `cloudDNS`. The docs list ACMEDNS, Akamai, AzureDNS, DigitalOcean, RFC-2136, Route53 and Webhook as well.",
+            {
+              "type": "code",
+              "title": "A Let's Encrypt staging ClusterIssuer",
+              "lang": "yaml",
+              "match": "name: letsencrypt-staging",
+              "source": {
+                "label": "ACME configuration",
+                "url": "https://cert-manager.io/docs/configuration/acme/"
+              }
+            },
+            {
+              "type": "callout",
+              "kind": "tip",
+              "text": "Test with the staging server `https://acme-staging-v02.api.letsencrypt.org/directory` first."
+            }
           ]
         },
         {
-          "title": "Certificates for an Ingress",
+          "title": "Get a certificate for an Ingress",
+          "part": "use",
+          "step": 3,
+          "icon": "globe",
           "items": [
-            "Annotate the Ingress with cert-manager.io/cluster-issuer (a ClusterIssuer, any namespace) or cert-manager.io/issuer (an Issuer in the same namespace), and add spec.tls with hosts and a unique secretName.",
-            "The ingress-shim component watches Ingresses with a supported annotation and creates a Certificate named after secretName. hosts become the subjectAltNames.",
+            "Annotate the Ingress with `cert-manager.io/cluster-issuer` (a ClusterIssuer, any namespace) or `cert-manager.io/issuer` (an Issuer in the same namespace), and add `spec.tls` with `hosts` and a unique `secretName`.",
+            {
+              "type": "code",
+              "title": "An Ingress annotated for cert-manager",
+              "lang": "yaml",
+              "match": "cert-manager.io/cluster-issuer",
+              "source": {
+                "label": "Securing Ingress",
+                "url": "https://cert-manager.io/docs/usage/ingress/"
+              }
+            },
+            "The ingress-shim component watches Ingresses with a supported annotation and creates a Certificate named after `secretName`. `hosts` become the subjectAltNames.",
             "The page notes ingress-nginx is scheduled for end of life in March 2026."
           ]
         },
         {
-          "title": "Troubleshooting",
+          "title": "Or write a Certificate",
+          "part": "use",
+          "step": 4,
+          "icon": "file",
           "items": [
-            "kubectl get and describe certificate, then certificaterequest, then the issuer or clusterissuer, then for ACME the Order and Challenge. Read Status and Events first, logs only if those do not help.",
-            "Example: a Certificate with Reason DoesNotExist and \"Issuing certificate as Secret does not exist\" is still waiting for issuance."
+            {
+              "type": "code",
+              "title": "A Certificate resource",
+              "lang": "yaml",
+              "match": "kind: Certificate\nmetadata:\n  name: example-com",
+              "source": {
+                "label": "Certificate",
+                "url": "https://cert-manager.io/docs/concepts/certificate/"
+              }
+            },
+            {
+              "type": "table",
+              "columns": [
+                "Field",
+                "Meaning"
+              ],
+              "rows": [
+                [
+                  "`secretName`",
+                  "required: the Secret for the certificate and key, in the same namespace"
+                ],
+                [
+                  "`issuerRef`",
+                  "required: `name`; `kind` defaults to `Issuer`, `group` to `cert-manager.io`"
+                ],
+                [
+                  "`dnsNames`",
+                  "the SANs. At least one of commonName, dnsNames, uris, emailAddresses, ipAddresses or otherNames is required"
+                ],
+                [
+                  "`duration`",
+                  "defaults to 90 days (2160h). Minimum 1 hour, and greater than `renewBefore`"
+                ],
+                [
+                  "`renewBefore`",
+                  "renewal happens at 2/3 of the lifetime by default. Minimum effective value 5 minutes"
+                ],
+                [
+                  "`privateKey.rotationPolicy`",
+                  "`Always` by default from v1.18.0 (`Never` before)"
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "title": "What ends up in the Secret",
+          "part": "run",
+          "icon": "key",
+          "items": [
+            "`tls.crt` (certificate and chain), `tls.key` and `ca.crt` (not present with ACME).",
+            "A change to names, usages, duration or issuerRef triggers reissuance. `cmctl renew` forces it.",
+            {
+              "type": "callout",
+              "kind": "gotcha",
+              "text": "Deleting the Secret is not recommended."
+            }
+          ]
+        },
+        {
+          "title": "Troubleshooting",
+          "part": "run",
+          "icon": "wrench",
+          "items": [
+            "In order: `kubectl get` and `describe` certificate, then certificaterequest, then the issuer or clusterissuer, then for ACME the order and challenge. Read Status and Events first, logs only if those do not help.",
+            "Example: a Certificate with Reason `DoesNotExist` and \"Issuing certificate as Secret does not exist\" is still waiting for issuance."
           ]
         }
       ],
@@ -1513,33 +2234,179 @@
       ],
       "sections": [
         {
-          "title": "Ingress TLS",
+          "title": "In one minute",
+          "part": "overview",
+          "icon": "eye",
           "items": [
-            "An Ingress \"may provide load balancing, SSL termination and name-based virtual hosting\" through its controller. The Kubernetes project recommends Gateway instead of Ingress and the Ingress API is frozen: generally available, with no further development.",
-            "With cert-manager, spec.tls lists hosts and a secretName. cert-manager stores the issued certificate in that Secret and the hosts become the SANs. Each Ingress needs a unique secretName."
+            "Where certificates appear in a cluster: TLS for Ingress, the CertificateSigningRequest API, and the cluster's own certificates managed by kubeadm.",
+            {
+              "type": "diagram",
+              "alt": "A client creates a CertificateSigningRequest naming a signer. An approver approves it. The signing controller writes the certificate into status.certificate, and the client fetches it.",
+              "caption": "The CertificateSigningRequest lifecycle.",
+              "w": 720,
+              "h": 200,
+              "nodes": [
+                {
+                  "id": "cl",
+                  "x": 90,
+                  "y": 100,
+                  "w": 120,
+                  "h": 40,
+                  "label": "Client",
+                  "kind": "ext"
+                },
+                {
+                  "id": "csr",
+                  "x": 290,
+                  "y": 100,
+                  "w": 170,
+                  "h": 44,
+                  "label": "CertificateSigningRequest",
+                  "sub": "spec.signerName",
+                  "kind": "hub"
+                },
+                {
+                  "id": "ap",
+                  "x": 510,
+                  "y": 50,
+                  "w": 130,
+                  "h": 36,
+                  "label": "Approver"
+                },
+                {
+                  "id": "sg",
+                  "x": 510,
+                  "y": 150,
+                  "w": 150,
+                  "h": 36,
+                  "label": "Signing controller"
+                }
+              ],
+              "links": [
+                {
+                  "from": "cl",
+                  "to": "csr",
+                  "label": "1 create",
+                  "arrow": "to"
+                },
+                {
+                  "from": "ap",
+                  "to": "csr",
+                  "label": "2 approve",
+                  "arrow": "to"
+                },
+                {
+                  "from": "sg",
+                  "to": "csr",
+                  "label": "3 signs",
+                  "arrow": "to"
+                },
+                {
+                  "from": "csr",
+                  "to": "cl",
+                  "label": "4 fetch",
+                  "arrow": "to",
+                  "dashed": true,
+                  "dy": -52
+                }
+              ]
+            }
           ]
         },
         {
-          "title": "CertificateSigningRequest API",
+          "title": "Ingress TLS",
+          "part": "use",
+          "step": 1,
+          "icon": "globe",
           "items": [
-            "certificates.k8s.io/v1. spec.request holds a base64-encoded PEM PKCS#10 request. spec.signerName is required in v1.",
-            "Lifecycle: create, approve or deny (some signers approve automatically, otherwise kubectl certificate approve or deny), sign (the controller writes status.certificate), fetch.",
-            "spec.expirationSeconds (v1.22 and later) requests a lifetime, minimum 600 seconds. Approval and signing need separate RBAC permissions (approve and sign on the signers resource).",
+            "An Ingress \"may provide load balancing, SSL termination and name-based virtual hosting\" through its controller. The Kubernetes project recommends Gateway instead of Ingress and the Ingress API is frozen: generally available, with no further development.",
+            "With [cert-manager](#cert-manager), `spec.tls` lists `hosts` and a `secretName`. cert-manager stores the issued certificate in that Secret and the hosts become the SANs. Each Ingress needs a unique `secretName`."
+          ]
+        },
+        {
+          "title": "The CertificateSigningRequest API",
+          "part": "use",
+          "step": 2,
+          "icon": "file",
+          "items": [
+            "`certificates.k8s.io/v1`. `spec.request` holds a base64-encoded PEM PKCS#10 request. `spec.signerName` is required in v1.",
+            {
+              "type": "code",
+              "title": "A CertificateSigningRequest",
+              "lang": "yaml",
+              "match": "kind: CertificateSigningRequest",
+              "source": {
+                "label": "CertificateSigningRequests",
+                "url": "https://kubernetes.io/docs/reference/access-authn-authz/certificate-signing-requests/"
+              }
+            },
+            {
+              "type": "code",
+              "title": "Approve or deny",
+              "lang": "shell",
+              "match": [
+                "kubectl certificate approve <certificate-signing-request-name>",
+                "kubectl certificate deny <certificate-signing-request-name>"
+              ],
+              "source": {
+                "label": "CertificateSigningRequests",
+                "url": "https://kubernetes.io/docs/reference/access-authn-authz/certificate-signing-requests/"
+              }
+            },
+            "`spec.expirationSeconds` (v1.22 and later) requests a lifetime, minimum 600 seconds. Approval and signing need separate RBAC permissions (`approve` and `sign` on the `signers` resource).",
             "Cleanup: approved, denied or failed requests are removed after 1 hour, pending ones after 24 hours, and any after the issued certificate expires."
           ]
         },
         {
           "title": "kubeadm cluster certificates",
+          "part": "run",
+          "icon": "clock",
           "items": [
-            "Default validity: leaf certificates 8760h (1 year, certificateValidityPeriod), the CA 87600h (10 years, caCertificateValidityPeriod). Key algorithm encryptionAlgorithm: RSA-2048 (default), RSA-3072, RSA-4096 or ECDSA-P256.",
-            "External CA mode: give kubeadm only ca.crt, not ca.key. Run the controller manager with --controllers=csrsigner pointing at the CA.",
-            "Custom certificates: put your own pairs in certificatesDir (default /etc/kubernetes/pki) before kubeadm init. kubeadm does not overwrite existing pairs."
+            {
+              "type": "table",
+              "columns": [
+                "",
+                "Default"
+              ],
+              "rows": [
+                [
+                  "Leaf certificates (`certificateValidityPeriod`)",
+                  "8760h (1 year)"
+                ],
+                [
+                  "The CA (`caCertificateValidityPeriod`)",
+                  "87600h (10 years)"
+                ],
+                [
+                  "Key algorithm (`encryptionAlgorithm`)",
+                  "`RSA-2048`. Also `RSA-3072`, `RSA-4096`, `ECDSA-P256`"
+                ]
+              ]
+            },
+            {
+              "type": "code",
+              "title": "Check expiry",
+              "lang": "shell",
+              "match": "kubeadm certs check-expiration",
+              "source": {
+                "label": "Certificate management with kubeadm",
+                "url": "https://kubernetes.io/docs/tasks/administer-cluster/kubeadm/kubeadm-certs/"
+              }
+            },
+            "External CA mode: give kubeadm only `ca.crt`, not `ca.key`. Run the controller manager with `--controllers=csrsigner` pointing at the CA.",
+            "Custom certificates: put your own pairs in `certificatesDir` (default `/etc/kubernetes/pki`) before `kubeadm init`. kubeadm does not overwrite existing pairs.",
+            {
+              "text": "kubeadm upgrade renews control plane certificates by default (from general knowledge).",
+              "unconfirmed": "Not in the part of the page read."
+            }
           ]
         },
         {
           "title": "Where cert-manager and SPIFFE fit",
+          "part": "run",
+          "icon": "layers",
           "items": [
-            "Use cert-manager for workload and ingress certificates and for renewal. SPIRE issues short-lived workload identity certificates (X.509-SVIDs). See cert-manager and SPIFFE and SPIRE."
+            "Use [cert-manager](#cert-manager) for workload and ingress certificates and for renewal. SPIRE issues short-lived workload identity certificates (X.509-SVIDs)."
           ]
         }
       ],
@@ -1738,45 +2605,162 @@
       ],
       "sections": [
         {
-          "title": "Read a certificate (openssl x509)",
+          "title": "In one minute",
+          "part": "overview",
+          "icon": "eye",
           "items": [
-            "openssl x509 -in cert.pem -noout -text: everything, including public key, names, serial number and extensions. Add -inform DER for a binary file.",
-            "-noout with -subject, -issuer, -dates (start and end) or -enddate prints just those fields.",
-            "-ext subjectAltName prints the named extensions. -fingerprint prints a digest of the DER form (SHA1 by default with this flag).",
-            "-checkend 86400 exits nonzero if the certificate expires within that many seconds, which suits a monitoring check."
+            "OpenSSL commands to read a certificate, test a server and check a chain, the errors you will meet, and how to debug a cert-manager Certificate.",
+            {
+              "type": "cards",
+              "cards": [
+                {
+                  "icon": "file",
+                  "title": "Read a certificate",
+                  "text": "`openssl x509 -in cert.pem -noout -text`"
+                },
+                {
+                  "icon": "server",
+                  "title": "Test a server",
+                  "text": "`openssl s_client -connect host:443 -servername host`"
+                },
+                {
+                  "icon": "check",
+                  "title": "Verify a chain",
+                  "text": "`openssl verify -CAfile root.pem -untrusted intermediate.pem cert.pem`"
+                },
+                {
+                  "icon": "wrench",
+                  "title": "cert-manager",
+                  "text": "`kubectl describe certificate`, then request, issuer, order and challenge"
+                }
+              ]
+            }
           ]
         },
         {
-          "title": "Test a server (openssl s_client)",
+          "title": "Read a certificate",
+          "part": "use",
+          "step": 1,
+          "icon": "file",
           "items": [
-            "openssl s_client -connect host:443 -servername host connects and prints the handshake. -servername sets SNI. Without it, SNI comes from -connect when that is a DNS name.",
-            "-showcerts prints the certificates the server sent, in the order sent. That is not a verified chain: it shows whether the server sends its intermediates.",
-            "-CAfile, -CApath or -CAstore load trust anchors. -verify_return_error aborts the handshake on a verification error, otherwise errors are shown and the command carries on. -brief prints a short summary.",
-            "-tls1_2 and -tls1_3 pick a version. -starttls protocol (smtp, imap, pop3, ftp, postgres, mysql, ldap and others) upgrades a plain connection first."
+            {
+              "type": "code",
+              "title": "Print, expiry-check and fingerprint a certificate",
+              "lang": "shell",
+              "match": [
+                "openssl x509 -in cert.pem -noout -text",
+                "openssl x509 -in cert.pem -noout -serial",
+                "openssl x509 -sha1 -in cert.pem -noout -fingerprint"
+              ],
+              "source": {
+                "label": "openssl x509",
+                "url": "https://docs.openssl.org/master/man1/openssl-x509/"
+              }
+            },
+            "`-noout` with `-subject`, `-issuer`, `-dates` (start and end) or `-enddate` prints just those fields. Add `-inform DER` for a binary file.",
+            "`-checkend 86400` exits nonzero if the certificate expires within that many seconds, which suits a monitoring check."
           ]
         },
         {
-          "title": "Verify a chain (openssl verify options)",
+          "title": "Test a server",
+          "part": "use",
+          "step": 2,
+          "icon": "server",
           "items": [
-            "-CAfile root.pem loads trusted roots. OpenSSL does not provide a default set of trust anchors. -untrusted intermediates.pem supplies intermediates, which help build a path but are never trust anchors.",
-            "-purpose sslserver checks the certificate's extensions against its intended use. -verify_hostname name checks a DNS name in the SAN, or the common name.",
-            "-attime sets another reference time and -no_check_time skips the validity check."
+            {
+              "type": "code",
+              "title": "Connect to a server",
+              "lang": "shell",
+              "match": "openssl s_client -connect servername:443",
+              "source": {
+                "label": "openssl s_client",
+                "url": "https://docs.openssl.org/master/man1/openssl-s_client/"
+              }
+            },
+            "`-servername` sets SNI. Without it, SNI comes from `-connect` when that is a DNS name. `-showcerts` prints the certificates the server sent, in the order sent. That is not a verified chain: it shows whether the server sends its intermediates.",
+            "`-CAfile`, `-CApath` or `-CAstore` load trust anchors. `-verify_return_error` aborts the handshake on a verification error, otherwise errors are shown and the command carries on. `-brief` prints a short summary.",
+            "`-tls1_2` and `-tls1_3` pick a version. `-starttls protocol` (smtp, imap, pop3, ftp, postgres, mysql, ldap and others) upgrades a plain connection first."
+          ]
+        },
+        {
+          "title": "Verify a chain",
+          "part": "use",
+          "step": 3,
+          "icon": "shield",
+          "items": [
+            "`-CAfile root.pem` loads trusted roots. OpenSSL does not provide a default set of trust anchors. `-untrusted intermediates.pem` supplies intermediates, which help build a path but are never trust anchors.",
+            "`-purpose sslserver` checks the certificate's extensions against its intended use. `-verify_hostname name` checks a DNS name in the SAN, or the common name. `-attime` sets another reference time and `-no_check_time` skips the validity check."
+          ]
+        },
+        {
+          "title": "Make a CSR or a self-signed certificate",
+          "part": "use",
+          "step": 4,
+          "icon": "key",
+          "items": [
+            {
+              "type": "code",
+              "title": "Self-signed certificate and key",
+              "lang": "shell",
+              "match": "openssl req -x509 -newkey rsa:2048 -keyout key.pem -out req.pem",
+              "source": {
+                "label": "openssl req",
+                "url": "https://docs.openssl.org/master/man1/openssl-req/"
+              }
+            },
+            {
+              "type": "code",
+              "title": "Pack a key and certificate into PKCS#12",
+              "lang": "shell",
+              "match": "openssl pkcs12 -export -in cert.pem -inkey key.pem -out file.p12",
+              "source": {
+                "label": "openssl pkcs12",
+                "url": "https://docs.openssl.org/master/man1/openssl-pkcs12/"
+              }
+            }
           ]
         },
         {
           "title": "Common errors",
+          "part": "use",
+          "step": 5,
+          "icon": "alert",
           "items": [
-            "unable to get local issuer certificate: chain building failed. The trust store has neither the root nor an unbroken chain to it. The usual cause is a server that does not send its intermediate: install the full chain.",
-            "self-signed certificate: trusted only if it is in the trust store and is a trust anchor. Add it to the store, or use a real CA.",
-            "certificate has expired: validity is checked at each element of the chain against the current time. Check the clock and the dates with -dates.",
-            "hostname mismatch: the name is not in the certificate's identity fields. Put every host name in subjectAltName.",
-            "Numeric X509 error codes are not on the OpenSSL pages read, so they are not listed here."
+            {
+              "type": "table",
+              "columns": [
+                "Error",
+                "What it means"
+              ],
+              "rows": [
+                [
+                  "unable to get local issuer certificate",
+                  "Chain building failed. The trust store has neither the root nor an unbroken chain to it. The usual cause is a server that does not send its intermediate: install the full chain"
+                ],
+                [
+                  "self-signed certificate",
+                  "Trusted only if it is in the trust store and is a trust anchor. Add it to the store, or use a real CA"
+                ],
+                [
+                  "certificate has expired",
+                  "Validity is checked at each element of the chain against the current time. Check the clock and the dates with `-dates`"
+                ],
+                [
+                  "hostname mismatch",
+                  "The name is not in the certificate's identity fields. Put every host name in `subjectAltName`"
+                ]
+              ],
+              "caption": "Numeric X509 error codes are not on the OpenSSL pages read, so they are not listed here."
+            }
           ]
         },
         {
           "title": "cert-manager",
+          "part": "use",
+          "step": 6,
+          "icon": "wrench",
           "items": [
-            "In order: kubectl get and describe certificate, then certificaterequest, then the issuer or clusterissuer, then for ACME the order and challenge. Look at Status and Events first and logs last. kubectl get event shows the namespace's events.",
+            "In order: `kubectl get` and `describe` certificate, then certificaterequest, then the issuer or clusterissuer, then for ACME the order and challenge. Look at Status and Events first and logs last. `kubectl get event` shows the namespace's events.",
             "Chain: Ingress (optional), Certificate, CertificateRequest, Order, Challenge."
           ]
         }

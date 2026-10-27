@@ -22,3 +22,7 @@ Review each difference, then update `checked`, `version` and the facts that chan
 The last tab, Standard topologies, shows every entry of the group `reference` in full (the template's `group` option on a tab). They are reference designs taken from vendor or project docs, so each says whose docs it comes from and which shapes it uses. Do not call one a standard unless a source does.
 
 Diagrams: an entry may have `diagrams` (see docs/data-model.md). The page draws them as inline SVG from the spec, so there is no image file and no script from outside. A diagram only restates what the entry's text and sources say. Keep labels short enough to fit their node, and check the page in a browser after changing one.
+
+Page: this topic uses the shared page (`shared/topic.html`). Its tabs are in `templates/view.json`. Tab entries use the learning layout (parts, steps,
+tables, callouts, cards, diagrams, fetched code examples: see `topics/gitops/docs/data-model.md`); short entries are flat. When converting an entry, keep
+every fact and check nothing was dropped. Examples are fetched by reference (`make examples`), never pasted. Check diagrams in a browser after editing one.

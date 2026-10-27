@@ -21,3 +21,8 @@ Review each difference, then update `checked`, `version` and the facts that chan
 
 Paid products: the group `paid` (Other tools tab) lists a few commercial products so the reader knows they exist. Each is a `ref` entry that says what the vendor's own
 page says, nothing more, and names its closest open source alternative in `compare` (an entry id in this topic). No prices unless the page shows them, and say they change.
+
+Learning layout: the five tab entries (GitOps principles, Argo CD, Flux, Helm, Kustomize) are organised into parts, Overview, Use it, Run it and Reference, with code examples,
+tables, callouts, cards, checklists, icons and diagrams (see docs/data-model.md). When converting an entry, keep every fact: list the old
+items and check each one landed somewhere (names, flags, numbers, versions). Code examples are not copied: give the source page and a
+match string, run `make examples`, and check the result on the page. Do not combine or edit examples.

@@ -5,6 +5,9 @@ import sys
 from collections import Counter
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent.parent / "shared"))
+import learning  # noqa: E402
+
 ROOT = Path(__file__).resolve().parent.parent
 DATE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 LEVELS = {"deep", "overview", "ref"}
@@ -71,9 +74,7 @@ def main():
                 bad.append(f"link needs a label and an https url: {i}")
         if len({x["url"] for x in links}) != len(links):
             bad.append(f"duplicate link url: {i}")
-        for sec in e.get("sections", []):
-            if not sec.get("title") or not sec.get("items"):
-                bad.append(f"section needs a title and items: {i}")
+        bad += learning.section_problems(e)
         for c in e.get("compare", []):
             if c["with"] not in known:
                 bad.append(f"compare points at unknown entry {c['with']}: {i}")

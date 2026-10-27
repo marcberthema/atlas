@@ -1,0 +1,37 @@
+{
+  "title": "Certificates",
+  "tabs": [
+    {
+      "id": "x509",
+      "label": "X.509 and PKI"
+    },
+    {
+      "id": "tls",
+      "label": "TLS"
+    },
+    {
+      "id": "acme",
+      "label": "ACME and Let's Encrypt"
+    },
+    {
+      "id": "cert-manager",
+      "label": "cert-manager"
+    },
+    {
+      "id": "kubernetes-tls",
+      "label": "Kubernetes"
+    },
+    {
+      "id": "troubleshooting",
+      "label": "Inspect and troubleshoot"
+    },
+    {
+      "id": "others",
+      "label": "Other tools"
+    },
+    {
+      "id": "compare",
+      "label": "Compare"
+    }
+  ]
+}
