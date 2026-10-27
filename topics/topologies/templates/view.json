@@ -1,0 +1,38 @@
+{
+  "title": "Enterprise topologies",
+  "tabs": [
+    {
+      "id": "hub-and-spoke",
+      "label": "Hub-and-spoke"
+    },
+    {
+      "id": "mesh",
+      "label": "Mesh"
+    },
+    {
+      "id": "tree",
+      "label": "Hierarchical (tree)"
+    },
+    {
+      "id": "bus",
+      "label": "Bus"
+    },
+    {
+      "id": "ring",
+      "label": "Ring"
+    },
+    {
+      "id": "others",
+      "label": "Other topologies and products"
+    },
+    {
+      "id": "compare",
+      "label": "Compare"
+    },
+    {
+      "id": "standard",
+      "label": "Standard topologies",
+      "group": "reference"
+    }
+  ]
+}

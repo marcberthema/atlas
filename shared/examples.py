@@ -1,9 +1,9 @@
-"""Fetch the code examples the data points to, instead of copying them by hand.
+"""Fetch the code examples a topic's data points to, instead of copying them by hand.
 
-  examples.py            check: fetch every example and report what changed upstream or can no longer be found (writes nothing)
-  examples.py --refresh  fetch every example and save it to data/examples.json, the cache the build reads
+  examples.py <topic>            check: fetch every example and report what changed upstream or can no longer be found (writes nothing)
+  examples.py <topic> --refresh  fetch every example and save it to data/examples.json, the cache the build reads
 
-A code item in data/gitops.json has a `source` (label, url) and a `match`: a string, or a list of strings for several examples
+A code item in a topic's data has a `source` (label, url) and a `match`: a string, or a list of strings for several examples
 from the same page, shown in that order. Each string selects the code block on the page that contains it; when several blocks
 contain it, the shortest one is used. The cache is generated, never edited by hand: Atlas points to the docs, it does not keep its own copy.
 """
@@ -18,9 +18,7 @@ import urllib.error
 import urllib.request
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent.parent
-DATA = ROOT / "data" / "gitops.json"
-CACHE = ROOT / "data" / "examples.json"
+SITE = Path(__file__).resolve().parent.parent
 UA = {"User-Agent": "atlas-check (https://github.com)"}
 
 
@@ -64,8 +62,11 @@ def find(url, match, pages):
 
 def main():
     ap = argparse.ArgumentParser()
+    ap.add_argument("topic")
     ap.add_argument("--refresh", action="store_true")
     args = ap.parse_args()
+    root = SITE / "topics" / args.topic
+    DATA, CACHE = root / "data" / f"{args.topic}.json", root / "data" / "examples.json"
     data = json.loads(DATA.read_text(encoding="utf-8"))
     cache = json.loads(CACHE.read_text(encoding="utf-8")) if CACHE.exists() else {}
     today = datetime.date.today().isoformat()
@@ -93,11 +94,11 @@ def main():
             print("nothing written: fix the match strings above first")
             return 1
         CACHE.write_text(json.dumps(dict(sorted(found.items())), indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
-        print(f"wrote {len(found)} examples to data/examples.json")
+        print(f"wrote {len(found)} examples to topics/{args.topic}/data/examples.json")
         return 0
     print(f"checked {len(found)} examples, {len(problems)} differences")
     if problems:
-        print("review each one, then run make examples to refresh the cache")
+        print(f"review each one, then run make {args.topic}-examples to refresh the cache")
     return 0
 
 

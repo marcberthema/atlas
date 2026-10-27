@@ -1,0 +1,33 @@
+{
+  "title": "GitOps",
+  "tabs": [
+    {
+      "id": "opengitops",
+      "label": "GitOps principles"
+    },
+    {
+      "id": "argo-cd",
+      "label": "Argo CD"
+    },
+    {
+      "id": "flux",
+      "label": "Flux"
+    },
+    {
+      "id": "helm",
+      "label": "Helm"
+    },
+    {
+      "id": "kustomize",
+      "label": "Kustomize"
+    },
+    {
+      "id": "others",
+      "label": "Other tools"
+    },
+    {
+      "id": "compare",
+      "label": "Compare"
+    }
+  ]
+}

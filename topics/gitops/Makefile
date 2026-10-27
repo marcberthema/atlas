@@ -8,12 +8,12 @@ help:  ## List the targets
 validate:  ## Check data/gitops.json is consistent (exit 1 on problems)
 	$(PY) scripts/validate.py
 
-check:  ## Network: releases, archived flags and CNCF levels against the data (ONLY=id, LINKS=1 also checks source links, STRICT=1 fails on differences)
+check:  ## Network: releases, archived flags, CNCF levels and code examples against the data (ONLY=id, LINKS=1 also checks source links, STRICT=1 fails on differences)
 	$(PY) scripts/check_updates.py $(if $(ONLY),--only $(ONLY)) $(if $(LINKS),--links) $(if $(STRICT),--strict)
-	$(PY) scripts/examples.py
+	$(PY) ../../shared/examples.py gitops
 
 examples:  ## Network: fetch the code examples from their docs pages into data/examples.json (the build reads it)
-	$(PY) scripts/examples.py --refresh
+	$(PY) ../../shared/examples.py gitops --refresh
 
 build: validate  ## Generate ../../dist/gitops/index.html
 	$(PY) scripts/build.py

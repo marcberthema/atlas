@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>GitOps - Atlas</title>
+<title>/*__TITLE__*/ - Atlas</title>
 <style>
 :root{--bg:#fff;--fg:#111;--mut:#555;--acc:#1a3c5e;--rule:#d5dde5;--card:#f6f8fa;--ok:#2e7d32;--warn:#b58900;--bad:#c62828}
 @media(prefers-color-scheme:dark){:root{--bg:#14181d;--fg:#e8ecef;--mut:#9aa6b2;--acc:#7fb2e5;--rule:#2b333b;--card:#1c2229;--ok:#4caf50;--warn:#d4a72c;--bad:#ef5350}}
@@ -31,6 +31,7 @@ button.nm{font:inherit;font-weight:600;color:var(--acc);background:none;border:0
 .q{color:var(--warn);font-weight:700;cursor:help}
 .empty{color:var(--mut);padding:16px 0}
 .pg{padding:4px 0 0}
+.gv{border-top:1px solid var(--rule);margin-top:18px;padding-top:12px}
 
 .cmp th:first-child,.cmp td:first-child{white-space:nowrap}
 dialog{width:min(820px,calc(100vw - 24px));max-height:calc(100vh - 24px);border:1px solid var(--rule);border-radius:12px;background:var(--bg);color:var(--fg);padding:0}
@@ -146,17 +147,11 @@ const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',
 const $=id=>document.getElementById(id);
 const byId=Object.fromEntries(D.entries.map(e=>[e.id,e]));
 const STATUS={active:'ok',inactive:'warn',archived:'bad'};
-// One tab per product, in this order. Everything else is listed on the Other tools tab.
-const TABS=[
-  {id:'opengitops',label:'GitOps principles'},
-  {id:'argo-cd',label:'Argo CD'},
-  {id:'flux',label:'Flux'},
-  {id:'helm',label:'Helm'},
-  {id:'kustomize',label:'Kustomize'},
-  {id:'others',label:'Other tools'},
-  {id:'compare',label:'Compare'}
-];
+// Tabs come from the topic's templates/view.json. An entry id opens that entry in full. others and compare are the two lists.
+// A tab with a group shows every entry of that group in full, and its entries are left out of the others list.
+const TABS=/*__TABS__*/[];
 const OWN=new Set(TABS.map(t=>t.id));
+const GROUPTAB=Object.fromEntries(TABS.filter(t=>t.group).map(t=>[t.group,t.id]));
 let view=TABS[0].id;
 $('title').textContent=D.title;
 $('intro').textContent=D.intro;
@@ -170,7 +165,7 @@ const nameBtn=e=>'<button class="nm" type="button" data-id="'+esc(e.id)+'">'+esc
 
 function entries(f){
   return D.groups.map(g=>{
-    const rows=D.entries.filter(e=>e.group===g.id&&!OWN.has(e.id)&&(!f||text(e).includes(f)));
+    const rows=D.entries.filter(e=>e.group===g.id&&!OWN.has(e.id)&&!GROUPTAB[e.group]&&(!f||text(e).includes(f)));
     if(!rows.length)return '';
     return '<h2>'+esc(g.label)+'</h2><p class="about">'+esc(g.about)+'</p><div class="wrap"><table><thead><tr><th>Name</th><th>Started</th><th>Status</th><th>CNCF</th><th>Version analysed</th><th>Licence</th></tr></thead><tbody>'
       +rows.map(e=>'<tr><td>'+nameBtn(e)+'<small>'+esc(e.summary)+'</small></td><td>'+started(e)+'</td><td><span class="badge '+STATUS[e.status]+'">'+esc(e.status)+'</span></td><td>'+cncf(e)+'</td><td>'+latest(e)+'</td><td>'+esc(e.license)+'</td></tr>').join('')
@@ -191,7 +186,13 @@ function render(){
   const list=view==='others'||view==='compare';
   $('q').style.display=list?'':'none';
   if(window.setBar)setBar();  // the top bar is shorter without the search box
-  $('out').innerHTML=view==='others'?entries(f):view==='compare'?compare(f):'<div class="pg db">'+detail(byId[view])+'</div>';
+  const gt=TABS.find(t=>t.id===view&&t.group);
+  $('out').innerHTML=view==='others'?entries(f):view==='compare'?compare(f):gt?groupView(gt.group):'<div class="pg db">'+detail(byId[view])+'</div>';
+}
+
+function groupView(gid){
+  const g=D.groups.find(x=>x.id===gid);
+  return '<p class="about">'+esc(g.about)+'</p>'+D.entries.filter(e=>e.group===gid).map(e=>'<section class="pg db gv" id="e-'+esc(e.id)+'">'+detail(e)+'</section>').join('');
 }
 
 function tab(id,push){
@@ -262,6 +263,7 @@ function learning(e){
   const parts=PARTS.filter(p=>e.sections.some(s=>s.part===p.id));
   if(!flat)h+='<nav class="jump" aria-label="On this page">'+parts.map(p=>'<a href="#'+pid(p.id)+'" data-jump="'+pid(p.id)+'">'+ic(p.icon)+esc(p.label)+'</a>').join('')
     +'<a href="#'+pid('more')+'" data-jump="'+pid('more')+'">'+ic('scale')+'Compared and sources</a></nav>';
+  (e.diagrams||[]).forEach(d=>{h+='<figure class="dg">'+svgDiagram(d)+(d.caption?'<figcaption>'+esc(d.caption)+'</figcaption>':'')+'</figure>';});
   if(e.links&&e.links.length)h+='<div class="pills">'+e.links.map(l=>'<a href="'+esc(l.url)+'" target="_blank" rel="noopener">'+esc(l.label)+ic('ext')+'</a>').join('')+'</div>';
   if(flat)e.sections.forEach(x=>{h+='<div class="sec"><h4>'+(x.icon?ic(x.icon):'')+esc(x.title)+'</h4>'+(x.intro?'<p class="lead">'+md(x.intro)+'</p>':'')+items(x.items,e.id)+'</div>';});
   parts.forEach(p=>{
@@ -285,6 +287,7 @@ function detail(e){return learning(e);}
 
 function open(id,push){
   const e=byId[id];if(!e)return;
+  if(GROUPTAB[e.group]){if($('dlg').open)$('dlg').close();tab(GROUPTAB[e.group],false);const el=document.getElementById('e-'+id);if(el)el.scrollIntoView();if(push!==false)history.replaceState(null,'','#'+id);return;}
   if(OWN.has(id)){if($('dlg').open)$('dlg').close();tab(id,push);return;}
   $('dt').textContent=e.name;$('db').innerHTML=detail(e);
   if(!$('dlg').open)$('dlg').showModal();

@@ -1,0 +1,37 @@
+{
+  "title": "Identity providers",
+  "tabs": [
+    {
+      "id": "sso",
+      "label": "SSO and federation"
+    },
+    {
+      "id": "oidc",
+      "label": "OIDC and OAuth 2.0"
+    },
+    {
+      "id": "saml",
+      "label": "SAML 2.0"
+    },
+    {
+      "id": "ldap",
+      "label": "LDAP"
+    },
+    {
+      "id": "keycloak",
+      "label": "Keycloak"
+    },
+    {
+      "id": "argocd-k8s",
+      "label": "Argo CD and Kubernetes"
+    },
+    {
+      "id": "others",
+      "label": "Other tools"
+    },
+    {
+      "id": "compare",
+      "label": "Compare"
+    }
+  ]
+}
