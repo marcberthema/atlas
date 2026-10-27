@@ -1,0 +1,27 @@
+{
+  "https://argo-cd.readthedocs.io/en/stable/operator-manual/user-management/ | dex.config: |\n    connectors:\n      # OIDC": {
+    "body": "data:\n  url: \"https://argocd.example.com\"\n  dex.config: |\n    connectors:\n      # OIDC\n      - type: oidc\n        id: oidc\n        name: OIDC\n        config:\n          issuer: https://example-OIDC-provider.example.com\n          clientID: aaaabbbbccccddddeee\n          clientSecret: $dex.oidc.clientSecret",
+    "fetched": "2026-10-27",
+    "checked": "2026-10-27"
+  },
+  "https://argo-cd.readthedocs.io/en/stable/operator-manual/user-management/ | example-OIDC-provider\n    issuer": {
+    "body": "  oidc.config: |\n    name: example-OIDC-provider\n    issuer: https://example-OIDC-provider.example.com\n    clientID: xxxxxxxxx\n    clientSecret: xxxxxxxxx\n    requestedScopes: [\"openid\", \"profile\", \"email\", \"groups\"]\n    requestedIDTokenClaims: {\"groups\": {\"essential\": true}}\n    logoutURL: https://example-OIDC-provider.example.com/logout?id_token_hint={{token}}",
+    "fetched": "2026-10-27",
+    "checked": "2026-10-27"
+  },
+  "https://kubernetes.io/docs/reference/access-authn-authz/authentication/ | - issuer:\n    url: https://example.com": {
+    "body": "apiVersion: apiserver.config.k8s.io/v1\nkind: AuthenticationConfiguration\njwt:\n- issuer:\n    url: https://example.com\n    audiences:\n    - my-app\n  claimMappings:\n    username:\n      expression: 'claims.username + \":external-user\"'\n    groups:\n      expression: 'claims.roles.split(\",\")'\n    uid:\n      expression: 'claims.sub'\n    extra:\n    - key: 'example.com/tenant'\n      valueExpression: 'claims.tenant'\n  userValidationRules:\n  - expression: \"!user.username.startsWith('system:')\" # the expression will evaluate to true, so validation will succeed.\n    message: 'username cannot used reserved system: prefix'",
+    "fetched": "2026-10-27",
+    "checked": "2026-10-27"
+  },
+  "https://openid.net/specs/openid-connect-discovery-1_0.html | GET /.well-known/openid-configuration HTTP/1.1": {
+    "body": "  GET /.well-known/openid-configuration HTTP/1.1\n  Host: example.com",
+    "fetched": "2026-10-27",
+    "checked": "2026-10-27"
+  },
+  "https://www.keycloak.org/server/containers | start-dev": {
+    "body": "podman|docker run --name mykeycloak -p 127.0.0.1:8080:8080 \\\n        -e KC_BOOTSTRAP_ADMIN_USERNAME=admin -e KC_BOOTSTRAP_ADMIN_PASSWORD=change_me \\\n        quay.io/keycloak/keycloak:latest \\\n        start-dev",
+    "fetched": "2026-10-27",
+    "checked": "2026-10-27"
+  }
+}

@@ -38,6 +38,14 @@ def refs(data):
     return out
 
 
+def text(block):
+    """A code block as plain text. Some sites end a code line with <br/>, some wrap each line in a div, some use a real newline."""
+    block = re.sub(r"<br\s*/?>\s*</div>", "</div>", block)
+    block = re.sub(r"</div>", "\n", block)
+    block = re.sub(r"<br\s*/?>", "\n", block)
+    return html.unescape(re.sub(r"<[^>]+>", "", block)).strip("\n")
+
+
 def blocks(url, pages):
     """The code blocks of a page, as plain text, fetched once per run."""
     if url not in pages:
@@ -50,8 +58,7 @@ def blocks(url, pages):
                 if n == 2:
                     raise
                 time.sleep(2 * (n + 1))
-        # some sites (Docusaurus) end each code line with <br/> instead of a newline
-        pages[url] = [html.unescape(re.sub(r"<[^>]+>", "", re.sub(r"<br\s*/?>", "\n", b))).strip("\n") for b in re.findall(r"<pre[^>]*>(.*?)</pre>", page, flags=re.S)]
+        pages[url] = [text(b) for b in re.findall(r"<pre[^>]*>(.*?)</pre>", page, flags=re.S)]
     return pages[url]
 
 
