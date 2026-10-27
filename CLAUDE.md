@@ -2,7 +2,7 @@
 
 A personal knowledge base: a collection of references to look things up in, not Q&A. Each topic is a set of facts kept in
 JSON, generated into static HTML. Published as a Cloudflare Worker with static assets at atlas.marcberthelette.com; only `dist/` is exposed.
-Built with AI assistance. Topics now: Azure with Terraform, GitOps, Identity providers, Certificates.
+Built with AI assistance. Topics now: Azure with Terraform, GitOps, Identity providers, Certificates, Enterprise topologies, Architecture and design patterns.
 
 ---
 

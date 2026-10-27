@@ -34,3 +34,7 @@ identity-%:
 	$(MAKE) -C topics/identity $*
 certificates-%:
 	$(MAKE) -C topics/certificates $*
+topologies-%:
+	$(MAKE) -C topics/topologies $*
+patterns-%:
+	$(MAKE) -C topics/patterns $*
