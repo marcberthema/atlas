@@ -2,7 +2,7 @@
   "title": "GitOps",
   "intro": "GitOps principles, Argo CD, Flux and the other operators, and the tools that produce the manifests (Helm, Kustomize and alternatives). Open source and free tools only.",
   "checked": "2026-10-26",
-  "scope": "Open source or free to use. Paid products are left out unless they are an alternative that is part of the CNCF.",
+  "scope": "Open source or free to use. Paid products are left out of the main groups. The Paid products group in Other tools lists a few commercial ones for awareness only.",
   "groups": [
     {
       "id": "principles",
@@ -28,6 +28,11 @@
       "id": "secrets",
       "label": "Secrets",
       "about": "Ways to keep secrets out of Git in plain text and still deploy them with GitOps."
+    },
+    {
+      "id": "paid",
+      "label": "Paid products",
+      "about": "Commercial products, listed so you know they exist, each with its closest open source alternative. Not recommendations. Details are only what the vendor's own page says."
     }
   ],
   "entries": [
@@ -2776,6 +2781,248 @@
         {
           "label": "Argo CD: secret management",
           "url": "https://argo-cd.readthedocs.io/en/stable/operator-manual/secret-management/"
+        }
+      ]
+    },
+    {
+      "id": "akuity-platform",
+      "name": "Akuity Platform",
+      "group": "paid",
+      "level": "ref",
+      "summary": "Commercial Argo CD service from the team behind Argo CD and Kargo. Closest open source alternative: Argo CD.",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "Not stated on the vendor page read",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "Commercial product, not a CNCF project."
+      },
+      "license": "Proprietary (commercial)",
+      "version": {
+        "name": "Akuity Platform",
+        "analysed": "vendor page read 2026-10-26",
+        "released": "2026-10-26",
+        "docs": "vendor page, no version or date shown on it",
+        "checked": "2026-10-26"
+      },
+      "compare": [
+        {
+          "with": "argo-cd",
+          "text": "The open source Argo CD you run and upgrade yourself. Akuity sells the managed service."
+        },
+        {
+          "with": "kargo",
+          "text": "Kargo is the open source promotion tool Akuity's promotions are built on."
+        }
+      ],
+      "related": [
+        "argo-cd",
+        "kargo"
+      ],
+      "notes": [
+        "The Akuity Platform page itself (akuity.io/akuity-platform) was not read; the homepage names it only in navigation. Whether the service is literally managed Argo CD is not stated on the page (unconfirmed)."
+      ],
+      "links": [
+        {
+          "label": "Akuity",
+          "url": "https://akuity.io/"
+        }
+      ],
+      "sections": [
+        {
+          "title": "What the vendor says",
+          "items": [
+            "\"Built by the creators of Argo CD and Kargo.\" It takes on \"upgrades, patching, and scaling overhead\".",
+            "Adds secure projects, auditability, consistent deployments across apps and clusters, one incident view of logs, events, metrics and deployment history, and approval and logging guardrails. Promotions are \"built on Kargo\".",
+            "A \"Try it for free\" button points to akuity.cloud. No prices or free tier terms are on the page."
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "Akuity",
+          "url": "https://akuity.io/"
+        }
+      ]
+    },
+    {
+      "id": "harness-gitops",
+      "name": "Harness GitOps",
+      "group": "paid",
+      "level": "ref",
+      "summary": "Commercial delivery platform that adds a control plane on top of Argo CD. Closest open source alternative: Argo CD.",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "Not stated on the vendor page read",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "Commercial product, not a CNCF project."
+      },
+      "license": "Proprietary (commercial)",
+      "version": {
+        "name": "Harness GitOps",
+        "analysed": "vendor page read 2026-10-26",
+        "released": "2026-10-26",
+        "docs": "vendor page, no version or date shown on it",
+        "checked": "2026-10-26"
+      },
+      "compare": [
+        {
+          "with": "argo-cd",
+          "text": "Argo CD does the sync. Harness manages many Argo instances and adds governance and promotion on top."
+        }
+      ],
+      "related": [
+        "argo-cd",
+        "flux",
+        "argo-rollouts"
+      ],
+      "notes": [
+        "The page does not say how Harness integrates with Argo CD internally, nor whether GitOps is in the free plan (unconfirmed). The page's structured data also mentions Flux."
+      ],
+      "links": [
+        {
+          "label": "Harness Continuous Delivery",
+          "url": "https://www.harness.io/products/continuous-delivery"
+        }
+      ],
+      "sections": [
+        {
+          "title": "What the vendor says",
+          "items": [
+            "\"Harness transforms Argo CD into a complete, enterprise-grade platform.\" It manages the health, versions and bulk operations of all Argo instances from one dashboard.",
+            "Adds a UI for ApplicationSets and rollouts, secrets from Vault or AWS referenced in manifests, OPA-based guardrails, FIPS hardened images, one audit trail and promotion across environments.",
+            "A free trial (no credit card) and a Harness Free Plan at $0 for individuals and small teams are on the page. Paid tiers and prices are not."
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "Harness Continuous Delivery",
+          "url": "https://www.harness.io/products/continuous-delivery"
+        }
+      ]
+    },
+    {
+      "id": "openshift-gitops",
+      "name": "Red Hat OpenShift GitOps",
+      "group": "paid",
+      "level": "ref",
+      "summary": "Red Hat's supported Argo CD for OpenShift, installed as an operator. Closest open source alternative: Argo CD.",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "Not stated on the vendor page read",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "Commercial product, not a CNCF project."
+      },
+      "license": "Proprietary (commercial)",
+      "version": {
+        "name": "Red Hat OpenShift GitOps",
+        "analysed": "vendor page read 2026-10-26",
+        "released": "2026-10-26",
+        "docs": "docs.redhat.com landing page, release 1.22",
+        "checked": "2026-10-26"
+      },
+      "compare": [
+        {
+          "with": "argo-cd",
+          "text": "The same Argo CD upstream. Red Hat packages, supports and versions it for OpenShift."
+        }
+      ],
+      "related": [
+        "argo-cd",
+        "argo-rollouts"
+      ],
+      "notes": [
+        "Relation to upstream Argo CD is inferred from the docs topics, not stated (unconfirmed). Subscription and support terms are not on the page. Version shown is the documentation release 1.22."
+      ],
+      "links": [
+        {
+          "label": "OpenShift GitOps documentation",
+          "url": "https://docs.redhat.com/en/documentation/red_hat_openshift_gitops/"
+        }
+      ],
+      "sections": [
+        {
+          "title": "What the documentation covers",
+          "items": [
+            "Release 1.22 (the selector lists 1.22 down to 1.8). Topics: installing and removing the OpenShift GitOps Operator, Argo CD instances, applications and ApplicationSets, multitenancy, Argo CD Agent, Argo Rollouts, security, observability, and the argocd CLI.",
+            "The docs repeatedly refer to Argo CD, which implies it is built on it, but no page read states that, nor the bundled Argo CD version, support terms or price."
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "OpenShift GitOps documentation",
+          "url": "https://docs.redhat.com/en/documentation/red_hat_openshift_gitops/"
+        }
+      ]
+    },
+    {
+      "id": "codefresh-gitops",
+      "name": "Codefresh GitOps Cloud",
+      "group": "paid",
+      "level": "ref",
+      "summary": "Discontinued commercial Argo CD based GitOps product. Codefresh is now part of Octopus Deploy. Closest open source alternative: Argo CD.",
+      "status": "archived",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "Not stated on the vendor page read",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "Commercial product, not a CNCF project."
+      },
+      "license": "Proprietary (commercial)",
+      "version": {
+        "name": "Codefresh GitOps Cloud",
+        "analysed": "vendor page read 2026-10-26",
+        "released": "2026-10-26",
+        "docs": "vendor page, no version or date shown on it",
+        "checked": "2026-10-26"
+      },
+      "compare": [
+        {
+          "with": "argo-cd",
+          "text": "Codefresh's GitOps product was built around Argo CD (unconfirmed on the page read)."
+        }
+      ],
+      "related": [
+        "argo-cd"
+      ],
+      "notes": [
+        "Status archived means this product is discontinued, per the vendor page. The page does not say what GitOps Cloud was built on, so the Argo CD link is context from the vendor's history, not a fact on the page (unconfirmed)."
+      ],
+      "links": [
+        {
+          "label": "Codefresh at Octopus Deploy",
+          "url": "https://octopus.com/codefresh"
+        }
+      ],
+      "sections": [
+        {
+          "title": "What the vendor says",
+          "items": [
+            "\"In February 2024, Octopus acquired Codefresh.\" The page says the GitOps Cloud product is no longer available. Codefresh CI continues within the Octopus portfolio.",
+            "The page recommends Octopus's free tier, an enterprise trial or a demo for deployment and release tooling."
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "Codefresh at Octopus Deploy",
+          "url": "https://octopus.com/codefresh"
         }
       ]
     }
