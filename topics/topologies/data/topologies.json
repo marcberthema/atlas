@@ -23,6 +23,11 @@
       "id": "data",
       "label": "Data and monitoring",
       "about": "Replication rings and federation."
+    },
+    {
+      "id": "reference",
+      "label": "Standard topologies",
+      "about": "Reference designs taken from vendor and project documentation. They are common starting points, not a universal standard: each entry names the documentation it comes from and the shapes it uses."
     }
   ],
   "entries": [
@@ -60,7 +65,10 @@
         "mesh",
         "tree",
         "azure-hub-spoke",
-        "aws-transit-gateway"
+        "aws-transit-gateway",
+        "ref-landing-zone",
+        "ref-multi-region",
+        "ref-multicluster-gitops"
       ],
       "notes": [
         "Terraform runners and other central CI hubs fit the shape but were not read, so they are not described here (unconfirmed).",
@@ -159,7 +167,8 @@
         "istio",
         "linkerd",
         "cassandra",
-        "ring"
+        "ring",
+        "ref-mesh"
       ],
       "notes": [
         "The n(n-1)/2 count is arithmetic from the page's statement that connections grow quadratically, not quoted from it.",
@@ -258,7 +267,9 @@
       "related": [
         "hub-and-spoke",
         "dns",
-        "prometheus"
+        "prometheus",
+        "ref-metrics",
+        "ref-dns"
       ],
       "notes": [
         "RFC 1034 was read for the first 100,000 of 135,972 characters. DNS root servers, caching resolvers' behaviour and later RFCs (such as RFC 1035) were not read."
@@ -350,7 +361,8 @@
         "kafka",
         "rabbitmq",
         "nats",
-        "mesh"
+        "mesh",
+        "ref-event-backbone"
       ],
       "notes": [
         "Delivery guarantees (at-most-once, at-least-once, exactly-once) were not read for any of the three and are not described (unconfirmed)."
@@ -1339,6 +1351,744 @@
         {
           "label": "CNCF: Prometheus",
           "url": "https://www.cncf.io/projects/prometheus/"
+        }
+      ]
+    },
+    {
+      "id": "ref-landing-zone",
+      "name": "Cloud network: hub-spoke landing zone",
+      "group": "reference",
+      "level": "overview",
+      "summary": "A central hub network for shared services and egress, one spoke network per workload or environment. Microsoft's recommended topology and the base of Azure landing zones.",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "A reference design, no start date",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "A design, not a project."
+      },
+      "license": "n/a",
+      "version": {
+        "name": "Reference topology",
+        "analysed": "sources as read 2026-10-26",
+        "released": "2026-04-10",
+        "docs": "Azure Architecture Center hub-spoke, ms.date 2026-04-10",
+        "checked": "2026-10-26"
+      },
+      "related": [
+        "hub-and-spoke",
+        "azure-hub-spoke",
+        "dns"
+      ],
+      "notes": [
+        "The page is dated 2026-04-10 (ms.date).",
+        "A reference design from the documentation named in Sources. It is a common starting point and not a universal standard."
+      ],
+      "links": [
+        {
+          "label": "Azure: hub-spoke network topology",
+          "url": "https://learn.microsoft.com/en-us/azure/architecture/networking/architecture/hub-spoke"
+        }
+      ],
+      "sections": [
+        {
+          "title": "Shapes used",
+          "items": [
+            "Hub-and-spoke for the network, with a hierarchy of ownership: a platform team owns the hub, workload teams co-own their spokes."
+          ]
+        },
+        {
+          "title": "Layout (Azure)",
+          "items": [
+            "The hub virtual network holds shared services: firewall (primary egress point), VPN or ExpressRoute gateway, Bastion, DNS, and Azure Monitor as the log sink. Each spoke isolates a workload, can live in its own subscription, and represents an environment such as production or non-production.",
+            "Azure landing zones are based on this topology. A centralised platform team manages the hub's shared resources and network. Hubs sit in a Connectivity subscription and spokes in workload landing zone subscriptions.",
+            "Peer each spoke to a single hub in the same region. Peering is nontransitive, so spoke-to-spoke traffic goes through a firewall or router in the hub unless you peer those spokes directly."
+          ]
+        },
+        {
+          "title": "Practices stated in the docs",
+          "items": [
+            "Direct outbound internet traffic from spokes through the hub's control mechanisms. Use explicit deny rules in network security groups. Turn on DDoS protection on perimeter virtual networks. Use availability zones for hub services that support them.",
+            "Automate peerings, routes and subnets with Azure Virtual Network Manager, and plan IP addressing so address spaces do not overlap across cross-premises and Azure locations."
+          ]
+        },
+        {
+          "title": "Watch for",
+          "items": [
+            "Peerings per virtual network are limited, and firewall bandwidth limits how many spokes a hub can carry. Move some shared services to a second level of hubs, or peer high-throughput low-risk spokes directly (Azure notes this can cut firewall cost)."
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "Azure: hub-spoke network topology",
+          "url": "https://learn.microsoft.com/en-us/azure/architecture/networking/architecture/hub-spoke"
+        }
+      ]
+    },
+    {
+      "id": "ref-multi-region",
+      "name": "Several regions: a hub per region",
+      "group": "reference",
+      "level": "overview",
+      "summary": "One hub per region, spokes only to their own region's hub, and the hubs linked to each other. A failed hub then stays inside its region.",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "A reference design, no start date",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "A design, not a project."
+      },
+      "license": "n/a",
+      "version": {
+        "name": "Reference topology",
+        "analysed": "sources as read 2026-10-26",
+        "released": "2026-04-10",
+        "docs": "Azure hub-spoke (ms.date 2026-04-10) and AWS Transit Gateway user guide",
+        "checked": "2026-10-26"
+      },
+      "related": [
+        "hub-and-spoke",
+        "mesh",
+        "azure-hub-spoke",
+        "aws-transit-gateway"
+      ],
+      "notes": [
+        "Pricing and throughput limits of inter-region links were not read.",
+        "A reference design from the documentation named in Sources. It is a common starting point and not a universal standard."
+      ],
+      "links": [
+        {
+          "label": "Azure: hub-spoke network topology",
+          "url": "https://learn.microsoft.com/en-us/azure/architecture/networking/architecture/hub-spoke"
+        },
+        {
+          "label": "AWS: what is Transit Gateway",
+          "url": "https://docs.aws.amazon.com/vpc/latest/tgw/what-is-transit-gateway.html"
+        }
+      ],
+      "sections": [
+        {
+          "title": "Shapes used",
+          "items": [
+            "Hub-and-spoke inside each region, a partial mesh between the hubs."
+          ]
+        },
+        {
+          "title": "Azure",
+          "items": [
+            "A hub is a regional resource. Use at least one hub per region and connect only spokes from the same region to it. This bulkheads regions, so a failure in one region's hub does not cause routing failures in unrelated regions.",
+            "A diagram on the page shows two regional hub-spoke layouts with one direct connection between the two hubs. To add regions, or scale beyond one ExpressRoute gateway and firewall in a region, use Azure Firewall to route a multi-hub-spoke topology and centralise policy with Azure Firewall Manager. Virtual Network Manager's global mesh option extends direct connectivity between spokes in different regions."
+          ]
+        },
+        {
+          "title": "AWS",
+          "items": [
+            "Inter-Region peering connects transit gateways together over the AWS Global Infrastructure. A peering attachment needs a static route in the transit gateway route table."
+          ]
+        },
+        {
+          "title": "Watch for",
+          "items": [
+            "A multi-region design needs the address plan, DNS and routing agreed across the hubs before the first spoke is added."
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "Azure: hub-spoke network topology",
+          "url": "https://learn.microsoft.com/en-us/azure/architecture/networking/architecture/hub-spoke"
+        },
+        {
+          "label": "AWS: what is Transit Gateway",
+          "url": "https://docs.aws.amazon.com/vpc/latest/tgw/what-is-transit-gateway.html"
+        }
+      ]
+    },
+    {
+      "id": "ref-hybrid",
+      "name": "On-premises to cloud",
+      "group": "reference",
+      "level": "overview",
+      "summary": "On-premises networks connect to the cloud through gateways in the hub only. Spokes use the hub's gateways, and a second path carries failover.",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "A reference design, no start date",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "A design, not a project."
+      },
+      "license": "n/a",
+      "version": {
+        "name": "Reference topology",
+        "analysed": "sources as read 2026-10-26",
+        "released": "2026-04-10",
+        "docs": "Azure hub-spoke (ms.date 2026-04-10), AWS Transit Gateway user guide",
+        "checked": "2026-10-26"
+      },
+      "related": [
+        "hub-and-spoke",
+        "azure-hub-spoke",
+        "aws-transit-gateway"
+      ],
+      "notes": [
+        "Only the first part of the AWS best practices page was read.",
+        "A reference design from the documentation named in Sources. It is a common starting point and not a universal standard."
+      ],
+      "links": [
+        {
+          "label": "Azure: hub-spoke network topology",
+          "url": "https://learn.microsoft.com/en-us/azure/architecture/networking/architecture/hub-spoke"
+        },
+        {
+          "label": "AWS: what is Transit Gateway",
+          "url": "https://docs.aws.amazon.com/vpc/latest/tgw/what-is-transit-gateway.html"
+        },
+        {
+          "label": "AWS: Transit Gateway design best practices",
+          "url": "https://docs.aws.amazon.com/vpc/latest/tgw/tgw-best-design-practices.html"
+        }
+      ],
+      "sections": [
+        {
+          "title": "Shapes used",
+          "items": [
+            "Hub-and-spoke, with the on-premises network as one more spoke or branch."
+          ]
+        },
+        {
+          "title": "Azure",
+          "items": [
+            "The hub is the central point of connectivity for cross-premises networks. Spokes typically do not deploy their own VPN or ExpressRoute gateway: they use the hub's, which needs routing configuration (gateway transit on the hub peering, use remote gateway on the spoke peering, forwarded traffic allowed).",
+            "For higher availability use ExpressRoute with VPN failover. For workloads that must survive a carrier outage, consider carrier-diverse ExpressRoute circuits and check physical path independence."
+          ]
+        },
+        {
+          "title": "AWS",
+          "items": [
+            "A transit gateway takes attachments for VPN connections, VPN concentrators, Direct Connect gateways and SD-WAN appliances. With a VPN connection, routes reach your on-premises router over BGP.",
+            "Best practices page: use BGP Site-to-Site VPN connections, enable multipath if the customer gateway device supports it, and enable route propagation for Direct Connect gateway and BGP VPN attachments."
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "Azure: hub-spoke network topology",
+          "url": "https://learn.microsoft.com/en-us/azure/architecture/networking/architecture/hub-spoke"
+        },
+        {
+          "label": "AWS: what is Transit Gateway",
+          "url": "https://docs.aws.amazon.com/vpc/latest/tgw/what-is-transit-gateway.html"
+        },
+        {
+          "label": "AWS: Transit Gateway design best practices",
+          "url": "https://docs.aws.amazon.com/vpc/latest/tgw/tgw-best-design-practices.html"
+        }
+      ]
+    },
+    {
+      "id": "ref-aws-transit",
+      "name": "AWS: Transit Gateway as the hub",
+      "group": "reference",
+      "level": "overview",
+      "summary": "Many VPCs and networks attach to one regional transit gateway instead of peering with each other.",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "A reference design, no start date",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "A design, not a project."
+      },
+      "license": "n/a",
+      "version": {
+        "name": "Reference topology",
+        "analysed": "sources as read 2026-10-26",
+        "released": "2026-10-26",
+        "docs": "documentation pages listed in Sources",
+        "checked": "2026-10-26"
+      },
+      "related": [
+        "hub-and-spoke",
+        "aws-transit-gateway",
+        "ref-hybrid"
+      ],
+      "notes": [
+        "The best practices page was read only up to the MTU point. The recommendation to use several route tables to segment networks is not stated on the pages read (unconfirmed).",
+        "A reference design from the documentation named in Sources. It is a common starting point and not a universal standard."
+      ],
+      "links": [
+        {
+          "label": "AWS: what is Transit Gateway",
+          "url": "https://docs.aws.amazon.com/vpc/latest/tgw/what-is-transit-gateway.html"
+        },
+        {
+          "label": "AWS: Transit Gateway design best practices",
+          "url": "https://docs.aws.amazon.com/vpc/latest/tgw/tgw-best-design-practices.html"
+        }
+      ],
+      "sections": [
+        {
+          "title": "Shapes used",
+          "items": [
+            "Hub-and-spoke, replacing a mesh of VPC peerings."
+          ]
+        },
+        {
+          "title": "Layout",
+          "items": [
+            "Attachments: VPCs, Direct Connect gateway, VPN, SD-WAN or third-party appliance, Client VPN endpoint, a peering to another transit gateway. Each attachment is associated with exactly one route table, and a route table can serve many attachments. A transit gateway has a default route table and can have more.",
+            "Routes propagate from VPC, VPN and Direct Connect gateway attachments. A VPC needs static routes to send traffic to the gateway, and a peering attachment needs a static route."
+          ]
+        },
+        {
+          "title": "Practices stated in the docs",
+          "items": [
+            "Use a separate subnet for each transit gateway VPC attachment, with a small CIDR such as /28, so the rest of the address space is left for EC2 resources.",
+            "Keep the inbound and outbound network ACLs of those subnets open and use one ACL for all of them. Associate the same VPC route table with all of those subnets unless the design needs several.",
+            "When migrating from VPC peering, an MTU mismatch between the VPCs can cause trouble."
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "AWS: what is Transit Gateway",
+          "url": "https://docs.aws.amazon.com/vpc/latest/tgw/what-is-transit-gateway.html"
+        },
+        {
+          "label": "AWS: Transit Gateway design best practices",
+          "url": "https://docs.aws.amazon.com/vpc/latest/tgw/tgw-best-design-practices.html"
+        }
+      ]
+    },
+    {
+      "id": "ref-multicluster-gitops",
+      "name": "Many Kubernetes clusters with GitOps",
+      "group": "reference",
+      "level": "overview",
+      "summary": "Three common shapes: one hub that deploys to registered clusters, an operator in every cluster that pulls from Git, or agents that dial out to a central hub.",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "A reference design, no start date",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "A design, not a project."
+      },
+      "license": "n/a",
+      "version": {
+        "name": "Reference topology",
+        "analysed": "sources as read 2026-10-26",
+        "released": "2026-10-26",
+        "docs": "Argo CD stable docs, Flux guide (last modified 2024-05-13), argocd-agent docs",
+        "checked": "2026-10-26"
+      },
+      "related": [
+        "hub-and-spoke",
+        "mesh"
+      ],
+      "notes": [
+        "The Flux page was last modified 2024-05-13. The argocd-agent page does not use the term principal and does not explain its operating modes.",
+        "A reference design from the documentation named in Sources. It is a common starting point and not a universal standard."
+      ],
+      "links": [
+        {
+          "label": "argocd cluster add",
+          "url": "https://argo-cd.readthedocs.io/en/stable/user-guide/commands/argocd_cluster_add/"
+        },
+        {
+          "label": "Argo CD: high availability",
+          "url": "https://argo-cd.readthedocs.io/en/stable/operator-manual/high_availability/"
+        },
+        {
+          "label": "Flux: repository structure",
+          "url": "https://fluxcd.io/flux/guides/repository-structure/"
+        },
+        {
+          "label": "argocd-agent",
+          "url": "https://argocd-agent.readthedocs.io/latest/"
+        }
+      ],
+      "sections": [
+        {
+          "title": "Shapes used",
+          "items": [
+            "Hub-and-spoke (central Argo CD), a flat set of independent pullers (Flux in each cluster), and an outbound-connecting hub-and-spoke (argocd-agent)."
+          ]
+        },
+        {
+          "title": "Central Argo CD",
+          "items": [
+            "One Argo CD registers clusters with argocd cluster add (a kubeconfig context, optionally limited to namespaces and a project) and deploys to them.",
+            "For high availability, the application controller shards the clusters it manages across replicas: raise the StatefulSet replicas and set ARGOCD_CONTROLLER_REPLICAS to match. See the GitOps topic."
+          ]
+        },
+        {
+          "title": "Flux in each cluster",
+          "items": [
+            "Flux runs in each cluster and clones Git sources into it with GitRepository resources. The repository guide describes three layouts: a monorepo (apps and infrastructure directories with a base and production and staging overlays, one directory per cluster), a repository per environment so production access can be restricted, and a repository per team with a platform team owning clusters and infrastructure."
+          ]
+        },
+        {
+          "title": "argocd-agent",
+          "items": [
+            "Lightweight agents on the workload clusters connect outward to a central hub, so the control plane does not need to reach into each cluster. This helps with clusters behind NATs or firewalls, credential management and central bottlenecks.",
+            "The project says it is in active development with a stable core architecture, and some documentation may be incomplete or outdated."
+          ]
+        },
+        {
+          "title": "Watch for",
+          "items": [
+            "A central hub is a shared dependency and a credentials store for every cluster. The per-cluster pull model has none of that but needs bootstrapping in each cluster. The GitOps topic keeps the decision about one or several Argo CD instances open (unconfirmed)."
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "argocd cluster add",
+          "url": "https://argo-cd.readthedocs.io/en/stable/user-guide/commands/argocd_cluster_add/"
+        },
+        {
+          "label": "Argo CD: high availability",
+          "url": "https://argo-cd.readthedocs.io/en/stable/operator-manual/high_availability/"
+        },
+        {
+          "label": "Flux: repository structure",
+          "url": "https://fluxcd.io/flux/guides/repository-structure/"
+        },
+        {
+          "label": "argocd-agent",
+          "url": "https://argocd-agent.readthedocs.io/latest/"
+        }
+      ]
+    },
+    {
+      "id": "ref-mesh",
+      "name": "Service mesh across clusters",
+      "group": "reference",
+      "level": "overview",
+      "summary": "Istio's docs frame a production mesh as a set of choices: clusters, networks, control planes, trust, meshes and tenancy.",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "A reference design, no start date",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "A design, not a project."
+      },
+      "license": "n/a",
+      "version": {
+        "name": "Reference topology",
+        "analysed": "sources as read 2026-10-26",
+        "released": "2026-10-26",
+        "docs": "documentation pages listed in Sources",
+        "checked": "2026-10-26"
+      },
+      "related": [
+        "mesh",
+        "istio",
+        "linkerd"
+      ],
+      "notes": [
+        "Only the table of contents and the introduction of the Istio deployment models page were read. The detail of each model (for example which is recommended for high availability) is not stated here (unconfirmed). Linkerd's multi-cluster model was not read.",
+        "A reference design from the documentation named in Sources. It is a common starting point and not a universal standard."
+      ],
+      "links": [
+        {
+          "label": "Istio: deployment models",
+          "url": "https://istio.io/latest/docs/ops/deployment/deployment-models/"
+        },
+        {
+          "label": "Istio architecture",
+          "url": "https://istio.io/latest/docs/ops/deployment/architecture/"
+        },
+        {
+          "label": "Linkerd architecture",
+          "url": "https://linkerd.io/2/reference/architecture/"
+        }
+      ],
+      "sections": [
+        {
+          "title": "Shapes used",
+          "items": [
+            "Mesh between services, hub-and-spoke or mesh between clusters."
+          ]
+        },
+        {
+          "title": "The questions Istio lists",
+          "items": [
+            "Cluster model: single cluster or several. Network model: one fully connected network, or gateways to connect services across several networks.",
+            "Control plane model, with endpoint discovery across several control planes. Identity and trust: trust within a mesh and between meshes. Mesh model: a single mesh or several. Tenancy: namespace, cluster or mesh tenancy.",
+            "Istio's control plane (istiod) also acts as the certificate authority for mTLS."
+          ]
+        },
+        {
+          "title": "Linkerd",
+          "items": [
+            "The identity service is a TLS certificate authority that signs proxy certificate requests, used for proxy-to-proxy mTLS."
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "Istio: deployment models",
+          "url": "https://istio.io/latest/docs/ops/deployment/deployment-models/"
+        },
+        {
+          "label": "Istio architecture",
+          "url": "https://istio.io/latest/docs/ops/deployment/architecture/"
+        },
+        {
+          "label": "Linkerd architecture",
+          "url": "https://linkerd.io/2/reference/architecture/"
+        }
+      ]
+    },
+    {
+      "id": "ref-event-backbone",
+      "name": "Event backbone",
+      "group": "reference",
+      "level": "overview",
+      "summary": "One replicated cluster carries events between many producers and many consumers, which do not know each other.",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "A reference design, no start date",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "A design, not a project."
+      },
+      "license": "n/a",
+      "version": {
+        "name": "Reference topology",
+        "analysed": "sources as read 2026-10-26",
+        "released": "2026-10-26",
+        "docs": "documentation pages listed in Sources",
+        "checked": "2026-10-26"
+      },
+      "related": [
+        "bus",
+        "kafka",
+        "rabbitmq",
+        "nats"
+      ],
+      "notes": [
+        "Cluster sizing, KRaft and multi-cluster replication were not on the pages read (unconfirmed).",
+        "A reference design from the documentation named in Sources. It is a common starting point and not a universal standard."
+      ],
+      "links": [
+        {
+          "label": "Apache Kafka introduction",
+          "url": "https://kafka.apache.org/intro"
+        },
+        {
+          "label": "RabbitMQ AMQP concepts",
+          "url": "https://www.rabbitmq.com/tutorials/amqp-concepts"
+        },
+        {
+          "label": "NATS about",
+          "url": "https://nats.io/about/"
+        }
+      ],
+      "sections": [
+        {
+          "title": "Shapes used",
+          "items": [
+            "Bus."
+          ]
+        },
+        {
+          "title": "Layout (Kafka)",
+          "items": [
+            "Servers form a cluster: some are the storage layer (brokers) and the cluster keeps working if a server fails. Topics are split into partitions spread across brokers. Replication copies each partition to several brokers, commonly three.",
+            "Producers write, consumers read, and the two are decoupled. Events with the same key go to the same partition, which keeps their order. Consumers can read events repeatedly within the retention period."
+          ]
+        },
+        {
+          "title": "Alternatives",
+          "items": [
+            "RabbitMQ (exchanges and queues, acknowledged delivery) and NATS (subjects, JetStream for persistence). See the Bus tab."
+          ]
+        },
+        {
+          "title": "Patterns that go with it",
+          "items": [
+            "Competing consumers and queue-based load leveling, in the Architecture and design patterns topic."
+          ]
+        },
+        {
+          "title": "Watch for",
+          "items": [
+            "The bus is critical infrastructure. Delivery guarantees and schema agreement are your problem (see the Bus tab)."
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "Apache Kafka introduction",
+          "url": "https://kafka.apache.org/intro"
+        },
+        {
+          "label": "RabbitMQ AMQP concepts",
+          "url": "https://www.rabbitmq.com/tutorials/amqp-concepts"
+        },
+        {
+          "label": "NATS about",
+          "url": "https://nats.io/about/"
+        }
+      ]
+    },
+    {
+      "id": "ref-metrics",
+      "name": "Metrics hierarchy",
+      "group": "reference",
+      "level": "overview",
+      "summary": "A Prometheus per cluster or data center scrapes local targets, and a higher-level Prometheus federates aggregated series from them.",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "A reference design, no start date",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "A design, not a project."
+      },
+      "license": "n/a",
+      "version": {
+        "name": "Reference topology",
+        "analysed": "sources as read 2026-10-26",
+        "released": "2026-10-26",
+        "docs": "documentation pages listed in Sources",
+        "checked": "2026-10-26"
+      },
+      "related": [
+        "tree",
+        "prometheus"
+      ],
+      "notes": [
+        "The page does not name alternatives such as remote write, and does not discuss limits (unconfirmed). 'Federate only what you need' follows from match[] and is a recommendation, not a quote.",
+        "A reference design from the documentation named in Sources. It is a common starting point and not a universal standard."
+      ],
+      "links": [
+        {
+          "label": "Prometheus: federation",
+          "url": "https://prometheus.io/docs/prometheus/latest/federation/"
+        }
+      ],
+      "sections": [
+        {
+          "title": "Shapes used",
+          "items": [
+            "Tree."
+          ]
+        },
+        {
+          "title": "Layout",
+          "items": [
+            "Hierarchical federation: higher-level servers collect aggregated data from many subordinate servers, which helps Prometheus scale across many data centers.",
+            "The higher-level server scrapes each lower server's /federate endpoint with at least one match[] selector, for example up or {job=\"api-server\"}. Set honor_labels so the source labels are kept.",
+            "Cross-service federation: one service's Prometheus pulls selected metrics from another's so both datasets can be queried and alerted on together."
+          ]
+        },
+        {
+          "title": "Watch for",
+          "items": [
+            "Federate only the series you need at the higher level, since match[] selects them."
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "Prometheus: federation",
+          "url": "https://prometheus.io/docs/prometheus/latest/federation/"
+        }
+      ]
+    },
+    {
+      "id": "ref-dns",
+      "name": "Shared DNS in a hub",
+      "group": "reference",
+      "level": "overview",
+      "summary": "One DNS solution in the hub serves every spoke, and names are delegated down a tree.",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "A reference design, no start date",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "A design, not a project."
+      },
+      "license": "n/a",
+      "version": {
+        "name": "Reference topology",
+        "analysed": "sources as read 2026-10-26",
+        "released": "2026-04-10",
+        "docs": "Azure hub-spoke (ms.date 2026-04-10), RFC 1034",
+        "checked": "2026-10-26"
+      },
+      "related": [
+        "hub-and-spoke",
+        "tree",
+        "dns"
+      ],
+      "notes": [
+        "RFC 1034 was read for the first 100,000 of 135,972 characters.",
+        "A reference design from the documentation named in Sources. It is a common starting point and not a universal standard."
+      ],
+      "links": [
+        {
+          "label": "Azure: hub-spoke network topology",
+          "url": "https://learn.microsoft.com/en-us/azure/architecture/networking/architecture/hub-spoke"
+        },
+        {
+          "label": "RFC 1034",
+          "url": "https://datatracker.ietf.org/doc/html/rfc1034"
+        }
+      ],
+      "sections": [
+        {
+          "title": "Shapes used",
+          "items": [
+            "Hub-and-spoke for the service, tree for the names."
+          ]
+        },
+        {
+          "title": "Layout",
+          "items": [
+            "Hub-spoke solutions often provide one DNS solution that all peered spokes use, especially for cross-premises routing and private endpoint DNS records. The hub can also carry a private resolver or DNS servers.",
+            "Resources that egress through Azure Firewall should use the same DNS provider as the firewall, otherwise the firewall may block legitimate traffic because its resolution of an FQDN differs from the originator's. The firewall's DNS proxy can keep them in sync.",
+            "The name space itself is a tree. Control of a subtree is delegated at cuts with NS records, and every zone must be available from at least two servers (RFC 1034)."
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "Azure: hub-spoke network topology",
+          "url": "https://learn.microsoft.com/en-us/azure/architecture/networking/architecture/hub-spoke"
+        },
+        {
+          "label": "RFC 1034",
+          "url": "https://datatracker.ietf.org/doc/html/rfc1034"
         }
       ]
     }

@@ -18,3 +18,5 @@ The page has one tab per main entry (the `TABS` list in `templates/index.html`, 
 
 Refreshing: `make check` lists what changed for the entries that have a `track` (releases, archived repositories, CNCF levels; `LINKS=1` for source and link urls) and writes nothing.
 Review each difference, then update `checked`, `version` and the facts that changed together. Add a `track` to every entry that has a GitHub repository and releases.
+
+The last tab, Standard topologies, shows every entry of the group `reference` in full (the template's `group` option on a tab). They are reference designs taken from vendor or project docs, so each says whose docs it comes from and which shapes it uses. Do not call one a standard unless a source does.

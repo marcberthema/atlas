@@ -31,6 +31,7 @@ button.nm{font:inherit;font-weight:600;color:var(--acc);background:none;border:0
 .q{color:var(--warn);font-weight:700;cursor:help}
 .empty{color:var(--mut);padding:16px 0}
 .pg{padding:4px 0 0}
+.gv{border-top:1px solid var(--rule);margin-top:18px;padding-top:12px}
 
 .cmp th:first-child,.cmp td:first-child{white-space:nowrap}
 dialog{width:min(820px,calc(100vw - 24px));max-height:calc(100vh - 24px);border:1px solid var(--rule);border-radius:12px;background:var(--bg);color:var(--fg);padding:0}
@@ -77,9 +78,12 @@ const TABS=[
   {id:'bus',label:'Bus'},
   {id:'ring',label:'Ring'},
   {id:'others',label:'Other topologies and products'},
-  {id:'compare',label:'Compare'}
+  {id:'compare',label:'Compare'},
+  {id:'standard',label:'Standard topologies',group:'reference'}
 ];
 const OWN=new Set(TABS.map(t=>t.id));
+// A tab with a group shows every entry of that group in full, and its entries are left out of Other tools.
+const GROUPTAB=Object.fromEntries(TABS.filter(t=>t.group).map(t=>[t.group,t.id]));
 let view=TABS[0].id;
 $('title').textContent=D.title;
 $('intro').textContent=D.intro;
@@ -93,7 +97,7 @@ const nameBtn=e=>'<button class="nm" type="button" data-id="'+esc(e.id)+'">'+esc
 
 function entries(f){
   return D.groups.map(g=>{
-    const rows=D.entries.filter(e=>e.group===g.id&&!OWN.has(e.id)&&(!f||text(e).includes(f)));
+    const rows=D.entries.filter(e=>e.group===g.id&&!OWN.has(e.id)&&!GROUPTAB[e.group]&&(!f||text(e).includes(f)));
     if(!rows.length)return '';
     return '<h2>'+esc(g.label)+'</h2><p class="about">'+esc(g.about)+'</p><div class="wrap"><table><thead><tr><th>Name</th><th>Started</th><th>Status</th><th>CNCF</th><th>Version analysed</th><th>Licence</th></tr></thead><tbody>'
       +rows.map(e=>'<tr><td>'+nameBtn(e)+'<small>'+esc(e.summary)+'</small></td><td>'+started(e)+'</td><td><span class="badge '+STATUS[e.status]+'">'+esc(e.status)+'</span></td><td>'+cncf(e)+'</td><td>'+latest(e)+'</td><td>'+esc(e.license)+'</td></tr>').join('')
@@ -113,7 +117,13 @@ function render(){
   const f=$('q').value.trim().toLowerCase();
   const list=view==='others'||view==='compare';
   $('q').style.display=list?'':'none';
-  $('out').innerHTML=view==='others'?entries(f):view==='compare'?compare(f):'<div class="pg db">'+detail(byId[view])+'</div>';
+  const gt=TABS.find(t=>t.id===view&&t.group);
+  $('out').innerHTML=view==='others'?entries(f):view==='compare'?compare(f):gt?groupView(gt.group):'<div class="pg db">'+detail(byId[view])+'</div>';
+}
+
+function groupView(gid){
+  const g=D.groups.find(x=>x.id===gid);
+  return '<p class="about">'+esc(g.about)+'</p>'+D.entries.filter(e=>e.group===gid).map(e=>'<section class="pg db gv" id="e-'+esc(e.id)+'">'+detail(e)+'</section>').join('');
 }
 
 function tab(id,push){
@@ -146,6 +156,7 @@ function detail(e){
 
 function open(id,push){
   const e=byId[id];if(!e)return;
+  if(GROUPTAB[e.group]){if($('dlg').open)$('dlg').close();tab(GROUPTAB[e.group],false);const el=document.getElementById('e-'+id);if(el)el.scrollIntoView();if(push!==false)history.replaceState(null,'','#'+id);return;}
   if(OWN.has(id)){if($('dlg').open)$('dlg').close();tab(id,push);return;}
   $('dt').textContent=e.name;$('db').innerHTML=detail(e);
   if(!$('dlg').open)$('dlg').showModal();
