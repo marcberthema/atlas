@@ -44,3 +44,8 @@ non-prerelease GitHub release with `version.analysed`, the archived flag with `s
 `LINKS=1` also fetches every source and link url, `ONLY=<id>` limits it to one entry, `STRICT=1` exits 1 on any difference. Set
 `GITHUB_TOKEN` to avoid the 60 requests an hour limit. A difference is a prompt to review the entry: update `version`, the facts
 that changed and `checked` together.
+
+## Learning layout
+
+Sections can carry a `part` (overview, use, run, reference) and items can be text, `code` (fetched by `match`, see `make examples`), `table`, `callout`, `cards`, `checklist` or `diagram`.
+The page is shared with the other topics, so the full format is documented once, in `topics/gitops/docs/data-model.md`. A short entry has no `part`.

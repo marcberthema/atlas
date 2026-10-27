@@ -141,9 +141,9 @@
                 },
                 {
                   "id": "srv",
-                  "x": 610,
+                  "x": 570,
                   "y": 215,
-                  "w": 170,
+                  "w": 240,
                   "h": 28,
                   "label": "Server sends leaf + intermediate",
                   "kind": "ext"
@@ -679,10 +679,10 @@
                   "id": "cl",
                   "x": 110,
                   "y": 130,
-                  "w": 150,
+                  "w": 170,
                   "h": 50,
                   "label": "ACME client",
-                  "sub": "certbot, cert-manager, Caddy...",
+                  "sub": "certbot, cert-manager...",
                   "kind": "hub"
                 },
                 {
@@ -2298,7 +2298,7 @@
                 {
                   "from": "sg",
                   "to": "csr",
-                  "label": "3 writes status.certificate",
+                  "label": "3 signs",
                   "arrow": "to"
                 },
                 {

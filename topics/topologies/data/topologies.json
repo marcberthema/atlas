@@ -74,100 +74,6 @@
         "Terraform runners and other central CI hubs fit the shape but were not read, so they are not described here (unconfirmed).",
         "The Azure page is dated 2026-04-10 (ms.date). Wikipedia was read for the first 100,000 of 111,880 characters."
       ],
-      "diagrams": [
-        {
-          "alt": "Hub-and-spoke: six spokes, each connected only to a central hub.",
-          "caption": "Every spoke reaches the others through the hub.",
-          "w": 520,
-          "h": 300,
-          "nodes": [
-            {
-              "id": "hub",
-              "x": 260,
-              "y": 150,
-              "w": 100,
-              "h": 44,
-              "label": "Hub",
-              "sub": "shared services",
-              "kind": "hub"
-            },
-            {
-              "id": "s0",
-              "x": 260,
-              "y": 50,
-              "w": 84,
-              "h": 30,
-              "label": "Spoke 1"
-            },
-            {
-              "id": "s1",
-              "x": 425,
-              "y": 100,
-              "w": 84,
-              "h": 30,
-              "label": "Spoke 2"
-            },
-            {
-              "id": "s2",
-              "x": 425,
-              "y": 200,
-              "w": 84,
-              "h": 30,
-              "label": "Spoke 3"
-            },
-            {
-              "id": "s3",
-              "x": 260,
-              "y": 250,
-              "w": 84,
-              "h": 30,
-              "label": "Spoke 4"
-            },
-            {
-              "id": "s4",
-              "x": 95,
-              "y": 200,
-              "w": 84,
-              "h": 30,
-              "label": "Spoke 5"
-            },
-            {
-              "id": "s5",
-              "x": 95,
-              "y": 100,
-              "w": 84,
-              "h": 30,
-              "label": "Spoke 6"
-            }
-          ],
-          "links": [
-            {
-              "from": "hub",
-              "to": "s0"
-            },
-            {
-              "from": "hub",
-              "to": "s1"
-            },
-            {
-              "from": "hub",
-              "to": "s2"
-            },
-            {
-              "from": "hub",
-              "to": "s3"
-            },
-            {
-              "from": "hub",
-              "to": "s4"
-            },
-            {
-              "from": "hub",
-              "to": "s5"
-            }
-          ]
-        }
-      ],
       "links": [
         {
           "label": "Azure hub-spoke",
@@ -184,7 +90,110 @@
       ],
       "sections": [
         {
+          "title": "In one minute",
+          "part": "overview",
+          "icon": "eye",
+          "items": [
+            "Every spoke connects to one central hub, and spokes reach each other through it. One place for shared services and control, one place that can fail or become a bottleneck.",
+            {
+              "alt": "Hub-and-spoke: six spokes, each connected only to a central hub.",
+              "caption": "Every spoke reaches the others through the hub.",
+              "w": 520,
+              "h": 300,
+              "nodes": [
+                {
+                  "id": "hub",
+                  "x": 260,
+                  "y": 150,
+                  "w": 100,
+                  "h": 44,
+                  "label": "Hub",
+                  "sub": "shared services",
+                  "kind": "hub"
+                },
+                {
+                  "id": "s0",
+                  "x": 260,
+                  "y": 50,
+                  "w": 84,
+                  "h": 30,
+                  "label": "Spoke 1"
+                },
+                {
+                  "id": "s1",
+                  "x": 425,
+                  "y": 100,
+                  "w": 84,
+                  "h": 30,
+                  "label": "Spoke 2"
+                },
+                {
+                  "id": "s2",
+                  "x": 425,
+                  "y": 200,
+                  "w": 84,
+                  "h": 30,
+                  "label": "Spoke 3"
+                },
+                {
+                  "id": "s3",
+                  "x": 260,
+                  "y": 250,
+                  "w": 84,
+                  "h": 30,
+                  "label": "Spoke 4"
+                },
+                {
+                  "id": "s4",
+                  "x": 95,
+                  "y": 200,
+                  "w": 84,
+                  "h": 30,
+                  "label": "Spoke 5"
+                },
+                {
+                  "id": "s5",
+                  "x": 95,
+                  "y": 100,
+                  "w": 84,
+                  "h": 30,
+                  "label": "Spoke 6"
+                }
+              ],
+              "links": [
+                {
+                  "from": "hub",
+                  "to": "s0"
+                },
+                {
+                  "from": "hub",
+                  "to": "s1"
+                },
+                {
+                  "from": "hub",
+                  "to": "s2"
+                },
+                {
+                  "from": "hub",
+                  "to": "s3"
+                },
+                {
+                  "from": "hub",
+                  "to": "s4"
+                },
+                {
+                  "from": "hub",
+                  "to": "s5"
+                }
+              ],
+              "type": "diagram"
+            }
+          ]
+        },
+        {
           "title": "The shape",
+          "part": "overview",
+          "icon": "grid",
           "items": [
             "Every peripheral node connects to a central hub or switch. Adding nodes is simple. The hub is a single point of failure, and in a large cluster the bandwidth into the hub becomes a bottleneck (Wikipedia, network topology).",
             "Spokes do not talk directly. Anything from one spoke to another goes through the hub, which is where inspection, routing and policy sit."
@@ -192,6 +201,9 @@
         },
         {
           "title": "Where it shows up",
+          "part": "use",
+          "icon": "globe",
+          "step": 1,
           "items": [
             "Azure hub-spoke: a hub virtual network holds shared services (firewall, VPN or ExpressRoute gateway, Bastion, DNS) and each spoke is a virtual network that isolates a workload. Spokes peer to a single hub in the same region. Peering is nontransitive, so spoke-to-spoke traffic goes through a firewall or router in the hub unless you peer spokes directly.",
             "AWS Transit Gateway: \"a network transit hub used to interconnect virtual private clouds (VPCs) and on-premises networks\". Attachments (VPCs, VPN, Direct Connect gateway, SD-WAN appliances, peered transit gateways) are associated with route tables.",
@@ -200,10 +212,27 @@
         },
         {
           "title": "Trade-offs",
+          "part": "run",
+          "icon": "scale",
           "items": [
-            "Pro: shared services and egress control in one place, workloads isolated from each other, easy to add a spoke. Azure lists central control over security and connectivity as the reason to choose it.",
-            "Con: the hub is a shared dependency. Azure advises one hub per region so a failed hub does not break unrelated regions, and warns that firewall bandwidth and the number of peerings limit how many spokes you can add.",
-            "Mitigation: second-level hubs, direct spoke peering for high-throughput low-risk traffic (Azure says this can cut firewall cost), or several hubs per region."
+            {
+              "type": "callout",
+              "kind": "prod",
+              "text": "shared services and egress control in one place, workloads isolated from each other, easy to add a spoke. Azure lists central control over security and connectivity as the reason to choose it.",
+              "title": "Pro"
+            },
+            {
+              "type": "callout",
+              "kind": "gotcha",
+              "text": "the hub is a shared dependency. Azure advises one hub per region so a failed hub does not break unrelated regions, and warns that firewall bandwidth and the number of peerings limit how many spokes you can add.",
+              "title": "Con"
+            },
+            {
+              "type": "callout",
+              "kind": "tip",
+              "text": "second-level hubs, direct spoke peering for high-throughput low-risk traffic (Azure says this can cut firewall cost), or several hubs per region.",
+              "title": "Mitigation"
+            }
           ]
         }
       ],
@@ -268,188 +297,6 @@
         "The n(n-1)/2 count is arithmetic from the page's statement that connections grow quadratically, not quoted from it.",
         "The Istio page covers sidecar mode only. Ambient mode is only named in its navigation (unconfirmed)."
       ],
-      "diagrams": [
-        {
-          "alt": "Full mesh: five nodes, every pair connected, ten links.",
-          "caption": "Full mesh: every pair linked (n(n-1)/2 links).",
-          "w": 300,
-          "h": 300,
-          "nodes": [
-            {
-              "id": "A",
-              "x": 150,
-              "y": 45,
-              "w": 56,
-              "h": 28,
-              "label": "A"
-            },
-            {
-              "id": "B",
-              "x": 250,
-              "y": 118,
-              "w": 56,
-              "h": 28,
-              "label": "B"
-            },
-            {
-              "id": "C",
-              "x": 212,
-              "y": 235,
-              "w": 56,
-              "h": 28,
-              "label": "C"
-            },
-            {
-              "id": "D",
-              "x": 88,
-              "y": 235,
-              "w": 56,
-              "h": 28,
-              "label": "D"
-            },
-            {
-              "id": "E",
-              "x": 50,
-              "y": 118,
-              "w": 56,
-              "h": 28,
-              "label": "E"
-            }
-          ],
-          "links": [
-            {
-              "from": "A",
-              "to": "B"
-            },
-            {
-              "from": "A",
-              "to": "C"
-            },
-            {
-              "from": "A",
-              "to": "D"
-            },
-            {
-              "from": "A",
-              "to": "E"
-            },
-            {
-              "from": "B",
-              "to": "C"
-            },
-            {
-              "from": "B",
-              "to": "D"
-            },
-            {
-              "from": "B",
-              "to": "E"
-            },
-            {
-              "from": "C",
-              "to": "D"
-            },
-            {
-              "from": "C",
-              "to": "E"
-            },
-            {
-              "from": "D",
-              "to": "E"
-            }
-          ]
-        },
-        {
-          "alt": "Partial mesh: six nodes, a ring plus two cross links.",
-          "caption": "Partial mesh: redundancy without linking every pair.",
-          "w": 300,
-          "h": 300,
-          "nodes": [
-            {
-              "id": "A",
-              "x": 150,
-              "y": 45,
-              "w": 56,
-              "h": 28,
-              "label": "A"
-            },
-            {
-              "id": "B",
-              "x": 241,
-              "y": 98,
-              "w": 56,
-              "h": 28,
-              "label": "B"
-            },
-            {
-              "id": "C",
-              "x": 241,
-              "y": 202,
-              "w": 56,
-              "h": 28,
-              "label": "C"
-            },
-            {
-              "id": "D",
-              "x": 150,
-              "y": 255,
-              "w": 56,
-              "h": 28,
-              "label": "D"
-            },
-            {
-              "id": "E",
-              "x": 59,
-              "y": 202,
-              "w": 56,
-              "h": 28,
-              "label": "E"
-            },
-            {
-              "id": "F",
-              "x": 59,
-              "y": 97,
-              "w": 56,
-              "h": 28,
-              "label": "F"
-            }
-          ],
-          "links": [
-            {
-              "from": "A",
-              "to": "B"
-            },
-            {
-              "from": "B",
-              "to": "C"
-            },
-            {
-              "from": "C",
-              "to": "D"
-            },
-            {
-              "from": "D",
-              "to": "E"
-            },
-            {
-              "from": "E",
-              "to": "F"
-            },
-            {
-              "from": "F",
-              "to": "A"
-            },
-            {
-              "from": "A",
-              "to": "D"
-            },
-            {
-              "from": "B",
-              "to": "E"
-            }
-          ]
-        }
-      ],
       "links": [
         {
           "label": "Istio architecture",
@@ -470,7 +317,199 @@
       ],
       "sections": [
         {
+          "title": "In one minute",
+          "part": "overview",
+          "icon": "eye",
+          "items": [
+            "Nodes connect to many other nodes directly. Full mesh links every pair, partial mesh links some. Service meshes, peer-to-peer replication and gossip use the idea.",
+            {
+              "alt": "Full mesh: five nodes, every pair connected, ten links.",
+              "caption": "Full mesh: every pair linked (n(n-1)/2 links).",
+              "w": 300,
+              "h": 300,
+              "nodes": [
+                {
+                  "id": "A",
+                  "x": 150,
+                  "y": 45,
+                  "w": 56,
+                  "h": 28,
+                  "label": "A"
+                },
+                {
+                  "id": "B",
+                  "x": 250,
+                  "y": 118,
+                  "w": 56,
+                  "h": 28,
+                  "label": "B"
+                },
+                {
+                  "id": "C",
+                  "x": 212,
+                  "y": 235,
+                  "w": 56,
+                  "h": 28,
+                  "label": "C"
+                },
+                {
+                  "id": "D",
+                  "x": 88,
+                  "y": 235,
+                  "w": 56,
+                  "h": 28,
+                  "label": "D"
+                },
+                {
+                  "id": "E",
+                  "x": 50,
+                  "y": 118,
+                  "w": 56,
+                  "h": 28,
+                  "label": "E"
+                }
+              ],
+              "links": [
+                {
+                  "from": "A",
+                  "to": "B"
+                },
+                {
+                  "from": "A",
+                  "to": "C"
+                },
+                {
+                  "from": "A",
+                  "to": "D"
+                },
+                {
+                  "from": "A",
+                  "to": "E"
+                },
+                {
+                  "from": "B",
+                  "to": "C"
+                },
+                {
+                  "from": "B",
+                  "to": "D"
+                },
+                {
+                  "from": "B",
+                  "to": "E"
+                },
+                {
+                  "from": "C",
+                  "to": "D"
+                },
+                {
+                  "from": "C",
+                  "to": "E"
+                },
+                {
+                  "from": "D",
+                  "to": "E"
+                }
+              ],
+              "type": "diagram"
+            },
+            {
+              "alt": "Partial mesh: six nodes, a ring plus two cross links.",
+              "caption": "Partial mesh: redundancy without linking every pair.",
+              "w": 300,
+              "h": 300,
+              "nodes": [
+                {
+                  "id": "A",
+                  "x": 150,
+                  "y": 45,
+                  "w": 56,
+                  "h": 28,
+                  "label": "A"
+                },
+                {
+                  "id": "B",
+                  "x": 241,
+                  "y": 98,
+                  "w": 56,
+                  "h": 28,
+                  "label": "B"
+                },
+                {
+                  "id": "C",
+                  "x": 241,
+                  "y": 202,
+                  "w": 56,
+                  "h": 28,
+                  "label": "C"
+                },
+                {
+                  "id": "D",
+                  "x": 150,
+                  "y": 255,
+                  "w": 56,
+                  "h": 28,
+                  "label": "D"
+                },
+                {
+                  "id": "E",
+                  "x": 59,
+                  "y": 202,
+                  "w": 56,
+                  "h": 28,
+                  "label": "E"
+                },
+                {
+                  "id": "F",
+                  "x": 59,
+                  "y": 97,
+                  "w": 56,
+                  "h": 28,
+                  "label": "F"
+                }
+              ],
+              "links": [
+                {
+                  "from": "A",
+                  "to": "B"
+                },
+                {
+                  "from": "B",
+                  "to": "C"
+                },
+                {
+                  "from": "C",
+                  "to": "D"
+                },
+                {
+                  "from": "D",
+                  "to": "E"
+                },
+                {
+                  "from": "E",
+                  "to": "F"
+                },
+                {
+                  "from": "F",
+                  "to": "A"
+                },
+                {
+                  "from": "A",
+                  "to": "D"
+                },
+                {
+                  "from": "B",
+                  "to": "E"
+                }
+              ],
+              "type": "diagram"
+            }
+          ]
+        },
+        {
           "title": "The shape",
+          "part": "overview",
+          "icon": "grid",
           "items": [
             "Full mesh: every node links to every other node. Connections grow quadratically with the number of nodes, which makes a large full mesh impractical. Partial mesh: some nodes link to two or more others, which gives redundancy without the cost (Wikipedia).",
             "There is no single hub, so no single point of failure by shape, but there is more to configure and more links to secure."
@@ -478,6 +517,9 @@
         },
         {
           "title": "Where it shows up",
+          "part": "use",
+          "icon": "globe",
+          "step": 1,
           "items": [
             "Service mesh: every service pod gets a proxy and all traffic between services passes through the sender's and the receiver's proxy. Istio uses Envoy sidecars with a control plane (istiod). Linkerd uses a Rust micro-proxy sidecar. Both give mTLS, retries, load balancing and metrics without changing the application.",
             "Peer-to-peer replication: in Cassandra every replica can accept writes and nodes share membership state by gossip.",
@@ -487,9 +529,21 @@
         },
         {
           "title": "Trade-offs",
+          "part": "run",
+          "icon": "scale",
           "items": [
-            "Pro: no central bottleneck, direct paths, resilience from redundant links.",
-            "Con: n(n-1)/2 links for a full mesh. In a service mesh the cost is a proxy per workload and a control plane to run."
+            {
+              "type": "callout",
+              "kind": "prod",
+              "text": "no central bottleneck, direct paths, resilience from redundant links.",
+              "title": "Pro"
+            },
+            {
+              "type": "callout",
+              "kind": "gotcha",
+              "text": "n(n-1)/2 links for a full mesh. In a service mesh the cost is a proxy per workload and a control plane to run.",
+              "title": "Con"
+            }
           ]
         }
       ],
@@ -550,99 +604,6 @@
       "notes": [
         "RFC 1034 was read for the first 100,000 of 135,972 characters. DNS root servers, caching resolvers' behaviour and later RFCs (such as RFC 1035) were not read."
       ],
-      "diagrams": [
-        {
-          "alt": "Tree: one root, two branches, four leaves.",
-          "caption": "Each level talks to its parent and its children.",
-          "w": 520,
-          "h": 280,
-          "nodes": [
-            {
-              "id": "r",
-              "x": 260,
-              "y": 36,
-              "w": 110,
-              "h": 32,
-              "label": "Root",
-              "kind": "hub"
-            },
-            {
-              "id": "b1",
-              "x": 130,
-              "y": 120,
-              "w": 110,
-              "h": 32,
-              "label": "Branch"
-            },
-            {
-              "id": "b2",
-              "x": 390,
-              "y": 120,
-              "w": 110,
-              "h": 32,
-              "label": "Branch"
-            },
-            {
-              "id": "l0",
-              "x": 65,
-              "y": 208,
-              "w": 100,
-              "h": 32,
-              "label": "Leaf"
-            },
-            {
-              "id": "l1",
-              "x": 195,
-              "y": 208,
-              "w": 100,
-              "h": 32,
-              "label": "Leaf"
-            },
-            {
-              "id": "l2",
-              "x": 325,
-              "y": 208,
-              "w": 100,
-              "h": 32,
-              "label": "Leaf"
-            },
-            {
-              "id": "l3",
-              "x": 455,
-              "y": 208,
-              "w": 100,
-              "h": 32,
-              "label": "Leaf"
-            }
-          ],
-          "links": [
-            {
-              "from": "r",
-              "to": "b1"
-            },
-            {
-              "from": "r",
-              "to": "b2"
-            },
-            {
-              "from": "b1",
-              "to": "l0"
-            },
-            {
-              "from": "b1",
-              "to": "l1"
-            },
-            {
-              "from": "b2",
-              "to": "l2"
-            },
-            {
-              "from": "b2",
-              "to": "l3"
-            }
-          ]
-        }
-      ],
       "links": [
         {
           "label": "RFC 1034",
@@ -659,7 +620,109 @@
       ],
       "sections": [
         {
+          "title": "In one minute",
+          "part": "overview",
+          "icon": "eye",
+          "items": [
+            "A hierarchy: a root, branches and leaves, where each level delegates to the next. DNS and Prometheus federation are the two examples with docs behind them here.",
+            {
+              "alt": "Tree: one root, two branches, four leaves.",
+              "caption": "Each level talks to its parent and its children.",
+              "w": 520,
+              "h": 280,
+              "nodes": [
+                {
+                  "id": "r",
+                  "x": 260,
+                  "y": 36,
+                  "w": 110,
+                  "h": 32,
+                  "label": "Root",
+                  "kind": "hub"
+                },
+                {
+                  "id": "b1",
+                  "x": 130,
+                  "y": 120,
+                  "w": 110,
+                  "h": 32,
+                  "label": "Branch"
+                },
+                {
+                  "id": "b2",
+                  "x": 390,
+                  "y": 120,
+                  "w": 110,
+                  "h": 32,
+                  "label": "Branch"
+                },
+                {
+                  "id": "l0",
+                  "x": 65,
+                  "y": 208,
+                  "w": 100,
+                  "h": 32,
+                  "label": "Leaf"
+                },
+                {
+                  "id": "l1",
+                  "x": 195,
+                  "y": 208,
+                  "w": 100,
+                  "h": 32,
+                  "label": "Leaf"
+                },
+                {
+                  "id": "l2",
+                  "x": 325,
+                  "y": 208,
+                  "w": 100,
+                  "h": 32,
+                  "label": "Leaf"
+                },
+                {
+                  "id": "l3",
+                  "x": 455,
+                  "y": 208,
+                  "w": 100,
+                  "h": 32,
+                  "label": "Leaf"
+                }
+              ],
+              "links": [
+                {
+                  "from": "r",
+                  "to": "b1"
+                },
+                {
+                  "from": "r",
+                  "to": "b2"
+                },
+                {
+                  "from": "b1",
+                  "to": "l0"
+                },
+                {
+                  "from": "b1",
+                  "to": "l1"
+                },
+                {
+                  "from": "b2",
+                  "to": "l2"
+                },
+                {
+                  "from": "b2",
+                  "to": "l3"
+                }
+              ],
+              "type": "diagram"
+            }
+          ]
+        },
+        {
           "title": "The shape",
+          "part": "overview",
+          "icon": "grid",
           "items": [
             "A hierarchy of star networks (Wikipedia). If a link to a leaf fails only that leaf is isolated. If a link to a non-leaf node fails the whole section beneath it is isolated.",
             "Each level only talks to its parent and its children. Authority and data flow up or down the tree."
@@ -667,6 +730,9 @@
         },
         {
           "title": "Where it shows up",
+          "part": "use",
+          "icon": "globe",
+          "step": 1,
           "items": [
             "DNS (RFC 1034, November 1987): the name space is a tree of labels. Control of a subtree is delegated at cuts, where NS records name the servers for the subzone. Every zone must be available from at least two servers. Resolvers follow referrals down the tree, and records carry a TTL that limits caching.",
             "Prometheus hierarchical federation: higher-level servers collect aggregated data from many subordinate servers, which helps scale across many data centers. Each Prometheus exposes /federate, which needs at least one match[] selector. Set honor_labels so the source labels are kept.",
@@ -675,9 +741,21 @@
         },
         {
           "title": "Trade-offs",
+          "part": "run",
+          "icon": "scale",
           "items": [
-            "Pro: delegation scales, and an outage stays inside a branch.",
-            "Con: the higher up a node is, the more it matters. Cross-branch traffic goes up and back down."
+            {
+              "type": "callout",
+              "kind": "prod",
+              "text": "delegation scales, and an outage stays inside a branch.",
+              "title": "Pro"
+            },
+            {
+              "type": "callout",
+              "kind": "gotcha",
+              "text": "the higher up a node is, the more it matters. Cross-branch traffic goes up and back down.",
+              "title": "Con"
+            }
           ]
         }
       ],
@@ -736,105 +814,6 @@
       "notes": [
         "Delivery guarantees (at-most-once, at-least-once, exactly-once) were not read for any of the three and are not described (unconfirmed)."
       ],
-      "diagrams": [
-        {
-          "alt": "Bus: three producers and three consumers share one channel.",
-          "caption": "Producers and consumers know the channel, not each other.",
-          "w": 560,
-          "h": 270,
-          "nodes": [
-            {
-              "id": "bus",
-              "x": 280,
-              "y": 135,
-              "w": 480,
-              "h": 30,
-              "label": "Shared channel (broker, log or cable)",
-              "kind": "bus"
-            },
-            {
-              "id": "p0",
-              "x": 110,
-              "y": 44,
-              "w": 120,
-              "h": 32,
-              "label": "Producer A"
-            },
-            {
-              "id": "p1",
-              "x": 280,
-              "y": 44,
-              "w": 120,
-              "h": 32,
-              "label": "Producer B"
-            },
-            {
-              "id": "p2",
-              "x": 450,
-              "y": 44,
-              "w": 120,
-              "h": 32,
-              "label": "Producer C"
-            },
-            {
-              "id": "c0",
-              "x": 110,
-              "y": 226,
-              "w": 120,
-              "h": 32,
-              "label": "Consumer X"
-            },
-            {
-              "id": "c1",
-              "x": 280,
-              "y": 226,
-              "w": 120,
-              "h": 32,
-              "label": "Consumer Y"
-            },
-            {
-              "id": "c2",
-              "x": 450,
-              "y": 226,
-              "w": 120,
-              "h": 32,
-              "label": "Consumer Z"
-            }
-          ],
-          "links": [
-            {
-              "from": "p0",
-              "to": "bus",
-              "arrow": "to"
-            },
-            {
-              "from": "p1",
-              "to": "bus",
-              "arrow": "to"
-            },
-            {
-              "from": "p2",
-              "to": "bus",
-              "arrow": "to"
-            },
-            {
-              "from": "bus",
-              "to": "c0",
-              "arrow": "to"
-            },
-            {
-              "from": "bus",
-              "to": "c1",
-              "arrow": "to"
-            },
-            {
-              "from": "bus",
-              "to": "c2",
-              "arrow": "to"
-            }
-          ]
-        }
-      ],
       "links": [
         {
           "label": "Kafka introduction",
@@ -855,7 +834,115 @@
       ],
       "sections": [
         {
+          "title": "In one minute",
+          "part": "overview",
+          "icon": "eye",
+          "items": [
+            "Producers and consumers share one channel. In a messaging system the broker or log is the bus: senders do not know who reads.",
+            {
+              "alt": "Bus: three producers and three consumers share one channel.",
+              "caption": "Producers and consumers know the channel, not each other.",
+              "w": 560,
+              "h": 270,
+              "nodes": [
+                {
+                  "id": "bus",
+                  "x": 280,
+                  "y": 135,
+                  "w": 480,
+                  "h": 30,
+                  "label": "Shared channel (broker, log or cable)",
+                  "kind": "bus"
+                },
+                {
+                  "id": "p0",
+                  "x": 110,
+                  "y": 44,
+                  "w": 120,
+                  "h": 32,
+                  "label": "Producer A"
+                },
+                {
+                  "id": "p1",
+                  "x": 280,
+                  "y": 44,
+                  "w": 120,
+                  "h": 32,
+                  "label": "Producer B"
+                },
+                {
+                  "id": "p2",
+                  "x": 450,
+                  "y": 44,
+                  "w": 120,
+                  "h": 32,
+                  "label": "Producer C"
+                },
+                {
+                  "id": "c0",
+                  "x": 110,
+                  "y": 226,
+                  "w": 120,
+                  "h": 32,
+                  "label": "Consumer X"
+                },
+                {
+                  "id": "c1",
+                  "x": 280,
+                  "y": 226,
+                  "w": 120,
+                  "h": 32,
+                  "label": "Consumer Y"
+                },
+                {
+                  "id": "c2",
+                  "x": 450,
+                  "y": 226,
+                  "w": 120,
+                  "h": 32,
+                  "label": "Consumer Z"
+                }
+              ],
+              "links": [
+                {
+                  "from": "p0",
+                  "to": "bus",
+                  "arrow": "to"
+                },
+                {
+                  "from": "p1",
+                  "to": "bus",
+                  "arrow": "to"
+                },
+                {
+                  "from": "p2",
+                  "to": "bus",
+                  "arrow": "to"
+                },
+                {
+                  "from": "bus",
+                  "to": "c0",
+                  "arrow": "to"
+                },
+                {
+                  "from": "bus",
+                  "to": "c1",
+                  "arrow": "to"
+                },
+                {
+                  "from": "bus",
+                  "to": "c2",
+                  "arrow": "to"
+                }
+              ],
+              "type": "diagram"
+            }
+          ]
+        },
+        {
           "title": "The shape",
+          "part": "overview",
+          "icon": "grid",
           "items": [
             "Network bus: all nodes connect to one shared central cable. Cheaper to cable than other shapes, but the cable is a single point of failure (Wikipedia).",
             "A message bus applies the idea in software: producers publish to the bus and consumers subscribe, so they are decoupled in time and in knowledge of each other."
@@ -863,6 +950,9 @@
         },
         {
           "title": "Where it shows up",
+          "part": "use",
+          "icon": "globe",
+          "step": 1,
           "items": [
             "Apache Kafka: events are stored in topics split into partitions spread across brokers. Producers write and consumers read, and the two are decoupled. Events with the same key go to the same partition, which keeps their order. Topics keep events for a configurable retention period and consumers can read them repeatedly. Replication copies each partition to several brokers, commonly three.",
             "RabbitMQ (AMQP 0-9-1): publishers send to exchanges, bindings copy messages into queues, consumers subscribe. Exchange types are direct, fanout, topic and headers. A message leaves the broker only after it is acknowledged, and an unacknowledged message is redelivered.",
@@ -871,9 +961,21 @@
         },
         {
           "title": "Trade-offs",
+          "part": "run",
+          "icon": "scale",
           "items": [
-            "Pro: producers and consumers change independently, and new consumers need no change to producers.",
-            "Con: the bus is critical infrastructure and ordering, delivery guarantees and schema agreement become your problem. Kafka orders only within a partition."
+            {
+              "type": "callout",
+              "kind": "prod",
+              "text": "producers and consumers change independently, and new consumers need no change to producers.",
+              "title": "Pro"
+            },
+            {
+              "type": "callout",
+              "kind": "gotcha",
+              "text": "the bus is critical infrastructure and ordering, delivery guarantees and schema agreement become your problem. Kafka orders only within a partition.",
+              "title": "Con"
+            }
           ]
         }
       ],
@@ -928,96 +1030,6 @@
         "The Cassandra page is the 5.0 documentation, labelled a prerelease on the page, with no date. Latest GA release per the download page is 5.0.9 (2026-08-07).",
         "The 'only part of the data moves' point is a general property of consistent hashing and was not on the page read (unconfirmed)."
       ],
-      "diagrams": [
-        {
-          "alt": "Ring: six nodes in a loop, data travelling one way.",
-          "caption": "Each node knows its neighbour. In Cassandra's token ring a key goes to the node that owns its token.",
-          "w": 360,
-          "h": 300,
-          "nodes": [
-            {
-              "id": "n0",
-              "x": 180,
-              "y": 50,
-              "w": 60,
-              "h": 28,
-              "label": "Node 1"
-            },
-            {
-              "id": "n1",
-              "x": 284,
-              "y": 100,
-              "w": 60,
-              "h": 28,
-              "label": "Node 2"
-            },
-            {
-              "id": "n2",
-              "x": 284,
-              "y": 200,
-              "w": 60,
-              "h": 28,
-              "label": "Node 3"
-            },
-            {
-              "id": "n3",
-              "x": 180,
-              "y": 250,
-              "w": 60,
-              "h": 28,
-              "label": "Node 4"
-            },
-            {
-              "id": "n4",
-              "x": 76,
-              "y": 200,
-              "w": 60,
-              "h": 28,
-              "label": "Node 5"
-            },
-            {
-              "id": "n5",
-              "x": 76,
-              "y": 100,
-              "w": 60,
-              "h": 28,
-              "label": "Node 6"
-            }
-          ],
-          "links": [
-            {
-              "from": "n0",
-              "to": "n1",
-              "arrow": "to"
-            },
-            {
-              "from": "n1",
-              "to": "n2",
-              "arrow": "to"
-            },
-            {
-              "from": "n2",
-              "to": "n3",
-              "arrow": "to"
-            },
-            {
-              "from": "n3",
-              "to": "n4",
-              "arrow": "to"
-            },
-            {
-              "from": "n4",
-              "to": "n5",
-              "arrow": "to"
-            },
-            {
-              "from": "n5",
-              "to": "n0",
-              "arrow": "to"
-            }
-          ]
-        }
-      ],
       "links": [
         {
           "label": "Cassandra architecture",
@@ -1030,7 +1042,106 @@
       ],
       "sections": [
         {
+          "title": "In one minute",
+          "part": "overview",
+          "icon": "eye",
+          "items": [
+            "Nodes form a loop, each knowing its neighbours. In a network the ring is historical; in distributed databases a consistent-hash ring spreads data across nodes.",
+            {
+              "alt": "Ring: six nodes in a loop, data travelling one way.",
+              "caption": "Each node knows its neighbour. In Cassandra's token ring a key goes to the node that owns its token.",
+              "w": 360,
+              "h": 300,
+              "nodes": [
+                {
+                  "id": "n0",
+                  "x": 180,
+                  "y": 50,
+                  "w": 60,
+                  "h": 28,
+                  "label": "Node 1"
+                },
+                {
+                  "id": "n1",
+                  "x": 284,
+                  "y": 100,
+                  "w": 60,
+                  "h": 28,
+                  "label": "Node 2"
+                },
+                {
+                  "id": "n2",
+                  "x": 284,
+                  "y": 200,
+                  "w": 60,
+                  "h": 28,
+                  "label": "Node 3"
+                },
+                {
+                  "id": "n3",
+                  "x": 180,
+                  "y": 250,
+                  "w": 60,
+                  "h": 28,
+                  "label": "Node 4"
+                },
+                {
+                  "id": "n4",
+                  "x": 76,
+                  "y": 200,
+                  "w": 60,
+                  "h": 28,
+                  "label": "Node 5"
+                },
+                {
+                  "id": "n5",
+                  "x": 76,
+                  "y": 100,
+                  "w": 60,
+                  "h": 28,
+                  "label": "Node 6"
+                }
+              ],
+              "links": [
+                {
+                  "from": "n0",
+                  "to": "n1",
+                  "arrow": "to"
+                },
+                {
+                  "from": "n1",
+                  "to": "n2",
+                  "arrow": "to"
+                },
+                {
+                  "from": "n2",
+                  "to": "n3",
+                  "arrow": "to"
+                },
+                {
+                  "from": "n3",
+                  "to": "n4",
+                  "arrow": "to"
+                },
+                {
+                  "from": "n4",
+                  "to": "n5",
+                  "arrow": "to"
+                },
+                {
+                  "from": "n5",
+                  "to": "n0",
+                  "arrow": "to"
+                }
+              ],
+              "type": "diagram"
+            }
+          ]
+        },
+        {
           "title": "The shape",
+          "part": "overview",
+          "icon": "grid",
           "items": [
             "Network ring: a daisy chain closed into a loop with data travelling in one direction. Aggregate bandwidth is limited by the weakest link between two nodes (Wikipedia).",
             "Token ring is the historical network example. It is named in your note and was not read here (unconfirmed)."
@@ -1038,6 +1149,9 @@
         },
         {
           "title": "Where it shows up",
+          "part": "use",
+          "icon": "globe",
+          "step": 1,
           "items": [
             "Cassandra partitions data with consistent hashing on a token ring. Each physical node owns one or more tokens (vnodes), and a key's replicas are found by walking the ring clockwise until enough distinct nodes are found.",
             "Replication: each partition is copied to several nodes by the keyspace's replication strategy and replication factor. NetworkTopologyStrategy is recommended for production and SimpleStrategy for testing.",
@@ -1047,9 +1161,21 @@
         },
         {
           "title": "Trade-offs",
+          "part": "run",
+          "icon": "scale",
           "items": [
-            "Pro: no single master, data spread evenly, nodes added or removed move only part of the data (a general property of consistent hashing, not a quote from the page).",
-            "Con: eventual consistency to reason about, and repair work to run."
+            {
+              "type": "callout",
+              "kind": "prod",
+              "text": "no single master, data spread evenly, nodes added or removed move only part of the data (a general property of consistent hashing, not a quote from the page).",
+              "title": "Pro"
+            },
+            {
+              "type": "callout",
+              "kind": "gotcha",
+              "text": "eventual consistency to reason about, and repair work to run.",
+              "title": "Con"
+            }
           ]
         }
       ],

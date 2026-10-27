@@ -88,7 +88,68 @@
       ],
       "sections": [
         {
-          "title": "Idea",
+          "title": "In one minute",
+          "part": "overview",
+          "icon": "eye",
+          "items": [
+            "Split an application into layers that each have one responsibility. A higher layer may use a lower one, never the other way. Tiers are layers placed on separate machines.",
+            {
+              "type": "diagram",
+              "alt": "Three layers stacked: presentation on top, business logic in the middle, data at the bottom. Each layer calls the one below it.",
+              "caption": "A higher layer uses a lower one. The reverse is not allowed.",
+              "w": 720,
+              "h": 230,
+              "nodes": [
+                {
+                  "id": "p",
+                  "x": 360,
+                  "y": 45,
+                  "w": 220,
+                  "h": 38,
+                  "label": "Presentation",
+                  "sub": "what the user sees"
+                },
+                {
+                  "id": "b",
+                  "x": 360,
+                  "y": 115,
+                  "w": 220,
+                  "h": 38,
+                  "label": "Business logic",
+                  "sub": "the middle tier, optional"
+                },
+                {
+                  "id": "d",
+                  "x": 360,
+                  "y": 185,
+                  "w": 220,
+                  "h": 38,
+                  "label": "Data",
+                  "sub": "database tier",
+                  "kind": "store"
+                }
+              ],
+              "links": [
+                {
+                  "from": "p",
+                  "to": "b",
+                  "label": "uses",
+                  "arrow": "to"
+                },
+                {
+                  "from": "b",
+                  "to": "d",
+                  "label": "uses",
+                  "arrow": "to"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Layers and tiers",
+          "part": "overview",
+          "icon": "layers",
           "items": [
             "An N-tier architecture divides an application into logical layers and physical tiers. Layers separate responsibilities and manage dependencies: a higher layer can use services in a lower layer, but a lower layer cannot use services in a higher layer.",
             "Tiers are physically separated and run on separate machines. A strict model sends a request through adjacent tiers one by one. A relaxed model lets requests skip tiers: lower latency, more coupling. A closed layer architecture lets a layer call only the layer immediately below, an open one lets it call any layer beneath it.",
@@ -97,15 +158,30 @@
         },
         {
           "title": "When it fits",
+          "part": "use",
+          "step": 1,
+          "icon": "check",
           "items": [
             "Architectural requirements that are still evolving, migrating an on-premises application with minimal change, and applications that span on-premises and cloud."
           ]
         },
         {
           "title": "Benefits and costs",
+          "part": "run",
+          "icon": "scale",
           "items": [
-            "Benefits: portable across cloud and on-premises, little to learn, cheap because nothing is re-architected, a natural evolution of the traditional application.",
-            "Challenges: a middle tier that only does CRUD adds latency and complexity for no value, a monolithic design prevents independent deployment of features, network security is harder in large systems, and a request through several tiers is harder to test and monitor."
+            {
+              "type": "callout",
+              "kind": "prod",
+              "text": "portable across cloud and on-premises, little to learn, cheap because nothing is re-architected, a natural evolution of the traditional application.",
+              "title": "Benefits"
+            },
+            {
+              "type": "callout",
+              "kind": "gotcha",
+              "text": "a middle tier that only does CRUD adds latency and complexity for no value, a monolithic design prevents independent deployment of features, network security is harder in large systems, and a request through several tiers is harder to test and monitor.",
+              "title": "Challenges"
+            }
           ]
         }
       ],
@@ -167,7 +243,90 @@
       ],
       "sections": [
         {
+          "title": "In one minute",
+          "part": "overview",
+          "icon": "eye",
+          "items": [
+            "Separate the domain model from the screen. Views display state, controllers handle input, and both observe the model.",
+            {
+              "type": "diagram",
+              "alt": "The user acts on the controller, which changes the model. The view observes the model and shows its state to the user.",
+              "caption": "Separated presentation with observer synchronization.",
+              "w": 720,
+              "h": 230,
+              "nodes": [
+                {
+                  "id": "u",
+                  "x": 90,
+                  "y": 115,
+                  "w": 110,
+                  "h": 40,
+                  "label": "User",
+                  "kind": "ext"
+                },
+                {
+                  "id": "c",
+                  "x": 330,
+                  "y": 50,
+                  "w": 150,
+                  "h": 40,
+                  "label": "Controller",
+                  "sub": "handles input"
+                },
+                {
+                  "id": "m",
+                  "x": 570,
+                  "y": 115,
+                  "w": 150,
+                  "h": 50,
+                  "label": "Model",
+                  "sub": "domain state and rules",
+                  "kind": "hub"
+                },
+                {
+                  "id": "v",
+                  "x": 330,
+                  "y": 190,
+                  "w": 150,
+                  "h": 40,
+                  "label": "View",
+                  "sub": "shows state"
+                }
+              ],
+              "links": [
+                {
+                  "from": "u",
+                  "to": "c",
+                  "label": "input",
+                  "arrow": "to"
+                },
+                {
+                  "from": "c",
+                  "to": "m",
+                  "label": "changes",
+                  "arrow": "to"
+                },
+                {
+                  "from": "m",
+                  "to": "v",
+                  "label": "observed by",
+                  "arrow": "to",
+                  "dashed": true
+                },
+                {
+                  "from": "v",
+                  "to": "u",
+                  "label": "display",
+                  "arrow": "to"
+                }
+              ]
+            }
+          ]
+        },
+        {
           "title": "Idea",
+          "part": "overview",
+          "icon": "grid",
           "items": [
             "Fowler treats MVC as a set of principles rather than one pattern. Its core is Separated Presentation: keep domain objects (the model) independent of the GUI.",
             "Views display state. Controllers handle user input. Both observe the model, an approach Fowler calls Observer Synchronization, so widgets update without talking to each other directly."
@@ -175,10 +334,30 @@
         },
         {
           "title": "Responsibilities",
+          "part": "use",
+          "step": 1,
+          "icon": "users",
           "items": [
-            "Model: the domain state and rules, with no knowledge of the screen.",
-            "View: shows the model's state.",
-            "Controller: turns user input into changes to the model."
+            {
+              "type": "cards",
+              "cards": [
+                {
+                  "icon": "server",
+                  "title": "Model",
+                  "text": "the domain state and rules, with no knowledge of the screen."
+                },
+                {
+                  "icon": "eye",
+                  "title": "View",
+                  "text": "shows the model's state."
+                },
+                {
+                  "icon": "wrench",
+                  "title": "Controller",
+                  "text": "turns user input into changes to the model."
+                }
+              ]
+            }
           ]
         }
       ],
@@ -364,18 +543,137 @@
       ],
       "sections": [
         {
+          "title": "In one minute",
+          "part": "overview",
+          "icon": "eye",
+          "items": [
+            "The application core talks to the outside world only through ports. Adapters plug technology into a port, so the core can be driven and tested without a database or a UI.",
+            {
+              "type": "diagram",
+              "alt": "A GUI and a test harness (driving adapters) call the application core through ports. The core calls a database through a port, plugged by a database adapter or a mock (driven adapters).",
+              "caption": "Ports and adapters. The core knows no technology.",
+              "w": 720,
+              "h": 230,
+              "nodes": [
+                {
+                  "id": "gui",
+                  "x": 90,
+                  "y": 70,
+                  "w": 150,
+                  "h": 36,
+                  "label": "GUI",
+                  "sub": "driving adapter",
+                  "kind": "ext"
+                },
+                {
+                  "id": "test",
+                  "x": 90,
+                  "y": 160,
+                  "w": 150,
+                  "h": 36,
+                  "label": "Test harness",
+                  "sub": "driving adapter",
+                  "kind": "ext"
+                },
+                {
+                  "id": "core",
+                  "x": 360,
+                  "y": 115,
+                  "w": 170,
+                  "h": 64,
+                  "label": "Application core",
+                  "sub": "business logic, ports",
+                  "kind": "hub"
+                },
+                {
+                  "id": "db",
+                  "x": 630,
+                  "y": 70,
+                  "w": 150,
+                  "h": 36,
+                  "label": "Database adapter",
+                  "sub": "driven adapter",
+                  "kind": "ext"
+                },
+                {
+                  "id": "mock",
+                  "x": 630,
+                  "y": 160,
+                  "w": 150,
+                  "h": 36,
+                  "label": "Mock database",
+                  "sub": "driven adapter",
+                  "kind": "ext"
+                }
+              ],
+              "links": [
+                {
+                  "from": "gui",
+                  "to": "core",
+                  "label": "port",
+                  "arrow": "to"
+                },
+                {
+                  "from": "test",
+                  "to": "core",
+                  "label": "port",
+                  "arrow": "to"
+                },
+                {
+                  "from": "core",
+                  "to": "db",
+                  "label": "port",
+                  "arrow": "to"
+                },
+                {
+                  "from": "core",
+                  "to": "mock",
+                  "label": "port",
+                  "arrow": "to"
+                }
+              ]
+            }
+          ]
+        },
+        {
           "title": "Intent",
+          "part": "overview",
+          "icon": "bulb",
           "items": [
             "Let users, programs and automated tests drive the application equally, and let it be developed and tested in isolation from its databases and runtime devices."
           ]
         },
         {
           "title": "Parts",
+          "part": "use",
+          "step": 1,
+          "icon": "grid",
           "items": [
-            "Application core: the business logic inside the hexagon, which should not depend on technology outside it.",
-            "Port: a purposeful conversation between the application and the outside world, defined by an API.",
-            "Adapter: technology-specific component that plugs into a port and converts external signals into the port's API calls, for example a GUI, a FIT test harness or a mock database.",
-            "Primary (driving) actors start conversations with the application. Secondary (driven) actors, such as databases, are called by the application."
+            {
+              "type": "cards",
+              "cards": [
+                {
+                  "icon": "box",
+                  "title": "Application core",
+                  "text": "The business logic inside the hexagon, which should not depend on technology outside it."
+                },
+                {
+                  "icon": "layers",
+                  "title": "Port",
+                  "text": "A purposeful conversation between the application and the outside world, defined by an API."
+                },
+                {
+                  "icon": "wrench",
+                  "title": "Adapter",
+                  "text": "A technology-specific component that plugs into a port and converts external signals into the port's API calls, for example a GUI, a FIT test harness or a mock database."
+                },
+                {
+                  "icon": "users",
+                  "title": "Driving and driven",
+                  "text": "Primary (driving) actors start conversations with the application. Secondary (driven) actors, such as databases, are called by the application."
+                }
+              ]
+            }
           ]
         }
       ],
@@ -574,32 +872,168 @@
       ],
       "sections": [
         {
-          "title": "What it is",
+          "title": "In one minute",
+          "part": "overview",
+          "icon": "eye",
           "items": [
-            "Small services that can be deployed on their own, each in a separate process (Lewis and Fowler, 25 March 2014). Azure: a collection of small, autonomous services, each self-contained and implementing a single business capability within a bounded context. A bounded context is a natural division within a business that gives an explicit boundary for a domain model."
+            "Small services that can be deployed on their own, each in a separate process (Lewis and Fowler, 25 March 2014). Azure: a collection of small, autonomous services, each self-contained and implementing a single business capability within a bounded context. A bounded context is a natural division within a business that gives an explicit boundary for a domain model.",
+            {
+              "type": "diagram",
+              "alt": "Three small services, each with its own data store, talking to each other over HTTP APIs or lightweight messaging. Each is deployed on its own.",
+              "caption": "Independent services, each owning its data.",
+              "w": 720,
+              "h": 230,
+              "nodes": [
+                {
+                  "id": "a",
+                  "x": 120,
+                  "y": 70,
+                  "w": 150,
+                  "h": 38,
+                  "label": "Orders service",
+                  "sub": "one business capability"
+                },
+                {
+                  "id": "b",
+                  "x": 360,
+                  "y": 70,
+                  "w": 150,
+                  "h": 38,
+                  "label": "Payments service",
+                  "sub": "one business capability"
+                },
+                {
+                  "id": "c",
+                  "x": 600,
+                  "y": 70,
+                  "w": 150,
+                  "h": 38,
+                  "label": "Shipping service",
+                  "sub": "one business capability"
+                },
+                {
+                  "id": "da",
+                  "x": 120,
+                  "y": 170,
+                  "w": 130,
+                  "h": 32,
+                  "label": "own data",
+                  "kind": "store"
+                },
+                {
+                  "id": "db",
+                  "x": 360,
+                  "y": 170,
+                  "w": 130,
+                  "h": 32,
+                  "label": "own data",
+                  "kind": "store"
+                },
+                {
+                  "id": "dc",
+                  "x": 600,
+                  "y": 170,
+                  "w": 130,
+                  "h": 32,
+                  "label": "own data",
+                  "kind": "store"
+                }
+              ],
+              "links": [
+                {
+                  "from": "a",
+                  "to": "b",
+                  "label": "HTTP API",
+                  "arrow": "both"
+                },
+                {
+                  "from": "b",
+                  "to": "c",
+                  "arrow": "both",
+                  "label": "or messaging"
+                },
+                {
+                  "from": "a",
+                  "to": "da",
+                  "arrow": "to"
+                },
+                {
+                  "from": "b",
+                  "to": "db",
+                  "arrow": "to"
+                },
+                {
+                  "from": "c",
+                  "to": "dc",
+                  "arrow": "to"
+                }
+              ]
+            }
           ]
         },
         {
           "title": "Characteristics (Lewis and Fowler)",
+          "part": "overview",
+          "icon": "grid",
           "items": [
-            "Componentization via services: services are out-of-process components, so boundaries are explicit.",
-            "Organised around business capabilities: cross-functional teams own each service end to end.",
-            "Smart endpoints and dumb pipes: the logic lives in the services, which talk through simple protocols such as HTTP APIs or lightweight messaging.",
-            "Decentralised governance and data: teams choose their tools and each service manages its own data.",
-            "Design for failure: services must tolerate others' outages, supported by monitoring that detects problems fast."
+            {
+              "type": "cards",
+              "cards": [
+                {
+                  "icon": "box",
+                  "title": "Componentization via services",
+                  "text": "Services are out-of-process components, so boundaries are explicit."
+                },
+                {
+                  "icon": "users",
+                  "title": "Organised around business capabilities",
+                  "text": "Cross-functional teams own each service end to end."
+                },
+                {
+                  "icon": "sync",
+                  "title": "Smart endpoints and dumb pipes",
+                  "text": "The logic lives in the services, which talk through simple protocols such as HTTP APIs or lightweight messaging."
+                },
+                {
+                  "icon": "globe",
+                  "title": "Decentralised governance and data",
+                  "text": "Teams choose their tools and each service manages its own data."
+                },
+                {
+                  "icon": "shield",
+                  "title": "Design for failure",
+                  "text": "Services must tolerate others' outages, supported by monitoring that detects problems fast."
+                }
+              ]
+            }
           ]
         },
         {
           "title": "Patterns that go with it",
+          "part": "use",
+          "step": 1,
+          "icon": "layers",
           "items": [
-            "API gateway (routing, aggregation, offloading), saga for consistency across services, circuit breaker, bulkhead, retry and sidecar for failure, strangler fig for migration, event-driven communication. See each entry."
+            "[API gateway](#api-gateway) (routing, aggregation, offloading), [saga](#saga) for consistency across services, [circuit breaker](#circuit-breaker), [bulkhead](#bulkhead), [retry](#retry) and [sidecar](#sidecar) for failure, [strangler fig](#strangler-fig) for migration, [event-driven](#event-driven) communication. See each entry."
           ]
         },
         {
           "title": "Caution",
+          "part": "run",
+          "icon": "alert",
           "items": [
-            "Azure: microservices require a fundamental shift in mindset beyond decomposing an application, you must also rethink how systems are designed, deployed and operated.",
-            "Fowler: you shouldn't start a new project with microservices. See Monolith and modular monolith."
+            {
+              "type": "callout",
+              "kind": "gotcha",
+              "text": "Azure: microservices require a fundamental shift in mindset beyond decomposing an application, you must also rethink how systems are designed, deployed and operated.",
+              "title": "Azure"
+            },
+            {
+              "type": "callout",
+              "kind": "tip",
+              "text": "Fowler: you shouldn't start a new project with microservices. See [Monolith and modular monolith](#monolith).",
+              "title": "Fowler"
+            }
           ]
         }
       ],
@@ -671,7 +1105,90 @@
       ],
       "sections": [
         {
+          "title": "In one minute",
+          "part": "overview",
+          "icon": "eye",
+          "items": [
+            "Producers emit events, consumers react, and a channel carries them. Producers do not know who is listening.",
+            {
+              "type": "diagram",
+              "alt": "Event producers send events to an event channel such as a broker. Several consumers each receive them and react.",
+              "caption": "Producers and consumers are decoupled.",
+              "w": 720,
+              "h": 230,
+              "nodes": [
+                {
+                  "id": "p1",
+                  "x": 100,
+                  "y": 60,
+                  "w": 140,
+                  "h": 34,
+                  "label": "Producer"
+                },
+                {
+                  "id": "p2",
+                  "x": 100,
+                  "y": 160,
+                  "w": 140,
+                  "h": 34,
+                  "label": "Producer"
+                },
+                {
+                  "id": "ch",
+                  "x": 360,
+                  "y": 110,
+                  "w": 170,
+                  "h": 50,
+                  "label": "Event channel",
+                  "sub": "broker or ingestion service",
+                  "kind": "bus"
+                },
+                {
+                  "id": "c1",
+                  "x": 620,
+                  "y": 60,
+                  "w": 140,
+                  "h": 34,
+                  "label": "Consumer"
+                },
+                {
+                  "id": "c2",
+                  "x": 620,
+                  "y": 160,
+                  "w": 140,
+                  "h": 34,
+                  "label": "Consumer"
+                }
+              ],
+              "links": [
+                {
+                  "from": "p1",
+                  "to": "ch",
+                  "arrow": "to"
+                },
+                {
+                  "from": "p2",
+                  "to": "ch",
+                  "arrow": "to"
+                },
+                {
+                  "from": "ch",
+                  "to": "c1",
+                  "arrow": "to"
+                },
+                {
+                  "from": "ch",
+                  "to": "c2",
+                  "arrow": "to"
+                }
+              ]
+            }
+          ]
+        },
+        {
           "title": "Shape (Azure)",
+          "part": "overview",
+          "icon": "grid",
           "items": [
             "Event producers generate a stream of events, event consumers listen, and event channels (often event brokers or ingestion services) transfer events from producers to consumers.",
             "Events are delivered in near real time. Producers are decoupled from consumers, and consumers are decoupled from each other, in a publish-subscribe model."
@@ -679,13 +1196,24 @@
         },
         {
           "title": "Four things people mean (Fowler, 2017)",
+          "part": "use",
+          "step": 1,
+          "icon": "list",
           "items": [
-            "Fowler says that when people talk about events they actually mean different things. Event Notification: a system sends events to say something changed and does not care about the response. It is low coupling and simple, but a logical flow spread over several notifications is hard to see because it is not explicit in any program text.",
-            "The page also separates Event-Carried State Transfer, Event Sourcing and CQRS. See the Event sourcing and CQRS entries."
+            "Fowler says that when people talk about events they actually mean different things..",
+            {
+              "type": "callout",
+              "kind": "default",
+              "text": "Event Notification: a system sends events to say something changed and does not care about the response. It is low coupling and simple, but a logical flow spread over several notifications is hard to see because it is not explicit in any program text.",
+              "title": "Event Notification"
+            },
+            "The page also separates Event-Carried State Transfer, Event Sourcing and CQRS. See [Event sourcing](#event-sourcing) and [CQRS](#cqrs)."
           ]
         },
         {
           "title": "Where it connects",
+          "part": "run",
+          "icon": "globe",
           "items": [
             "The bus topology in the Enterprise topologies topic: Kafka, RabbitMQ and NATS are the usual channels."
           ]

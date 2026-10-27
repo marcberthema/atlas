@@ -21,3 +21,7 @@ Review each difference, then update `checked`, `version` and the facts that chan
 
 Paid products: the group `paid` (Other tools tab) lists a few commercial products so the reader knows they exist. Each is a `ref` entry that says what the vendor's own
 page says, nothing more, and names its closest open source alternative in `compare` (an entry id in this topic). No prices unless the page shows them, and say they change.
+
+Page: this topic uses the shared page (`shared/topic.html`). Its tabs are in `templates/view.json`. Tab entries use the learning layout (parts, steps,
+tables, callouts, cards, diagrams, fetched code examples: see `topics/gitops/docs/data-model.md`); short entries are flat. When converting an entry, keep
+every fact and check nothing was dropped. Examples are fetched by reference (`make examples`), never pasted. Check diagrams in a browser after editing one.
