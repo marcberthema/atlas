@@ -2,7 +2,7 @@
   "title": "Identity providers",
   "intro": "Single sign-on and the protocols behind it (OIDC, OAuth 2.0, SAML, LDAP, Kerberos, SCIM), the open source identity providers, and how Argo CD and Kubernetes use one.",
   "checked": "2026-10-26",
-  "scope": "Open source or free to use. Paid products are left out unless they are a CNCF alternative. The three cloud services are references you asked for, and are marked as not open source.",
+  "scope": "Open source or free to use. Paid products are left out of the main groups. The Paid products group in Other tools lists a few commercial ones for awareness only. The three cloud services are references you asked for, and are marked as not open source.",
   "groups": [
     {
       "id": "concepts",
@@ -28,6 +28,11 @@
       "id": "integration",
       "label": "GitOps and Kubernetes",
       "about": "How Argo CD and the Kubernetes API server use an identity provider."
+    },
+    {
+      "id": "paid",
+      "label": "Paid products",
+      "about": "Commercial products, listed so you know they exist, each with its closest open source alternative. Not recommendations. Details are only what the vendor's own page says."
     }
   ],
   "entries": [
@@ -1872,6 +1877,198 @@
         {
           "label": "int128/kubelogin",
           "url": "https://github.com/int128/kubelogin"
+        }
+      ]
+    },
+    {
+      "id": "okta",
+      "name": "Okta",
+      "group": "paid",
+      "level": "ref",
+      "summary": "Commercial identity platform for workforce and customers. Closest open source alternative: Keycloak.",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "Not stated on the vendor page read",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "Commercial product, not a CNCF project."
+      },
+      "license": "Proprietary (commercial)",
+      "version": {
+        "name": "Okta",
+        "analysed": "vendor page read 2026-10-26",
+        "released": "2026-10-26",
+        "docs": "vendor page, no version or date shown on it",
+        "checked": "2026-10-26"
+      },
+      "compare": [
+        {
+          "with": "keycloak",
+          "text": "Keycloak covers single sign-on, brokering and federation, self-hosted. Okta is the hosted service."
+        },
+        {
+          "with": "zitadel",
+          "text": "ZITADEL is a hosted or self-hosted option closer to Okta's customer identity side."
+        }
+      ],
+      "related": [
+        "keycloak",
+        "zitadel",
+        "auth0"
+      ],
+      "notes": [
+        "The page read does not list SSO, MFA, Universal Directory or lifecycle management as features, and does not state how Okta Customer Identity and Auth0 relate (unconfirmed)."
+      ],
+      "links": [
+        {
+          "label": "Okta products",
+          "url": "https://www.okta.com/products/"
+        }
+      ],
+      "sections": [
+        {
+          "title": "What the vendor says",
+          "items": [
+            "Workforce identity to connect employees, partners and AI agents. Okta Customer Identity and the Auth0 platform are listed separately for customer sign-in.",
+            "A 30-day free trial and a contact-sales link. No prices on the page."
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "Okta products",
+          "url": "https://www.okta.com/products/"
+        }
+      ]
+    },
+    {
+      "id": "auth0",
+      "name": "Auth0",
+      "group": "paid",
+      "level": "ref",
+      "summary": "Commercial authentication and authorization service for developers. Closest open source alternatives: Keycloak, ZITADEL and Ory.",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "Not stated on the vendor page read",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "Commercial product, not a CNCF project."
+      },
+      "license": "Proprietary (commercial)",
+      "version": {
+        "name": "Auth0",
+        "analysed": "vendor page read 2026-10-26",
+        "released": "2026-10-26",
+        "docs": "vendor page, no version or date shown on it",
+        "checked": "2026-10-26"
+      },
+      "compare": [
+        {
+          "with": "keycloak",
+          "text": "Self-hosted identity server with OIDC, OAuth 2.0 and SAML."
+        },
+        {
+          "with": "ory-kratos",
+          "text": "Headless identity management you build your own UI on."
+        },
+        {
+          "with": "zitadel",
+          "text": "Identity infrastructure with multi-tenancy, self-hosted or cloud."
+        }
+      ],
+      "related": [
+        "okta",
+        "keycloak",
+        "ory-kratos",
+        "zitadel"
+      ],
+      "notes": [
+        "The docs page does not mention OIDC, a free plan, or Okta. That Okta owns Auth0 is widely known but was not on a page read (unconfirmed)."
+      ],
+      "links": [
+        {
+          "label": "Auth0 overview",
+          "url": "https://auth0.com/docs/get-started/auth0-overview"
+        }
+      ],
+      "sections": [
+        {
+          "title": "What the docs say",
+          "items": [
+            "\"A flexible, drop-in solution to add authentication and authorization services to your applications.\" Names OAuth 2.0 (APIs) and SAML.",
+            "Capabilities: login with passwords or social accounts, single sign-on, multi-factor and one-time codes, breached password alerts, blocking suspicious IPs, federating enterprise directories, user management, role based authorization, monitoring and compliance support (SOC2, GDPR, PCI DSS, HIPAA)."
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "Auth0 overview",
+          "url": "https://auth0.com/docs/get-started/auth0-overview"
+        }
+      ]
+    },
+    {
+      "id": "ping-identity",
+      "name": "Ping Identity",
+      "group": "paid",
+      "level": "ref",
+      "summary": "Commercial identity platform for workforce and customers: access, lifecycle, governance and fraud protection. Closest open source alternative: Keycloak.",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "Not stated on the vendor page read",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "Commercial product, not a CNCF project."
+      },
+      "license": "Proprietary (commercial)",
+      "version": {
+        "name": "Ping Identity",
+        "analysed": "vendor page read 2026-10-26",
+        "released": "2026-10-26",
+        "docs": "vendor page, no version or date shown on it",
+        "checked": "2026-10-26"
+      },
+      "compare": [
+        {
+          "with": "keycloak",
+          "text": "Covers single sign-on, federation and user federation, without governance or fraud features."
+        }
+      ],
+      "related": [
+        "okta",
+        "keycloak"
+      ],
+      "notes": [
+        "The page read does not name individual Ping products or open source components, and was cut off before its Orchestrate and AI sections (unconfirmed)."
+      ],
+      "links": [
+        {
+          "label": "Ping Identity platform",
+          "url": "https://www.pingidentity.com/en/platform.html"
+        }
+      ],
+      "sections": [
+        {
+          "title": "What the vendor says",
+          "items": [
+            "Identify (verifiable credentials, identity verification), Manage (lifecycle management, directory, relationship management), Access (single sign-on, authorization, MFA and passwordless, just-in-time privileged access), Govern (access requests, segregation of duties, access reviews) and Protect (threat detection, fraud prevention).",
+            "Audiences: customers, B2B, workforce, and agentic and AI."
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "Ping Identity platform",
+          "url": "https://www.pingidentity.com/en/platform.html"
         }
       ]
     }

@@ -2,7 +2,7 @@
   "title": "Certificates",
   "intro": "X.509 and TLS basics, ACME and Let's Encrypt, private CAs, cert-manager and Kubernetes, and OpenSSL commands to inspect and troubleshoot.",
   "checked": "2026-10-26",
-  "scope": "Open source or free to use. Paid products are left out unless they are a CNCF alternative. The two cloud services are references and are marked as not open source.",
+  "scope": "Open source or free to use. Paid products are left out of the main groups. The Paid products group in Other tools lists a few commercial ones for awareness only. The two cloud services are references and are marked as not open source.",
   "groups": [
     {
       "id": "concepts",
@@ -33,6 +33,11 @@
       "id": "tools",
       "label": "Tools and troubleshooting",
       "about": "Commands to read, test and make certificates."
+    },
+    {
+      "id": "paid",
+      "label": "Paid products",
+      "about": "Commercial products, listed so you know they exist, each with its closest open source alternative. Not recommendations. Details are only what the vendor's own page says."
     }
   ],
   "entries": [
@@ -1867,6 +1872,320 @@
         {
           "label": "OpenSSL docs (master)",
           "url": "https://docs.openssl.org/master/man1/openssl-x509/"
+        }
+      ]
+    },
+    {
+      "id": "digicert",
+      "name": "DigiCert",
+      "group": "paid",
+      "level": "ref",
+      "summary": "Commercial public certificate authority: OV and EV TLS certificates, with a management portal. Closest open source alternative: Let's Encrypt for DV certificates.",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "Not stated on the vendor page read",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "Commercial product, not a CNCF project."
+      },
+      "license": "Proprietary (commercial)",
+      "version": {
+        "name": "DigiCert",
+        "analysed": "vendor page read 2026-10-26",
+        "released": "2026-10-26",
+        "docs": "vendor page, no version or date shown on it",
+        "checked": "2026-10-26"
+      },
+      "compare": [
+        {
+          "with": "acme",
+          "text": "Let's Encrypt issues free DV certificates over ACME. It has no OV or EV products, which DigiCert sells."
+        },
+        {
+          "with": "cert-manager",
+          "text": "cert-manager can request certificates from an ACME CA such as DigiCert's, since DigiCert lists ACME automation."
+        }
+      ],
+      "related": [
+        "acme",
+        "cert-manager",
+        "azure-key-vault-certs"
+      ],
+      "notes": [
+        "DV products and the lifecycle management service are not described on the page read. Azure Key Vault lists DigiCert as an integrated issuer. Prices change; treat them as a snapshot."
+      ],
+      "links": [
+        {
+          "label": "DigiCert TLS/SSL certificates",
+          "url": "https://www.digicert.com/tls-ssl/tls-ssl-certificates"
+        }
+      ],
+      "sections": [
+        {
+          "title": "What the vendor says",
+          "items": [
+            "Public TLS/SSL certificates: OV and EV, single domain, multi-domain and wildcard (OV only), in Basic, Secure Site and Secure Site Pro tiers. Each Basic tier includes the CertCentral management portal. Every listed tier includes free ACME automation.",
+            "Prices on the page read, per domain per month on a 12-month auto-renewing subscription: Basic OV $26, Secure Site OV $44, Secure Site Pro OV $108, Basic EV $39. Prices are subject to change."
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "DigiCert TLS/SSL certificates",
+          "url": "https://www.digicert.com/tls-ssl/tls-ssl-certificates"
+        }
+      ]
+    },
+    {
+      "id": "sectigo",
+      "name": "Sectigo",
+      "group": "paid",
+      "level": "ref",
+      "summary": "Commercial certificate authority: DV, OV and EV TLS certificates, code signing and S/MIME, with a certificate lifecycle manager. Closest open source alternative: Let's Encrypt with cert-manager or certbot.",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "Not stated on the vendor page read",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "Commercial product, not a CNCF project."
+      },
+      "license": "Proprietary (commercial)",
+      "version": {
+        "name": "Sectigo",
+        "analysed": "vendor page read 2026-10-26",
+        "released": "2026-10-26",
+        "docs": "vendor page, no version or date shown on it",
+        "checked": "2026-10-26"
+      },
+      "compare": [
+        {
+          "with": "acme",
+          "text": "Let's Encrypt issues free DV certificates over ACME."
+        },
+        {
+          "with": "cert-manager",
+          "text": "cert-manager automates renewal inside Kubernetes. Sectigo's manager covers a wider estate."
+        }
+      ],
+      "related": [
+        "acme",
+        "cert-manager"
+      ],
+      "notes": [
+        "ACME and pricing are not on the page read (unconfirmed)."
+      ],
+      "links": [
+        {
+          "label": "Sectigo",
+          "url": "https://www.sectigo.com/"
+        }
+      ],
+      "sections": [
+        {
+          "title": "What the vendor says",
+          "items": [
+            "Offers OV, DV and EV SSL, code signing, email security (S/MIME) and VMC/CMC certificates.",
+            "Sectigo Certificate Manager discovers, deploys, renews and replaces certificates, with 50+ integrations."
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "Sectigo",
+          "url": "https://www.sectigo.com/"
+        }
+      ]
+    },
+    {
+      "id": "globalsign",
+      "name": "GlobalSign",
+      "group": "paid",
+      "level": "ref",
+      "summary": "Commercial certificate authority: DV, OV and EV SSL, an ACME service and the Atlas platform. Closest open source alternative: Let's Encrypt.",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "Not stated on the vendor page read",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "Commercial product, not a CNCF project."
+      },
+      "license": "Proprietary (commercial)",
+      "version": {
+        "name": "GlobalSign",
+        "analysed": "vendor page read 2026-10-26",
+        "released": "2026-10-26",
+        "docs": "vendor page, no version or date shown on it",
+        "checked": "2026-10-26"
+      },
+      "compare": [
+        {
+          "with": "acme",
+          "text": "Let's Encrypt issues free DV certificates over ACME."
+        },
+        {
+          "with": "step-ca",
+          "text": "step-ca is the open source choice for a private CA and ACME server."
+        }
+      ],
+      "related": [
+        "acme",
+        "step-ca",
+        "azure-key-vault-certs"
+      ],
+      "notes": [
+        "Azure Key Vault lists GlobalSign as an integrated issuer. Validation requirements and Atlas features are not on the page read."
+      ],
+      "links": [
+        {
+          "label": "GlobalSign SSL",
+          "url": "https://www.globalsign.com/en/ssl"
+        }
+      ],
+      "sections": [
+        {
+          "title": "What the vendor says",
+          "items": [
+            "SSL/TLS certificates: DV, OV and EV, with wildcard and multi-domain options. Atlas is described as a digital identity platform. A SaaS \"ACME\" service automates TLS certificate management.",
+            "Also listed: Certificate Automation Manager, Managed PKI, PKI for DevSecOps, document signing, S/MIME, code signing, IoT identity and custom CAs. No prices on the page."
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "GlobalSign SSL",
+          "url": "https://www.globalsign.com/en/ssl"
+        }
+      ]
+    },
+    {
+      "id": "cyberark-certificate-manager",
+      "name": "CyberArk Certificate Manager (Venafi)",
+      "group": "paid",
+      "level": "ref",
+      "summary": "Commercial certificate lifecycle management, now delivered by Palo Alto Networks. The evolution of Venafi TLS Protect. Closest open source alternative: cert-manager.",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "Not stated on the vendor page read",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "Commercial product, not a CNCF project."
+      },
+      "license": "Proprietary (commercial)",
+      "version": {
+        "name": "CyberArk Certificate Manager (Venafi)",
+        "analysed": "vendor page read 2026-10-26",
+        "released": "2026-10-26",
+        "docs": "vendor page, no version or date shown on it",
+        "checked": "2026-10-26"
+      },
+      "compare": [
+        {
+          "with": "cert-manager",
+          "text": "cert-manager is the open source Kubernetes operator. It can use this product as an issuer, so they are complements as much as competitors."
+        }
+      ],
+      "related": [
+        "cert-manager",
+        "step-ca"
+      ],
+      "notes": [
+        "Kubernetes integration and pricing are not on the vendor page read. Ownership as described is only what that page says."
+      ],
+      "links": [
+        {
+          "label": "Certificate Manager at Palo Alto Networks",
+          "url": "https://www.paloaltonetworks.com/network-security/next-gen-trust-security/certificate-manager"
+        }
+      ],
+      "sections": [
+        {
+          "title": "What the vendor says",
+          "items": [
+            "The page says it is \"the evolution of the SaaS certificate lifecycle management offering previously known as Venafi TLS Protect\", later CyberArk Certificate Manager SaaS. Palo Alto Networks now delivers it under Next-Generation Trust Security (NGTS), with CyberArk named as the prior owner.",
+            "It helps manage machine identities, modernise PKI and automate certificate operations. A self-hosted Certificate Manager is mentioned and still receives investment.",
+            "The cert-manager docs list \"CyberArk Certificate Manager\" among its issuers (the URLs use venafi)."
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "Certificate Manager at Palo Alto Networks",
+          "url": "https://www.paloaltonetworks.com/network-security/next-gen-trust-security/certificate-manager"
+        }
+      ]
+    },
+    {
+      "id": "keyfactor-command",
+      "name": "Keyfactor Command",
+      "group": "paid",
+      "level": "ref",
+      "summary": "Commercial certificate lifecycle management from Keyfactor. Closest open source alternative: EJBCA Community Edition for the CA side.",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "Not stated on the vendor page read",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "Commercial product, not a CNCF project."
+      },
+      "license": "Proprietary (commercial)",
+      "version": {
+        "name": "Keyfactor Command",
+        "analysed": "vendor page read 2026-10-26",
+        "released": "2026-10-26",
+        "docs": "vendor page, no version or date shown on it",
+        "checked": "2026-10-26"
+      },
+      "compare": [
+        {
+          "with": "ejbca",
+          "text": "EJBCA CE is an open source CA from the same vendor. Command manages certificates across CAs. The page read does not say how they relate."
+        },
+        {
+          "with": "cert-manager",
+          "text": "cert-manager handles certificates for Kubernetes workloads only."
+        }
+      ],
+      "related": [
+        "ejbca",
+        "cert-manager"
+      ],
+      "notes": [
+        "The page does not describe a relation to EJBCA. Keyfactor sells a commercial EJBCA edition, which is not covered here."
+      ],
+      "links": [
+        {
+          "label": "Keyfactor Command",
+          "url": "https://www.keyfactor.com/products/keyfactor-command/"
+        }
+      ],
+      "sections": [
+        {
+          "title": "What the vendor says",
+          "items": [
+            "\"Discover, manage, and automate the lifecycle of every machine identity.\" Covers discovery, inventory, renewal and provisioning alerts, role based access, audit logging and self-service enrollment.",
+            "A 30-day free Test Drive and a demo request. No prices."
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "Keyfactor Command",
+          "url": "https://www.keyfactor.com/products/keyfactor-command/"
         }
       ]
     }
