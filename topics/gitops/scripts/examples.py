@@ -52,7 +52,8 @@ def blocks(url, pages):
                 if n == 2:
                     raise
                 time.sleep(2 * (n + 1))
-        pages[url] = [html.unescape(re.sub(r"<[^>]+>", "", b)).strip("\n") for b in re.findall(r"<pre[^>]*>(.*?)</pre>", page, flags=re.S)]
+        # some sites (Docusaurus) end each code line with <br/> instead of a newline
+        pages[url] = [html.unescape(re.sub(r"<[^>]+>", "", re.sub(r"<br\s*/?>", "\n", b))).strip("\n") for b in re.findall(r"<pre[^>]*>(.*?)</pre>", page, flags=re.S)]
     return pages[url]
 
 

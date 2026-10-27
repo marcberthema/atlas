@@ -46,8 +46,9 @@ that changed and `checked` together.
 
 ## Learning layout
 
-An entry whose sections all have a `part` is drawn as a page to learn from instead of a list of bullets (the Argo CD entry is the first).
-Entries without `part` render as before. Either every section of an entry has a `part` or none does.
+An entry whose sections all have a `part` is drawn as a page to learn from: a jump bar, then Overview, Use it, Run it and a collapsed Reference. The five tab
+entries use it. A short entry (an overview or a reference card) has no `part`: it gets the same header and the same item types, with its sections one
+after another and no jump bar. Either every section of an entry has a `part` or none does.
 
 | Section field | Meaning |
 |---|---|

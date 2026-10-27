@@ -88,7 +88,7 @@ figure.code{margin:8px 0;border:1px solid var(--rule);border-radius:8px;overflow
 .ch .lang{color:var(--mut);font-size:.78rem;text-transform:uppercase}
 .cp{font:inherit;font-size:.8rem;display:inline-flex;gap:4px;align-items:center;color:var(--fg);background:var(--bg);border:1px solid var(--rule);border-radius:6px;padding:2px 8px;cursor:pointer}
 .cp .ic{width:14px;height:14px}
-figure.code pre{margin:0;padding:10px 12px;overflow-x:auto;background:var(--bg)}
+figure.code pre{margin:0;padding:10px 12px;overflow:auto;max-height:24em;background:var(--bg)}
 figure.code pre code{background:none;border:0;padding:0}
 figure.code figcaption{font-size:.8rem;color:var(--mut);padding:4px 10px;border-top:1px solid var(--rule)}
 .co{display:flex;gap:10px;align-items:flex-start;border:1px solid var(--rule);border-left-width:4px;border-radius:6px;padding:8px 12px;margin:8px 0;background:var(--card);font-size:.93rem}
@@ -206,8 +206,8 @@ function link(id){return byId[id]?'<a href="#'+esc(id)+'" data-id="'+esc(id)+'">
 
 // Learning layout. Icons come from the sprite at the top of the page.
 const ic=n=>'<svg class="ic" aria-hidden="true"><use href="#i-'+n+'"/></svg>';
-// `code` and [label](url) in text. A url is https or a relative page of this site.
-const md=s=>esc(s).replace(/`([^`]+)`/g,'<code>$1</code>').replace(/\[([^\]]+)\]\(((?:https:\/\/|\.\.\/)[^)\s]+)\)/g,(m,l,u)=>'<a href="'+u+'"'+(u.startsWith('https')?' target="_blank" rel="noopener"':'')+'>'+l+'</a>');
+// `code` and [label](url) in text. A url is https, a relative page of this site, or #entry-id.
+const md=s=>esc(s).replace(/`([^`]+)`/g,'<code>$1</code>').replace(/\[([^\]]+)\]\(((?:https:\/\/|\.\.\/|#)[^)\s]+)\)/g,(m,l,u)=>u[0]==='#'?'<a href="'+u+'" data-id="'+u.slice(1)+'">'+l+'</a>':'<a href="'+u+'"'+(u.startsWith('https')?' target="_blank" rel="noopener"':'')+'>'+l+'</a>');
 const PARTS=[{id:'overview',label:'Overview',icon:'book',lead:'What it is and how it works'},{id:'use',label:'Use it',icon:'play',lead:'Typical use, step by step'},
   {id:'run',label:'Run it',icon:'server',lead:'Owning and operating it'},{id:'reference',label:'Reference',icon:'list',lead:'Lookup tables'}];
 const CALLOUT={gotcha:['alert','Watch out'],default:['info','Default'],prod:['shield','In production'],tip:['bulb','Tip']};
@@ -258,10 +258,12 @@ function learning(e){
     +'<details class="ae"><summary>About this entry: sources and how it was checked</summary><div class="ver"><div><span>Source:</span> '+esc(v.docs||'')+'</div>'
     +'<div><span>Started:</span> '+started(e)+' <span>('+esc(e.started.basis)+')</span></div>'+(e.maintainer?'<div><span>Maintainer:</span> '+esc(e.maintainer)+'</div>':'')
     +'<div><span>CNCF:</span> '+esc(e.cncf.text)+'</div></div></details>';
+  const flat=!e.sections.some(s=>s.part);  // a short entry: its sections one after another, no parts and no jump bar
   const parts=PARTS.filter(p=>e.sections.some(s=>s.part===p.id));
-  h+='<nav class="jump" aria-label="On this page">'+parts.map(p=>'<a href="#'+pid(p.id)+'" data-jump="'+pid(p.id)+'">'+ic(p.icon)+esc(p.label)+'</a>').join('')
+  if(!flat)h+='<nav class="jump" aria-label="On this page">'+parts.map(p=>'<a href="#'+pid(p.id)+'" data-jump="'+pid(p.id)+'">'+ic(p.icon)+esc(p.label)+'</a>').join('')
     +'<a href="#'+pid('more')+'" data-jump="'+pid('more')+'">'+ic('scale')+'Compared and sources</a></nav>';
   if(e.links&&e.links.length)h+='<div class="pills">'+e.links.map(l=>'<a href="'+esc(l.url)+'" target="_blank" rel="noopener">'+esc(l.label)+ic('ext')+'</a>').join('')+'</div>';
+  if(flat)e.sections.forEach(x=>{h+='<div class="sec"><h4>'+(x.icon?ic(x.icon):'')+esc(x.title)+'</h4>'+(x.intro?'<p class="lead">'+md(x.intro)+'</p>':'')+items(x.items,e.id)+'</div>';});
   parts.forEach(p=>{
     h+='<section class="part" id="'+pid(p.id)+'"><h3 class="ph">'+ic(p.icon)+esc(p.label)+'<small>'+esc(p.lead)+'</small></h3>';
     e.sections.filter(s=>s.part===p.id).forEach(s=>{
@@ -271,7 +273,7 @@ function learning(e){
     });
     h+='</section>';
   });
-  h+='<section class="part" id="'+pid('more')+'"><h3 class="ph">'+ic('scale')+'Compared and sources<small>How it relates, what is not confirmed, where it comes from</small></h3>';
+  h+=flat?'<section class="part" id="'+pid('more')+'">':'<section class="part" id="'+pid('more')+'"><h3 class="ph">'+ic('scale')+'Compared and sources<small>How it relates, what is not confirmed, where it comes from</small></h3>';
   if(e.compare&&e.compare.length)h+='<h4>Compared</h4><ul>'+e.compare.map(c=>'<li>'+link(c.with)+': '+md(c.text)+'</li>').join('')+'</ul>';
   if(e.related&&e.related.length)h+='<h4>Related</h4><p>'+e.related.map(link).join(', ')+'</p>';
   if(e.notes&&e.notes.length)h+='<h4>Unconfirmed and notes</h4><div class="nt"><ul>'+e.notes.map(n=>'<li>'+md(n)+'</li>').join('')+'</ul></div>';
@@ -279,24 +281,7 @@ function learning(e){
   return h;
 }
 
-function detail(e){
-  if(e.sections.some(s=>s.part))return learning(e);
-  const v=e.version;
-  let h='<h3>'+esc(e.name)+'</h3><p class="meta">'+esc(e.summary)+'</p>'
-    +'<div class="ver"><div><b>Version analysed:</b> '+esc(v.name)+' '+esc(v.analysed)+' <span>(released '+esc(v.released)+')</span></div>'
-    +(v.docs?'<div><span>Source:</span> '+esc(v.docs)+'</div>':'')
-    +'<div><span>Checked:</span> '+esc(v.checked)+'</div>'
-    +'<div><span>Started:</span> '+started(e)+' <span>('+esc(e.started.basis)+')</span></div>'
-    +'<div><span>Status:</span> '+esc(e.status)+' &middot; <span>Licence:</span> '+esc(e.license)+(e.maintainer?' &middot; <span>Maintainer:</span> '+esc(e.maintainer):'')+'</div>'
-    +'<div><span>CNCF:</span> '+esc(e.cncf.text)+'</div></div>';
-  if(e.links&&e.links.length)h+='<h4>Links</h4><ul class="lk">'+e.links.map(l=>'<li><a href="'+esc(l.url)+'" target="_blank" rel="noopener">'+esc(l.label)+'</a></li>').join('')+'</ul>';
-  h+=e.sections.map(s=>'<h4>'+esc(s.title)+'</h4><ul>'+s.items.map(i=>'<li>'+esc(i)+'</li>').join('')+'</ul>').join('');
-  if(e.compare&&e.compare.length)h+='<h4>Compared</h4><ul>'+e.compare.map(c=>'<li>'+link(c.with)+': '+esc(c.text)+'</li>').join('')+'</ul>';
-  if(e.related&&e.related.length)h+='<h4>Related</h4><p>'+e.related.map(link).join(', ')+'</p>';
-  if(e.notes&&e.notes.length)h+='<h4>Unconfirmed and notes</h4><div class="nt"><ul>'+e.notes.map(n=>'<li>'+esc(n)+'</li>').join('')+'</ul></div>';
-  h+='<h4>Sources</h4><ul>'+e.sources.map(s=>'<li><a href="'+esc(s.url)+'" target="_blank" rel="noopener">'+esc(s.label)+'</a> <span class="badge">'+(s.date?'page dated '+esc(s.date):'no date on page')+'</span></li>').join('')+'</ul>';
-  return h;
-}
+function detail(e){return learning(e);}
 
 function open(id,push){
   const e=byId[id];if(!e)return;

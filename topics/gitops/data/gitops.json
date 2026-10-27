@@ -74,21 +74,211 @@
       ],
       "sections": [
         {
-          "title": "The four principles (v1.0.0)",
+          "title": "In one minute",
+          "part": "overview",
+          "icon": "eye",
           "items": [
-            "Declarative: the system's desired state is expressed declaratively.",
-            "Versioned and immutable: desired state is stored so that it is immutable, versioned and keeps a complete history.",
-            "Pulled automatically: software agents automatically pull the desired state from the source.",
-            "Continuously reconciled: agents continuously observe the actual state and try to apply the desired state."
+            "GitOps is a way to run a system where the desired state lives in version control, and software agents keep the real system equal to it.",
+            "OpenGitOps (v1.0.0) states it as four principles. Everything else on this page, Argo CD, Flux, Helm and Kustomize, is a tool to apply them.",
+            {
+              "type": "diagram",
+              "alt": "In a push model a CI pipeline applies changes to the cluster. In a pull model an agent in the cluster fetches the desired state from Git and applies it.",
+              "caption": "Push or pull: who touches the cluster.",
+              "w": 720,
+              "h": 250,
+              "boxes": [
+                {
+                  "x": 10,
+                  "y": 14,
+                  "w": 700,
+                  "h": 92,
+                  "label": "Push (CI applies)"
+                },
+                {
+                  "x": 10,
+                  "y": 136,
+                  "w": 700,
+                  "h": 98,
+                  "label": "Pull (what GitOps means)"
+                }
+              ],
+              "nodes": [
+                {
+                  "id": "ci1",
+                  "x": 90,
+                  "y": 60,
+                  "w": 120,
+                  "h": 34,
+                  "label": "CI pipeline"
+                },
+                {
+                  "id": "c1",
+                  "x": 330,
+                  "y": 60,
+                  "w": 150,
+                  "h": 38,
+                  "label": "Cluster",
+                  "kind": "hub"
+                },
+                {
+                  "id": "git1",
+                  "x": 570,
+                  "y": 60,
+                  "w": 130,
+                  "h": 34,
+                  "label": "Git",
+                  "kind": "store"
+                },
+                {
+                  "id": "git2",
+                  "x": 90,
+                  "y": 185,
+                  "w": 130,
+                  "h": 34,
+                  "label": "Git",
+                  "kind": "store"
+                },
+                {
+                  "id": "ag",
+                  "x": 330,
+                  "y": 185,
+                  "w": 150,
+                  "h": 38,
+                  "label": "Agent in cluster",
+                  "kind": "hub"
+                },
+                {
+                  "id": "c2",
+                  "x": 570,
+                  "y": 185,
+                  "w": 130,
+                  "h": 34,
+                  "label": "Cluster"
+                }
+              ],
+              "links": [
+                {
+                  "from": "ci1",
+                  "to": "c1",
+                  "label": "applies",
+                  "arrow": "to"
+                },
+                {
+                  "from": "git1",
+                  "to": "ci1",
+                  "label": "triggers",
+                  "arrow": "to",
+                  "dashed": true,
+                  "dy": -24
+                },
+                {
+                  "from": "git2",
+                  "to": "ag",
+                  "label": "agent fetches",
+                  "arrow": "to"
+                },
+                {
+                  "from": "ag",
+                  "to": "c2",
+                  "label": "applies",
+                  "arrow": "to"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": "The four principles (v1.0.0)",
+          "part": "overview",
+          "icon": "check",
+          "items": [
+            {
+              "type": "cards",
+              "cards": [
+                {
+                  "icon": "file",
+                  "title": "Declarative",
+                  "text": "The system's desired state is expressed declaratively."
+                },
+                {
+                  "icon": "git",
+                  "title": "Versioned and immutable",
+                  "text": "Desired state is stored so that it is immutable, versioned and keeps a complete history."
+                },
+                {
+                  "icon": "download",
+                  "title": "Pulled automatically",
+                  "text": "Software agents automatically pull the desired state from the source."
+                },
+                {
+                  "icon": "sync",
+                  "title": "Continuously reconciled",
+                  "text": "Agents continuously observe the actual state and try to apply the desired state."
+                }
+              ]
+            }
           ]
         },
         {
           "title": "What they mean in practice",
+          "part": "overview",
+          "icon": "bulb",
           "items": [
-            "Pull is the confusing one. In a push pipeline, CI applies changes to the cluster. In a pull model, an agent fetches the desired state and applies it itself. Argo CD's docs say that with automated sync, CI only has to push a commit and not call the Argo CD API.",
-            "The source is not always Git. Flux sources can be Git, OCI artifacts, Helm repositories or buckets. Argo CD's docs describe Git as the source of truth.",
-            "Reconciling means drift is corrected, not just reported. Flux reverts manual kubectl changes on the next reconcile. Argo CD only does it when selfHeal is on, and it is off by default.",
-            "A GitOps operator needs a way to render the desired state: plain YAML, Helm or Kustomize. See the Helm and Kustomize entries."
+            {
+              "type": "callout",
+              "kind": "tip",
+              "text": "In a push pipeline, CI applies changes to the cluster. In a pull model, an agent fetches the desired state and applies it itself. Argo CD's docs say that with automated sync, CI only has to push a commit and not call the Argo CD API.",
+              "title": "Pull is the confusing one"
+            },
+            {
+              "type": "callout",
+              "kind": "default",
+              "text": "Flux sources can be Git, OCI artifacts, Helm repositories or buckets. Argo CD's docs describe Git as the source of truth.",
+              "title": "The source is not always Git"
+            },
+            {
+              "type": "callout",
+              "kind": "gotcha",
+              "text": "Reconciling means drift is corrected, not just reported. Flux reverts manual `kubectl` changes on the next reconcile. Argo CD only does it when `selfHeal` is on, and it is off by default.",
+              "title": "Drift is corrected"
+            },
+            "A GitOps operator needs a way to render the desired state: plain YAML, Helm or Kustomize. See [Helm](#helm) and [Kustomize](#kustomize)."
+          ]
+        },
+        {
+          "title": "Where to go next",
+          "part": "use",
+          "icon": "play",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "You want to",
+                "Start with"
+              ],
+              "rows": [
+                [
+                  "Deploy to Kubernetes from Git, with a UI",
+                  "[Argo CD](#argo-cd)"
+                ],
+                [
+                  "Run a set of controllers in each cluster",
+                  "[Flux](#flux)"
+                ],
+                [
+                  "Package or template manifests",
+                  "[Helm](#helm)"
+                ],
+                [
+                  "Patch plain YAML per environment",
+                  "[Kustomize](#kustomize)"
+                ],
+                [
+                  "See every other operator and tool",
+                  "The Other tools and Compare tabs"
+                ]
+              ]
+            }
           ]
         }
       ],
@@ -1573,54 +1763,384 @@
       ],
       "sections": [
         {
-          "title": "Controllers and objects",
+          "title": "In one minute",
+          "part": "overview",
+          "icon": "eye",
           "items": [
-            "Source controller: GitRepository, OCIRepository, HelmRepository, HelmChart, Bucket, ExternalArtifact, ArtifactGenerator. A source is checked on an interval and produces an artifact when there is a newer matching version.",
-            "Kustomize controller: Kustomization applies a path of a source, built with Kustomize.",
-            "Helm controller: HelmRelease performs a Helm release when the resource or the chart revision changes.",
-            "Notification controller: Provider, Alert, Receiver. Image reflector controller: ImageRepository, ImagePolicy. Image automation controller: ImageUpdateAutomation, which commits image updates back to Git.",
-            "Installed in the flux-system namespace by flux bootstrap, which supports GitHub, GitLab, Bitbucket Server and Data Center, Gitea, Azure DevOps, AWS CodeCommit, Google Cloud Source Repositories, Oracle VBS and a generic Git server."
+            "Flux is a set of Kubernetes controllers (the GitOps Toolkit) that keep a cluster in line with Git, OCI, Helm or bucket sources. It is the closest competitor to Argo CD.",
+            "Each controller owns a few custom resources. A source controller fetches, and the kustomize and helm controllers apply what was fetched.",
+            {
+              "type": "diagram",
+              "alt": "Flux sources (Git, OCI, Helm, bucket) are fetched by the source controller, which hands artifacts to the kustomize and helm controllers, which apply to the cluster. The notification controller sends events out. The image controllers commit image updates back to Git.",
+              "caption": "The Flux controllers, in the flux-system namespace.",
+              "w": 720,
+              "h": 300,
+              "boxes": [
+                {
+                  "x": 240,
+                  "y": 12,
+                  "w": 455,
+                  "h": 160,
+                  "label": "flux-system namespace"
+                }
+              ],
+              "nodes": [
+                {
+                  "id": "src",
+                  "x": 90,
+                  "y": 70,
+                  "w": 120,
+                  "h": 60,
+                  "label": "Sources",
+                  "sub": "Git, OCI, Helm, bucket",
+                  "kind": "store"
+                },
+                {
+                  "id": "sc",
+                  "x": 290,
+                  "y": 70,
+                  "w": 150,
+                  "h": 40,
+                  "label": "Source controller",
+                  "sub": "GitRepository, ...",
+                  "kind": "hub"
+                },
+                {
+                  "id": "kc",
+                  "x": 520,
+                  "y": 40,
+                  "w": 160,
+                  "h": 36,
+                  "label": "Kustomize controller",
+                  "sub": "Kustomization"
+                },
+                {
+                  "id": "hc",
+                  "x": 520,
+                  "y": 100,
+                  "w": 160,
+                  "h": 36,
+                  "label": "Helm controller",
+                  "sub": "HelmRelease"
+                },
+                {
+                  "id": "cl",
+                  "x": 660,
+                  "y": 220,
+                  "w": 100,
+                  "h": 40,
+                  "label": "Cluster",
+                  "kind": "ext"
+                },
+                {
+                  "id": "nc",
+                  "x": 290,
+                  "y": 200,
+                  "w": 160,
+                  "h": 40,
+                  "label": "Notification controller",
+                  "sub": "Provider, Alert, Receiver"
+                },
+                {
+                  "id": "ir",
+                  "x": 90,
+                  "y": 200,
+                  "w": 150,
+                  "h": 40,
+                  "label": "Image controllers",
+                  "sub": "reflector, automation"
+                }
+              ],
+              "links": [
+                {
+                  "from": "src",
+                  "to": "sc",
+                  "label": "fetch",
+                  "arrow": "to"
+                },
+                {
+                  "from": "sc",
+                  "to": "kc",
+                  "label": "artifact",
+                  "arrow": "to"
+                },
+                {
+                  "from": "sc",
+                  "to": "hc",
+                  "label": "artifact",
+                  "arrow": "to"
+                },
+                {
+                  "from": "kc",
+                  "to": "cl",
+                  "arrow": "to"
+                },
+                {
+                  "from": "hc",
+                  "to": "cl",
+                  "arrow": "to"
+                },
+                {
+                  "from": "ir",
+                  "to": "src",
+                  "label": "commits update",
+                  "arrow": "to",
+                  "dashed": true
+                },
+                {
+                  "from": "nc",
+                  "to": "cl",
+                  "label": "events",
+                  "dashed": true
+                }
+              ]
+            }
           ]
         },
         {
-          "title": "Kustomization",
+          "title": "Key ideas",
+          "part": "overview",
+          "icon": "grid",
           "items": [
-            "Reconciles on interval (minimum 60 seconds; the concepts page says every five minutes by default). Manual kubectl changes are 'promptly reverted'. Suspend it to keep a manual change.",
-            "prune is required and removes objects deleted from the source. wait and healthChecks check health after apply. dependsOn orders Kustomizations.",
-            "postBuild.substitute and substituteFrom replace variables. decryption with provider sops decrypts SOPS-encrypted secrets, the only provider supported.",
-            "serviceAccountName makes Flux impersonate a service account, for multi-tenancy. targetNamespace, patches, images and components (experimental) work as in Kustomize.",
-            "If the path has no kustomization.yaml, Flux generates one for the manifests it finds. The docs recommend committing your own."
+            {
+              "type": "cards",
+              "cards": [
+                {
+                  "icon": "git",
+                  "title": "Source",
+                  "text": "Where the desired state comes from: a GitRepository, OCIRepository, HelmRepository or Bucket. Checked on an interval; produces an artifact when there is a newer matching version."
+                },
+                {
+                  "icon": "layers",
+                  "title": "Kustomization",
+                  "text": "Applies a path of a source, built with Kustomize. Reconciles on an interval and reverts manual changes."
+                },
+                {
+                  "icon": "box",
+                  "title": "HelmRelease",
+                  "text": "Performs a Helm release when the resource or the chart revision changes."
+                },
+                {
+                  "icon": "bell",
+                  "title": "Notifications and images",
+                  "text": "Providers, Alerts and Receivers send and receive events. Image controllers can commit new image tags back to Git."
+                }
+              ]
+            }
           ]
         },
         {
-          "title": "HelmRelease",
+          "title": "Argo CD or Flux?",
+          "part": "overview",
+          "icon": "scale",
           "items": [
-            "Chart from chart (a template for a HelmChart or OCIRepository) or chartRef. values and valuesFrom (ConfigMap or Secret).",
-            "install, upgrade, rollback, uninstall and test sections. Remediation strategy for upgrades is rollback or uninstall. Strategies: RemediateOnFailure (default) or RetryOnFailure.",
-            "driftDetection mode warn or enabled, with ignore rules. postRenderers take Kustomize patches and images. dependsOn orders releases.",
-            "kubeConfig deploys to a remote cluster, from a Secret or, recommended, from a ConfigMap with workload identity."
+            {
+              "type": "callout",
+              "kind": "tip",
+              "text": "Argo CD is one application with a UI and an API server, and drift correction is opt-in (`selfHeal`). Flux is a set of controllers with custom resources, and its Kustomization reverts drift by default. See the Compare tab.",
+              "title": "Short version"
+            },
+            {
+              "text": "Whether Flux core has a web UI is not confirmed here. Flux Operator, a separate project, adds one.",
+              "unconfirmed": "Not stated on the pages read."
+            }
           ]
         },
         {
-          "title": "Repository layouts",
+          "title": "Install it: flux bootstrap",
+          "part": "use",
+          "step": 1,
+          "icon": "download",
           "items": [
-            "Monorepo (apps, infrastructure and clusters directories with Kustomize base and overlays), repo per environment, repo per team, repo per app.",
-            "Separating infrastructure from apps lets cluster add-ons reconcile first."
+            "Flux is installed in the `flux-system` namespace by `flux bootstrap`. It supports GitHub, GitLab, Bitbucket Server and Data Center, Gitea, Azure DevOps, AWS CodeCommit, Google Cloud Source Repositories, Oracle VBS and a generic Git server.",
+            {
+              "type": "code",
+              "title": "Bootstrap Flux from a GitHub repository",
+              "lang": "shell",
+              "match": "flux bootstrap github",
+              "source": {
+                "label": "Bootstrap with GitHub",
+                "url": "https://fluxcd.io/flux/installation/bootstrap/github/"
+              }
+            }
+          ]
+        },
+        {
+          "title": "Tell Flux what to deploy",
+          "part": "use",
+          "step": 2,
+          "icon": "layers",
+          "items": [
+            "Two objects do it: a source that says where, and a Kustomization that says which path to apply.",
+            {
+              "type": "code",
+              "title": "A GitRepository and a Kustomization that applies one of its paths",
+              "lang": "yaml",
+              "match": "interval: 10m",
+              "source": {
+                "label": "Kustomization API",
+                "url": "https://fluxcd.io/flux/components/kustomize/kustomizations/"
+              }
+            },
+            "The Kustomization reconciles on `interval` (minimum 60 seconds; the concepts page says every five minutes by default). Manual `kubectl` changes are \"promptly reverted\". Suspend it to keep a manual change.",
+            "`prune` is required and removes objects deleted from the source. `wait` and `healthChecks` check health after apply. `dependsOn` orders Kustomizations.",
+            {
+              "type": "callout",
+              "kind": "tip",
+              "text": "If the path has no `kustomization.yaml`, Flux generates one for the manifests it finds. The docs recommend committing your own."
+            }
+          ]
+        },
+        {
+          "title": "Tune a Kustomization",
+          "part": "use",
+          "step": 3,
+          "icon": "wrench",
+          "items": [
+            "`postBuild.substitute` and `substituteFrom` replace variables. `decryption` with provider `sops` decrypts SOPS-encrypted secrets; it is the only provider supported.",
+            "`serviceAccountName` makes Flux impersonate a service account, for multi-tenancy. `targetNamespace`, `patches`, `images` and `components` (experimental) work as in Kustomize.",
+            {
+              "type": "code",
+              "title": "A Kustomization with health checks",
+              "lang": "yaml",
+              "match": "healthCheckExprs:",
+              "source": {
+                "label": "Kustomization API",
+                "url": "https://fluxcd.io/flux/components/kustomize/kustomizations/"
+              }
+            }
+          ]
+        },
+        {
+          "title": "Deploy a Helm chart",
+          "part": "use",
+          "step": 4,
+          "icon": "box",
+          "items": [
+            "A HelmRelease performs a real Helm release: install, upgrade, rollback, uninstall and test.",
+            {
+              "type": "code",
+              "title": "A HelmRelease from an OCI chart",
+              "lang": "yaml",
+              "match": "kind: HelmRelease\nmetadata:\n  name: podinfo",
+              "source": {
+                "label": "HelmRelease API",
+                "url": "https://fluxcd.io/flux/components/helm/helmreleases/"
+              }
+            },
+            "The chart comes from `chart` (a template for a HelmChart or OCIRepository) or `chartRef`. Values come from `values` and `valuesFrom` (a ConfigMap or Secret).",
+            "Remediation for failed upgrades is `rollback` or `uninstall`. Strategies: `RemediateOnFailure` (default) or `RetryOnFailure`. `driftDetection` has mode `warn` or `enabled`, with ignore rules. `postRenderers` take Kustomize patches and images. `dependsOn` orders releases.",
+            "`kubeConfig` deploys to a remote cluster, from a Secret or, recommended, from a ConfigMap with workload identity."
+          ]
+        },
+        {
+          "title": "Organise the repository",
+          "part": "use",
+          "step": 5,
+          "icon": "folder",
+          "items": [
+            "Layouts from the Flux guide: a monorepo (`apps`, `infrastructure` and `clusters` directories with Kustomize base and overlays), a repository per environment, per team, or per app.",
+            {
+              "type": "callout",
+              "kind": "tip",
+              "text": "Separating infrastructure from apps lets cluster add-ons reconcile first."
+            },
+            "More layouts, with diagrams of the directory trees, are in the repository structure guide linked under Sources."
           ]
         },
         {
           "title": "Security",
+          "part": "run",
+          "icon": "shield",
           "items": [
-            "Only the Kustomize and Helm controllers are bound to cluster-admin. Tenants run through impersonated service accounts. Cross-namespace references to Secrets and ConfigMaps are blocked by default.",
+            {
+              "type": "callout",
+              "kind": "prod",
+              "text": "Only the Kustomize and Helm controllers are bound to cluster-admin. Tenants run through impersonated service accounts. Cross-namespace references to Secrets and ConfigMaps are blocked by default.",
+              "title": "Least privilege"
+            },
             "Images are signed with Cosign, each release has an SPDX SBOM, and from v2.0.0 the pipeline provisionally meets SLSA Build Level 3."
           ]
         },
         {
-          "title": "Releases and history",
+          "title": "Releases and support",
+          "part": "run",
+          "icon": "up",
           "items": [
-            "A minor release at least every four months. The last three minor releases are supported. Kubernetes support is N-2 of what is supported upstream.",
-            "Flux v1 (2016) is end of life and archived. Flux v2 first release v0.0.1-alpha.1 on 2020-05-06 and v2.0.0 on 2023-07-05.",
+            {
+              "type": "table",
+              "columns": [
+                "",
+                "Flux"
+              ],
+              "rows": [
+                [
+                  "Cadence",
+                  "a minor release at least every four months"
+                ],
+                [
+                  "Support",
+                  "the last three minor releases"
+                ],
+                [
+                  "Kubernetes",
+                  "N-2 of what is supported upstream"
+                ]
+              ]
+            },
+            "Flux v1 (2016) is end of life and archived. Flux v2's first release was v0.0.1-alpha.1 on 2020-05-06, and v2.0.0 was on 2023-07-05.",
             "Weaveworks, the company behind Flux, shut down in early February 2024. Flux is a CNCF graduated project and kept going."
+          ]
+        },
+        {
+          "title": "Open questions",
+          "part": "run",
+          "icon": "help",
+          "items": [
+            {
+              "text": "Whether the Helm controller uses the Helm SDK, as opposed to `helm template`, is not confirmed by the pages read.",
+              "unconfirmed": "Not stated on the pages read."
+            }
+          ]
+        },
+        {
+          "title": "Objects by controller",
+          "part": "reference",
+          "icon": "list",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Controller",
+                "Objects"
+              ],
+              "rows": [
+                [
+                  "Source",
+                  "GitRepository, OCIRepository, HelmRepository, HelmChart, Bucket, ExternalArtifact, ArtifactGenerator"
+                ],
+                [
+                  "Kustomize",
+                  "Kustomization"
+                ],
+                [
+                  "Helm",
+                  "HelmRelease"
+                ],
+                [
+                  "Notification",
+                  "Provider, Alert, Receiver"
+                ],
+                [
+                  "Image reflector",
+                  "ImageRepository, ImagePolicy"
+                ],
+                [
+                  "Image automation",
+                  "ImageUpdateAutomation, which commits image updates back to Git"
+                ]
+              ]
+            }
           ]
         }
       ],
@@ -1685,6 +2205,10 @@
         {
           "label": "SD Times: Weaveworks shuts down",
           "url": "https://sdtimes.com/softwaredev/state-of-gitops-now-in-flux-as-weaveworks-shuts-down/"
+        },
+        {
+          "label": "GitRepository API",
+          "url": "https://fluxcd.io/flux/components/source/gitrepositories/"
         }
       ]
     },
@@ -2431,142 +2955,703 @@
       ],
       "sections": [
         {
-          "title": "Concepts",
+          "title": "In one minute",
+          "part": "overview",
+          "icon": "eye",
           "items": [
-            "Chart: a package of Kubernetes resources. Repository: where charts are published. Release: a named installation of a chart in a cluster. Revision: the release's version number, starting at 1 and going up with each install, upgrade or rollback.",
-            "helm search hub searches Artifact Hub. helm search repo searches repositories you added."
+            "Helm is the package manager for Kubernetes. A chart is a package of templates and default values. Helm renders it with your values and installs it as a named release that it tracks and can roll back.",
+            {
+              "type": "diagram",
+              "alt": "A chart's templates and default values are combined with your values by helm to produce manifests, which are installed in the cluster as a release with numbered revisions.",
+              "caption": "From chart to release.",
+              "w": 720,
+              "h": 230,
+              "nodes": [
+                {
+                  "id": "chart",
+                  "x": 100,
+                  "y": 70,
+                  "w": 150,
+                  "h": 50,
+                  "label": "Chart",
+                  "sub": "templates + default values",
+                  "kind": "store"
+                },
+                {
+                  "id": "vals",
+                  "x": 100,
+                  "y": 170,
+                  "w": 150,
+                  "h": 36,
+                  "label": "Your values",
+                  "sub": "-f file, --set",
+                  "kind": "ext"
+                },
+                {
+                  "id": "helm",
+                  "x": 340,
+                  "y": 120,
+                  "w": 130,
+                  "h": 48,
+                  "label": "helm",
+                  "sub": "renders and installs",
+                  "kind": "hub"
+                },
+                {
+                  "id": "man",
+                  "x": 540,
+                  "y": 60,
+                  "w": 130,
+                  "h": 36,
+                  "label": "Manifests"
+                },
+                {
+                  "id": "rel",
+                  "x": 570,
+                  "y": 180,
+                  "w": 160,
+                  "h": 48,
+                  "label": "Release",
+                  "sub": "revision 1, 2, 3...",
+                  "kind": "hub"
+                }
+              ],
+              "links": [
+                {
+                  "from": "chart",
+                  "to": "helm",
+                  "arrow": "to"
+                },
+                {
+                  "from": "vals",
+                  "to": "helm",
+                  "arrow": "to"
+                },
+                {
+                  "from": "helm",
+                  "to": "man",
+                  "label": "renders",
+                  "arrow": "to"
+                },
+                {
+                  "from": "man",
+                  "to": "rel",
+                  "label": "installs",
+                  "arrow": "to"
+                },
+                {
+                  "from": "helm",
+                  "to": "rel",
+                  "arrow": "to"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Key ideas",
+          "part": "overview",
+          "icon": "grid",
+          "items": [
+            {
+              "type": "cards",
+              "cards": [
+                {
+                  "icon": "box",
+                  "title": "Chart",
+                  "text": "A package of Kubernetes resources."
+                },
+                {
+                  "icon": "folder",
+                  "title": "Repository",
+                  "text": "Where charts are published. `helm search hub` searches Artifact Hub, `helm search repo` searches repositories you added."
+                },
+                {
+                  "icon": "sync",
+                  "title": "Release",
+                  "text": "A named installation of a chart in a cluster."
+                },
+                {
+                  "icon": "clock",
+                  "title": "Revision",
+                  "text": "The release's version number. It starts at 1 and goes up with each install, upgrade or rollback."
+                }
+              ]
+            }
           ]
         },
         {
           "title": "Typical use",
+          "part": "overview",
+          "icon": "users",
           "items": [
-            "Alone: helm install with a published chart and a values file, for software someone else maintains. Or one chart of your own with a values file per environment.",
-            "With Kustomize: patch the output of a chart that has no value for what you need. Flux HelmRelease postRenderers apply Kustomize patches after Helm renders. Kustomize's own helmCharts field needs --enable-helm and covers a subset of Helm.",
-            "With Argo CD: it renders the chart with helm template and manages the lifecycle itself, so helm list does not show its applications. With Flux: the HelmRelease performs a real Helm release.",
-            "Choose Helm for packaging, defaults, release history and rollback. Choose Kustomize to vary plain YAML between environments without templates."
+            {
+              "type": "table",
+              "columns": [
+                "Situation",
+                "What people do"
+              ],
+              "rows": [
+                [
+                  "Software someone else maintains",
+                  "`helm install` a published chart with a values file"
+                ],
+                [
+                  "Your own app in several environments",
+                  "One chart of your own with a values file per environment"
+                ],
+                [
+                  "A chart has no value for what you need",
+                  "Patch its output with Kustomize. Flux HelmRelease `postRenderers` apply Kustomize patches after Helm renders. Kustomize's own `helmCharts` needs `--enable-helm` and covers a subset of Helm"
+                ],
+                [
+                  "Argo CD",
+                  "It renders the chart with `helm template` and manages the lifecycle itself, so `helm list` does not show its applications"
+                ],
+                [
+                  "Flux",
+                  "The HelmRelease performs a real Helm release"
+                ]
+              ]
+            },
+            {
+              "type": "callout",
+              "kind": "tip",
+              "text": "Choose Helm for packaging, defaults, release history and rollback. Choose [Kustomize](#kustomize) to vary plain YAML between environments without templates.",
+              "title": "Helm or Kustomize?",
+              "unconfirmed": "This is common practice, not a rule stated by a page read here."
+            }
           ]
         },
         {
-          "title": "Commands",
+          "title": "Find and install a chart",
+          "part": "use",
+          "step": 1,
+          "icon": "download",
           "items": [
-            "helm install <release> <chart> (or --generate-name), helm upgrade, helm rollback <release> <revision>, helm uninstall (--keep-history keeps the record), helm list, helm history, helm status.",
-            "helm show values, helm get values, helm create, helm lint, helm package. helm template renders locally and prints the result. See Render and upgrade flags.",
-            "--wait holds the command until pods are ready, PVCs are bound and Services have IPs, up to --timeout (default 5m0s). After the timeout the release is marked FAILED."
+            {
+              "type": "code",
+              "title": "Search Artifact Hub",
+              "lang": "shell",
+              "match": "helm search hub wordpress",
+              "source": {
+                "label": "Using Helm",
+                "url": "https://helm.sh/docs/intro/using_helm/"
+              }
+            },
+            {
+              "type": "code",
+              "title": "Install a release",
+              "lang": "shell",
+              "match": "helm install happy-panda bitnami/wordpress",
+              "source": {
+                "label": "Using Helm",
+                "url": "https://helm.sh/docs/intro/using_helm/"
+              }
+            },
+            "`helm install <release> <chart>` (or `--generate-name`). `--wait` holds the command until pods are ready, PVCs are bound and Services have IPs, up to `--timeout` (default `5m0s`). After the timeout the release is marked `FAILED`.",
+            "Look around: `helm list`, `helm status`, `helm history`, `helm show values`."
           ]
         },
         {
-          "title": "Chart layout",
+          "title": "Change values and upgrade",
+          "part": "use",
+          "step": 2,
+          "icon": "sync",
           "items": [
-            "Chart.yaml (required: apiVersion, name, version), values.yaml, templates/ with an optional NOTES.txt, charts/ for dependencies, crds/, values.schema.json.",
-            "apiVersion v2 is for Helm 3 and later. type is application (default) or library. Library charts only provide helpers and cannot be installed.",
-            "version is SemVer 2 and names the package. appVersion is the packaged app's version and is informational.",
-            "Since 3.3.2 unknown fields in Chart.yaml are not allowed. Custom data goes in annotations.",
-            "CRDs go in crds/. The old crd-install hook was removed in Helm 3."
+            {
+              "type": "code",
+              "title": "Values from a file",
+              "lang": "shell",
+              "match": "echo '{mariadb.auth.database",
+              "source": {
+                "label": "Using Helm",
+                "url": "https://helm.sh/docs/intro/using_helm/"
+              }
+            },
+            {
+              "type": "code",
+              "title": "Upgrade with a values file",
+              "lang": "shell",
+              "match": "helm upgrade -f panda.yaml happy-panda bitnami/wordpress",
+              "source": {
+                "label": "Using Helm",
+                "url": "https://helm.sh/docs/intro/using_helm/"
+              }
+            },
+            {
+              "type": "code",
+              "title": "See the values in use",
+              "lang": "shell",
+              "match": "helm get values happy-panda",
+              "source": {
+                "label": "Using Helm",
+                "url": "https://helm.sh/docs/intro/using_helm/"
+              }
+            },
+            {
+              "type": "table",
+              "columns": [
+                "Where a value comes from",
+                "Order"
+              ],
+              "rows": [
+                [
+                  "`values.yaml` in the chart",
+                  "defaults"
+                ],
+                [
+                  "`-f` / `--values` files",
+                  "override the defaults; with several files the rightmost wins"
+                ],
+                [
+                  "`--set`",
+                  "overrides `-f`"
+                ]
+              ]
+            },
+            {
+              "type": "callout",
+              "kind": "gotcha",
+              "text": "`--reset-values` drops earlier `--set` overrides on upgrade. `--reuse-values` keeps the previous release's values and ignores new chart defaults."
+            }
           ]
         },
         {
-          "title": "Values",
+          "title": "Roll back and uninstall",
+          "part": "use",
+          "step": 3,
+          "icon": "up",
           "items": [
-            "values.yaml holds defaults. -f/--values files override them, and with several the rightmost wins. --set overrides -f. --reset-values drops earlier --set overrides on upgrade.",
-            "values.schema.json (JSON Schema) validates the final values on install, upgrade, lint and template. --skip-schema-validation turns it off.",
-            "A parent chart sets a subchart's values under the subchart's name. Subcharts cannot see parent values. global values reach every chart, but only downward."
+            {
+              "type": "code",
+              "title": "Roll back to revision 1",
+              "lang": "shell",
+              "match": "helm rollback happy-panda 1",
+              "source": {
+                "label": "Using Helm",
+                "url": "https://helm.sh/docs/intro/using_helm/"
+              }
+            },
+            {
+              "type": "code",
+              "title": "Uninstall",
+              "lang": "shell",
+              "match": "helm uninstall happy-panda",
+              "source": {
+                "label": "Using Helm",
+                "url": "https://helm.sh/docs/intro/using_helm/"
+              }
+            },
+            "`helm rollback <release> <revision>`. `helm uninstall --keep-history` keeps the record."
           ]
         },
         {
-          "title": "Templates",
+          "title": "Write your own chart",
+          "part": "use",
+          "step": 4,
+          "icon": "file",
           "items": [
-            "Go templates plus the Sprig library, over 60 functions. Values are read from .Values, and .Release.Name is the release name.",
-            "Pipelines: .Values.favorite.drink | repeat 5 | quote. The piped value is the last argument. quote the strings you read from values. default gives a fallback for computed values.",
-            "lookup reads live cluster objects and returns empty when nothing matches. It does not run in --dry-run, so test it with --dry-run=server.",
-            "The full function list is on Helm's Template Function List page (linked in Sources). Many of its functions come from Sprig, and Helm removes Sprig's env and expandenv on purpose."
+            {
+              "type": "code",
+              "title": "Scaffold a chart",
+              "lang": "shell",
+              "match": "helm create mychart",
+              "source": {
+                "label": "Getting started with a chart",
+                "url": "https://helm.sh/docs/chart_template_guide/getting_started/"
+              }
+            },
+            {
+              "type": "code",
+              "title": "Layout of a chart directory",
+              "lang": "text",
+              "match": "wordpress/",
+              "source": {
+                "label": "Charts",
+                "url": "https://helm.sh/docs/topics/charts/"
+              }
+            },
+            "`Chart.yaml` (required: `apiVersion`, `name`, `version`), `values.yaml`, `templates/` with an optional `NOTES.txt`, `charts/` for dependencies, `crds/`, `values.schema.json`.",
+            "`apiVersion: v2` is for Helm 3 and later. `type` is `application` (default) or `library`; library charts only provide helpers and cannot be installed. `version` is SemVer 2 and names the package. `appVersion` is the packaged app's version and is informational.",
+            {
+              "type": "callout",
+              "kind": "gotcha",
+              "text": "Since 3.3.2 unknown fields in `Chart.yaml` are not allowed. Custom data goes in `annotations`. CRDs go in `crds/`; the old `crd-install` hook was removed in Helm 3."
+            },
+            {
+              "type": "code",
+              "title": "A template that uses the release name",
+              "lang": "yaml",
+              "match": "name: {{ .Release.Name }}-configmap",
+              "source": {
+                "label": "Getting started with a chart",
+                "url": "https://helm.sh/docs/chart_template_guide/getting_started/"
+              }
+            },
+            "`helm lint`, `helm package` and `helm template` check, package and render a chart."
           ]
         },
         {
-          "title": "Built-in objects",
+          "title": "Template language basics",
+          "part": "use",
+          "step": 5,
+          "icon": "layers",
           "items": [
-            "Release: Name, Namespace, IsInstall, IsUpgrade, Revision (starts at 1, goes up on each upgrade or rollback), Service (always Helm).",
-            "Values: from values.yaml and the files and flags you pass. Chart: the fields of Chart.yaml, such as .Chart.Name and .Chart.Version.",
-            "Files: reads non-template files of the chart (Get, GetBytes, Glob, Lines, AsSecrets, AsConfig). Capabilities: APIVersions.Has, KubeVersion, HelmVersion. Template: Name and BasePath of the current template."
+            "Go templates plus the Sprig library (over 60 functions). Values are read from `.Values`, and `.Release.Name` is the release name.",
+            {
+              "type": "code",
+              "title": "Defaults in values.yaml",
+              "lang": "yaml",
+              "match": "favoriteDrink: coffee",
+              "source": {
+                "label": "Values files",
+                "url": "https://helm.sh/docs/chart_template_guide/values_files/"
+              }
+            },
+            "Pipelines: `.Values.favorite.drink | repeat 5 | quote`. The piped value is the last argument. `quote` the strings you read from values. `default` gives a fallback for computed values.",
+            "`lookup` reads live cluster objects and returns empty when nothing matches. It does not run in `--dry-run`, so test it with `--dry-run=server`.",
+            "The full function list is on Helm's Template Function List page (linked under Sources). Many of its functions come from Sprig, and Helm removes Sprig's `env` and `expandenv` on purpose.",
+            {
+              "type": "callout",
+              "kind": "gotcha",
+              "text": "Templates run again on every upgrade, so random output (for example a generated password) differs each time and updates the resource."
+            },
+            "Named templates, flow control, built-in objects and the useful patterns are in the sections below and in Reference."
           ]
         },
         {
-          "title": "Named templates",
+          "title": "Named templates and helpers",
+          "part": "use",
+          "step": 6,
+          "icon": "file",
           "items": [
-            "define creates a named template. It prints nothing until a template or include call renders it. Put a {{/* comment */}} above each define.",
-            "Template names are global and the last one loaded wins. Prefix the name with the chart name, for example mychart.labels. A version in the name helps between chart versions.",
-            "Files in templates/ that start with _ are not rendered as manifests. _helpers.tpl is the usual place for helpers.",
-            "A named template only sees what you pass. Call it with . to give it the top-level scope. Inside it, $ is that passed-in scope.",
-            "template is an action, so its output cannot be piped. include is a function and can be piped, as in {{- include \"mychart.app\" . | nindent 4 }}. The docs call include preferable."
+            "`define` creates a named template. It prints nothing until a `template` or `include` call renders it. Put a `{{/* comment */}}` above each `define`.",
+            "Template names are global and the last one loaded wins. Prefix the name with the chart name, for example `mychart.labels`. A version in the name helps between chart versions.",
+            "Files in `templates/` that start with `_` are not rendered as manifests. `_helpers.tpl` is the usual place for helpers.",
+            "A named template only sees what you pass. Call it with `.` to give it the top-level scope. Inside it, `$` is that passed-in scope.",
+            {
+              "type": "callout",
+              "kind": "tip",
+              "text": "`template` is an action, so its output cannot be piped. `include` is a function and can be piped, as in `{{- include \"mychart.app\" . | nindent 4 }}`. The docs call `include` preferable."
+            }
           ]
         },
         {
-          "title": "Flow control and whitespace",
+          "title": "Control flow and whitespace",
+          "part": "use",
+          "step": 7,
+          "icon": "clock",
           "items": [
-            "if / else if / else, closed by end. False is: boolean false, zero, an empty string, nil, and an empty map, slice, tuple, dict or array. Everything else is true.",
-            "with sets . to a value and skips the block when it is empty. Inside it, . cannot reach parent objects, so use $.Release.Name.",
-            "range loops over a list and sets . to each item. $ always refers to the root scope.",
-            "{{- trims whitespace on the left, -}} on the right, and newlines count as whitespace. The space after the dash matters: {{- 3 }} prints 3, {{-3 }} prints -3. indent and nindent are an alternative to managing spaces by hand."
+            "`if` / `else if` / `else`, closed by `end`. False is: boolean false, zero, an empty string, nil, and an empty map, slice, tuple, dict or array. Everything else is true.",
+            "`with` sets `.` to a value and skips the block when it is empty. Inside it, `.` cannot reach parent objects, so use `$.Release.Name`.",
+            "`range` loops over a list and sets `.` to each item. `$` always refers to the root scope.",
+            {
+              "type": "callout",
+              "kind": "gotcha",
+              "text": "`{{-` trims whitespace on the left, `-}}` on the right, and newlines count as whitespace. The space after the dash matters: `{{- 3 }}` prints `3`, `{{-3 }}` prints `-3`. `indent` and `nindent` are an alternative to managing spaces by hand.",
+              "title": "Whitespace"
+            }
           ]
         },
         {
-          "title": "Common patterns",
+          "title": "Useful patterns",
+          "part": "use",
+          "step": 8,
+          "icon": "bulb",
           "items": [
-            "required fails rendering with your message when a value is empty: required \"A valid foo is required!\" .Values.foo. The tips page recommends it for values that must be set.",
-            "tpl evaluates a string as a template, for template strings passed in as values.",
-            "include with toYaml and nindent puts a block of YAML at the right indent: {{- include \"toYaml\" $value | nindent 2 }}.",
-            "Quote strings with quote, but not integers, which can break parsing in Kubernetes. Env var values are the exception and must be strings.",
-            "Roll a Deployment when a ConfigMap changes: add a checksum/config annotation using sha256sum of the ConfigMap's rendered output. This replaces the --recreate-pods flag, which is deprecated.",
-            "helm.sh/resource-policy: keep stops Helm deleting a resource on uninstall, upgrade or rollback. The resource is then orphaned.",
-            "Templates run again on every upgrade, so random output (for example a generated password) differs each time and updates the resource."
+            "`required` fails rendering with your message when a value is empty: `required \"A valid foo is required!\" .Values.foo`. The tips page recommends it for values that must be set.",
+            "`tpl` evaluates a string as a template, for template strings passed in as values.",
+            "`include` with `toYaml` and `nindent` puts a block of YAML at the right indent: `{{- include \"toYaml\" $value | nindent 2 }}`.",
+            "Quote strings with `quote`, but not integers, which can break parsing in Kubernetes. Env var values are the exception and must be strings.",
+            {
+              "type": "callout",
+              "kind": "tip",
+              "text": "Roll a Deployment when a ConfigMap changes: add a `checksum/config` annotation using `sha256sum` of the ConfigMap's rendered output. This replaces the `--recreate-pods` flag, which is deprecated."
+            },
+            {
+              "type": "callout",
+              "kind": "gotcha",
+              "text": "`helm.sh/resource-policy: keep` stops Helm deleting a resource on uninstall, upgrade or rollback. The resource is then orphaned."
+            }
           ]
         },
         {
-          "title": "Render and upgrade flags",
+          "title": "Dependencies, hooks and registries",
+          "part": "use",
+          "step": 9,
+          "icon": "globe",
           "items": [
-            "helm template renders locally. Anything normally looked up in the cluster is faked, and server-side checks such as API support are skipped. -s/--show-only renders chosen templates, --include-crds adds CRDs, --api-versions and --kube-version set Capabilities, --set, --set-string, --set-json, --set-file and -f supply values.",
-            "--dry-run takes none, client or server. server validates against the cluster and needs connectivity.",
-            "helm upgrade --install installs when there is no release. --rollback-on-failure (formerly --atomic) rolls back on failure. --wait takes a strategy: watcher, hookOnly or legacy. A bare --wait means watcher and the default is hookOnly. --timeout applies to each Kubernetes operation, default 5m0s.",
-            "--reuse-values keeps the previous release's values and ignores new chart defaults. --reset-values uses the chart defaults. --reset-then-reuse-values resets to the new chart's defaults and then reapplies the previous release's values.",
-            "--force-replace replaces resources and --force-conflicts takes over fields in server-side apply (--force is the old name). --history-max defaults to 10. --server-side takes true, false or auto (default auto). --cleanup-on-fail deletes resources created by a failed upgrade."
-          ]
-        },
-        {
-          "title": "Dependencies",
-          "items": [
-            "Declared in Chart.yaml with name, version and repository (URL, alias or oci://). helm dependency update fetches them into charts/.",
-            "alias includes a chart twice. condition (a YAML path to a boolean) and tags switch subcharts on or off, and condition wins. import-values copies values from child to parent."
-          ]
-        },
-        {
-          "title": "Hooks",
-          "items": [
-            "Types: pre-install, post-install, pre-delete, post-delete, pre-upgrade, post-upgrade, pre-rollback, post-rollback, test. Set with helm.sh/hook. Order with helm.sh/hook-weight (a string, ascending, default 0).",
-            "helm.sh/hook-delete-policy: before-hook-creation (default), hook-succeeded, hook-failed. helm.sh/resource-policy: keep stops deletion.",
-            "Hook resources are not part of the release, so helm uninstall does not remove them. Job and Pod hooks block until they complete, and a failed hook fails the release. Subchart hooks always run."
-          ]
-        },
-        {
-          "title": "OCI registries",
-          "items": [
-            "Charts can be stored in any OCI registry. helm registry login (a bare hostname only), helm push chart.tgz oci://host/path, and oci:// in pull, show, template, install and upgrade.",
-            "Install by digest (@sha256:...) is safer than by tag, because digests are immutable. A .prov file next to the .tgz is uploaded with it. The helm-sigstore plugin signs OCI charts as an alternative to GPG provenance."
+            "Dependencies are declared in `Chart.yaml` with `name`, `version` and `repository` (URL, alias or `oci://`). `helm dependency update` fetches them into `charts/`.",
+            {
+              "type": "code",
+              "title": "Declare dependencies",
+              "lang": "yaml",
+              "match": "dependencies:\n  - name: apache",
+              "source": {
+                "label": "Charts",
+                "url": "https://helm.sh/docs/topics/charts/"
+              }
+            },
+            "`alias` includes a chart twice. `condition` (a YAML path to a boolean) and `tags` switch subcharts on or off, and `condition` wins. `import-values` copies values from child to parent.",
+            "A parent chart sets a subchart's values under the subchart's name. Subcharts cannot see parent values. `global` values reach every chart, but only downward.",
+            {
+              "type": "code",
+              "title": "Run a hook after install",
+              "lang": "yaml",
+              "match": "\"helm.sh/hook\": post-install",
+              "source": {
+                "label": "Chart hooks",
+                "url": "https://helm.sh/docs/topics/charts_hooks/"
+              }
+            },
+            "Charts can be stored in any OCI registry: `helm registry login` (a bare hostname only), `helm push chart.tgz oci://host/path`, and `oci://` in `pull`, `show`, `template`, `install` and `upgrade`.",
+            {
+              "type": "code",
+              "title": "Push a chart to an OCI registry",
+              "lang": "shell",
+              "match": "helm push mychart",
+              "source": {
+                "label": "Registries",
+                "url": "https://helm.sh/docs/topics/registries/"
+              }
+            },
+            {
+              "type": "callout",
+              "kind": "prod",
+              "text": "Install by digest (`@sha256:...`) is safer than by tag, because digests are immutable. A `.prov` file next to the `.tgz` is uploaded with it. The helm-sigstore plugin signs OCI charts as an alternative to GPG provenance.",
+              "title": "Supply chain"
+            }
           ]
         },
         {
           "title": "Helm 4 and support",
+          "part": "run",
+          "icon": "up",
           "items": [
-            "Helm 4.0.0 was released on 2025-11-12 (KubeCon). Helm 3 gets bug fixes until 2026-07-08 and security fixes until 2026-11-11.",
-            "Changes: redesigned plugins (CLI, getter, post-renderer, optional WebAssembly runtime), server-side apply by default for new installs, --atomic is now --rollback-on-failure, --force is now --force-replace, kstatus-based waiting, install by OCI digest. Chart apiVersion v3 is experimental. v2 charts are unchanged.",
-            "Kubernetes skew: Helm supports the version it was built against and three before it. 4.3.x: 1.34 to 1.37. 4.2.x: 1.33 to 1.36. 4.1.x: 1.32 to 1.35. 4.0.x: 1.31 to 1.34."
+            {
+              "type": "table",
+              "columns": [
+                "",
+                "Helm 4 / Helm 3"
+              ],
+              "rows": [
+                [
+                  "Helm 4.0.0",
+                  "released on 2025-11-12 (KubeCon)"
+                ],
+                [
+                  "Helm 3 bug fixes",
+                  "until 2026-07-08"
+                ],
+                [
+                  "Helm 3 security fixes",
+                  "until 2026-11-11"
+                ]
+              ]
+            },
+            "Changes in Helm 4: redesigned plugins (CLI, getter, post-renderer, optional WebAssembly runtime), server-side apply by default for new installs, `--atomic` is now `--rollback-on-failure`, `--force` is now `--force-replace`, kstatus-based waiting, install by OCI digest. Chart `apiVersion: v3` is experimental. v2 charts are unchanged.",
+            {
+              "type": "table",
+              "columns": [
+                "Helm version",
+                "Kubernetes versions supported"
+              ],
+              "rows": [
+                [
+                  "4.3.x",
+                  "1.34 to 1.37"
+                ],
+                [
+                  "4.2.x",
+                  "1.33 to 1.36"
+                ],
+                [
+                  "4.1.x",
+                  "1.32 to 1.35"
+                ],
+                [
+                  "4.0.x",
+                  "1.31 to 1.34"
+                ]
+              ],
+              "caption": "Helm supports the version it was built against and three before it."
+            }
           ]
         },
         {
           "title": "Helm with GitOps tools",
+          "part": "run",
+          "icon": "scale",
           "items": [
-            "Argo CD renders charts with helm template and runs the lifecycle itself. helm ls does not show those apps and Helm hooks are only mapped.",
-            "Flux's HelmRelease performs a Helm release, with install, upgrade, rollback and test actions.",
-            "Rancher Fleet turns everything into a Helm chart.",
-            "Kustomize can inflate a chart with helmCharts and --enable-helm, but only a subset of Helm."
+            {
+              "type": "table",
+              "columns": [
+                "Tool",
+                "How it uses Helm"
+              ],
+              "rows": [
+                [
+                  "[Argo CD](#argo-cd)",
+                  "Renders charts with `helm template` and runs the lifecycle itself. `helm ls` does not show those apps and Helm hooks are only mapped"
+                ],
+                [
+                  "[Flux](#flux)",
+                  "HelmRelease performs a Helm release, with install, upgrade, rollback and test actions"
+                ],
+                [
+                  "Rancher Fleet",
+                  "Turns everything into a Helm chart"
+                ],
+                [
+                  "[Kustomize](#kustomize)",
+                  "Can inflate a chart with `helmCharts` and `--enable-helm`, but only a subset of Helm"
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Commands",
+          "part": "reference",
+          "icon": "list",
+          "items": [
+            "`helm install`, `upgrade`, `rollback`, `uninstall`, `list`, `history`, `status`.",
+            "`helm show values`, `get values`, `create`, `lint`, `package`. `helm template` renders locally and prints the result."
+          ]
+        },
+        {
+          "title": "Built-in objects",
+          "part": "reference",
+          "icon": "box",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Object",
+                "What it holds"
+              ],
+              "rows": [
+                [
+                  "`Release`",
+                  "`Name`, `Namespace`, `IsInstall`, `IsUpgrade`, `Revision` (starts at 1, goes up on each upgrade or rollback), `Service` (always Helm)"
+                ],
+                [
+                  "`Values`",
+                  "From `values.yaml` and the files and flags you pass"
+                ],
+                [
+                  "`Chart`",
+                  "The fields of `Chart.yaml`, such as `.Chart.Name` and `.Chart.Version`"
+                ],
+                [
+                  "`Files`",
+                  "Reads non-template files of the chart (`Get`, `GetBytes`, `Glob`, `Lines`, `AsSecrets`, `AsConfig`)"
+                ],
+                [
+                  "`Capabilities`",
+                  "`APIVersions.Has`, `KubeVersion`, `HelmVersion`"
+                ],
+                [
+                  "`Template`",
+                  "`Name` and `BasePath` of the current template"
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "title": "values.schema.json",
+          "part": "reference",
+          "icon": "shield",
+          "items": [
+            "`values.schema.json` (JSON Schema) validates the final values on install, upgrade, lint and template. `--skip-schema-validation` turns it off."
+          ]
+        },
+        {
+          "title": "Render and upgrade flags",
+          "part": "reference",
+          "icon": "wrench",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Flag",
+                "What it does"
+              ],
+              "rows": [
+                [
+                  "`helm template`",
+                  "Renders locally. Anything normally looked up in the cluster is faked, and server-side checks such as API support are skipped. `-s/--show-only` renders chosen templates, `--include-crds` adds CRDs, `--api-versions` and `--kube-version` set Capabilities, `--set`, `--set-string`, `--set-json`, `--set-file` and `-f` supply values"
+                ],
+                [
+                  "`--dry-run`",
+                  "Takes `none`, `client` or `server`. `server` validates against the cluster and needs connectivity"
+                ],
+                [
+                  "`helm upgrade --install`",
+                  "Installs when there is no release"
+                ],
+                [
+                  "`--rollback-on-failure`",
+                  "Rolls back on failure (formerly `--atomic`)"
+                ],
+                [
+                  "`--wait`",
+                  "Takes a strategy: `watcher`, `hookOnly` or `legacy`. A bare `--wait` means `watcher` and the default is `hookOnly`. `--timeout` applies to each Kubernetes operation, default `5m0s`"
+                ],
+                [
+                  "`--reuse-values`",
+                  "Keeps the previous release's values and ignores new chart defaults"
+                ],
+                [
+                  "`--reset-values`",
+                  "Uses the chart defaults"
+                ],
+                [
+                  "`--reset-then-reuse-values`",
+                  "Resets to the new chart's defaults and then reapplies the previous release's values"
+                ],
+                [
+                  "`--force-replace`, `--force-conflicts`",
+                  "Replace resources, and take over fields in server-side apply (`--force` is the old name)"
+                ],
+                [
+                  "`--history-max`",
+                  "Defaults to 10"
+                ],
+                [
+                  "`--server-side`",
+                  "`true`, `false` or `auto` (default `auto`)"
+                ],
+                [
+                  "`--cleanup-on-fail`",
+                  "Deletes resources created by a failed upgrade"
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Hooks",
+          "part": "reference",
+          "icon": "clock",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Hook types",
+                "Notes"
+              ],
+              "rows": [
+                [
+                  "`pre-install`, `post-install`, `pre-delete`, `post-delete`, `pre-upgrade`, `post-upgrade`, `pre-rollback`, `post-rollback`, `test`",
+                  "Set with `helm.sh/hook`. Order with `helm.sh/hook-weight` (a string, ascending, default 0)"
+                ]
+              ]
+            },
+            "`helm.sh/hook-delete-policy`: `before-hook-creation` (default), `hook-succeeded`, `hook-failed`. `helm.sh/resource-policy: keep` stops deletion.",
+            "Hook resources are not part of the release, so `helm uninstall` does not remove them. Job and Pod hooks block until they complete, and a failed hook fails the release. Subchart hooks always run."
           ]
         }
       ],
@@ -2591,8 +3676,7 @@
       ],
       "notes": [
         "Start date is the repository creation date. The release date for 4.0.0 is on GitHub as 2025-11-12 and in the announcement as 2025-11-12.",
-        "The registries page says it is not yet fully updated for Helm 4. Flags are read from the Helm 4.3.1 command pages. Helm 3 names (--atomic, --force) still work with a warning.",
-        "Typical use: the choice between Helm and Kustomize is common practice, not a rule stated by a page read here."
+        "The registries page says it is not yet fully updated for Helm 4. Flags are read from the Helm 4.3.1 command pages. Helm 3 names (--atomic, --force) still work with a warning."
       ],
       "sources": [
         {
@@ -2731,47 +3815,385 @@
       ],
       "sections": [
         {
-          "title": "Idea",
+          "title": "In one minute",
+          "part": "overview",
+          "icon": "eye",
           "items": [
-            "No templates and no DSL. A kustomization.yaml lists resources and changes. The original YAML stays untouched and valid on its own.",
-            "Base and overlays: the base holds the common resources, each overlay is a sibling directory with its own kustomization that refers to the base and patches it. A base can come from another repository while overlays stay in yours.",
-            "Components (since v3.7.0) hold an optional feature. They have kind Component and apiVersion kustomize.config.k8s.io/v1alpha1, and an overlay turns them on with components:. Bases and overlays use kind Kustomization, apiVersion kustomize.config.k8s.io/v1beta1."
+            "Kustomize customizes plain, template-free Kubernetes YAML. A base holds the common resources and overlays patch it for each variant. It is built into `kubectl`.",
+            "There are no templates and no DSL. A `kustomization.yaml` lists resources and changes. The original YAML stays untouched and valid on its own.",
+            {
+              "type": "diagram",
+              "alt": "A base directory with common resources, plus a development and a production overlay that each refer to the base and patch it. kustomize build merges a base and an overlay into final manifests, which kubectl applies.",
+              "caption": "Base and overlays: the same base, a different patch per environment.",
+              "w": 720,
+              "h": 240,
+              "nodes": [
+                {
+                  "id": "base",
+                  "x": 120,
+                  "y": 120,
+                  "w": 150,
+                  "h": 50,
+                  "label": "base/",
+                  "sub": "common resources",
+                  "kind": "store"
+                },
+                {
+                  "id": "dev",
+                  "x": 120,
+                  "y": 40,
+                  "w": 150,
+                  "h": 34,
+                  "label": "overlays/development"
+                },
+                {
+                  "id": "prod",
+                  "x": 120,
+                  "y": 200,
+                  "w": 150,
+                  "h": 34,
+                  "label": "overlays/production"
+                },
+                {
+                  "id": "build",
+                  "x": 370,
+                  "y": 120,
+                  "w": 150,
+                  "h": 44,
+                  "label": "kustomize build",
+                  "sub": "merge and patch",
+                  "kind": "hub"
+                },
+                {
+                  "id": "out",
+                  "x": 590,
+                  "y": 120,
+                  "w": 140,
+                  "h": 44,
+                  "label": "Manifests",
+                  "sub": "valid YAML"
+                }
+              ],
+              "links": [
+                {
+                  "from": "dev",
+                  "to": "base",
+                  "label": "patches",
+                  "arrow": "to",
+                  "dx": 34
+                },
+                {
+                  "from": "prod",
+                  "to": "base",
+                  "label": "patches",
+                  "arrow": "to",
+                  "dx": 34
+                },
+                {
+                  "from": "base",
+                  "to": "build",
+                  "arrow": "to"
+                },
+                {
+                  "from": "dev",
+                  "to": "build",
+                  "arrow": "to"
+                },
+                {
+                  "from": "prod",
+                  "to": "build",
+                  "arrow": "to"
+                },
+                {
+                  "from": "build",
+                  "to": "out",
+                  "arrow": "to"
+                }
+              ]
+            }
           ]
         },
         {
-          "title": "Fields",
+          "title": "Key ideas",
+          "part": "overview",
+          "icon": "grid",
           "items": [
-            "resources: include files, directories or remote bases. components: compose kustomizations.",
-            "patches: an ordered list. Each is a strategic merge patch or a JSON6902 patch, inline or from a file. A target selects by group, version, kind, name, namespace, labelSelector or annotationSelector. name and namespace are anchored regular expressions. JSON6902 needs a target, and ~1 stands for / in a path.",
-            "images: change name, tag or digest. replicas: change a replica count. namePrefix and nameSuffix. namespace: set it on all resources.",
-            "labels and commonAnnotations add them to all resources. commonLabels is deprecated, replaced by labels.",
-            "configMapGenerator and secretGenerator build objects from literals, files or env files, and add a content hash to the name. Kustomize rewrites references to the new name, so a changed ConfigMap rolls the Deployment. Generated secrets are only base64-encoded, not encrypted.",
-            "replacements copy a field from one source into many targets (fieldPath, delimiter and index for partial replacement, create: true). openapi helps merge custom resources. sortOptions and buildMetadata also exist. generatorOptions controls generators.",
-            "helmCharts inflates a Helm chart. It needs kustomize build --enable-helm."
+            {
+              "type": "cards",
+              "cards": [
+                {
+                  "icon": "folder",
+                  "title": "Base",
+                  "text": "The common resources. A base can come from another repository while the overlays stay in yours."
+                },
+                {
+                  "icon": "layers",
+                  "title": "Overlay",
+                  "text": "A sibling directory with its own kustomization that refers to the base and patches it."
+                },
+                {
+                  "icon": "wrench",
+                  "title": "Patch",
+                  "text": "A strategic merge patch or a JSON6902 patch, inline or from a file, aimed at a target."
+                },
+                {
+                  "icon": "grid",
+                  "title": "Component",
+                  "text": "An optional feature (since v3.7.0) that an overlay turns on with `components:`."
+                }
+              ]
+            },
+            "Bases and overlays use `kind: Kustomization`, `apiVersion: kustomize.config.k8s.io/v1beta1`. Components use `kind: Component`, `apiVersion: kustomize.config.k8s.io/v1alpha1`.",
+            {
+              "type": "callout",
+              "kind": "tip",
+              "text": "Choose Kustomize to vary plain YAML between environments without templates. Choose [Helm](#helm) for packaging, defaults and release history.",
+              "title": "Helm or Kustomize?"
+            }
+          ]
+        },
+        {
+          "title": "Lay out a base and overlays",
+          "part": "use",
+          "step": 1,
+          "icon": "folder",
+          "items": [
+            {
+              "type": "code",
+              "title": "A base and two overlays",
+              "lang": "text",
+              "match": "├── base",
+              "source": {
+                "label": "Kustomize intro",
+                "url": "https://kubectl.docs.kubernetes.io/guides/introduction/kustomize/"
+              }
+            },
+            "Each directory has a `kustomization.yaml`. The overlay lists the base under `resources:` and adds its changes."
+          ]
+        },
+        {
+          "title": "Build and apply",
+          "part": "use",
+          "step": 2,
+          "icon": "play",
+          "items": [
+            {
+              "type": "code",
+              "title": "Build the production overlay and apply it",
+              "lang": "shell",
+              "match": "kustomize build ~/someApp/overlays/production | kubectl apply",
+              "source": {
+                "label": "Kustomize intro",
+                "url": "https://kubectl.docs.kubernetes.io/guides/introduction/kustomize/"
+              }
+            },
+            {
+              "type": "code",
+              "title": "Render and apply with kubectl",
+              "lang": "shell",
+              "match": [
+                "kubectl kustomize <kustomization_directory>",
+                "kubectl apply -k <kustomization_directory>"
+              ],
+              "source": {
+                "label": "Kubernetes docs: Kustomize",
+                "url": "https://kubernetes.io/docs/tasks/manage-kubernetes-objects/kustomization/"
+              }
+            },
+            "`kubectl kustomize <dir>` renders. `kubectl apply -k <dir>` applies. Kustomize has been built into kubectl since 1.14."
+          ]
+        },
+        {
+          "title": "Patch a resource",
+          "part": "use",
+          "step": 3,
+          "icon": "wrench",
+          "items": [
+            {
+              "type": "code",
+              "title": "patches: select a target and change it",
+              "lang": "yaml",
+              "match": "labelSelector: \"env=dev\"\n    annotationSelector",
+              "source": {
+                "label": "patches",
+                "url": "https://kubectl.docs.kubernetes.io/references/kustomize/kustomization/patches/"
+              }
+            },
+            "`patches` is an ordered list. Each patch is a strategic merge patch or a JSON6902 patch, inline or from a file. A `target` selects by `group`, `version`, `kind`, `name`, `namespace`, `labelSelector` or `annotationSelector`. `name` and `namespace` are anchored regular expressions.",
+            {
+              "type": "callout",
+              "kind": "gotcha",
+              "text": "JSON6902 needs a `target`, and `~1` stands for `/` in a path."
+            }
+          ]
+        },
+        {
+          "title": "Change names, images, replicas and labels",
+          "part": "use",
+          "step": 4,
+          "icon": "list",
+          "items": [
+            "`images`: change name, tag or digest. `replicas`: change a replica count. `namePrefix` and `nameSuffix`. `namespace`: set it on all resources.",
+            "`labels` and `commonAnnotations` add them to all resources. `commonLabels` is deprecated, replaced by `labels`."
+          ]
+        },
+        {
+          "title": "Generate ConfigMaps and Secrets",
+          "part": "use",
+          "step": 5,
+          "icon": "key",
+          "items": [
+            "`configMapGenerator` and `secretGenerator` build objects from literals, files or env files, and add a content hash to the name. Kustomize rewrites references to the new name, so a changed ConfigMap rolls the Deployment.",
+            {
+              "type": "callout",
+              "kind": "gotcha",
+              "text": "Generated secrets are only base64-encoded, not encrypted."
+            },
+            "`generatorOptions` controls generators."
+          ]
+        },
+        {
+          "title": "Reuse: components and replacements",
+          "part": "use",
+          "step": 6,
+          "icon": "layers",
+          "items": [
+            "`resources` include files, directories or remote bases. `components` compose kustomizations.",
+            "`replacements` copy a field from one source into many targets (`fieldPath`, `delimiter` and `index` for partial replacement, `create: true`). `openapi` helps merge custom resources. `sortOptions` and `buildMetadata` also exist."
           ]
         },
         {
           "title": "kubectl and versions",
+          "part": "run",
+          "icon": "up",
           "items": [
-            "kubectl kustomize <dir> renders. kubectl apply -k <dir> applies. Built into kubectl since 1.14.",
-            "kubectl 1.14 bundled kustomize v2.0.3 and stayed there until 1.21 moved to v4.0.5. The README lists versions up to kubectl 1.27 with v5.0.1. Run kubectl version to see what yours has. The standalone kustomize is newer than the one in kubectl.",
+            {
+              "type": "table",
+              "columns": [
+                "kubectl",
+                "Bundled Kustomize"
+              ],
+              "rows": [
+                [
+                  "1.14 to 1.20",
+                  "v2.0.3"
+                ],
+                [
+                  "1.21",
+                  "v4.0.5"
+                ],
+                [
+                  "up to 1.27 (the README's list)",
+                  "v5.0.1"
+                ]
+              ],
+              "caption": "Run `kubectl version` to see what yours has. The standalone kustomize is newer than the one in kubectl."
+            },
             "Releases read: v4.0.0 2021-02-12, v5.0.0 2023-02-02, v5.8.0 2025-11-09, v5.8.3 2026-10-08."
           ]
         },
         {
           "title": "Limits",
+          "part": "run",
+          "icon": "alert",
           "items": [
-            "helmCharts is a subset of Helm and will only get bug fixes, security fixes and fields that match helm template flags. No private repository authentication and no post-renderer.",
-            "Custom resources may need openapi configuration for strategic merge patches, for example when the merge key is not name.",
-            "bases, vars, patchesStrategicMerge and patchesJson6902 are still listed in the field index. Whether they are deprecated is not stated there. Check the release notes before using them."
+            {
+              "type": "callout",
+              "kind": "gotcha",
+              "text": "`helmCharts` inflates a Helm chart. It needs `kustomize build --enable-helm`, is a subset of Helm and will only get bug fixes, security fixes and fields that match `helm template` flags. No private repository authentication and no post-renderer.",
+              "title": "helmCharts"
+            },
+            "Custom resources may need `openapi` configuration for strategic merge patches, for example when the merge key is not `name`.",
+            {
+              "text": "`bases`, `vars`, `patchesStrategicMerge` and `patchesJson6902` are still listed in the field index. Whether they are deprecated is not stated there. Check the release notes before using them.",
+              "unconfirmed": "Not stated on the field index page."
+            }
           ]
         },
         {
           "title": "Kustomize with GitOps tools",
+          "part": "run",
+          "icon": "scale",
           "items": [
-            "Argo CD detects it by kustomization.yaml, kustomization.yml or Kustomization. It supports namePrefix, nameSuffix, images, replicas, commonLabels, commonAnnotations, patches, components and namespace, and several Kustomize versions side by side.",
-            "Argo CD: remote bases only use the application's repository credentials. Generated resources may show OutOfSync, so use IgnoreExtraneous. Setting spec.source.kustomize.namespace is safer than spec.destination.namespace for custom resources.",
-            "Flux's Kustomization runs the Kustomize build on a path, generates a kustomization.yaml if there is none, and adds postBuild variable substitution, SOPS decryption, patches and images."
+            {
+              "type": "table",
+              "columns": [
+                "Tool",
+                "What it does with Kustomize"
+              ],
+              "rows": [
+                [
+                  "[Argo CD](#argo-cd)",
+                  "Detects it by `kustomization.yaml`, `kustomization.yml` or `Kustomization`. Supports `namePrefix`, `nameSuffix`, `images`, `replicas`, `commonLabels`, `commonAnnotations`, `patches`, `components` and `namespace`, and several Kustomize versions side by side"
+                ],
+                [
+                  "[Flux](#flux)",
+                  "Its Kustomization runs the Kustomize build on a path, generates a `kustomization.yaml` if there is none, and adds `postBuild` variable substitution, SOPS decryption, patches and images"
+                ]
+              ]
+            },
+            {
+              "type": "callout",
+              "kind": "gotcha",
+              "text": "Argo CD: remote bases only use the application's repository credentials. Generated resources may show OutOfSync, so use `IgnoreExtraneous`. Setting `spec.source.kustomize.namespace` is safer than `spec.destination.namespace` for custom resources.",
+              "title": "Argo CD gotchas"
+            }
+          ]
+        },
+        {
+          "title": "Fields of a kustomization",
+          "part": "reference",
+          "icon": "list",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Field",
+                "What it does"
+              ],
+              "rows": [
+                [
+                  "`resources`",
+                  "Include files, directories or remote bases"
+                ],
+                [
+                  "`components`",
+                  "Compose kustomizations"
+                ],
+                [
+                  "`patches`",
+                  "Ordered strategic merge or JSON6902 patches with a target"
+                ],
+                [
+                  "`images`, `replicas`",
+                  "Change an image name, tag or digest, or a replica count"
+                ],
+                [
+                  "`namePrefix`, `nameSuffix`, `namespace`",
+                  "Rename or set the namespace on all resources"
+                ],
+                [
+                  "`labels`, `commonAnnotations`",
+                  "Add labels or annotations to all resources (`commonLabels` is deprecated)"
+                ],
+                [
+                  "`configMapGenerator`, `secretGenerator`, `generatorOptions`",
+                  "Build objects from literals, files or env files"
+                ],
+                [
+                  "`replacements`",
+                  "Copy a field from one source into many targets"
+                ],
+                [
+                  "`openapi`, `sortOptions`, `buildMetadata`",
+                  "Merging custom resources, ordering, build annotations"
+                ],
+                [
+                  "`helmCharts`",
+                  "Inflates a Helm chart (`--enable-helm`)"
+                ]
+              ]
+            }
           ]
         }
       ],
