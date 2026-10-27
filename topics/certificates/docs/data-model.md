@@ -19,7 +19,7 @@
 | `id`, `name`, `group`, `summary` | `group` is a group id. `summary` is one line. |
 | `level` | `deep` (own sections, in depth), `overview`, `ref` (name, dates, status, a few lines). |
 | `status` | `active`, `inactive` (a judgement, say why in `notes`) or `archived`. |
-| `started` | `date` (or `unconfirmed`), `basis` (what the date is: first release, repository created, ...), `confirmed`. Repository creation dates are not announcements, so they stay `confirmed: false`. An RFC is dated by month, so a confirmed `date` may be `YYYY-MM`. |
+| `started` | `date` (or `unconfirmed`), `basis` (what the date is: first release, repository created, ...), `confirmed`. Repository creation dates are not announcements, so they stay `confirmed: false`. An RFC is dated by month, so a confirmed `date` may be `YYYY-MM`, or `YYYY` for a book. |
 | `cncf` | `level` (`graduated`, `incubating`, `sandbox`, `none`) and `text` with the dates from cncf.io. |
 | `license`, `maintainer` | SPDX id as GitHub reports it. `maintainer` is optional. |
 | `version` | Required, and shown in the dialog: `name`, `analysed` (the version the content was written against), `released` (its date), `docs` (what the text was read from), `checked` (date). |

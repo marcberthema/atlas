@@ -7,7 +7,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 DATE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
-MONTH = re.compile(r"^\d{4}-\d{2}(-\d{2})?$")  # an RFC is dated by month
+MONTH = re.compile(r"^\d{4}(-\d{2}(-\d{2})?)?$")  # an RFC is dated by month, a book by year
 LEVELS = {"deep", "overview", "ref"}
 STATUS = {"active", "inactive", "archived"}
 CNCF = {"graduated", "incubating", "sandbox", "none"}
@@ -51,10 +51,11 @@ def main():
         if not s.get("date") or not s.get("basis") or not isinstance(s.get("confirmed"), bool):
             bad.append(f"started needs date, basis and confirmed: {i}")
         if s.get("confirmed") and not MONTH.match(s.get("date", "")):
-            bad.append(f"started is confirmed but not a date or a month: {i}")
+            bad.append(f"started is confirmed but not a date, a month or a year: {i}")
         t = e.get("track")
         if not t:
-            warn.append(f"no track (the update check skips it): {i}")
+            if e.get("license") != "n/a":  # a concept has no release to check
+                warn.append(f"no track (the update check skips it): {i}")
         elif not re.match(r"^[\w.-]+/[\w.-]+$", t.get("github", "")):
             bad.append(f"track.github needs owner/repo: {i}")
         for src in e.get("sources", []):
