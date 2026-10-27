@@ -30,7 +30,7 @@ button.nm{font:inherit;font-weight:600;color:var(--acc);background:none;border:0
 .badge.bad{color:var(--bad);border-color:var(--bad)}
 .q{color:var(--warn);font-weight:700;cursor:help}
 .empty{color:var(--mut);padding:16px 0}
-.pg{padding-top:4px}
+.pg{padding:4px 0 0}
 
 .cmp th:first-child,.cmp td:first-child{white-space:nowrap}
 dialog{width:min(820px,calc(100vw - 24px));max-height:calc(100vh - 24px);border:1px solid var(--rule);border-radius:12px;background:var(--bg);color:var(--fg);padding:0}
@@ -44,6 +44,7 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
 .db h4{margin:16px 0 6px;font-size:.95rem;color:var(--acc)}
 .db ul{margin:4px 0;padding-left:20px}
 .db li{margin:2px 0}
+.db ul.lk{display:flex;flex-wrap:wrap;gap:4px 18px;list-style:none;padding:0}
 .db a{color:var(--acc)}
 .ver{border:1px solid var(--rule);background:var(--card);border-radius:8px;padding:8px 12px;margin:8px 0;font-size:.92rem}
 .ver div{margin:2px 0}
@@ -112,7 +113,7 @@ function render(){
   const f=$('q').value.trim().toLowerCase();
   const list=view==='others'||view==='compare';
   $('q').style.display=list?'':'none';
-  $('out').innerHTML=view==='others'?entries(f):view==='compare'?compare(f):'<div class="pg">'+detail(byId[view])+'</div>';
+  $('out').innerHTML=view==='others'?entries(f):view==='compare'?compare(f):'<div class="pg db">'+detail(byId[view])+'</div>';
 }
 
 function tab(id,push){
@@ -134,6 +135,7 @@ function detail(e){
     +'<div><span>Started:</span> '+started(e)+' <span>('+esc(e.started.basis)+')</span></div>'
     +'<div><span>Status:</span> '+esc(e.status)+' &middot; <span>Licence:</span> '+esc(e.license)+(e.maintainer?' &middot; <span>Maintainer:</span> '+esc(e.maintainer):'')+'</div>'
     +'<div><span>CNCF:</span> '+esc(e.cncf.text)+'</div></div>';
+  if(e.links&&e.links.length)h+='<h4>Links</h4><ul class="lk">'+e.links.map(l=>'<li><a href="'+esc(l.url)+'" target="_blank" rel="noopener">'+esc(l.label)+'</a></li>').join('')+'</ul>';
   h+=e.sections.map(s=>'<h4>'+esc(s.title)+'</h4><ul>'+s.items.map(i=>'<li>'+esc(i)+'</li>').join('')+'</ul>').join('');
   if(e.compare&&e.compare.length)h+='<h4>Compared</h4><ul>'+e.compare.map(c=>'<li>'+link(c.with)+': '+esc(c.text)+'</li>').join('')+'</ul>';
   if(e.related&&e.related.length)h+='<h4>Related</h4><p>'+e.related.map(link).join(', ')+'</p>';
@@ -162,6 +164,7 @@ $('tabs').innerHTML=TABS.map(t=>'<button class="tab" role="tab" data-v="'+t.id+'
 document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>tab(b.dataset.v));
 tab(TABS[0].id,false);
 if(location.hash)open(decodeURIComponent(location.hash.slice(1)),false);
+window.addEventListener('hashchange',()=>{const id=decodeURIComponent(location.hash.slice(1));if(byId[id]&&id!==view&&!($('dlg').open&&$('dt').textContent===byId[id].name))open(id,false);});
 </script>
 <!--__FOOTER__-->
 </body></html>

@@ -57,6 +57,16 @@
       "track": {
         "github": "open-gitops/documents"
       },
+      "links": [
+        {
+          "label": "Project",
+          "url": "https://opengitops.dev/"
+        },
+        {
+          "label": "Repository",
+          "url": "https://github.com/open-gitops/documents"
+        }
+      ],
       "sections": [
         {
           "title": "The four principles (v1.0.0)",
@@ -121,6 +131,52 @@
         "github": "argoproj/argo-cd",
         "cncf": "argo"
       },
+      "links": [
+        {
+          "label": "Project",
+          "url": "https://argoproj.github.io/cd/"
+        },
+        {
+          "label": "Documentation",
+          "url": "https://argo-cd.readthedocs.io/en/stable/"
+        },
+        {
+          "label": "Getting started",
+          "url": "https://argo-cd.readthedocs.io/en/stable/getting_started/"
+        },
+        {
+          "label": "Install (cluster)",
+          "url": "https://argo-cd.readthedocs.io/en/stable/operator-manual/installation/"
+        },
+        {
+          "label": "Install the CLI",
+          "url": "https://argo-cd.readthedocs.io/en/stable/cli_installation/"
+        },
+        {
+          "label": "CLI reference",
+          "url": "https://argo-cd.readthedocs.io/en/stable/user-guide/commands/argocd/"
+        },
+        {
+          "label": "API docs",
+          "url": "https://argo-cd.readthedocs.io/en/stable/developer-guide/api-docs/"
+        },
+        {
+          "label": "Application specification",
+          "url": "https://argo-cd.readthedocs.io/en/stable/user-guide/application-specification/"
+        },
+        {
+          "label": "Helm chart (community)",
+          "url": "https://github.com/argoproj/argo-helm/tree/main/charts/argo-cd"
+        },
+        {
+          "label": "Repository",
+          "url": "https://github.com/argoproj/argo-cd"
+        },
+        {
+          "label": "Releases",
+          "url": "https://github.com/argoproj/argo-cd/releases"
+        }
+      ],
       "sections": [
         {
           "title": "What it is",
@@ -437,6 +493,40 @@
         "github": "fluxcd/flux2",
         "cncf": "flux"
       },
+      "links": [
+        {
+          "label": "Project",
+          "url": "https://fluxcd.io/"
+        },
+        {
+          "label": "Documentation",
+          "url": "https://fluxcd.io/flux/"
+        },
+        {
+          "label": "Get started",
+          "url": "https://fluxcd.io/flux/get-started/"
+        },
+        {
+          "label": "Install",
+          "url": "https://fluxcd.io/flux/installation/"
+        },
+        {
+          "label": "CLI reference",
+          "url": "https://fluxcd.io/flux/cmd/"
+        },
+        {
+          "label": "API reference (components)",
+          "url": "https://fluxcd.io/flux/components/"
+        },
+        {
+          "label": "Repository",
+          "url": "https://github.com/fluxcd/flux2"
+        },
+        {
+          "label": "Releases",
+          "url": "https://github.com/fluxcd/flux2/releases"
+        }
+      ],
       "sections": [
         {
           "title": "Controllers and objects",
@@ -582,6 +672,20 @@
       "track": {
         "github": "rancher/fleet"
       },
+      "links": [
+        {
+          "label": "Documentation",
+          "url": "https://fleet.rancher.io/"
+        },
+        {
+          "label": "Install",
+          "url": "https://fleet.rancher.io/how-tos-for-operators/installation"
+        },
+        {
+          "label": "Repository",
+          "url": "https://github.com/rancher/fleet"
+        }
+      ],
       "sections": [
         {
           "title": "How it works",
@@ -645,6 +749,16 @@
       "track": {
         "github": "fluxcd/flux"
       },
+      "links": [
+        {
+          "label": "Migrate to Flux v2",
+          "url": "https://fluxcd.io/flux/migration/"
+        },
+        {
+          "label": "Repository (archived)",
+          "url": "https://github.com/fluxcd/flux"
+        }
+      ],
       "sections": [
         {
           "title": "Status",
@@ -696,6 +810,12 @@
         "github": "weaveworks/weave-gitops",
         "tag": "^v\\d+\\.\\d+\\.\\d+$"
       },
+      "links": [
+        {
+          "label": "Repository",
+          "url": "https://github.com/weaveworks/weave-gitops"
+        }
+      ],
       "sections": [
         {
           "title": "Status",
@@ -747,6 +867,16 @@
       "track": {
         "github": "GoogleContainerTools/config-sync"
       },
+      "links": [
+        {
+          "label": "Repository",
+          "url": "https://github.com/GoogleContainerTools/config-sync"
+        },
+        {
+          "label": "Documentation (Google Cloud)",
+          "url": "https://docs.cloud.google.com/kubernetes-engine/config-sync/docs/overview"
+        }
+      ],
       "sections": [
         {
           "title": "Notes",
@@ -794,6 +924,28 @@
         "github": "kubevela/kubevela",
         "cncf": "kubevela"
       },
+      "links": [
+        {
+          "label": "Project",
+          "url": "https://kubevela.io/"
+        },
+        {
+          "label": "Documentation",
+          "url": "https://kubevela.io/docs/"
+        },
+        {
+          "label": "Install",
+          "url": "https://kubevela.io/docs/installation/kubernetes"
+        },
+        {
+          "label": "CLI reference",
+          "url": "https://kubevela.io/docs/cli/vela"
+        },
+        {
+          "label": "Repository",
+          "url": "https://github.com/kubevela/kubevela"
+        }
+      ],
       "sections": [
         {
           "title": "Notes",
@@ -845,6 +997,20 @@
       "track": {
         "github": "controlplaneio-fluxcd/flux-operator"
       },
+      "links": [
+        {
+          "label": "Project",
+          "url": "https://fluxoperator.dev/"
+        },
+        {
+          "label": "Documentation",
+          "url": "https://fluxoperator.dev/docs/"
+        },
+        {
+          "label": "Repository",
+          "url": "https://github.com/controlplaneio-fluxcd/flux-operator"
+        }
+      ],
       "sections": [
         {
           "title": "Notes",
@@ -893,6 +1059,24 @@
         "github": "argoproj/argo-rollouts",
         "cncf": "argo"
       },
+      "links": [
+        {
+          "label": "Documentation",
+          "url": "https://argo-rollouts.readthedocs.io/en/stable/"
+        },
+        {
+          "label": "Install",
+          "url": "https://argo-rollouts.readthedocs.io/en/stable/installation/"
+        },
+        {
+          "label": "kubectl plugin (CLI)",
+          "url": "https://argo-rollouts.readthedocs.io/en/stable/features/kubectl-plugin/"
+        },
+        {
+          "label": "Repository",
+          "url": "https://github.com/argoproj/argo-rollouts"
+        }
+      ],
       "sections": [
         {
           "title": "How it works",
@@ -953,6 +1137,20 @@
         "github": "fluxcd/flagger",
         "cncf": "flux"
       },
+      "links": [
+        {
+          "label": "Documentation",
+          "url": "https://docs.flagger.app/"
+        },
+        {
+          "label": "Install on Kubernetes",
+          "url": "https://docs.flagger.app/install/flagger-install-on-kubernetes"
+        },
+        {
+          "label": "Repository",
+          "url": "https://github.com/fluxcd/flagger"
+        }
+      ],
       "sections": [
         {
           "title": "How it works",
@@ -1011,6 +1209,24 @@
       "track": {
         "github": "akuity/kargo"
       },
+      "links": [
+        {
+          "label": "Project",
+          "url": "https://kargo.io/"
+        },
+        {
+          "label": "Documentation",
+          "url": "https://docs.kargo.io/"
+        },
+        {
+          "label": "Quickstart",
+          "url": "https://docs.kargo.io/quickstart/"
+        },
+        {
+          "label": "Repository",
+          "url": "https://github.com/akuity/kargo"
+        }
+      ],
       "sections": [
         {
           "title": "What it does",
@@ -1062,6 +1278,20 @@
       "track": {
         "github": "argoproj-labs/argocd-image-updater"
       },
+      "links": [
+        {
+          "label": "Documentation",
+          "url": "https://argocd-image-updater.readthedocs.io/en/stable/"
+        },
+        {
+          "label": "Install",
+          "url": "https://argocd-image-updater.readthedocs.io/en/stable/install/installation/"
+        },
+        {
+          "label": "Repository",
+          "url": "https://github.com/argoproj-labs/argocd-image-updater"
+        }
+      ],
       "sections": [
         {
           "title": "Notes",
@@ -1109,6 +1339,52 @@
         "tag": "^v4\\.",
         "cncf": "helm"
       },
+      "links": [
+        {
+          "label": "Project",
+          "url": "https://helm.sh/"
+        },
+        {
+          "label": "Documentation",
+          "url": "https://helm.sh/docs/"
+        },
+        {
+          "label": "Quickstart",
+          "url": "https://helm.sh/docs/intro/quickstart/"
+        },
+        {
+          "label": "Install",
+          "url": "https://helm.sh/docs/intro/install/"
+        },
+        {
+          "label": "CLI reference",
+          "url": "https://helm.sh/docs/helm/"
+        },
+        {
+          "label": "Chart template guide",
+          "url": "https://helm.sh/docs/chart_template_guide/"
+        },
+        {
+          "label": "Template function list",
+          "url": "https://helm.sh/docs/chart_template_guide/function_list/"
+        },
+        {
+          "label": "Go SDK",
+          "url": "https://helm.sh/docs/sdk/"
+        },
+        {
+          "label": "Artifact Hub (public charts)",
+          "url": "https://artifacthub.io/"
+        },
+        {
+          "label": "Repository",
+          "url": "https://github.com/helm/helm"
+        },
+        {
+          "label": "Releases",
+          "url": "https://github.com/helm/helm/releases"
+        }
+      ],
       "sections": [
         {
           "title": "Concepts",
@@ -1375,6 +1651,40 @@
         "github": "kubernetes-sigs/kustomize",
         "tag": "^kustomize/"
       },
+      "links": [
+        {
+          "label": "Project",
+          "url": "https://kustomize.io/"
+        },
+        {
+          "label": "Documentation",
+          "url": "https://kubectl.docs.kubernetes.io/"
+        },
+        {
+          "label": "Install",
+          "url": "https://kubectl.docs.kubernetes.io/installation/kustomize/"
+        },
+        {
+          "label": "CLI reference",
+          "url": "https://kubectl.docs.kubernetes.io/references/kustomize/cmd/"
+        },
+        {
+          "label": "Kustomization fields",
+          "url": "https://kubectl.docs.kubernetes.io/references/kustomize/kustomization/"
+        },
+        {
+          "label": "In the Kubernetes docs",
+          "url": "https://kubernetes.io/docs/tasks/manage-kubernetes-objects/kustomization/"
+        },
+        {
+          "label": "Repository",
+          "url": "https://github.com/kubernetes-sigs/kustomize"
+        },
+        {
+          "label": "Releases",
+          "url": "https://github.com/kubernetes-sigs/kustomize/releases"
+        }
+      ],
       "sections": [
         {
           "title": "Idea",
@@ -1514,6 +1824,16 @@
       "track": {
         "github": "helmfile/helmfile"
       },
+      "links": [
+        {
+          "label": "Documentation",
+          "url": "https://helmfile.readthedocs.io/en/latest/"
+        },
+        {
+          "label": "Repository",
+          "url": "https://github.com/helmfile/helmfile"
+        }
+      ],
       "sections": [
         {
           "title": "What it does",
@@ -1568,6 +1888,24 @@
         "github": "carvel-dev/ytt",
         "cncf": "carvel"
       },
+      "links": [
+        {
+          "label": "Project",
+          "url": "https://carvel.dev/"
+        },
+        {
+          "label": "Install ytt",
+          "url": "https://carvel.dev/ytt/docs/latest/install/"
+        },
+        {
+          "label": "Repository (ytt)",
+          "url": "https://github.com/carvel-dev/ytt"
+        },
+        {
+          "label": "Repository (kapp-controller)",
+          "url": "https://github.com/carvel-dev/kapp-controller"
+        }
+      ],
       "sections": [
         {
           "title": "Tools",
@@ -1638,6 +1976,28 @@
       "track": {
         "github": "google/jsonnet"
       },
+      "links": [
+        {
+          "label": "Project",
+          "url": "https://jsonnet.org/"
+        },
+        {
+          "label": "Tutorial",
+          "url": "https://jsonnet.org/learning/tutorial.html"
+        },
+        {
+          "label": "Language reference",
+          "url": "https://jsonnet.org/ref/language.html"
+        },
+        {
+          "label": "Standard library",
+          "url": "https://jsonnet.org/ref/stdlib.html"
+        },
+        {
+          "label": "Repository",
+          "url": "https://github.com/google/jsonnet"
+        }
+      ],
       "sections": [
         {
           "title": "Notes",
@@ -1693,6 +2053,20 @@
       "track": {
         "github": "grafana/tanka"
       },
+      "links": [
+        {
+          "label": "Project",
+          "url": "https://tanka.dev/"
+        },
+        {
+          "label": "Install",
+          "url": "https://tanka.dev/install"
+        },
+        {
+          "label": "Repository",
+          "url": "https://github.com/grafana/tanka"
+        }
+      ],
       "sections": [
         {
           "title": "Notes",
@@ -1743,6 +2117,12 @@
       "track": {
         "github": "ksonnet/ksonnet"
       },
+      "links": [
+        {
+          "label": "Repository (archived)",
+          "url": "https://github.com/ksonnet/ksonnet"
+        }
+      ],
       "sections": [
         {
           "title": "Status",
@@ -1790,6 +2170,24 @@
         "github": "kptdev/kpt",
         "tag": "^v\\d"
       },
+      "links": [
+        {
+          "label": "Project",
+          "url": "https://kpt.dev/"
+        },
+        {
+          "label": "Install the CLI",
+          "url": "https://kpt.dev/installation/"
+        },
+        {
+          "label": "CLI reference",
+          "url": "https://kpt.dev/reference/cli/"
+        },
+        {
+          "label": "Repository",
+          "url": "https://github.com/kptdev/kpt"
+        }
+      ],
       "sections": [
         {
           "title": "Notes",
@@ -1837,6 +2235,20 @@
       "track": {
         "github": "cdk8s-team/cdk8s-core"
       },
+      "links": [
+        {
+          "label": "Project",
+          "url": "https://cdk8s.io/"
+        },
+        {
+          "label": "Documentation",
+          "url": "https://cdk8s.io/docs/latest/"
+        },
+        {
+          "label": "Repository",
+          "url": "https://github.com/cdk8s-team/cdk8s"
+        }
+      ],
       "sections": [
         {
           "title": "Notes",
@@ -1885,6 +2297,20 @@
       "track": {
         "github": "stefanprodan/timoni"
       },
+      "links": [
+        {
+          "label": "Project",
+          "url": "https://timoni.sh/"
+        },
+        {
+          "label": "Install",
+          "url": "https://timoni.sh/install/"
+        },
+        {
+          "label": "Repository",
+          "url": "https://github.com/stefanprodan/timoni"
+        }
+      ],
       "sections": [
         {
           "title": "Notes",
@@ -1940,6 +2366,24 @@
         "github": "kcl-lang/kcl",
         "cncf": "kcl"
       },
+      "links": [
+        {
+          "label": "Project",
+          "url": "https://www.kcl-lang.io/"
+        },
+        {
+          "label": "Introduction",
+          "url": "https://www.kcl-lang.io/docs/user_docs/getting-started/intro"
+        },
+        {
+          "label": "Install",
+          "url": "https://www.kcl-lang.io/docs/user_docs/getting-started/install"
+        },
+        {
+          "label": "Repository",
+          "url": "https://github.com/kcl-lang/kcl"
+        }
+      ],
       "sections": [
         {
           "title": "Notes",
@@ -1993,6 +2437,12 @@
         "github": "bitnami/sealed-secrets",
         "tag": "^v\\d"
       },
+      "links": [
+        {
+          "label": "Repository and README",
+          "url": "https://github.com/bitnami/sealed-secrets"
+        }
+      ],
       "sections": [
         {
           "title": "How it works",
@@ -2061,6 +2511,24 @@
         "tag": "^v\\d",
         "cncf": "external-secrets"
       },
+      "links": [
+        {
+          "label": "Project and docs",
+          "url": "https://external-secrets.io/latest/"
+        },
+        {
+          "label": "Getting started",
+          "url": "https://external-secrets.io/latest/introduction/getting-started/"
+        },
+        {
+          "label": "API reference",
+          "url": "https://external-secrets.io/latest/api/externalsecret/"
+        },
+        {
+          "label": "Repository",
+          "url": "https://github.com/external-secrets/external-secrets"
+        }
+      ],
       "sections": [
         {
           "title": "How it works",
@@ -2118,6 +2586,20 @@
         "github": "getsops/sops",
         "cncf": "sops"
       },
+      "links": [
+        {
+          "label": "Project",
+          "url": "https://getsops.io/"
+        },
+        {
+          "label": "Documentation",
+          "url": "https://getsops.io/docs/"
+        },
+        {
+          "label": "Repository",
+          "url": "https://github.com/getsops/sops"
+        }
+      ],
       "sections": [
         {
           "title": "What it is",
@@ -2192,6 +2674,20 @@
       "track": {
         "github": "kubernetes-sigs/secrets-store-csi-driver"
       },
+      "links": [
+        {
+          "label": "Documentation",
+          "url": "https://secrets-store-csi-driver.sigs.k8s.io/"
+        },
+        {
+          "label": "Install",
+          "url": "https://secrets-store-csi-driver.sigs.k8s.io/getting-started/installation"
+        },
+        {
+          "label": "Repository",
+          "url": "https://github.com/kubernetes-sigs/secrets-store-csi-driver"
+        }
+      ],
       "sections": [
         {
           "title": "How it works",
@@ -2245,6 +2741,20 @@
       "track": {
         "github": "argoproj-labs/argocd-vault-plugin"
       },
+      "links": [
+        {
+          "label": "Documentation",
+          "url": "https://argocd-vault-plugin.readthedocs.io/en/stable/"
+        },
+        {
+          "label": "Install",
+          "url": "https://argocd-vault-plugin.readthedocs.io/en/stable/installation/"
+        },
+        {
+          "label": "Repository",
+          "url": "https://github.com/argoproj-labs/argocd-vault-plugin"
+        }
+      ],
       "sections": [
         {
           "title": "Status",

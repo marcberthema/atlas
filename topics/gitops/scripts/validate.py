@@ -63,6 +63,14 @@ def main():
                 bad.append(f"source date is not a date: {i}")
         if len({s["url"] for s in e.get("sources", [])}) != len(e.get("sources", [])):
             bad.append(f"duplicate source url: {i}")
+        links = e.get("links", [])
+        if not links:
+            bad.append(f"no links (project, docs or repository): {i}")
+        for link in links:
+            if not link.get("label") or not link.get("url", "").startswith("https://"):
+                bad.append(f"link needs a label and an https url: {i}")
+        if len({x["url"] for x in links}) != len(links):
+            bad.append(f"duplicate link url: {i}")
         for sec in e.get("sections", []):
             if not sec.get("title") or not sec.get("items"):
                 bad.append(f"section needs a title and items: {i}")
