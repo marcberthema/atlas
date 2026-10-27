@@ -219,6 +219,28 @@
           ]
         },
         {
+          "title": "Setup: dev (no HA)",
+          "items": [
+            "Install: kubectl create namespace argocd, then kubectl apply -n argocd --server-side --force-conflicts -f the stable manifests/install.yaml. The install docs call the non-HA install \"not recommended for production use\".",
+            "Reach it with kubectl port-forward svc/argocd-server -n argocd 8080:443 and open https://localhost:8080. The default certificate is self-signed: trust it, or pass --insecure to every CLI command.",
+            "First login: argocd admin initial-password -n argocd prints the admin password (stored in the argocd-initial-admin-secret secret). Log in with argocd login, change it with argocd account update-password, then delete argocd-initial-admin-secret.",
+            "Lighter variants: core-install.yaml is headless (no API server or UI, non-HA, no multi-tenancy). namespace-install.yaml needs only namespace privileges and manages only the local cluster's Argo CD resources, and its CRDs are applied separately from manifests/crds.",
+            "Declare apps as Application manifests in Git, even in dev, so the setup you test is the one you run in prod."
+          ]
+        },
+        {
+          "title": "Setup: prod (HA)",
+          "items": [
+            "Install ha/install.yaml (or ha/namespace-install.yaml) instead, and pin a version, for example a release tag, rather than stable. HA needs at least three nodes, because of pod anti-affinity rules. IPv6-only clusters are not supported.",
+            "Replicas: argocd-server 3 or more, with ARGOCD_API_SERVER_REPLICAS set to the same number. Application controller: raise the StatefulSet replicas and set ARGOCD_CONTROLLER_REPLICAS to match, which shards the clusters across replicas. Scale argocd-repo-server when manifest generation times out. Redis runs as three servers with Sentinel, and is only a cache.",
+            "Repo server and controller tuning: --parallelismlimit on the repo server, --status-processors (default 20) and --operation-processors (default 10) on the controller, GOMEMLIMIT at 80 to 90 percent of the memory limit, and a webhook so Git changes do not wait for the 120 second poll.",
+            "Expose it through an ingress, load balancer or Gateway. Either terminate TLS there and set server.insecure: \"true\" in argocd-cmd-params-cm, or pass TLS through to the API server. Use a real certificate.",
+            "Access: set admin.enabled: \"false\" in argocd-cm once SSO works. Use SSO through bundled Dex (SAML, LDAP, other connectors) or direct OIDC (oidc.config), with RBAC in argocd-rbac-cm and policy.default set deliberately. See Projects and RBAC.",
+            "Manage Argo CD itself and its Applications from Git (app of apps or ApplicationSet), keep secrets out of Git (see Secrets), and take an argocd admin export backup before a major upgrade.",
+            "Add clusters with argocd cluster add, and decide whether one Argo CD manages all clusters or each cluster runs its own. See Multi-cluster and ApplicationSet."
+          ]
+        },
+        {
           "title": "Running it",
           "items": [
             "A new minor release about every three months (about February, May, August, November). Only the three latest minor versions get patches.",
@@ -251,7 +273,8 @@
       "notes": [
         "Origin date: the first GitHub release is 2018-03-13 and a Red Hat and Intuit press release says Intuit open sourced it in January 2018. An engineer interview says March 2018. Unconfirmed.",
         "The docs pages show no Argo CD version. They are the stable docs read on 2026-10-26, when the latest release was v3.5.6.",
-        "To do, once a test Argo CD is running: compare the API (/swagger-ui on the server) with the CLI commands and the web UI, to list what only one of them can do. Known so far: argocd admin works on the cluster directly, not through the API server; the web terminal is a UI feature (off by default) with no CLI command named in its docs. Everything else is unconfirmed."
+        "To do, once a test Argo CD is running: compare the API (/swagger-ui on the server) with the CLI commands and the web UI, to list what only one of them can do. Known so far: argocd admin works on the cluster directly, not through the API server; the web terminal is a UI feature (off by default) with no CLI command named in its docs. Everything else is unconfirmed.",
+        "Setup sections: the replica, flag and setting names come from the installation, high availability, ingress and user management pages. Which combination counts as \"typical\" is composed from them, not a reference architecture the docs publish. Replica numbers other than \"3 or more\" API servers are not given by the docs. Whether argocd cluster add suits a production rollout versus a declarative cluster Secret is not settled by the pages read."
       ],
       "sources": [
         {
@@ -370,6 +393,18 @@
           "label": "Red Hat and Intuit press release (2020)",
           "url": "https://www.redhat.com/en/about/press-releases/red-hat-and-intuit-join-forces-argo-project-extending-gitops-community-innovation-better-manage-multi-cluster-cloud-native-applications-scale",
           "date": "2020-08-17"
+        },
+        {
+          "label": "Installation",
+          "url": "https://argo-cd.readthedocs.io/en/stable/operator-manual/installation/"
+        },
+        {
+          "label": "Ingress",
+          "url": "https://argo-cd.readthedocs.io/en/stable/operator-manual/ingress/"
+        },
+        {
+          "label": "User management",
+          "url": "https://argo-cd.readthedocs.io/en/stable/operator-manual/user-management/"
         }
       ]
     },
