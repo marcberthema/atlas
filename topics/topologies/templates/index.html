@@ -31,6 +31,22 @@ button.nm{font:inherit;font-weight:600;color:var(--acc);background:none;border:0
 .q{color:var(--warn);font-weight:700;cursor:help}
 .empty{color:var(--mut);padding:16px 0}
 .pg{padding:4px 0 0}
+.dg{margin:10px 0}
+.dg svg{display:block;width:100%;height:auto;max-width:var(--w);margin:0 auto;border:1px solid var(--rule);border-radius:8px;background:var(--card)}
+.dg figcaption{color:var(--mut);font-size:.85rem;text-align:center;margin-top:4px}
+.dg text{fill:var(--fg);font:12px system-ui,sans-serif;paint-order:stroke;stroke:var(--card);stroke-width:3px;stroke-linejoin:round}
+.dg .sub{font-size:10.5px;fill:var(--mut)}
+.dg .lk{font-size:10.5px;fill:var(--mut)}
+.dg .bt{font-size:11px;font-weight:600;fill:var(--mut);text-anchor:start}
+.dg rect.n{fill:var(--bg);stroke:var(--acc);stroke-width:1.4}
+.dg rect.hub{fill:var(--acc);fill-opacity:.18;stroke-width:2}
+.dg rect.ext{stroke-dasharray:5 3;stroke:var(--mut)}
+.dg rect.bus{fill:var(--warn);fill-opacity:.2;stroke:var(--warn)}
+.dg rect.store{stroke:var(--ok)}
+.dg rect.box{fill:none;stroke:var(--rule);stroke-width:1.4;stroke-dasharray:2 4}
+.dg line{stroke:var(--acc);stroke-width:1.5}
+.dg line.dash{stroke-dasharray:6 4}
+.dg marker path{fill:var(--acc)}
 .gv{border-top:1px solid var(--rule);margin-top:18px;padding-top:12px}
 
 .cmp th:first-child,.cmp td:first-child{white-space:nowrap}
@@ -136,6 +152,25 @@ function tab(id,push){
 
 function link(id){return byId[id]?'<a href="#'+esc(id)+'" data-id="'+esc(id)+'">'+esc(byId[id].name)+'</a>':''}
 
+// A diagram spec: w, h, boxes (frames), nodes (x, y is the centre), links (from, to, label, arrow none|to|both, dashed).
+function svgDiagram(d){
+  const N=Object.fromEntries(d.nodes.map(n=>[n.id,n]));
+  const edge=(n,tx,ty)=>{const dx=tx-n.x,dy=ty-n.y;if(!dx&&!dy)return[n.x,n.y];
+    const k=Math.min(dx?(n.w/2)/Math.abs(dx):Infinity,dy?(n.h/2)/Math.abs(dy):Infinity);return[n.x+dx*k,n.y+dy*k];};
+  let s='<svg viewBox="0 0 '+d.w+' '+d.h+'" style="--w:'+d.w+'px" role="img" aria-label="'+esc(d.alt)+'"><title>'+esc(d.alt)+'</title>'
+    +'<defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z"/></marker></defs>';
+  (d.boxes||[]).forEach(b=>{s+='<rect class="box" x="'+b.x+'" y="'+b.y+'" width="'+b.w+'" height="'+b.h+'" rx="10"/><text class="bt" x="'+(b.x+10)+'" y="'+(b.y+16)+'">'+esc(b.label)+'</text>';});
+  (d.links||[]).forEach(l=>{const a=N[l.from],b=N[l.to];const p=edge(a,b.x,b.y),q=edge(b,a.x,a.y);
+    const ar=l.arrow||'none';
+    s+='<line class="'+(l.dashed?'dash':'')+'" x1="'+p[0].toFixed(1)+'" y1="'+p[1].toFixed(1)+'" x2="'+q[0].toFixed(1)+'" y2="'+q[1].toFixed(1)+'"'
+      +(ar==='to'||ar==='both'?' marker-end="url(#ar)"':'')+(ar==='both'?' marker-start="url(#ar)"':'')+'/>';
+    if(l.label)s+='<text class="lk" text-anchor="middle" x="'+((p[0]+q[0])/2).toFixed(1)+'" y="'+(((p[1]+q[1])/2)-4).toFixed(1)+'">'+esc(l.label)+'</text>';});
+  d.nodes.forEach(n=>{s+='<rect class="n '+esc(n.kind||'')+'" x="'+(n.x-n.w/2)+'" y="'+(n.y-n.h/2)+'" width="'+n.w+'" height="'+n.h+'" rx="6"/>'
+    +'<text text-anchor="middle" x="'+n.x+'" y="'+(n.sub?n.y-2:n.y+4)+'">'+esc(n.label)+'</text>'
+    +(n.sub?'<text class="sub" text-anchor="middle" x="'+n.x+'" y="'+(n.y+12)+'">'+esc(n.sub)+'</text>':'');});
+  return s+'</svg>';
+}
+
 function detail(e){
   const v=e.version;
   let h='<h3>'+esc(e.name)+'</h3><p class="meta">'+esc(e.summary)+'</p>'
@@ -145,6 +180,7 @@ function detail(e){
     +'<div><span>Started:</span> '+started(e)+' <span>('+esc(e.started.basis)+')</span></div>'
     +'<div><span>Status:</span> '+esc(e.status)+' &middot; <span>Licence:</span> '+esc(e.license)+(e.maintainer?' &middot; <span>Maintainer:</span> '+esc(e.maintainer):'')+'</div>'
     +'<div><span>CNCF:</span> '+esc(e.cncf.text)+'</div></div>';
+  (e.diagrams||[]).forEach(d=>{h+='<figure class="dg">'+svgDiagram(d)+(d.caption?'<figcaption>'+esc(d.caption)+'</figcaption>':'')+'</figure>';});
   if(e.links&&e.links.length)h+='<h4>Links</h4><ul class="lk">'+e.links.map(l=>'<li><a href="'+esc(l.url)+'" target="_blank" rel="noopener">'+esc(l.label)+'</a></li>').join('')+'</ul>';
   h+=e.sections.map(s=>'<h4>'+esc(s.title)+'</h4><ul>'+s.items.map(i=>'<li>'+esc(i)+'</li>').join('')+'</ul>').join('');
   if(e.compare&&e.compare.length)h+='<h4>Compared</h4><ul>'+e.compare.map(c=>'<li>'+link(c.with)+': '+esc(c.text)+'</li>').join('')+'</ul>';

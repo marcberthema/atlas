@@ -73,6 +73,18 @@ def main():
                 bad.append(f"link needs a label and an https url: {i}")
         if len({x["url"] for x in links}) != len(links):
             bad.append(f"duplicate link url: {i}")
+        for d in e.get("diagrams", []):
+            ids = [n.get("id") for n in d.get("nodes", [])]
+            if not d.get("alt") or not d.get("w") or not d.get("h") or len(ids) != len(set(ids)):
+                bad.append(f"diagram needs alt, w, h and unique node ids: {i}")
+            for n in d.get("nodes", []):
+                if not all(isinstance(n.get(k), (int, float)) for k in ("x", "y", "w", "h")) or not n.get("label"):
+                    bad.append(f"diagram node needs x, y, w, h and a label: {i}")
+                elif n["x"] - n["w"] / 2 < 0 or n["y"] - n["h"] / 2 < 0 or n["x"] + n["w"] / 2 > d["w"] or n["y"] + n["h"] / 2 > d["h"]:
+                    bad.append(f"diagram node {n['id']} is outside the canvas: {i}")
+            for l in d.get("links", []):
+                if l.get("from") not in ids or l.get("to") not in ids:
+                    bad.append(f"diagram link names an unknown node: {i}")
         for sec in e.get("sections", []):
             if not sec.get("title") or not sec.get("items"):
                 bad.append(f"section needs a title and items: {i}")

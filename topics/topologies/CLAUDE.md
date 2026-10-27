@@ -20,3 +20,5 @@ Refreshing: `make check` lists what changed for the entries that have a `track` 
 Review each difference, then update `checked`, `version` and the facts that changed together. Add a `track` to every entry that has a GitHub repository and releases.
 
 The last tab, Standard topologies, shows every entry of the group `reference` in full (the template's `group` option on a tab). They are reference designs taken from vendor or project docs, so each says whose docs it comes from and which shapes it uses. Do not call one a standard unless a source does.
+
+Diagrams: an entry may have `diagrams` (see docs/data-model.md). The page draws them as inline SVG from the spec, so there is no image file and no script from outside. A diagram only restates what the entry's text and sources say. Keep labels short enough to fit their node, and check the page in a browser after changing one.

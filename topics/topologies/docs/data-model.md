@@ -25,6 +25,7 @@
 | `version` | Required, and shown in the dialog: `name`, `analysed` (the version the content was written against), `released` (its date), `docs` (what the text was read from), `checked` (date). |
 | `track` | Input to `make check`: `github` (owner/repo), optional `tag` (regex a release tag must match, for repositories that also publish API or chart tags) and `cncf` (slug in cncf.io/projects/<slug>). |
 | `links` | Where to go next, required: `label` and `url` (https). Project page, documentation, install guide, CLI and API references, repository, releases, whichever exist. Unlike `sources` these are not what the text was written from, so they carry no date. |
+| `diagrams` | Optional list of inline SVG diagrams, drawn by the page from a spec: `alt`, `caption`, `w`, `h`, `boxes` (`x`, `y`, `w`, `h`, `label`), `nodes` (`id`, `x`, `y` is the centre, `w`, `h`, `label`, optional `sub` and `kind`: hub, ext, bus, store) and `links` (`from`, `to`, optional `label`, `arrow`: none, to or both, `dashed`). The validator checks ids and that nodes fit the canvas. Describe the same thing in text, the diagram is not the only copy. |
 | `sections` | `title` and `items` (plain text lines). |
 | `compare`, `related` | `with` / entry ids that must exist. |
 | `notes` | Unconfirmed claims and caveats, shown in a separate block. |

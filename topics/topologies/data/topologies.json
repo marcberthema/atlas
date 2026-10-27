@@ -74,6 +74,100 @@
         "Terraform runners and other central CI hubs fit the shape but were not read, so they are not described here (unconfirmed).",
         "The Azure page is dated 2026-04-10 (ms.date). Wikipedia was read for the first 100,000 of 111,880 characters."
       ],
+      "diagrams": [
+        {
+          "alt": "Hub-and-spoke: six spokes, each connected only to a central hub.",
+          "caption": "Every spoke reaches the others through the hub.",
+          "w": 520,
+          "h": 300,
+          "nodes": [
+            {
+              "id": "hub",
+              "x": 260,
+              "y": 150,
+              "w": 100,
+              "h": 44,
+              "label": "Hub",
+              "sub": "shared services",
+              "kind": "hub"
+            },
+            {
+              "id": "s0",
+              "x": 260,
+              "y": 50,
+              "w": 84,
+              "h": 30,
+              "label": "Spoke 1"
+            },
+            {
+              "id": "s1",
+              "x": 425,
+              "y": 100,
+              "w": 84,
+              "h": 30,
+              "label": "Spoke 2"
+            },
+            {
+              "id": "s2",
+              "x": 425,
+              "y": 200,
+              "w": 84,
+              "h": 30,
+              "label": "Spoke 3"
+            },
+            {
+              "id": "s3",
+              "x": 260,
+              "y": 250,
+              "w": 84,
+              "h": 30,
+              "label": "Spoke 4"
+            },
+            {
+              "id": "s4",
+              "x": 95,
+              "y": 200,
+              "w": 84,
+              "h": 30,
+              "label": "Spoke 5"
+            },
+            {
+              "id": "s5",
+              "x": 95,
+              "y": 100,
+              "w": 84,
+              "h": 30,
+              "label": "Spoke 6"
+            }
+          ],
+          "links": [
+            {
+              "from": "hub",
+              "to": "s0"
+            },
+            {
+              "from": "hub",
+              "to": "s1"
+            },
+            {
+              "from": "hub",
+              "to": "s2"
+            },
+            {
+              "from": "hub",
+              "to": "s3"
+            },
+            {
+              "from": "hub",
+              "to": "s4"
+            },
+            {
+              "from": "hub",
+              "to": "s5"
+            }
+          ]
+        }
+      ],
       "links": [
         {
           "label": "Azure hub-spoke",
@@ -173,6 +267,188 @@
       "notes": [
         "The n(n-1)/2 count is arithmetic from the page's statement that connections grow quadratically, not quoted from it.",
         "The Istio page covers sidecar mode only. Ambient mode is only named in its navigation (unconfirmed)."
+      ],
+      "diagrams": [
+        {
+          "alt": "Full mesh: five nodes, every pair connected, ten links.",
+          "caption": "Full mesh: every pair linked (n(n-1)/2 links).",
+          "w": 300,
+          "h": 300,
+          "nodes": [
+            {
+              "id": "A",
+              "x": 150,
+              "y": 45,
+              "w": 56,
+              "h": 28,
+              "label": "A"
+            },
+            {
+              "id": "B",
+              "x": 250,
+              "y": 118,
+              "w": 56,
+              "h": 28,
+              "label": "B"
+            },
+            {
+              "id": "C",
+              "x": 212,
+              "y": 235,
+              "w": 56,
+              "h": 28,
+              "label": "C"
+            },
+            {
+              "id": "D",
+              "x": 88,
+              "y": 235,
+              "w": 56,
+              "h": 28,
+              "label": "D"
+            },
+            {
+              "id": "E",
+              "x": 50,
+              "y": 118,
+              "w": 56,
+              "h": 28,
+              "label": "E"
+            }
+          ],
+          "links": [
+            {
+              "from": "A",
+              "to": "B"
+            },
+            {
+              "from": "A",
+              "to": "C"
+            },
+            {
+              "from": "A",
+              "to": "D"
+            },
+            {
+              "from": "A",
+              "to": "E"
+            },
+            {
+              "from": "B",
+              "to": "C"
+            },
+            {
+              "from": "B",
+              "to": "D"
+            },
+            {
+              "from": "B",
+              "to": "E"
+            },
+            {
+              "from": "C",
+              "to": "D"
+            },
+            {
+              "from": "C",
+              "to": "E"
+            },
+            {
+              "from": "D",
+              "to": "E"
+            }
+          ]
+        },
+        {
+          "alt": "Partial mesh: six nodes, a ring plus two cross links.",
+          "caption": "Partial mesh: redundancy without linking every pair.",
+          "w": 300,
+          "h": 300,
+          "nodes": [
+            {
+              "id": "A",
+              "x": 150,
+              "y": 45,
+              "w": 56,
+              "h": 28,
+              "label": "A"
+            },
+            {
+              "id": "B",
+              "x": 241,
+              "y": 98,
+              "w": 56,
+              "h": 28,
+              "label": "B"
+            },
+            {
+              "id": "C",
+              "x": 241,
+              "y": 202,
+              "w": 56,
+              "h": 28,
+              "label": "C"
+            },
+            {
+              "id": "D",
+              "x": 150,
+              "y": 255,
+              "w": 56,
+              "h": 28,
+              "label": "D"
+            },
+            {
+              "id": "E",
+              "x": 59,
+              "y": 202,
+              "w": 56,
+              "h": 28,
+              "label": "E"
+            },
+            {
+              "id": "F",
+              "x": 59,
+              "y": 97,
+              "w": 56,
+              "h": 28,
+              "label": "F"
+            }
+          ],
+          "links": [
+            {
+              "from": "A",
+              "to": "B"
+            },
+            {
+              "from": "B",
+              "to": "C"
+            },
+            {
+              "from": "C",
+              "to": "D"
+            },
+            {
+              "from": "D",
+              "to": "E"
+            },
+            {
+              "from": "E",
+              "to": "F"
+            },
+            {
+              "from": "F",
+              "to": "A"
+            },
+            {
+              "from": "A",
+              "to": "D"
+            },
+            {
+              "from": "B",
+              "to": "E"
+            }
+          ]
+        }
       ],
       "links": [
         {
@@ -274,6 +550,99 @@
       "notes": [
         "RFC 1034 was read for the first 100,000 of 135,972 characters. DNS root servers, caching resolvers' behaviour and later RFCs (such as RFC 1035) were not read."
       ],
+      "diagrams": [
+        {
+          "alt": "Tree: one root, two branches, four leaves.",
+          "caption": "Each level talks to its parent and its children.",
+          "w": 520,
+          "h": 280,
+          "nodes": [
+            {
+              "id": "r",
+              "x": 260,
+              "y": 36,
+              "w": 110,
+              "h": 32,
+              "label": "Root",
+              "kind": "hub"
+            },
+            {
+              "id": "b1",
+              "x": 130,
+              "y": 120,
+              "w": 110,
+              "h": 32,
+              "label": "Branch"
+            },
+            {
+              "id": "b2",
+              "x": 390,
+              "y": 120,
+              "w": 110,
+              "h": 32,
+              "label": "Branch"
+            },
+            {
+              "id": "l0",
+              "x": 65,
+              "y": 208,
+              "w": 100,
+              "h": 32,
+              "label": "Leaf"
+            },
+            {
+              "id": "l1",
+              "x": 195,
+              "y": 208,
+              "w": 100,
+              "h": 32,
+              "label": "Leaf"
+            },
+            {
+              "id": "l2",
+              "x": 325,
+              "y": 208,
+              "w": 100,
+              "h": 32,
+              "label": "Leaf"
+            },
+            {
+              "id": "l3",
+              "x": 455,
+              "y": 208,
+              "w": 100,
+              "h": 32,
+              "label": "Leaf"
+            }
+          ],
+          "links": [
+            {
+              "from": "r",
+              "to": "b1"
+            },
+            {
+              "from": "r",
+              "to": "b2"
+            },
+            {
+              "from": "b1",
+              "to": "l0"
+            },
+            {
+              "from": "b1",
+              "to": "l1"
+            },
+            {
+              "from": "b2",
+              "to": "l2"
+            },
+            {
+              "from": "b2",
+              "to": "l3"
+            }
+          ]
+        }
+      ],
       "links": [
         {
           "label": "RFC 1034",
@@ -367,6 +736,105 @@
       "notes": [
         "Delivery guarantees (at-most-once, at-least-once, exactly-once) were not read for any of the three and are not described (unconfirmed)."
       ],
+      "diagrams": [
+        {
+          "alt": "Bus: three producers and three consumers share one channel.",
+          "caption": "Producers and consumers know the channel, not each other.",
+          "w": 560,
+          "h": 270,
+          "nodes": [
+            {
+              "id": "bus",
+              "x": 280,
+              "y": 135,
+              "w": 480,
+              "h": 30,
+              "label": "Shared channel (broker, log or cable)",
+              "kind": "bus"
+            },
+            {
+              "id": "p0",
+              "x": 110,
+              "y": 44,
+              "w": 120,
+              "h": 32,
+              "label": "Producer A"
+            },
+            {
+              "id": "p1",
+              "x": 280,
+              "y": 44,
+              "w": 120,
+              "h": 32,
+              "label": "Producer B"
+            },
+            {
+              "id": "p2",
+              "x": 450,
+              "y": 44,
+              "w": 120,
+              "h": 32,
+              "label": "Producer C"
+            },
+            {
+              "id": "c0",
+              "x": 110,
+              "y": 226,
+              "w": 120,
+              "h": 32,
+              "label": "Consumer X"
+            },
+            {
+              "id": "c1",
+              "x": 280,
+              "y": 226,
+              "w": 120,
+              "h": 32,
+              "label": "Consumer Y"
+            },
+            {
+              "id": "c2",
+              "x": 450,
+              "y": 226,
+              "w": 120,
+              "h": 32,
+              "label": "Consumer Z"
+            }
+          ],
+          "links": [
+            {
+              "from": "p0",
+              "to": "bus",
+              "arrow": "to"
+            },
+            {
+              "from": "p1",
+              "to": "bus",
+              "arrow": "to"
+            },
+            {
+              "from": "p2",
+              "to": "bus",
+              "arrow": "to"
+            },
+            {
+              "from": "bus",
+              "to": "c0",
+              "arrow": "to"
+            },
+            {
+              "from": "bus",
+              "to": "c1",
+              "arrow": "to"
+            },
+            {
+              "from": "bus",
+              "to": "c2",
+              "arrow": "to"
+            }
+          ]
+        }
+      ],
       "links": [
         {
           "label": "Kafka introduction",
@@ -459,6 +927,96 @@
       "notes": [
         "The Cassandra page is the 5.0 documentation, labelled a prerelease on the page, with no date. Latest GA release per the download page is 5.0.9 (2026-08-07).",
         "The 'only part of the data moves' point is a general property of consistent hashing and was not on the page read (unconfirmed)."
+      ],
+      "diagrams": [
+        {
+          "alt": "Ring: six nodes in a loop, data travelling one way.",
+          "caption": "Each node knows its neighbour. In Cassandra's token ring a key goes to the node that owns its token.",
+          "w": 360,
+          "h": 300,
+          "nodes": [
+            {
+              "id": "n0",
+              "x": 180,
+              "y": 50,
+              "w": 60,
+              "h": 28,
+              "label": "Node 1"
+            },
+            {
+              "id": "n1",
+              "x": 284,
+              "y": 100,
+              "w": 60,
+              "h": 28,
+              "label": "Node 2"
+            },
+            {
+              "id": "n2",
+              "x": 284,
+              "y": 200,
+              "w": 60,
+              "h": 28,
+              "label": "Node 3"
+            },
+            {
+              "id": "n3",
+              "x": 180,
+              "y": 250,
+              "w": 60,
+              "h": 28,
+              "label": "Node 4"
+            },
+            {
+              "id": "n4",
+              "x": 76,
+              "y": 200,
+              "w": 60,
+              "h": 28,
+              "label": "Node 5"
+            },
+            {
+              "id": "n5",
+              "x": 76,
+              "y": 100,
+              "w": 60,
+              "h": 28,
+              "label": "Node 6"
+            }
+          ],
+          "links": [
+            {
+              "from": "n0",
+              "to": "n1",
+              "arrow": "to"
+            },
+            {
+              "from": "n1",
+              "to": "n2",
+              "arrow": "to"
+            },
+            {
+              "from": "n2",
+              "to": "n3",
+              "arrow": "to"
+            },
+            {
+              "from": "n3",
+              "to": "n4",
+              "arrow": "to"
+            },
+            {
+              "from": "n4",
+              "to": "n5",
+              "arrow": "to"
+            },
+            {
+              "from": "n5",
+              "to": "n0",
+              "arrow": "to"
+            }
+          ]
+        }
       ],
       "links": [
         {
@@ -1387,6 +1945,118 @@
         "The page is dated 2026-04-10 (ms.date).",
         "A reference design from the documentation named in Sources. It is a common starting point and not a universal standard."
       ],
+      "diagrams": [
+        {
+          "alt": "Landing zone: a hub network with firewall, gateway and DNS, workload spokes peered to it, on-premises connected through the hub.",
+          "caption": "Spokes peer to one hub in their region. Spoke-to-spoke traffic goes through the hub.",
+          "w": 720,
+          "h": 340,
+          "boxes": [
+            {
+              "x": 215,
+              "y": 68,
+              "w": 290,
+              "h": 172,
+              "label": "Connectivity subscription"
+            },
+            {
+              "x": 520,
+              "y": 40,
+              "w": 190,
+              "h": 250,
+              "label": "Workload subscriptions"
+            }
+          ],
+          "nodes": [
+            {
+              "id": "int",
+              "x": 360,
+              "y": 34,
+              "w": 120,
+              "h": 30,
+              "label": "Internet",
+              "kind": "ext"
+            },
+            {
+              "id": "hub",
+              "x": 360,
+              "y": 150,
+              "w": 190,
+              "h": 62,
+              "label": "Hub virtual network",
+              "sub": "Firewall, gateway, Bastion, DNS",
+              "kind": "hub"
+            },
+            {
+              "id": "onp",
+              "x": 90,
+              "y": 150,
+              "w": 130,
+              "h": 44,
+              "label": "On-premises",
+              "kind": "ext"
+            },
+            {
+              "id": "s1",
+              "x": 620,
+              "y": 90,
+              "w": 140,
+              "h": 44,
+              "label": "Spoke: production",
+              "sub": "workload"
+            },
+            {
+              "id": "s2",
+              "x": 620,
+              "y": 200,
+              "w": 140,
+              "h": 44,
+              "label": "Spoke: non-production",
+              "sub": "workload"
+            },
+            {
+              "id": "s3",
+              "x": 360,
+              "y": 290,
+              "w": 180,
+              "h": 36,
+              "label": "Spoke: another workload"
+            }
+          ],
+          "links": [
+            {
+              "from": "int",
+              "to": "hub",
+              "label": "egress via firewall",
+              "arrow": "both"
+            },
+            {
+              "from": "onp",
+              "to": "hub",
+              "label": "VPN / ExpressRoute",
+              "arrow": "both"
+            },
+            {
+              "from": "hub",
+              "to": "s1",
+              "label": "peering",
+              "arrow": "both"
+            },
+            {
+              "from": "hub",
+              "to": "s2",
+              "label": "peering",
+              "arrow": "both"
+            },
+            {
+              "from": "hub",
+              "to": "s3",
+              "label": "peering",
+              "arrow": "both"
+            }
+          ]
+        }
+      ],
       "links": [
         {
           "label": "Azure: hub-spoke network topology",
@@ -1462,6 +2132,154 @@
       "notes": [
         "Pricing and throughput limits of inter-region links were not read.",
         "A reference design from the documentation named in Sources. It is a common starting point and not a universal standard."
+      ],
+      "diagrams": [
+        {
+          "alt": "Two regions, each with a hub and its spokes, and the two hubs linked.",
+          "caption": "A hub per region. A failed hub stays inside its region.",
+          "w": 720,
+          "h": 300,
+          "boxes": [
+            {
+              "x": 10,
+              "y": 8,
+              "w": 350,
+              "h": 284,
+              "label": "Region 1"
+            },
+            {
+              "x": 370,
+              "y": 8,
+              "w": 340,
+              "h": 284,
+              "label": "Region 2"
+            }
+          ],
+          "nodes": [
+            {
+              "id": "h1",
+              "x": 180,
+              "y": 140,
+              "w": 130,
+              "h": 44,
+              "label": "Hub, region 1",
+              "kind": "hub"
+            },
+            {
+              "id": "a1",
+              "x": 70,
+              "y": 60,
+              "w": 100,
+              "h": 30,
+              "label": "Spoke"
+            },
+            {
+              "id": "a2",
+              "x": 70,
+              "y": 220,
+              "w": 100,
+              "h": 30,
+              "label": "Spoke"
+            },
+            {
+              "id": "a3",
+              "x": 290,
+              "y": 60,
+              "w": 100,
+              "h": 30,
+              "label": "Spoke"
+            },
+            {
+              "id": "a4",
+              "x": 290,
+              "y": 220,
+              "w": 100,
+              "h": 30,
+              "label": "Spoke"
+            },
+            {
+              "id": "h2",
+              "x": 540,
+              "y": 140,
+              "w": 130,
+              "h": 44,
+              "label": "Hub, region 2",
+              "kind": "hub"
+            },
+            {
+              "id": "b1",
+              "x": 430,
+              "y": 60,
+              "w": 100,
+              "h": 30,
+              "label": "Spoke"
+            },
+            {
+              "id": "b2",
+              "x": 430,
+              "y": 220,
+              "w": 100,
+              "h": 30,
+              "label": "Spoke"
+            },
+            {
+              "id": "b3",
+              "x": 650,
+              "y": 60,
+              "w": 100,
+              "h": 30,
+              "label": "Spoke"
+            },
+            {
+              "id": "b4",
+              "x": 650,
+              "y": 220,
+              "w": 100,
+              "h": 30,
+              "label": "Spoke"
+            }
+          ],
+          "links": [
+            {
+              "from": "h1",
+              "to": "a1"
+            },
+            {
+              "from": "h1",
+              "to": "a2"
+            },
+            {
+              "from": "h1",
+              "to": "a3"
+            },
+            {
+              "from": "h1",
+              "to": "a4"
+            },
+            {
+              "from": "h2",
+              "to": "b1"
+            },
+            {
+              "from": "h2",
+              "to": "b2"
+            },
+            {
+              "from": "h2",
+              "to": "b3"
+            },
+            {
+              "from": "h2",
+              "to": "b4"
+            },
+            {
+              "from": "h1",
+              "to": "h2",
+              "label": "hub link",
+              "arrow": "both"
+            }
+          ]
+        }
       ],
       "links": [
         {
@@ -1543,6 +2361,102 @@
       "notes": [
         "Only the first part of the AWS best practices page was read.",
         "A reference design from the documentation named in Sources. It is a common starting point and not a universal standard."
+      ],
+      "diagrams": [
+        {
+          "alt": "On-premises network connected to a cloud hub by a primary private circuit and a failover VPN, with spokes behind the hub.",
+          "caption": "Primary path and failover path land on the hub's gateway. Spokes use the hub's gateway.",
+          "w": 720,
+          "h": 260,
+          "nodes": [
+            {
+              "id": "onp",
+              "x": 90,
+              "y": 130,
+              "w": 130,
+              "h": 48,
+              "label": "On-premises",
+              "sub": "data centre / sites",
+              "kind": "ext"
+            },
+            {
+              "id": "gw",
+              "x": 360,
+              "y": 130,
+              "w": 170,
+              "h": 56,
+              "label": "Hub gateways",
+              "sub": "private circuit + VPN",
+              "kind": "hub"
+            },
+            {
+              "id": "s1",
+              "x": 620,
+              "y": 70,
+              "w": 120,
+              "h": 34,
+              "label": "Spoke"
+            },
+            {
+              "id": "s2",
+              "x": 620,
+              "y": 130,
+              "w": 120,
+              "h": 34,
+              "label": "Spoke"
+            },
+            {
+              "id": "s3",
+              "x": 620,
+              "y": 190,
+              "w": 120,
+              "h": 34,
+              "label": "Spoke"
+            },
+            {
+              "id": "vpn",
+              "x": 225,
+              "y": 200,
+              "w": 110,
+              "h": 28,
+              "label": "VPN (failover)",
+              "kind": "ext"
+            }
+          ],
+          "links": [
+            {
+              "from": "onp",
+              "to": "gw",
+              "label": "private circuit (primary)",
+              "arrow": "both"
+            },
+            {
+              "from": "gw",
+              "to": "s1",
+              "arrow": "both"
+            },
+            {
+              "from": "gw",
+              "to": "s2",
+              "arrow": "both"
+            },
+            {
+              "from": "gw",
+              "to": "s3",
+              "arrow": "both"
+            },
+            {
+              "from": "onp",
+              "to": "vpn",
+              "dashed": true
+            },
+            {
+              "from": "vpn",
+              "to": "gw",
+              "dashed": true
+            }
+          ]
+        }
       ],
       "links": [
         {
@@ -1628,6 +2542,110 @@
         "The best practices page was read only up to the MTU point. The recommendation to use several route tables to segment networks is not stated on the pages read (unconfirmed).",
         "A reference design from the documentation named in Sources. It is a common starting point and not a universal standard."
       ],
+      "diagrams": [
+        {
+          "alt": "An AWS transit gateway in the middle with VPCs, a Direct Connect gateway, a VPN and a peered transit gateway attached.",
+          "caption": "Each attachment is associated with one route table. Routes propagate or are static.",
+          "w": 720,
+          "h": 320,
+          "nodes": [
+            {
+              "id": "tgw",
+              "x": 360,
+              "y": 160,
+              "w": 150,
+              "h": 56,
+              "label": "Transit gateway",
+              "sub": "route tables",
+              "kind": "hub"
+            },
+            {
+              "id": "v1",
+              "x": 120,
+              "y": 60,
+              "w": 120,
+              "h": 34,
+              "label": "VPC A"
+            },
+            {
+              "id": "v2",
+              "x": 120,
+              "y": 160,
+              "w": 120,
+              "h": 34,
+              "label": "VPC B"
+            },
+            {
+              "id": "v3",
+              "x": 120,
+              "y": 260,
+              "w": 120,
+              "h": 34,
+              "label": "VPC C"
+            },
+            {
+              "id": "dx",
+              "x": 600,
+              "y": 60,
+              "w": 150,
+              "h": 40,
+              "label": "Direct Connect gateway",
+              "kind": "ext"
+            },
+            {
+              "id": "vpn",
+              "x": 600,
+              "y": 160,
+              "w": 150,
+              "h": 34,
+              "label": "Site-to-Site VPN (BGP)",
+              "kind": "ext"
+            },
+            {
+              "id": "peer",
+              "x": 600,
+              "y": 260,
+              "w": 180,
+              "h": 40,
+              "label": "Transit gateway, other Region",
+              "kind": "ext"
+            }
+          ],
+          "links": [
+            {
+              "from": "tgw",
+              "to": "v1",
+              "arrow": "both"
+            },
+            {
+              "from": "tgw",
+              "to": "v2",
+              "arrow": "both"
+            },
+            {
+              "from": "tgw",
+              "to": "v3",
+              "arrow": "both"
+            },
+            {
+              "from": "tgw",
+              "to": "dx",
+              "arrow": "both"
+            },
+            {
+              "from": "tgw",
+              "to": "vpn",
+              "arrow": "both"
+            },
+            {
+              "from": "tgw",
+              "to": "peer",
+              "label": "peering (static route)",
+              "arrow": "both"
+            }
+          ]
+        }
+      ],
       "links": [
         {
           "label": "AWS: what is Transit Gateway",
@@ -1703,6 +2721,214 @@
       "notes": [
         "The Flux page was last modified 2024-05-13. The argocd-agent page does not use the term principal and does not explain its operating modes.",
         "A reference design from the documentation named in Sources. It is a common starting point and not a universal standard."
+      ],
+      "diagrams": [
+        {
+          "alt": "Central Argo CD deploys to registered clusters.",
+          "caption": "Push from a hub: the hub holds credentials for every cluster.",
+          "w": 560,
+          "h": 230,
+          "nodes": [
+            {
+              "id": "git",
+              "x": 280,
+              "y": 30,
+              "w": 150,
+              "h": 30,
+              "label": "Git repository",
+              "kind": "store"
+            },
+            {
+              "id": "hub",
+              "x": 280,
+              "y": 105,
+              "w": 170,
+              "h": 46,
+              "label": "Central Argo CD",
+              "sub": "registered clusters",
+              "kind": "hub"
+            },
+            {
+              "id": "c0",
+              "x": 90,
+              "y": 200,
+              "w": 120,
+              "h": 32,
+              "label": "Cluster 1"
+            },
+            {
+              "id": "c1",
+              "x": 280,
+              "y": 200,
+              "w": 120,
+              "h": 32,
+              "label": "Cluster 2"
+            },
+            {
+              "id": "c2",
+              "x": 470,
+              "y": 200,
+              "w": 120,
+              "h": 32,
+              "label": "Cluster 3"
+            }
+          ],
+          "links": [
+            {
+              "from": "git",
+              "to": "hub",
+              "label": "pulls",
+              "arrow": "to"
+            },
+            {
+              "from": "hub",
+              "to": "c0",
+              "label": "deploys",
+              "arrow": "to"
+            },
+            {
+              "from": "hub",
+              "to": "c1",
+              "label": "deploys",
+              "arrow": "to"
+            },
+            {
+              "from": "hub",
+              "to": "c2",
+              "label": "deploys",
+              "arrow": "to"
+            }
+          ]
+        },
+        {
+          "alt": "A Flux instance in each cluster pulls from Git.",
+          "caption": "Pull in each cluster: no central hub, bootstrap in every cluster.",
+          "w": 560,
+          "h": 200,
+          "nodes": [
+            {
+              "id": "git",
+              "x": 280,
+              "y": 30,
+              "w": 150,
+              "h": 30,
+              "label": "Git repository",
+              "kind": "store"
+            },
+            {
+              "id": "c0",
+              "x": 90,
+              "y": 150,
+              "w": 150,
+              "h": 40,
+              "label": "Cluster 1",
+              "sub": "Flux inside"
+            },
+            {
+              "id": "c1",
+              "x": 280,
+              "y": 150,
+              "w": 150,
+              "h": 40,
+              "label": "Cluster 2",
+              "sub": "Flux inside"
+            },
+            {
+              "id": "c2",
+              "x": 470,
+              "y": 150,
+              "w": 150,
+              "h": 40,
+              "label": "Cluster 3",
+              "sub": "Flux inside"
+            }
+          ],
+          "links": [
+            {
+              "from": "git",
+              "to": "c0",
+              "label": "pulls",
+              "arrow": "to"
+            },
+            {
+              "from": "git",
+              "to": "c1",
+              "label": "pulls",
+              "arrow": "to"
+            },
+            {
+              "from": "git",
+              "to": "c2",
+              "label": "pulls",
+              "arrow": "to"
+            }
+          ]
+        },
+        {
+          "alt": "argocd-agent: agents in workload clusters connect outward to a central hub.",
+          "caption": "Outbound from each cluster: helps clusters behind NATs or firewalls.",
+          "w": 560,
+          "h": 200,
+          "nodes": [
+            {
+              "id": "hub",
+              "x": 280,
+              "y": 35,
+              "w": 170,
+              "h": 40,
+              "label": "Central hub",
+              "sub": "control plane",
+              "kind": "hub"
+            },
+            {
+              "id": "c0",
+              "x": 90,
+              "y": 150,
+              "w": 150,
+              "h": 40,
+              "label": "Cluster 1",
+              "sub": "agent inside"
+            },
+            {
+              "id": "c1",
+              "x": 280,
+              "y": 150,
+              "w": 150,
+              "h": 40,
+              "label": "Cluster 2",
+              "sub": "agent inside"
+            },
+            {
+              "id": "c2",
+              "x": 470,
+              "y": 150,
+              "w": 150,
+              "h": 40,
+              "label": "Cluster 3",
+              "sub": "agent inside"
+            }
+          ],
+          "links": [
+            {
+              "from": "c0",
+              "to": "hub",
+              "label": "connects out",
+              "arrow": "to"
+            },
+            {
+              "from": "c1",
+              "to": "hub",
+              "label": "connects out",
+              "arrow": "to"
+            },
+            {
+              "from": "c2",
+              "to": "hub",
+              "label": "connects out",
+              "arrow": "to"
+            }
+          ]
+        }
       ],
       "links": [
         {
@@ -1808,6 +3034,156 @@
         "Only the table of contents and the introduction of the Istio deployment models page were read. The detail of each model (for example which is recommended for high availability) is not stated here (unconfirmed). Linkerd's multi-cluster model was not read.",
         "A reference design from the documentation named in Sources. It is a common starting point and not a universal standard."
       ],
+      "diagrams": [
+        {
+          "alt": "A service mesh over two clusters: services with sidecar proxies, a control plane per cluster, and a gateway link between networks.",
+          "caption": "Proxies talk mTLS to each other. Pick cluster, network, control plane, trust, mesh and tenancy models (Istio's list).",
+          "w": 720,
+          "h": 320,
+          "boxes": [
+            {
+              "x": 10,
+              "y": 30,
+              "w": 290,
+              "h": 285,
+              "label": "Cluster 1 (network 1)"
+            },
+            {
+              "x": 420,
+              "y": 30,
+              "w": 290,
+              "h": 285,
+              "label": "Cluster 2 (network 2)"
+            }
+          ],
+          "nodes": [
+            {
+              "id": "cp1",
+              "x": 130,
+              "y": 70,
+              "w": 140,
+              "h": 36,
+              "label": "Control plane",
+              "sub": "istiod",
+              "kind": "hub"
+            },
+            {
+              "id": "a1",
+              "x": 70,
+              "y": 170,
+              "w": 110,
+              "h": 40,
+              "label": "Service A",
+              "sub": "+ proxy"
+            },
+            {
+              "id": "b1",
+              "x": 200,
+              "y": 170,
+              "w": 110,
+              "h": 40,
+              "label": "Service B",
+              "sub": "+ proxy"
+            },
+            {
+              "id": "g1",
+              "x": 130,
+              "y": 262,
+              "w": 140,
+              "h": 32,
+              "label": "Gateway",
+              "kind": "ext"
+            },
+            {
+              "id": "cp2",
+              "x": 590,
+              "y": 70,
+              "w": 140,
+              "h": 36,
+              "label": "Control plane",
+              "sub": "istiod",
+              "kind": "hub"
+            },
+            {
+              "id": "a2",
+              "x": 520,
+              "y": 170,
+              "w": 110,
+              "h": 40,
+              "label": "Service C",
+              "sub": "+ proxy"
+            },
+            {
+              "id": "b2",
+              "x": 650,
+              "y": 170,
+              "w": 110,
+              "h": 40,
+              "label": "Service D",
+              "sub": "+ proxy"
+            },
+            {
+              "id": "g2",
+              "x": 590,
+              "y": 262,
+              "w": 140,
+              "h": 32,
+              "label": "Gateway",
+              "kind": "ext"
+            }
+          ],
+          "links": [
+            {
+              "from": "cp1",
+              "to": "a1"
+            },
+            {
+              "from": "cp1",
+              "to": "b1"
+            },
+            {
+              "from": "a1",
+              "to": "b1",
+              "arrow": "both"
+            },
+            {
+              "from": "a1",
+              "to": "g1"
+            },
+            {
+              "from": "b1",
+              "to": "g1"
+            },
+            {
+              "from": "cp2",
+              "to": "a2"
+            },
+            {
+              "from": "cp2",
+              "to": "b2"
+            },
+            {
+              "from": "a2",
+              "to": "b2",
+              "arrow": "both"
+            },
+            {
+              "from": "a2",
+              "to": "g2"
+            },
+            {
+              "from": "b2",
+              "to": "g2"
+            },
+            {
+              "from": "g1",
+              "to": "g2",
+              "label": "multi-network link",
+              "arrow": "both"
+            }
+          ]
+        }
+      ],
       "links": [
         {
           "label": "Istio: deployment models",
@@ -1892,6 +3268,149 @@
       "notes": [
         "Cluster sizing, KRaft and multi-cluster replication were not on the pages read (unconfirmed).",
         "A reference design from the documentation named in Sources. It is a common starting point and not a universal standard."
+      ],
+      "diagrams": [
+        {
+          "alt": "Three producers write to a three-broker cluster with replicated partitions, and three consumers read from it.",
+          "caption": "The cluster is the bus. Producers and consumers are decoupled.",
+          "w": 720,
+          "h": 300,
+          "boxes": [
+            {
+              "x": 250,
+              "y": 8,
+              "w": 220,
+              "h": 284,
+              "label": "Event cluster"
+            }
+          ],
+          "nodes": [
+            {
+              "id": "p1",
+              "x": 80,
+              "y": 60,
+              "w": 110,
+              "h": 32,
+              "label": "Producer"
+            },
+            {
+              "id": "p2",
+              "x": 80,
+              "y": 150,
+              "w": 110,
+              "h": 32,
+              "label": "Producer"
+            },
+            {
+              "id": "p3",
+              "x": 80,
+              "y": 240,
+              "w": 110,
+              "h": 32,
+              "label": "Producer"
+            },
+            {
+              "id": "k1",
+              "x": 360,
+              "y": 70,
+              "w": 130,
+              "h": 36,
+              "label": "Broker 1",
+              "sub": "partitions",
+              "kind": "bus"
+            },
+            {
+              "id": "k2",
+              "x": 360,
+              "y": 150,
+              "w": 130,
+              "h": 36,
+              "label": "Broker 2",
+              "sub": "partitions",
+              "kind": "bus"
+            },
+            {
+              "id": "k3",
+              "x": 360,
+              "y": 230,
+              "w": 130,
+              "h": 36,
+              "label": "Broker 3",
+              "sub": "partitions",
+              "kind": "bus"
+            },
+            {
+              "id": "c1",
+              "x": 640,
+              "y": 60,
+              "w": 110,
+              "h": 32,
+              "label": "Consumer"
+            },
+            {
+              "id": "c2",
+              "x": 640,
+              "y": 150,
+              "w": 110,
+              "h": 32,
+              "label": "Consumer"
+            },
+            {
+              "id": "c3",
+              "x": 640,
+              "y": 240,
+              "w": 110,
+              "h": 32,
+              "label": "Consumer"
+            }
+          ],
+          "links": [
+            {
+              "from": "p1",
+              "to": "k1",
+              "arrow": "to"
+            },
+            {
+              "from": "p2",
+              "to": "k2",
+              "arrow": "to"
+            },
+            {
+              "from": "p3",
+              "to": "k3",
+              "arrow": "to"
+            },
+            {
+              "from": "k1",
+              "to": "c1",
+              "arrow": "to"
+            },
+            {
+              "from": "k2",
+              "to": "c2",
+              "arrow": "to"
+            },
+            {
+              "from": "k3",
+              "to": "c3",
+              "arrow": "to"
+            },
+            {
+              "from": "k1",
+              "to": "k2",
+              "label": "replicates",
+              "arrow": "both",
+              "dashed": true
+            },
+            {
+              "from": "k2",
+              "to": "k3",
+              "label": "replicates",
+              "arrow": "both",
+              "dashed": true
+            }
+          ]
+        }
       ],
       "links": [
         {
@@ -1987,6 +3506,109 @@
         "The page does not name alternatives such as remote write, and does not discuss limits (unconfirmed). 'Federate only what you need' follows from match[] and is a recommendation, not a quote.",
         "A reference design from the documentation named in Sources. It is a common starting point and not a universal standard."
       ],
+      "diagrams": [
+        {
+          "alt": "A global Prometheus scrapes the /federate endpoint of one Prometheus per cluster, each of which scrapes local targets.",
+          "caption": "Hierarchical federation: aggregated series flow up.",
+          "w": 640,
+          "h": 300,
+          "nodes": [
+            {
+              "id": "g",
+              "x": 320,
+              "y": 40,
+              "w": 170,
+              "h": 40,
+              "label": "Global Prometheus",
+              "sub": "aggregated series",
+              "kind": "hub"
+            },
+            {
+              "id": "p0",
+              "x": 110,
+              "y": 150,
+              "w": 150,
+              "h": 40,
+              "label": "Prometheus, cluster 1"
+            },
+            {
+              "id": "p1",
+              "x": 320,
+              "y": 150,
+              "w": 150,
+              "h": 40,
+              "label": "Prometheus, cluster 2"
+            },
+            {
+              "id": "p2",
+              "x": 530,
+              "y": 150,
+              "w": 150,
+              "h": 40,
+              "label": "Prometheus, cluster 3"
+            },
+            {
+              "id": "t0",
+              "x": 110,
+              "y": 255,
+              "w": 120,
+              "h": 32,
+              "label": "Local targets"
+            },
+            {
+              "id": "t1",
+              "x": 320,
+              "y": 255,
+              "w": 120,
+              "h": 32,
+              "label": "Local targets"
+            },
+            {
+              "id": "t2",
+              "x": 530,
+              "y": 255,
+              "w": 120,
+              "h": 32,
+              "label": "Local targets"
+            }
+          ],
+          "links": [
+            {
+              "from": "g",
+              "to": "p0",
+              "label": "scrapes /federate",
+              "arrow": "to"
+            },
+            {
+              "from": "g",
+              "to": "p1",
+              "label": "scrapes /federate",
+              "arrow": "to"
+            },
+            {
+              "from": "g",
+              "to": "p2",
+              "label": "scrapes /federate",
+              "arrow": "to"
+            },
+            {
+              "from": "p0",
+              "to": "t0",
+              "arrow": "to"
+            },
+            {
+              "from": "p1",
+              "to": "t1",
+              "arrow": "to"
+            },
+            {
+              "from": "p2",
+              "to": "t2",
+              "arrow": "to"
+            }
+          ]
+        }
+      ],
       "links": [
         {
           "label": "Prometheus: federation",
@@ -2054,6 +3676,100 @@
       "notes": [
         "RFC 1034 was read for the first 100,000 of 135,972 characters.",
         "A reference design from the documentation named in Sources. It is a common starting point and not a universal standard."
+      ],
+      "diagrams": [
+        {
+          "alt": "Spokes resolve names through DNS in the hub, which forwards to on-premises DNS and to the public DNS tree.",
+          "caption": "One DNS service for every spoke. Delegation happens down the name tree.",
+          "w": 720,
+          "h": 280,
+          "nodes": [
+            {
+              "id": "hub",
+              "x": 360,
+              "y": 140,
+              "w": 160,
+              "h": 56,
+              "label": "Hub DNS",
+              "sub": "resolver and private zones",
+              "kind": "hub"
+            },
+            {
+              "id": "s1",
+              "x": 100,
+              "y": 60,
+              "w": 110,
+              "h": 32,
+              "label": "Spoke"
+            },
+            {
+              "id": "s2",
+              "x": 100,
+              "y": 140,
+              "w": 110,
+              "h": 32,
+              "label": "Spoke"
+            },
+            {
+              "id": "s3",
+              "x": 100,
+              "y": 220,
+              "w": 110,
+              "h": 32,
+              "label": "Spoke"
+            },
+            {
+              "id": "onp",
+              "x": 620,
+              "y": 60,
+              "w": 140,
+              "h": 40,
+              "label": "On-premises DNS",
+              "kind": "ext"
+            },
+            {
+              "id": "pub",
+              "x": 620,
+              "y": 220,
+              "w": 160,
+              "h": 40,
+              "label": "Public DNS (root, zones)",
+              "kind": "ext"
+            }
+          ],
+          "links": [
+            {
+              "from": "s1",
+              "to": "hub",
+              "label": "queries",
+              "arrow": "to"
+            },
+            {
+              "from": "s2",
+              "to": "hub",
+              "label": "queries",
+              "arrow": "to"
+            },
+            {
+              "from": "s3",
+              "to": "hub",
+              "label": "queries",
+              "arrow": "to"
+            },
+            {
+              "from": "hub",
+              "to": "onp",
+              "label": "forwards",
+              "arrow": "to"
+            },
+            {
+              "from": "hub",
+              "to": "pub",
+              "label": "recursion",
+              "arrow": "to"
+            }
+          ]
+        }
       ],
       "links": [
         {
