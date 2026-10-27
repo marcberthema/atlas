@@ -3,7 +3,7 @@
   check_updates.py [--only ID] [--links] [--strict]
 
 For each entry with a `track`: the latest GitHub release against version.analysed, the repository archived flag against
-status, and the CNCF maturity level against cncf.level. --links also fetches every source and link url. Set GITHUB_TOKEN to avoid
+status, and the CNCF maturity level against cncf.level. --links also fetches every source, link and code example url. Set GITHUB_TOKEN to avoid
 the unauthenticated GitHub rate limit (60 requests an hour). --strict exits 1 when anything differs.
 """
 import argparse
@@ -102,7 +102,8 @@ def check(entry):
 
 def broken_links(entry):
     out = []
-    for s in entry["sources"] + entry.get("links", []):
+    code = [it["source"] for sec in entry["sections"] for it in sec["items"] if isinstance(it, dict) and it.get("source")]
+    for s in entry["sources"] + entry.get("links", []) + code:
         status, _ = fetch(s["url"])
         # 403 and 429 are usually bot protection, not a dead link
         if not isinstance(status, int) or (status >= 400 and status not in (403, 429)):

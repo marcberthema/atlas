@@ -12,6 +12,45 @@ STATUS = {"active", "inactive", "archived"}
 CNCF = {"graduated", "incubating", "sandbox", "none"}
 
 
+PARTS = ("overview", "use", "run", "reference")
+CALLOUTS = {"gotcha", "default", "prod", "tip"}
+
+
+def item_problems(it):
+    """A section item is a string (a bullet) or an object with a type. Returns what is wrong with it."""
+    if isinstance(it, str):
+        return [] if it.strip() else ["empty item"]
+    t = it.get("type")
+    if t is None:
+        return [] if it.get("text") else ["an object item needs a type or a text"]
+    if t == "code":
+        out = [] if it.get("body") and it.get("lang") in ("yaml", "shell", "text") else ["code needs a body and lang yaml, shell or text"]
+        src = it.get("source") or {}
+        if not src.get("label") or not src.get("url", "").startswith("https://"):
+            out.append("code needs a source with a label and an https url")
+        return out
+    if t == "table":
+        cols = it.get("columns") or []
+        return [] if cols and it.get("rows") and all(len(r) == len(cols) for r in it["rows"]) else ["table rows must match its columns"]
+    if t == "callout":
+        return [] if it.get("kind") in CALLOUTS and it.get("text") else [f"callout needs a kind ({', '.join(sorted(CALLOUTS))}) and a text"]
+    if t == "cards":
+        return [] if it.get("cards") and all(c.get("title") and c.get("text") for c in it["cards"]) else ["cards need a title and a text each"]
+    if t == "checklist":
+        return [] if it.get("items") else ["checklist needs items"]
+    if t == "diagram":
+        ids = [n.get("id") for n in it.get("nodes", [])]
+        out = [] if it.get("alt") and it.get("w") and it.get("h") and len(ids) == len(set(ids)) else ["diagram needs alt, w, h and unique node ids"]
+        for n in it.get("nodes", []):
+            if not all(isinstance(n.get(k), (int, float)) for k in ("x", "y", "w", "h")) or not n.get("label"):
+                out.append("diagram node needs x, y, w, h and a label")
+            elif n["x"] - n["w"] / 2 < 0 or n["y"] - n["h"] / 2 < 0 or n["x"] + n["w"] / 2 > it["w"] or n["y"] + n["h"] / 2 > it["h"]:
+                out.append(f"diagram node {n['id']} is outside the canvas")
+        out += ["diagram link names an unknown node" for l in it.get("links", []) if l.get("from") not in ids or l.get("to") not in ids]
+        return out
+    return [f"unknown item type {t}"]
+
+
 def main():
     path = Path(sys.argv[1]) if len(sys.argv) > 1 else ROOT / "data" / "gitops.json"
     data = json.loads(path.read_text(encoding="utf-8"))
@@ -74,6 +113,12 @@ def main():
         for sec in e.get("sections", []):
             if not sec.get("title") or not sec.get("items"):
                 bad.append(f"section needs a title and items: {i}")
+            if sec.get("part") not in (None, *PARTS):
+                bad.append(f"section part must be one of {', '.join(PARTS)}: {i}")
+            for it in sec.get("items", []):
+                bad += [f"{m}: {i} / {sec.get('title')}" for m in item_problems(it)]
+        if any(sec.get("part") for sec in e.get("sections", [])) and not all(sec.get("part") for sec in e.get("sections", [])):
+            bad.append(f"either every section has a part or none does: {i}")
         for c in e.get("compare", []):
             if c["with"] not in known:
                 bad.append(f"compare points at unknown entry {c['with']}: {i}")

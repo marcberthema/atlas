@@ -184,131 +184,1140 @@
       ],
       "sections": [
         {
-          "title": "What it is",
+          "title": "In one minute",
+          "part": "overview",
+          "icon": "eye",
           "items": [
-            "A Kubernetes controller that compares the live state of an application with the desired state in Git. A difference shows as OutOfSync, and Argo CD can sync it back manually or automatically.",
-            "Renders Kustomize, Helm, Jsonnet, plain YAML or JSON, and custom config management plugins.",
-            "Features listed in the docs: multi-cluster, SSO (OIDC, OAuth2, LDAP, SAML 2.0, GitHub, GitLab, Microsoft, LinkedIn), multi-tenancy and RBAC, rollback to any configuration committed in Git, health and drift detection, UI, CLI and webhooks, hooks, audit trail, Prometheus metrics.",
-            "You cannot roll back an application that has automated sync enabled."
+            "Argo CD is a Kubernetes controller for GitOps. You describe the applications you want in Git, and Argo CD keeps comparing that desired state with the live state in the cluster.",
+            "When the two differ the application shows as `OutOfSync`, and Argo CD can sync it back, manually or automatically.",
+            "It renders Kustomize, Helm, Jsonnet, plain YAML or JSON, and custom config management plugins, then applies the result.",
+            {
+              "type": "diagram",
+              "alt": "You commit to Git. The repository server renders the manifests, the application controller compares them with the cluster and syncs. A Git webhook can notify the API server.",
+              "caption": "The reconcile loop: Git is the desired state, the cluster is the live state, the controller keeps them equal.",
+              "w": 720,
+              "h": 230,
+              "nodes": [
+                {
+                  "id": "you",
+                  "x": 55,
+                  "y": 55,
+                  "w": 90,
+                  "h": 32,
+                  "label": "You commit",
+                  "kind": "ext"
+                },
+                {
+                  "id": "git",
+                  "x": 210,
+                  "y": 55,
+                  "w": 150,
+                  "h": 40,
+                  "label": "Git repository",
+                  "sub": "desired state",
+                  "kind": "store"
+                },
+                {
+                  "id": "repo",
+                  "x": 470,
+                  "y": 55,
+                  "w": 170,
+                  "h": 40,
+                  "label": "Repository server",
+                  "sub": "renders manifests"
+                },
+                {
+                  "id": "ctrl",
+                  "x": 470,
+                  "y": 175,
+                  "w": 170,
+                  "h": 44,
+                  "label": "Application controller",
+                  "sub": "compares and syncs",
+                  "kind": "hub"
+                },
+                {
+                  "id": "k8s",
+                  "x": 650,
+                  "y": 175,
+                  "w": 110,
+                  "h": 40,
+                  "label": "Cluster",
+                  "sub": "live state"
+                },
+                {
+                  "id": "api",
+                  "x": 210,
+                  "y": 175,
+                  "w": 150,
+                  "h": 40,
+                  "label": "API server",
+                  "sub": "UI, CLI, webhooks"
+                }
+              ],
+              "links": [
+                {
+                  "from": "you",
+                  "to": "git",
+                  "arrow": "to"
+                },
+                {
+                  "from": "git",
+                  "to": "repo",
+                  "label": "fetch",
+                  "arrow": "to"
+                },
+                {
+                  "from": "repo",
+                  "to": "ctrl",
+                  "label": "manifests",
+                  "arrow": "to"
+                },
+                {
+                  "from": "ctrl",
+                  "to": "k8s",
+                  "label": "sync",
+                  "arrow": "both"
+                },
+                {
+                  "from": "git",
+                  "to": "api",
+                  "label": "webhook",
+                  "arrow": "to",
+                  "dashed": true
+                },
+                {
+                  "from": "api",
+                  "to": "ctrl",
+                  "label": "refresh, sync",
+                  "arrow": "to"
+                }
+              ]
+            }
           ]
         },
         {
-          "title": "Architecture",
+          "title": "Key ideas",
+          "part": "overview",
+          "icon": "grid",
           "items": [
-            "API server: gRPC and REST for the UI, the CLI and CI. Manages applications, triggers sync and rollback, stores repository and cluster credentials as Kubernetes secrets, does authentication and RBAC, receives Git webhooks. It is stateless.",
-            "Repository server: internal service with a local cache of the Git repositories. Given repo URL, revision, path and template settings (for example Helm values) it returns the manifests.",
-            "Application controller: compares live and desired state, flags OutOfSync, can correct it, and runs the PreSync, Sync and PostSync hooks.",
-            "Redis is only a disposable cache. Dex (SSO) keeps its data in memory, so several instances can disagree.",
-            "The ApplicationSet controller is bundled with Argo CD since v2.3.",
-            "Install: apply manifests/install.yaml, or manifests/ha/install.yaml for HA, with kubectl apply --server-side --force-conflicts in the argocd namespace. The default install uses a self-signed certificate."
+            {
+              "type": "cards",
+              "cards": [
+                {
+                  "icon": "box",
+                  "title": "Application",
+                  "text": "A source in Git (repo URL, revision, path or Helm chart) and a destination (cluster and namespace)."
+                },
+                {
+                  "icon": "sync",
+                  "title": "Sync",
+                  "text": "Make the cluster match Git. Manual by default, automated with `spec.syncPolicy.automated`."
+                },
+                {
+                  "icon": "pulse",
+                  "title": "Health and drift",
+                  "text": "Each resource shows whether it is in sync with Git and whether it is healthy."
+                },
+                {
+                  "icon": "folder",
+                  "title": "Project",
+                  "text": "An AppProject groups Applications and limits which repositories, clusters and namespaces they may use."
+                }
+              ]
+            }
           ]
         },
         {
-          "title": "Objects",
+          "title": "What you get",
+          "part": "overview",
+          "icon": "check",
+          "intro": "Features listed in the Argo CD docs.",
           "items": [
-            "Application: a source (repo URL, revision, path or Helm chart) and a destination (cluster server or name, plus namespace). Add the resources-finalizer.argocd.argoproj.io finalizer for cascading deletes.",
-            "AppProject: groups applications and limits what they may use. See Projects and RBAC.",
-            "ApplicationSet: generates Applications from a template. See Multi-cluster.",
+            "Multi-cluster: one Argo CD can deploy to many clusters.",
+            "SSO: OIDC, OAuth2, LDAP, SAML 2.0, GitHub, GitLab, Microsoft, LinkedIn. Multi-tenancy and RBAC.",
+            "Rollback to any configuration committed in Git. Health and drift detection.",
+            "A web UI, a CLI and webhooks. Hooks around a sync. An audit trail. Prometheus metrics.",
+            {
+              "type": "callout",
+              "kind": "tip",
+              "text": "Argo CD is one application with a UI and an API server, and drift correction is opt-in (`selfHeal`). Flux is a set of controllers with custom resources, and its Kustomization reverts drift by default. See the Compare tab.",
+              "title": "Argo CD or Flux?"
+            }
+          ]
+        },
+        {
+          "title": "Install it (dev)",
+          "part": "use",
+          "step": 1,
+          "icon": "download",
+          "items": [
+            {
+              "type": "code",
+              "title": "Install Argo CD in the argocd namespace",
+              "lang": "shell",
+              "body": "kubectl create namespace argocd\nkubectl apply -n argocd --server-side --force-conflicts -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml",
+              "source": {
+                "label": "Argo CD: getting started",
+                "url": "https://argo-cd.readthedocs.io/en/stable/getting_started/"
+              }
+            },
+            {
+              "type": "callout",
+              "kind": "gotcha",
+              "text": "The install docs call this non-HA install \"not recommended for production use\". See Run it for production."
+            },
+            "Lighter variants: `core-install.yaml` is headless (no API server or UI, non-HA, no multi-tenancy). `namespace-install.yaml` needs only namespace privileges and manages only the local cluster's Argo CD resources. Its CRDs are applied separately from `manifests/crds`."
+          ]
+        },
+        {
+          "title": "Open the UI and log in",
+          "part": "use",
+          "step": 2,
+          "icon": "login",
+          "items": [
+            {
+              "type": "code",
+              "title": "Reach the API server and log in",
+              "lang": "shell",
+              "body": "kubectl port-forward svc/argocd-server -n argocd 8080:443\nargocd admin initial-password -n argocd\nargocd login <ARGOCD_SERVER>\nargocd account update-password",
+              "source": {
+                "label": "Argo CD: getting started",
+                "url": "https://argo-cd.readthedocs.io/en/stable/getting_started/"
+              },
+              "note": "port-forward, then open https://localhost:8080"
+            },
+            "The default certificate is self-signed: trust it, or pass `--insecure` to every CLI command.",
+            "The initial `admin` password is stored in the `argocd-initial-admin-secret` Secret. After changing the password, delete that Secret."
+          ]
+        },
+        {
+          "title": "Deploy your first application",
+          "part": "use",
+          "step": 3,
+          "icon": "box",
+          "intro": "An Application points at a path in a Git repository and at a destination cluster and namespace.",
+          "items": [
+            {
+              "type": "code",
+              "title": "application.yaml: the guestbook example app",
+              "lang": "yaml",
+              "body": "apiVersion: argoproj.io/v1alpha1\nkind: Application\nmetadata:\n  name: guestbook\n  namespace: argocd\nspec:\n  project: default\n  source:\n    repoURL: https://github.com/argoproj/argocd-example-apps.git\n    targetRevision: HEAD\n    path: guestbook\n  destination:\n    server: https://kubernetes.default.svc\n    namespace: guestbook",
+              "source": {
+                "label": "Argo CD: declarative setup",
+                "url": "https://argo-cd.readthedocs.io/en/stable/operator-manual/declarative-setup/"
+              }
+            },
+            {
+              "type": "code",
+              "title": "Or create and sync it with the CLI",
+              "lang": "shell",
+              "body": "argocd app create guestbook --repo https://github.com/argoproj/argocd-example-apps.git --path guestbook --dest-server https://kubernetes.default.svc --dest-namespace default\nargocd app sync guestbook",
+              "source": {
+                "label": "Argo CD: getting started",
+                "url": "https://argo-cd.readthedocs.io/en/stable/getting_started/"
+              }
+            },
+            "Before the first sync, `argocd app get guestbook` shows the app `OutOfSync` and its resources `Missing`.",
+            "`https://kubernetes.default.svc` is the cluster Argo CD itself runs in.",
+            {
+              "type": "callout",
+              "kind": "gotcha",
+              "text": "Add the `resources-finalizer.argocd.argoproj.io` finalizer to an Application if deleting it should also delete its resources (cascading delete)."
+            },
+            {
+              "type": "callout",
+              "kind": "tip",
+              "text": "Declare apps as Application manifests in Git, even in dev, so the setup you test is the one you run in production."
+            }
+          ]
+        },
+        {
+          "title": "Turn on automated sync",
+          "part": "use",
+          "step": 4,
+          "icon": "sync",
+          "items": [
+            {
+              "type": "code",
+              "title": "Sync on every Git change, prune and self-heal",
+              "lang": "yaml",
+              "body": "spec:\n  syncPolicy:\n    automated:\n      prune: true\n      selfHeal: true",
+              "source": {
+                "label": "Argo CD: automated sync policy",
+                "url": "https://argo-cd.readthedocs.io/en/stable/user-guide/auto_sync/"
+              },
+              "note": "the docs show prune and selfHeal in separate examples; combined here"
+            },
+            {
+              "type": "table",
+              "columns": [
+                "Setting",
+                "Default",
+                "What it does"
+              ],
+              "rows": [
+                [
+                  "`automated`",
+                  "off",
+                  "Applies Git changes without a manual step. Only `OutOfSync` applications are synced, and only once per commit SHA and parameters."
+                ],
+                [
+                  "`prune`",
+                  "off",
+                  "When off, resources removed from Git stay in the cluster."
+                ],
+                [
+                  "`selfHeal`",
+                  "off",
+                  "When off, manual changes to live resources are not reverted."
+                ],
+                [
+                  "`allowEmpty`",
+                  "off",
+                  "A sync that would leave the application empty is blocked unless this is true."
+                ],
+                [
+                  "`enabled`",
+                  "treated as on when null",
+                  "`automated.enabled: false` skips automated sync even if `prune`, `selfHeal` and `allowEmpty` are set."
+                ],
+                [
+                  "`retry`",
+                  "none",
+                  "Failed syncs are retried with exponential backoff only if a `retry` block is set. Otherwise a failed commit is not retried."
+                ]
+              ]
+            },
+            "Argo CD checks Git every 120 seconds plus up to 60 seconds of jitter (`timeout.reconciliation` in `argocd-cm`). A Git webhook makes it faster.",
+            {
+              "type": "callout",
+              "kind": "gotcha",
+              "text": "You cannot roll back an application that has automated sync enabled."
+            }
+          ]
+        },
+        {
+          "title": "Render with Helm or Kustomize",
+          "part": "use",
+          "step": 5,
+          "icon": "layers",
+          "items": [
+            "Tool detection: an explicit setting wins. Otherwise Helm if there is a `Chart.yaml`, Kustomize if there is a `kustomization.yaml`, `kustomization.yml` or `Kustomization` file, else plain YAML.",
+            {
+              "type": "code",
+              "title": "A Helm chart from a chart repository",
+              "lang": "yaml",
+              "body": "apiVersion: argoproj.io/v1alpha1\nkind: Application\nmetadata:\n  name: sealed-secrets\n  namespace: argocd\nspec:\n  project: default\n  source:\n    chart: sealed-secrets\n    repoURL: https://bitnami-labs.github.io/sealed-secrets\n    targetRevision: 1.16.1\n    helm:\n      releaseName: sealed-secrets\n  destination:\n    server: \"https://kubernetes.default.svc\"\n    namespace: kubeseal",
+              "source": {
+                "label": "Argo CD: declarative setup",
+                "url": "https://argo-cd.readthedocs.io/en/stable/operator-manual/declarative-setup/"
+              }
+            },
+            {
+              "type": "code",
+              "title": "Helm values files",
+              "lang": "yaml",
+              "body": "source:\n  helm:\n    valueFiles:\n    - values-production.yaml",
+              "source": {
+                "label": "Argo CD: Helm",
+                "url": "https://argo-cd.readthedocs.io/en/stable/user-guide/helm/"
+              }
+            },
+            "Helm: Argo CD only renders the chart (`helm template`) and runs the lifecycle itself, so `helm ls` does not show its apps. The docs say it renders with Helm v4.",
+            "Value precedence: `parameters`, then `valuesObject`, then `values`, then `valueFiles`, then the chart's `values.yaml`.",
+            "Helm hooks are mapped to Argo CD hooks, not replicated: rollback and test hooks are ignored, pre-install and pre-upgrade run together, and if any Argo CD hook exists all Helm hooks are ignored.",
+            {
+              "type": "code",
+              "title": "A Kustomize patch set on the Application",
+              "lang": "yaml",
+              "body": "apiVersion: argoproj.io/v1alpha1\nkind: Application\nmetadata:\n  name: kustomize-inline-guestbook\n  namespace: argocd\n  finalizers:\n    - resources-finalizer.argocd.argoproj.io\nspec:\n  destination:\n    namespace: test1\n    server: https://kubernetes.default.svc\n  project: default\n  source:\n    path: kustomize-guestbook\n    repoURL: https://github.com/argoproj/argocd-example-apps.git\n    targetRevision: master\n    kustomize:\n      patches:\n        - target:\n            kind: Deployment\n            name: guestbook-ui\n          patch: |-\n            - op: replace\n              path: /spec/template/spec/containers/0/ports/0/containerPort\n              value: 443",
+              "source": {
+                "label": "Argo CD: Kustomize",
+                "url": "https://argo-cd.readthedocs.io/en/stable/user-guide/kustomize/"
+              }
+            },
+            "Kustomize: fields under `spec.source.kustomize` are `namePrefix`, `nameSuffix`, `images`, `replicas`, `commonLabels`, `commonAnnotations`, `patches`, `components` and `namespace`. Several Kustomize versions can be bundled and chosen per application. Helm charts inside a kustomization need `--enable-helm` in `kustomize.buildOptions`.",
+            "Multiple sources: an Application can have several, for example a Helm chart from one repository and its values file from a Git repository referenced as `$values`. The docs say not to use it to group unrelated apps, and to reconsider past 2 or 3 sources.",
+            {
+              "type": "callout",
+              "kind": "gotcha",
+              "text": "A template that generates random values (some Helm functions do) keeps the app `OutOfSync`."
+            },
+            {
+              "type": "callout",
+              "kind": "default",
+              "text": "Source Hydrator (beta since v3.5.0, off by default): renders the manifests and commits them to a branch, which Argo CD then syncs, so the exact manifests can be reviewed in Git."
+            }
+          ]
+        },
+        {
+          "title": "Order a sync: hooks and waves",
+          "part": "use",
+          "step": 6,
+          "icon": "clock",
+          "items": [
+            {
+              "type": "diagram",
+              "alt": "A sync runs PreSync hooks, then the Sync phase wave by wave from the lowest wave, then PostSync hooks. SyncFail hooks run if the sync fails.",
+              "caption": "Phases run in order. Inside a phase, lower waves go first, 2 seconds apart by default.",
+              "w": 720,
+              "h": 200,
+              "boxes": [
+                {
+                  "x": 175,
+                  "y": 20,
+                  "w": 370,
+                  "h": 90,
+                  "label": "Sync phase"
+                }
+              ],
+              "nodes": [
+                {
+                  "id": "pre",
+                  "x": 80,
+                  "y": 70,
+                  "w": 110,
+                  "h": 36,
+                  "label": "PreSync",
+                  "sub": "hooks"
+                },
+                {
+                  "id": "w0",
+                  "x": 240,
+                  "y": 70,
+                  "w": 100,
+                  "h": 36,
+                  "label": "wave 0",
+                  "kind": "hub"
+                },
+                {
+                  "id": "w1",
+                  "x": 360,
+                  "y": 70,
+                  "w": 100,
+                  "h": 36,
+                  "label": "wave 1",
+                  "kind": "hub"
+                },
+                {
+                  "id": "w2",
+                  "x": 480,
+                  "y": 70,
+                  "w": 100,
+                  "h": 36,
+                  "label": "wave 2",
+                  "kind": "hub"
+                },
+                {
+                  "id": "post",
+                  "x": 640,
+                  "y": 70,
+                  "w": 110,
+                  "h": 36,
+                  "label": "PostSync",
+                  "sub": "hooks"
+                },
+                {
+                  "id": "fail",
+                  "x": 360,
+                  "y": 165,
+                  "w": 140,
+                  "h": 36,
+                  "label": "SyncFail",
+                  "sub": "hooks, on failure",
+                  "kind": "ext"
+                }
+              ],
+              "links": [
+                {
+                  "from": "pre",
+                  "to": "w0",
+                  "arrow": "to"
+                },
+                {
+                  "from": "w0",
+                  "to": "w1",
+                  "arrow": "to"
+                },
+                {
+                  "from": "w1",
+                  "to": "w2",
+                  "arrow": "to"
+                },
+                {
+                  "from": "w2",
+                  "to": "post",
+                  "arrow": "to"
+                },
+                {
+                  "from": "w1",
+                  "to": "fail",
+                  "label": "if it fails",
+                  "arrow": "to",
+                  "dashed": true
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "title": "Make a resource a hook, or put it in a wave",
+              "lang": "yaml",
+              "body": "metadata:\n  annotations:\n    argocd.argoproj.io/hook: PreSync\n---\nmetadata:\n  annotations:\n    argocd.argoproj.io/sync-wave: \"5\"",
+              "source": {
+                "label": "Argo CD: sync phases and waves",
+                "url": "https://argo-cd.readthedocs.io/en/stable/user-guide/sync-waves/"
+              },
+              "note": "two separate examples from the page, shown together"
+            },
+            "Hooks: `PreSync`, `Sync`, `PostSync`, `SyncFail`, `Skip`, and `PreDelete` and `PostDelete` when the whole application is deleted. Set them with `argocd.argoproj.io/hook`. What each does is in Reference.",
+            "Delete policies: `HookSucceeded`, `HookFailed`, `BeforeHookCreation` (the default).",
+            "Waves: `argocd.argoproj.io/sync-wave` is an integer, default 0, lowest first. The order is phase, wave, kind (namespaces first), then name. Pruning runs in reverse wave order.",
+            {
+              "type": "callout",
+              "kind": "gotcha",
+              "text": "Hooks do not run on a selective sync."
+            }
+          ]
+        },
+        {
+          "title": "Manage many applications",
+          "part": "use",
+          "step": 7,
+          "icon": "grid",
+          "items": [
             "App of apps: one Application whose manifests are other Applications, used for example to bootstrap a cluster.",
-            "Repository: a Secret labelled argocd.argoproj.io/secret-type: repository. A repo-creds Secret gives shared credentials to every repo with a matching URL prefix (longest prefix wins).",
-            "Cluster: a Secret labelled argocd.argoproj.io/secret-type: cluster with name, server and a JSON config. The cluster Argo CD runs in is https://kubernetes.default.svc.",
-            "Settings live in the ConfigMaps argocd-cm, argocd-rbac-cm and argocd-cmd-params-cm. A ConfigMap needs the label app.kubernetes.io/part-of: argocd or Argo CD ignores it."
+            "ApplicationSet: generates Applications from a template. The template is an Application with parameter placeholders filled in by a generator.",
+            {
+              "type": "diagram",
+              "alt": "An ApplicationSet with a List generator produces one Application per list element, each pointing at its own cluster.",
+              "caption": "One template, one Application per generated element.",
+              "w": 720,
+              "h": 220,
+              "nodes": [
+                {
+                  "id": "gen",
+                  "x": 100,
+                  "y": 110,
+                  "w": 150,
+                  "h": 44,
+                  "label": "Generator",
+                  "sub": "List, Cluster, Git...",
+                  "kind": "ext"
+                },
+                {
+                  "id": "set",
+                  "x": 340,
+                  "y": 110,
+                  "w": 170,
+                  "h": 48,
+                  "label": "ApplicationSet",
+                  "sub": "template",
+                  "kind": "hub"
+                },
+                {
+                  "id": "a1",
+                  "x": 580,
+                  "y": 40,
+                  "w": 200,
+                  "h": 36,
+                  "label": "Application: dev"
+                },
+                {
+                  "id": "a2",
+                  "x": 580,
+                  "y": 110,
+                  "w": 200,
+                  "h": 36,
+                  "label": "Application: staging"
+                },
+                {
+                  "id": "a3",
+                  "x": 580,
+                  "y": 180,
+                  "w": 200,
+                  "h": 36,
+                  "label": "Application: prod"
+                }
+              ],
+              "links": [
+                {
+                  "from": "gen",
+                  "to": "set",
+                  "label": "parameters",
+                  "arrow": "to"
+                },
+                {
+                  "from": "set",
+                  "to": "a1",
+                  "arrow": "to"
+                },
+                {
+                  "from": "set",
+                  "to": "a2",
+                  "arrow": "to"
+                },
+                {
+                  "from": "set",
+                  "to": "a3",
+                  "arrow": "to"
+                }
+              ]
+            },
+            {
+              "type": "code",
+              "title": "ApplicationSet with a List generator",
+              "lang": "yaml",
+              "body": "apiVersion: argoproj.io/v1alpha1\nkind: ApplicationSet\nmetadata:\n  name: guestbook\n  namespace: argocd\nspec:\n  goTemplate: true\n  goTemplateOptions: [\"missingkey=error\"]\n  generators:\n  - list:\n      elements:\n      - cluster: engineering-dev\n        url: https://kubernetes.default.svc\n      # - cluster: engineering-prod\n      #   url: https://kubernetes.default.svc\n  template:\n    metadata:\n      name: '{{.cluster}}-guestbook'\n    spec:\n      project: \"my-project\"\n      source:\n        repoURL: https://github.com/argoproj/argo-cd.git\n        targetRevision: HEAD\n        path: applicationset/examples/list-generator/guestbook/{{.cluster}}\n      destination:\n        server: '{{.url}}'\n        namespace: guestbook",
+              "source": {
+                "label": "Argo CD: ApplicationSet List generator",
+                "url": "https://argo-cd.readthedocs.io/en/stable/operator-manual/applicationset/Generators-List/"
+              }
+            },
+            "The ApplicationSet controller is bundled with Argo CD since v2.3. All generators are listed in Reference.",
+            {
+              "type": "callout",
+              "kind": "default",
+              "text": "Progressive syncs (RollingSync): beta since v3.3.0 and must be enabled. Steps select Applications by label, each step must be Healthy before the next, and `maxUpdate` limits parallel updates. It disables autosync on the generated Applications."
+            }
           ]
         },
         {
-          "title": "Sync",
+          "title": "Get notified",
+          "part": "use",
+          "step": 8,
+          "icon": "bell",
           "items": [
-            "Automated sync (spec.syncPolicy.automated) applies Git changes without a manual step. Only OutOfSync applications are synced, and only once per commit SHA and parameters.",
-            "prune: off by default, so resources removed from Git stay in the cluster. selfHeal: off by default, so manual changes to live resources are not reverted. allowEmpty: a sync that would leave the application empty is blocked unless allowEmpty is true.",
-            "retry: failed syncs are retried with exponential backoff only if a retry block is set. A failed commit is not retried otherwise.",
-            "Argo CD checks Git every 120 seconds plus up to 60 seconds of jitter (timeout.reconciliation in argocd-cm). A webhook makes it faster.",
-            "Sync options (annotation or spec.syncPolicy.syncOptions): Prune=false, Prune=confirm, Validate=false, SkipDryRunOnMissingResource=true, Delete=false, Delete=confirm, ApplyOutOfSyncOnly=true, PrunePropagationPolicy, PruneLast=true, Replace=true, Force=true, ServerSideApply=true, ClientSideApplyMigration=false, FailOnSharedResource=true, RespectIgnoreDifferences=true, CreateNamespace=true. Replace and Force are destructive.",
-            "Hooks: PreSync, Sync, PostSync, SyncFail, and PreDelete and PostDelete when the whole application is deleted. Set with argocd.argoproj.io/hook. Delete policies: HookSucceeded, HookFailed, BeforeHookCreation (the default). Hooks do not run on a selective sync.",
-            "Sync waves: argocd.argoproj.io/sync-wave, an integer, default 0, lowest first, 2 seconds between waves by default. Order is phase, wave, kind (namespaces first), then name. Pruning runs in reverse wave order."
+            "Triggers say when, templates say what. Subscribe with an annotation on an Application or a project: `notifications.argoproj.io/subscribe.<trigger>.<service>`. The docs show Slack, email and PagerDuty.",
+            {
+              "type": "code",
+              "title": "Subscribe an app to Slack on sync success",
+              "lang": "shell",
+              "body": "kubectl patch app <my-app> -n argocd -p '{\"metadata\": {\"annotations\": {\"notifications.argoproj.io/subscribe.on-sync-succeeded.slack\":\"<my-channel>\"}}}' --type merge",
+              "source": {
+                "label": "Argo CD: notifications",
+                "url": "https://argo-cd.readthedocs.io/en/stable/operator-manual/notifications/"
+              }
+            }
           ]
         },
         {
-          "title": "Helm, Kustomize and other sources",
+          "title": "Keep secrets out of Git",
+          "part": "use",
+          "step": 9,
+          "icon": "key",
           "items": [
-            "Tool detection: an explicit setting wins. Otherwise Helm if there is a Chart.yaml, Kustomize if there is a kustomization.yaml, kustomization.yml or Kustomization file, else plain YAML. The docs recommend disabling the built-in tools you do not use (kustomize.enable, helm.enable, jsonnet.enable in argocd-cm).",
-            "Helm: Argo CD only renders the chart (helm template) and runs the lifecycle itself, so helm ls does not show its apps. Helm hooks are mapped to Argo CD hooks, not replicated: rollback and test hooks are ignored, pre-install and pre-upgrade run together, and if any Argo CD hook exists all Helm hooks are ignored.",
-            "Helm value precedence: parameters, then valuesObject, then values, then valueFiles, then the chart's values.yaml. A template that generates random values keeps the app OutOfSync. The docs say Argo CD renders with Helm v4.",
-            "Kustomize: fields under spec.source.kustomize are namePrefix, nameSuffix, images, replicas, commonLabels, commonAnnotations, patches, components and namespace. Several Kustomize versions can be bundled and chosen per application. Helm charts inside a kustomization need --enable-helm in kustomize.buildOptions.",
-            "Multiple sources: an Application can have several sources, for example a Helm chart from one repo and its values file from a Git repo referenced as $values. The docs say not to use it to group unrelated apps, and to reconsider past 2 or 3 sources.",
-            "Source Hydrator (beta since v3.5.0, off by default): renders the manifests and commits them to a branch, which Argo CD then syncs, so the exact manifests can be reviewed in Git."
+            {
+              "type": "callout",
+              "kind": "prod",
+              "text": "Put secrets in the destination cluster with an operator, so Argo CD never handles them. Named in the docs: Sealed Secrets, External Secrets Operator, Secrets Store CSI Driver, Vault Secrets Operator.",
+              "title": "Recommended"
+            },
+            {
+              "type": "callout",
+              "kind": "gotcha",
+              "text": "Plugins that inject secrets while rendering (for example argocd-vault-plugin) are discouraged: the docs say Redis then caches the secrets in plaintext. Still supported, but without new features.",
+              "title": "Discouraged"
+            }
           ]
         },
         {
-          "title": "Tracking and drift",
+          "title": "How it is built",
+          "part": "run",
+          "icon": "server",
           "items": [
-            "Resource tracking: annotation (argocd.argoproj.io/tracking-id) is the default and since 3.0. Others are annotation+label and label (app.kubernetes.io/instance). Labels are limited to 63 characters and other tools write to the same label.",
-            "An app can stay OutOfSync because of controllers, mutating webhooks, fields Kubernetes drops, or Helm functions that generate random values.",
-            "ignoreDifferences on an Application, or resource.customizations.ignoreDifferences in argocd-cm, ignores fields by jsonPointers, jqPathExpressions or managedFieldsManagers. RespectIgnoreDifferences=true also honours it during sync."
+            {
+              "type": "diagram",
+              "alt": "Users reach the API server. The repository server fetches Git and renders manifests. The application controller compares and syncs clusters. The ApplicationSet controller creates Applications. Redis is a cache and Dex handles SSO.",
+              "caption": "Main flows between the components (simplified). All of them run in the argocd namespace.",
+              "w": 720,
+              "h": 310,
+              "boxes": [
+                {
+                  "x": 175,
+                  "y": 12,
+                  "w": 440,
+                  "h": 294,
+                  "label": "argocd namespace"
+                }
+              ],
+              "nodes": [
+                {
+                  "id": "users",
+                  "x": 80,
+                  "y": 70,
+                  "w": 120,
+                  "h": 40,
+                  "label": "UI, CLI, CI",
+                  "kind": "ext"
+                },
+                {
+                  "id": "api",
+                  "x": 290,
+                  "y": 70,
+                  "w": 160,
+                  "h": 44,
+                  "label": "API server",
+                  "sub": "stateless",
+                  "kind": "hub"
+                },
+                {
+                  "id": "dex",
+                  "x": 500,
+                  "y": 70,
+                  "w": 140,
+                  "h": 40,
+                  "label": "Dex",
+                  "sub": "SSO, data in memory"
+                },
+                {
+                  "id": "git",
+                  "x": 80,
+                  "y": 190,
+                  "w": 120,
+                  "h": 40,
+                  "label": "Git",
+                  "kind": "store"
+                },
+                {
+                  "id": "repo",
+                  "x": 270,
+                  "y": 190,
+                  "w": 160,
+                  "h": 44,
+                  "label": "Repository server",
+                  "sub": "renders manifests"
+                },
+                {
+                  "id": "ctrl",
+                  "x": 510,
+                  "y": 190,
+                  "w": 160,
+                  "h": 44,
+                  "label": "Application controller",
+                  "sub": "compares, syncs",
+                  "kind": "hub"
+                },
+                {
+                  "id": "redis",
+                  "x": 270,
+                  "y": 272,
+                  "w": 160,
+                  "h": 32,
+                  "label": "Redis",
+                  "sub": "disposable cache",
+                  "kind": "store"
+                },
+                {
+                  "id": "appset",
+                  "x": 510,
+                  "y": 272,
+                  "w": 170,
+                  "h": 32,
+                  "label": "ApplicationSet controller"
+                },
+                {
+                  "id": "k8s",
+                  "x": 670,
+                  "y": 110,
+                  "w": 90,
+                  "h": 40,
+                  "label": "Clusters",
+                  "kind": "ext"
+                }
+              ],
+              "links": [
+                {
+                  "from": "users",
+                  "to": "api",
+                  "arrow": "to"
+                },
+                {
+                  "from": "git",
+                  "to": "repo",
+                  "label": "fetch",
+                  "arrow": "to"
+                },
+                {
+                  "from": "repo",
+                  "to": "ctrl",
+                  "label": "manifests",
+                  "arrow": "to"
+                },
+                {
+                  "from": "api",
+                  "to": "ctrl",
+                  "label": "sync, rollback",
+                  "arrow": "to"
+                },
+                {
+                  "from": "ctrl",
+                  "to": "k8s",
+                  "arrow": "both"
+                },
+                {
+                  "from": "appset",
+                  "to": "ctrl",
+                  "label": "Applications",
+                  "arrow": "to",
+                  "dashed": true
+                }
+              ]
+            },
+            "API server: gRPC and REST for the UI, the CLI and CI. Manages applications, triggers sync and rollback, stores repository and cluster credentials as Kubernetes Secrets, does authentication and RBAC, receives Git webhooks. It is stateless.",
+            "Repository server: an internal service with a local cache of the Git repositories. Given a repo URL, revision, path and template settings (for example Helm values) it returns the manifests.",
+            "Application controller: compares live and desired state, flags `OutOfSync`, can correct it, and runs the PreSync, Sync and PostSync hooks.",
+            "Redis is only a disposable cache. Dex (SSO) keeps its data in memory, so several instances can disagree."
+          ]
+        },
+        {
+          "title": "Where the configuration lives",
+          "part": "run",
+          "icon": "file",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "What",
+                "Kind",
+                "Notes"
+              ],
+              "rows": [
+                [
+                  "Application",
+                  "Custom resource",
+                  "Source and destination. See Use it, step 3."
+                ],
+                [
+                  "AppProject",
+                  "Custom resource",
+                  "Groups applications and limits what they may use."
+                ],
+                [
+                  "ApplicationSet",
+                  "Custom resource",
+                  "Generates Applications from a template."
+                ],
+                [
+                  "Repository",
+                  "Secret",
+                  "Labelled `argocd.argoproj.io/secret-type: repository`. A `repo-creds` Secret gives shared credentials to every repo with a matching URL prefix (longest prefix wins)."
+                ],
+                [
+                  "Cluster",
+                  "Secret",
+                  "Labelled `argocd.argoproj.io/secret-type: cluster`, with `name`, `server` and a JSON `config`."
+                ],
+                [
+                  "Settings",
+                  "ConfigMaps",
+                  "`argocd-cm`, `argocd-rbac-cm` and `argocd-cmd-params-cm`. A ConfigMap needs the label `app.kubernetes.io/part-of: argocd` or Argo CD ignores it."
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Dev or production",
+          "part": "run",
+          "icon": "scale",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "",
+                "Dev",
+                "Production"
+              ],
+              "rows": [
+                [
+                  "Install",
+                  "`install.yaml`",
+                  "`ha/install.yaml` (or `ha/namespace-install.yaml`), with a pinned version such as a release tag, not `stable`"
+                ],
+                [
+                  "Nodes",
+                  "any",
+                  "at least three, because of pod anti-affinity rules. IPv6-only clusters are not supported"
+                ],
+                [
+                  "API server",
+                  "non-HA install",
+                  "3 or more replicas, with `ARGOCD_API_SERVER_REPLICAS` set to the same number. Three also give zero-downtime upgrades"
+                ],
+                [
+                  "Application controller",
+                  "non-HA install",
+                  "raise the StatefulSet replicas and set `ARGOCD_CONTROLLER_REPLICAS` to match, which shards the clusters across replicas"
+                ],
+                [
+                  "Repository server",
+                  "non-HA install",
+                  "scale `argocd-repo-server` when manifest generation times out"
+                ],
+                [
+                  "Redis",
+                  "non-HA install",
+                  "three servers with Sentinel. Still only a cache"
+                ],
+                [
+                  "Access",
+                  "port-forward, self-signed certificate",
+                  "ingress, load balancer or Gateway, with a real certificate"
+                ],
+                [
+                  "Login",
+                  "`admin` and the initial password",
+                  "SSO, then `admin.enabled: \"false\"`"
+                ]
+              ],
+              "caption": "The replica, flag and setting names come from the installation, high availability, ingress and user management pages. Which combination is typical is composed from them."
+            }
+          ]
+        },
+        {
+          "title": "Production checklist",
+          "part": "run",
+          "icon": "shield",
+          "items": [
+            {
+              "type": "checklist",
+              "items": [
+                "Install `ha/install.yaml` and pin a release tag.",
+                "Expose it through an ingress, a load balancer or a Gateway. Either terminate TLS there and set `server.insecure: \"true\"` in `argocd-cmd-params-cm`, or pass TLS through to the API server.",
+                "Use SSO through the bundled Dex (SAML, LDAP, other connectors) or direct OIDC (`oidc.config`). Then set `admin.enabled: \"false\"` in `argocd-cm`.",
+                "Set RBAC in `argocd-rbac-cm`, with `policy.default` chosen deliberately.",
+                "Restrict the `default` project.",
+                "Manage Argo CD itself and its Applications from Git (app of apps or ApplicationSet).",
+                "Keep secrets out of Git (Use it, step 9).",
+                "Add a Git webhook so changes do not wait for the 120 second poll.",
+                "Take an `argocd admin export` backup before a major upgrade."
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Tuning",
+          "part": "run",
+          "icon": "wrench",
+          "items": [
+            "Repository server: `--parallelismlimit` caps concurrent manifest generation.",
+            "Application controller: `--status-processors` (default 20) and `--operation-processors` (default 10).",
+            "`GOMEMLIMIT` at 80 to 90 percent of the container memory limit.",
+            "Sharding algorithms for the application controller: legacy, round-robin and consistent-hashing. The last two are experimental."
           ]
         },
         {
           "title": "Projects and RBAC",
+          "part": "run",
+          "icon": "users",
           "items": [
-            "An AppProject restricts source repositories, destination clusters and namespaces, which cluster-scoped kinds are allowed and which namespaced kinds are denied. It also holds roles with policies, named proj:<project>:<role>.",
-            "The default project is created automatically and allows everything. It cannot be deleted, only restricted.",
-            "By default an application can deploy to clusters outside its project. permitOnlyProjectScopedClusters: true prevents it.",
-            "RBAC lives in argocd-rbac-cm. Policy: p, <subject>, <resource>, <action>, <object>, allow|deny. Group: g, <user or group>, <role>. Built-in roles: role:readonly and role:admin. policy.default applies to everyone authenticated and a deny cannot remove it.",
-            "Resources: applications, applicationsets, clusters, projects, repositories, accounts, certificates, gpgkeys, logs, exec, extensions. Actions: get, create, update, delete, sync, action, override, invoke. An application object is <project>/<app>.",
-            "A deny that matches always wins. SSO group claims map to roles with g lines. Use policy.matchMode for glob or regex."
+            "An AppProject restricts source repositories, destination clusters and namespaces, which cluster-scoped kinds are allowed and which namespaced kinds are denied. It also holds roles with policies, named `proj:<project>:<role>`.",
+            {
+              "type": "callout",
+              "kind": "gotcha",
+              "text": "The `default` project is created automatically and allows everything. It cannot be deleted, only restricted. By default an application can also deploy to clusters outside its project: `permitOnlyProjectScopedClusters: true` prevents it."
+            },
+            {
+              "type": "code",
+              "title": "Restrict the default project",
+              "lang": "yaml",
+              "body": "apiVersion: argoproj.io/v1alpha1\nkind: AppProject\nmetadata:\n  name: default\nspec:\n  sourceRepos: []\n  sourceNamespaces: []\n  destinations: []\n  namespaceResourceBlacklist:\n  - group: '*'\n    kind: '*'",
+              "source": {
+                "label": "Argo CD: projects",
+                "url": "https://argo-cd.readthedocs.io/en/stable/user-guide/projects/"
+              }
+            },
+            {
+              "type": "code",
+              "title": "argocd-rbac-cm: policies, groups and the default role",
+              "lang": "yaml",
+              "body": "apiVersion: v1\nkind: ConfigMap\nmetadata:\n  name: argocd-rbac-cm\n  namespace: argocd\n  labels:\n    app.kubernetes.io/name: argocd-rbac-cm\n    app.kubernetes.io/part-of: argocd\ndata:\n  policy.csv: |\n    p, my-org:team-alpha, applications, sync, my-project/*, allow\n    g, my-org:team-beta, role:admin\n    g, user@example.org, role:admin\n    g, admin, role:admin\n    g, role:admin, role:readonly\n  policy.default: role:readonly\n  scopes: '[groups, email]'",
+              "source": {
+                "label": "Argo CD: RBAC",
+                "url": "https://argo-cd.readthedocs.io/en/stable/operator-manual/rbac/"
+              }
+            },
+            "Policy: `p, <subject>, <resource>, <action>, <object>, allow|deny`. Group: `g, <user or group>, <role>`. Built-in roles: `role:readonly` and `role:admin`. An application object is `<project>/<app>`.",
+            "A deny that matches always wins. SSO group claims map to roles with `g` lines. `policy.matchMode` chooses glob or regex.",
+            {
+              "type": "callout",
+              "kind": "gotcha",
+              "text": "`policy.default` applies to everyone who is authenticated, and a deny cannot remove it."
+            }
           ]
         },
         {
-          "title": "Multi-cluster and ApplicationSet",
+          "title": "Many clusters",
+          "part": "run",
+          "icon": "globe",
           "items": [
-            "argocd cluster add <context> registers another cluster. It creates an argocd-manager service account in kube-system bound to an admin-level ClusterRole.",
-            "ApplicationSet generators: List, Cluster, Git, Matrix, Merge, SCM Provider, Pull Request, Cluster Decision Resource, Plugin. The template is an Application with {{parameter}} placeholders.",
-            "Progressive syncs (RollingSync): beta since v3.3.0, must be enabled. Steps select Applications by label, each step must be Healthy before the next, maxUpdate limits parallel updates. It disables autosync on the generated Applications.",
-            "Argo CD agent (separate project): agents on workload clusters connect to a central control plane, so the control plane does not call each cluster. The docs say 'active development with a stable core architecture'. A version and a maturity level are unconfirmed."
+            "`argocd cluster add <context>` registers another cluster. It creates an `argocd-manager` service account in `kube-system`, bound to an admin-level ClusterRole.",
+            "Decide whether one Argo CD manages all clusters or each cluster runs its own. One instance shards clusters across application controller replicas.",
+            {
+              "text": "Argo CD agent (separate project): agents on workload clusters connect to a central control plane, so the control plane does not call each cluster. The docs say 'active development with a stable core architecture'.",
+              "unconfirmed": "A version and a maturity level for the agent are not stated."
+            },
+            "Diagrams of the three models are in [Enterprise topologies: many Kubernetes clusters with GitOps](../topologies/index.html#ref-multicluster-gitops)."
           ]
         },
         {
-          "title": "Secrets",
-          "items": [
-            "Recommended: put secrets in the destination cluster with an operator, so Argo CD never handles them. Named in the docs: Sealed Secrets, External Secrets Operator, Secrets Store CSI Driver, Vault Secrets Operator.",
-            "Discouraged: plugins that inject secrets while rendering (for example argocd-vault-plugin). The docs say Redis then caches them in plaintext. Still supported, but without new features."
-          ]
-        },
-        {
-          "title": "Notifications",
-          "items": [
-            "Triggers say when, templates say what. Subscribe with an annotation: notifications.argoproj.io/subscribe.<trigger>.<service> on an Application or project. Examples in the docs use Slack, email and PagerDuty."
-          ]
-        },
-        {
-          "title": "Setup: dev (no HA)",
-          "items": [
-            "Install: kubectl create namespace argocd, then kubectl apply -n argocd --server-side --force-conflicts -f the stable manifests/install.yaml. The install docs call the non-HA install \"not recommended for production use\".",
-            "Reach it with kubectl port-forward svc/argocd-server -n argocd 8080:443 and open https://localhost:8080. The default certificate is self-signed: trust it, or pass --insecure to every CLI command.",
-            "First login: argocd admin initial-password -n argocd prints the admin password (stored in the argocd-initial-admin-secret secret). Log in with argocd login, change it with argocd account update-password, then delete argocd-initial-admin-secret.",
-            "Lighter variants: core-install.yaml is headless (no API server or UI, non-HA, no multi-tenancy). namespace-install.yaml needs only namespace privileges and manages only the local cluster's Argo CD resources, and its CRDs are applied separately from manifests/crds.",
-            "Declare apps as Application manifests in Git, even in dev, so the setup you test is the one you run in prod."
-          ]
-        },
-        {
-          "title": "Setup: prod (HA)",
-          "items": [
-            "Install ha/install.yaml (or ha/namespace-install.yaml) instead, and pin a version, for example a release tag, rather than stable. HA needs at least three nodes, because of pod anti-affinity rules. IPv6-only clusters are not supported.",
-            "Replicas: argocd-server 3 or more, with ARGOCD_API_SERVER_REPLICAS set to the same number. Application controller: raise the StatefulSet replicas and set ARGOCD_CONTROLLER_REPLICAS to match, which shards the clusters across replicas. Scale argocd-repo-server when manifest generation times out. Redis runs as three servers with Sentinel, and is only a cache.",
-            "Repo server and controller tuning: --parallelismlimit on the repo server, --status-processors (default 20) and --operation-processors (default 10) on the controller, GOMEMLIMIT at 80 to 90 percent of the memory limit, and a webhook so Git changes do not wait for the 120 second poll.",
-            "Expose it through an ingress, load balancer or Gateway. Either terminate TLS there and set server.insecure: \"true\" in argocd-cmd-params-cm, or pass TLS through to the API server. Use a real certificate.",
-            "Access: set admin.enabled: \"false\" in argocd-cm once SSO works. Use SSO through bundled Dex (SAML, LDAP, other connectors) or direct OIDC (oidc.config), with RBAC in argocd-rbac-cm and policy.default set deliberately. See Projects and RBAC.",
-            "Manage Argo CD itself and its Applications from Git (app of apps or ApplicationSet), keep secrets out of Git (see Secrets), and take an argocd admin export backup before a major upgrade.",
-            "Add clusters with argocd cluster add, and decide whether one Argo CD manages all clusters or each cluster runs its own. See Multi-cluster and ApplicationSet."
-          ]
-        },
-        {
-          "title": "Running it",
+          "title": "Upgrades and releases",
+          "part": "run",
+          "icon": "up",
           "items": [
             "A new minor release about every three months (about February, May, August, November). Only the three latest minor versions get patches.",
             "Upgrade one minor version at a time and read each guide. Major releases need a backup first.",
-            "Upgrading to 3.0 changed defaults: annotation tracking, fine-grained RBAC no longer inherited by sub-resources, logs RBAC enforced, status fields ignored in diffs, Dex RBAC subject, repository settings only as Secrets.",
-            "HA needs at least three nodes. The application controller shards clusters across replicas (legacy, round-robin, consistent-hashing; the last two are experimental). Default processors: 20 status, 10 operation.",
-            "Run at least three API server replicas for zero-downtime upgrades."
+            "Upgrading to 3.0 changed defaults: annotation tracking, fine-grained RBAC no longer inherited by sub-resources, logs RBAC enforced, status fields ignored in diffs, the Dex RBAC subject, repository settings only as Secrets."
+          ]
+        },
+        {
+          "title": "When an app stays OutOfSync",
+          "part": "run",
+          "icon": "eye",
+          "items": [
+            "Common causes: controllers or mutating webhooks that change resources, fields Kubernetes drops, or Helm functions that generate random values.",
+            {
+              "type": "code",
+              "title": "Ignore a field that something else changes",
+              "lang": "yaml",
+              "body": "spec:\n  ignoreDifferences:\n    - group: apps\n      kind: Deployment\n      jsonPointers:\n        - /spec/replicas",
+              "source": {
+                "label": "Argo CD: diffing customization",
+                "url": "https://argo-cd.readthedocs.io/en/stable/user-guide/diffing/"
+              }
+            },
+            "`ignoreDifferences` on an Application, or `resource.customizations.ignoreDifferences` in `argocd-cm`, ignores fields by `jsonPointers`, `jqPathExpressions` or `managedFieldsManagers`. The sync option `RespectIgnoreDifferences=true` also honours it during sync.",
+            "Resource tracking decides which live resources belong to an app. Annotation tracking is the default since 3.0 (see Reference)."
+          ]
+        },
+        {
+          "title": "Sync options",
+          "part": "reference",
+          "icon": "list",
+          "items": [
+            "Set as an annotation on a resource or in `spec.syncPolicy.syncOptions` on the Application.",
+            "`Prune=false`, `Prune=confirm`, `Validate=false`, `SkipDryRunOnMissingResource=true`, `Delete=false`, `Delete=confirm`, `ApplyOutOfSyncOnly=true`, `PrunePropagationPolicy`, `PruneLast=true`, `Replace=true`, `Force=true`, `ServerSideApply=true`, `ClientSideApplyMigration=false`, `FailOnSharedResource=true`, `RespectIgnoreDifferences=true`, `CreateNamespace=true`.",
+            {
+              "type": "callout",
+              "kind": "gotcha",
+              "text": "`Replace=true` and `Force=true` are destructive."
+            }
+          ]
+        },
+        {
+          "title": "Hooks and delete policies",
+          "part": "reference",
+          "icon": "clock",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Hook",
+                "Runs"
+              ],
+              "rows": [
+                [
+                  "`PreSync`",
+                  "before the manifests are applied"
+                ],
+                [
+                  "`Sync`",
+                  "after all PreSync hooks succeeded, at the same time as the manifests are applied"
+                ],
+                [
+                  "`Skip`",
+                  "tells Argo CD not to apply that manifest"
+                ],
+                [
+                  "`PostSync`",
+                  "after all Sync hooks succeeded, the apply succeeded and all resources are Healthy"
+                ],
+                [
+                  "`SyncFail`",
+                  "when the sync operation fails"
+                ],
+                [
+                  "`PreDelete`",
+                  "before the Application's resources are deleted. Only when the whole Application is deleted, not during a normal sync, even with pruning"
+                ],
+                [
+                  "`PostDelete`",
+                  "after all the Application's resources are deleted"
+                ]
+              ],
+              "caption": "Descriptions from the sync phases and waves page."
+            },
+            "Delete policies: `HookSucceeded`, `HookFailed`, `BeforeHookCreation` (the default). Set with `argocd.argoproj.io/hook-delete-policy`."
+          ]
+        },
+        {
+          "title": "ApplicationSet generators",
+          "part": "reference",
+          "icon": "grid",
+          "items": [
+            "List, Cluster, Git, Matrix, Merge, SCM Provider, Pull Request, Cluster Decision Resource, Plugin."
+          ]
+        },
+        {
+          "title": "RBAC resources and actions",
+          "part": "reference",
+          "icon": "users",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "",
+                "Values"
+              ],
+              "rows": [
+                [
+                  "Resources",
+                  "`applications`, `applicationsets`, `clusters`, `projects`, `repositories`, `accounts`, `certificates`, `gpgkeys`, `logs`, `exec`, `extensions`"
+                ],
+                [
+                  "Actions",
+                  "`get`, `create`, `update`, `delete`, `sync`, `action`, `override`, `invoke`"
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Resource tracking",
+          "part": "reference",
+          "icon": "eye",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Method",
+                "How"
+              ],
+              "rows": [
+                [
+                  "`annotation`",
+                  "`argocd.argoproj.io/tracking-id`. The default, and since 3.0."
+                ],
+                [
+                  "`annotation+label`",
+                  "Both."
+                ],
+                [
+                  "`label`",
+                  "`app.kubernetes.io/instance`. Labels are limited to 63 characters and other tools write to the same label."
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Settings in argocd-cm",
+          "part": "reference",
+          "icon": "file",
+          "items": [
+            "The docs recommend disabling the built-in tools you do not use: `kustomize.enable`, `helm.enable`, `jsonnet.enable`.",
+            "`timeout.reconciliation` sets the Git polling interval. `admin.enabled` turns the built-in admin off. `resource.customizations.ignoreDifferences` ignores fields for every app."
           ]
         }
       ],
@@ -335,7 +1344,15 @@
         "Origin date: the first GitHub release is 2018-03-13 and a Red Hat and Intuit press release says Intuit open sourced it in January 2018. An engineer interview says March 2018. Unconfirmed.",
         "The docs pages show no Argo CD version. They are the stable docs read on 2026-10-26, when the latest release was v3.5.6.",
         "To do, once a test Argo CD is running: compare the API (/swagger-ui on the server) with the CLI commands and the web UI, to list what only one of them can do. Known so far: argocd admin works on the cluster directly, not through the API server; the web terminal is a UI feature (off by default) with no CLI command named in its docs. Everything else is unconfirmed.",
-        "Setup sections: the replica, flag and setting names come from the installation, high availability, ingress and user management pages. Which combination counts as \"typical\" is composed from them, not a reference architecture the docs publish. Replica numbers other than \"3 or more\" API servers are not given by the docs. Whether argocd cluster add suits a production rollout versus a declarative cluster Secret is not settled by the pages read."
+        "Dev or production table: the replica, flag and setting names come from the installation, high availability, ingress and user management pages. Replica numbers other than \"3 or more\" API servers are not given by the docs. Whether argocd cluster add suits a production rollout versus a declarative cluster Secret is not settled by the pages read.",
+        "Code examples are copied from the Argo CD docs pages named under each one. Where two examples from a page are shown together, the caption says so.",
+        "The diagrams simplify the docs: arrows show the main flows described on the architecture and sync pages, not every connection between components.",
+        "Dev or production table: the replica, flag and setting names come from the installation, high availability, ingress and user management pages. Replica numbers other than \"3 or more\" API servers are not given by the docs. Whether argocd cluster add suits a production rollout versus a declarative cluster Secret is not settled by the pages read.",
+        "Code examples are copied from the Argo CD docs pages named under each one. Where two examples from a page are shown together, the caption says so.",
+        "The diagrams simplify the docs: arrows show the main flows described on the architecture and sync pages, not every connection between components.",
+        "Dev or production table: the replica, flag and setting names come from the installation, high availability, ingress and user management pages. Replica numbers other than \"3 or more\" API servers are not given by the docs. Whether argocd cluster add suits a production rollout versus a declarative cluster Secret is not settled by the pages read.",
+        "Code examples are copied from the Argo CD docs pages named under each one. Where two examples from a page are shown together, the caption says so.",
+        "The diagrams simplify the docs: arrows show the main flows described on the architecture and sync pages, not every connection between components."
       ],
       "sources": [
         {
@@ -466,6 +1483,10 @@
         {
           "label": "User management",
           "url": "https://argo-cd.readthedocs.io/en/stable/operator-manual/user-management/"
+        },
+        {
+          "label": "Argo CD: ApplicationSet List generator",
+          "url": "https://argo-cd.readthedocs.io/en/stable/operator-manual/applicationset/Generators-List/"
         }
       ]
     },
