@@ -356,7 +356,7 @@
               "type": "code",
               "title": "Install Argo CD in the argocd namespace",
               "lang": "shell",
-              "body": "kubectl create namespace argocd\nkubectl apply -n argocd --server-side --force-conflicts -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml",
+              "match": "kubectl create namespace argocd",
               "source": {
                 "label": "Argo CD: getting started",
                 "url": "https://argo-cd.readthedocs.io/en/stable/getting_started/"
@@ -380,7 +380,12 @@
               "type": "code",
               "title": "Reach the API server and log in",
               "lang": "shell",
-              "body": "kubectl port-forward svc/argocd-server -n argocd 8080:443\nargocd admin initial-password -n argocd\nargocd login <ARGOCD_SERVER>\nargocd account update-password",
+              "match": [
+                "kubectl port-forward svc/argocd-server",
+                "argocd admin initial-password",
+                "argocd login <ARGOCD_SERVER>",
+                "argocd account update-password"
+              ],
               "source": {
                 "label": "Argo CD: getting started",
                 "url": "https://argo-cd.readthedocs.io/en/stable/getting_started/"
@@ -402,7 +407,7 @@
               "type": "code",
               "title": "application.yaml: the guestbook example app",
               "lang": "yaml",
-              "body": "apiVersion: argoproj.io/v1alpha1\nkind: Application\nmetadata:\n  name: guestbook\n  namespace: argocd\nspec:\n  project: default\n  source:\n    repoURL: https://github.com/argoproj/argocd-example-apps.git\n    targetRevision: HEAD\n    path: guestbook\n  destination:\n    server: https://kubernetes.default.svc\n    namespace: guestbook",
+              "match": "name: guestbook\n  namespace: argocd\nspec:\n  project: default",
               "source": {
                 "label": "Argo CD: declarative setup",
                 "url": "https://argo-cd.readthedocs.io/en/stable/operator-manual/declarative-setup/"
@@ -412,7 +417,10 @@
               "type": "code",
               "title": "Or create and sync it with the CLI",
               "lang": "shell",
-              "body": "argocd app create guestbook --repo https://github.com/argoproj/argocd-example-apps.git --path guestbook --dest-server https://kubernetes.default.svc --dest-namespace default\nargocd app sync guestbook",
+              "match": [
+                "argocd app create guestbook",
+                "argocd app sync guestbook"
+              ],
               "source": {
                 "label": "Argo CD: getting started",
                 "url": "https://argo-cd.readthedocs.io/en/stable/getting_started/"
@@ -440,14 +448,16 @@
           "items": [
             {
               "type": "code",
-              "title": "Sync on every Git change, prune and self-heal",
+              "title": "Automated sync with prune, and with self-heal",
               "lang": "yaml",
-              "body": "spec:\n  syncPolicy:\n    automated:\n      prune: true\n      selfHeal: true",
+              "match": [
+                "prune: true",
+                "selfHeal: true"
+              ],
               "source": {
                 "label": "Argo CD: automated sync policy",
                 "url": "https://argo-cd.readthedocs.io/en/stable/user-guide/auto_sync/"
-              },
-              "note": "the docs show prune and selfHeal in separate examples; combined here"
+              }
             },
             {
               "type": "table",
@@ -508,7 +518,7 @@
               "type": "code",
               "title": "A Helm chart from a chart repository",
               "lang": "yaml",
-              "body": "apiVersion: argoproj.io/v1alpha1\nkind: Application\nmetadata:\n  name: sealed-secrets\n  namespace: argocd\nspec:\n  project: default\n  source:\n    chart: sealed-secrets\n    repoURL: https://bitnami-labs.github.io/sealed-secrets\n    targetRevision: 1.16.1\n    helm:\n      releaseName: sealed-secrets\n  destination:\n    server: \"https://kubernetes.default.svc\"\n    namespace: kubeseal",
+              "match": "chart: sealed-secrets",
               "source": {
                 "label": "Argo CD: declarative setup",
                 "url": "https://argo-cd.readthedocs.io/en/stable/operator-manual/declarative-setup/"
@@ -518,7 +528,7 @@
               "type": "code",
               "title": "Helm values files",
               "lang": "yaml",
-              "body": "source:\n  helm:\n    valueFiles:\n    - values-production.yaml",
+              "match": "- values-production.yaml",
               "source": {
                 "label": "Argo CD: Helm",
                 "url": "https://argo-cd.readthedocs.io/en/stable/user-guide/helm/"
@@ -531,7 +541,7 @@
               "type": "code",
               "title": "A Kustomize patch set on the Application",
               "lang": "yaml",
-              "body": "apiVersion: argoproj.io/v1alpha1\nkind: Application\nmetadata:\n  name: kustomize-inline-guestbook\n  namespace: argocd\n  finalizers:\n    - resources-finalizer.argocd.argoproj.io\nspec:\n  destination:\n    namespace: test1\n    server: https://kubernetes.default.svc\n  project: default\n  source:\n    path: kustomize-guestbook\n    repoURL: https://github.com/argoproj/argocd-example-apps.git\n    targetRevision: master\n    kustomize:\n      patches:\n        - target:\n            kind: Deployment\n            name: guestbook-ui\n          patch: |-\n            - op: replace\n              path: /spec/template/spec/containers/0/ports/0/containerPort\n              value: 443",
+              "match": "name: kustomize-inline-guestbook",
               "source": {
                 "label": "Argo CD: Kustomize",
                 "url": "https://argo-cd.readthedocs.io/en/stable/user-guide/kustomize/"
@@ -663,12 +673,14 @@
               "type": "code",
               "title": "Make a resource a hook, or put it in a wave",
               "lang": "yaml",
-              "body": "metadata:\n  annotations:\n    argocd.argoproj.io/hook: PreSync\n---\nmetadata:\n  annotations:\n    argocd.argoproj.io/sync-wave: \"5\"",
+              "match": [
+                "argocd.argoproj.io/hook: PreSync",
+                "argocd.argoproj.io/sync-wave: \"5\""
+              ],
               "source": {
                 "label": "Argo CD: sync phases and waves",
                 "url": "https://argo-cd.readthedocs.io/en/stable/user-guide/sync-waves/"
-              },
-              "note": "two separate examples from the page, shown together"
+              }
             },
             "Hooks: `PreSync`, `Sync`, `PostSync`, `SyncFail`, `Skip`, and `PreDelete` and `PostDelete` when the whole application is deleted. Set them with `argocd.argoproj.io/hook`. What each does is in Reference.",
             "Delete policies: `HookSucceeded`, `HookFailed`, `BeforeHookCreation` (the default).",
@@ -768,7 +780,7 @@
               "type": "code",
               "title": "ApplicationSet with a List generator",
               "lang": "yaml",
-              "body": "apiVersion: argoproj.io/v1alpha1\nkind: ApplicationSet\nmetadata:\n  name: guestbook\n  namespace: argocd\nspec:\n  goTemplate: true\n  goTemplateOptions: [\"missingkey=error\"]\n  generators:\n  - list:\n      elements:\n      - cluster: engineering-dev\n        url: https://kubernetes.default.svc\n      # - cluster: engineering-prod\n      #   url: https://kubernetes.default.svc\n  template:\n    metadata:\n      name: '{{.cluster}}-guestbook'\n    spec:\n      project: \"my-project\"\n      source:\n        repoURL: https://github.com/argoproj/argo-cd.git\n        targetRevision: HEAD\n        path: applicationset/examples/list-generator/guestbook/{{.cluster}}\n      destination:\n        server: '{{.url}}'\n        namespace: guestbook",
+              "match": "kind: ApplicationSet\nmetadata:\n  name: guestbook",
               "source": {
                 "label": "Argo CD: ApplicationSet List generator",
                 "url": "https://argo-cd.readthedocs.io/en/stable/operator-manual/applicationset/Generators-List/"
@@ -793,7 +805,7 @@
               "type": "code",
               "title": "Subscribe an app to Slack on sync success",
               "lang": "shell",
-              "body": "kubectl patch app <my-app> -n argocd -p '{\"metadata\": {\"annotations\": {\"notifications.argoproj.io/subscribe.on-sync-succeeded.slack\":\"<my-channel>\"}}}' --type merge",
+              "match": "kubectl patch app <my-app>",
               "source": {
                 "label": "Argo CD: notifications",
                 "url": "https://argo-cd.readthedocs.io/en/stable/operator-manual/notifications/"
@@ -1122,7 +1134,7 @@
               "type": "code",
               "title": "Restrict the default project",
               "lang": "yaml",
-              "body": "apiVersion: argoproj.io/v1alpha1\nkind: AppProject\nmetadata:\n  name: default\nspec:\n  sourceRepos: []\n  sourceNamespaces: []\n  destinations: []\n  namespaceResourceBlacklist:\n  - group: '*'\n    kind: '*'",
+              "match": "sourceNamespaces: []",
               "source": {
                 "label": "Argo CD: projects",
                 "url": "https://argo-cd.readthedocs.io/en/stable/user-guide/projects/"
@@ -1132,7 +1144,7 @@
               "type": "code",
               "title": "argocd-rbac-cm: policies, groups and the default role",
               "lang": "yaml",
-              "body": "apiVersion: v1\nkind: ConfigMap\nmetadata:\n  name: argocd-rbac-cm\n  namespace: argocd\n  labels:\n    app.kubernetes.io/name: argocd-rbac-cm\n    app.kubernetes.io/part-of: argocd\ndata:\n  policy.csv: |\n    p, my-org:team-alpha, applications, sync, my-project/*, allow\n    g, my-org:team-beta, role:admin\n    g, user@example.org, role:admin\n    g, admin, role:admin\n    g, role:admin, role:readonly\n  policy.default: role:readonly\n  scopes: '[groups, email]'",
+              "match": "p, my-org:team-alpha, applications, sync",
               "source": {
                 "label": "Argo CD: RBAC",
                 "url": "https://argo-cd.readthedocs.io/en/stable/operator-manual/rbac/"
@@ -1181,7 +1193,7 @@
               "type": "code",
               "title": "Ignore a field that something else changes",
               "lang": "yaml",
-              "body": "spec:\n  ignoreDifferences:\n    - group: apps\n      kind: Deployment\n      jsonPointers:\n        - /spec/replicas",
+              "match": "- /spec/replicas",
               "source": {
                 "label": "Argo CD: diffing customization",
                 "url": "https://argo-cd.readthedocs.io/en/stable/user-guide/diffing/"
@@ -1352,6 +1364,12 @@
         "The diagrams simplify the docs: arrows show the main flows described on the architecture and sync pages, not every connection between components.",
         "Dev or production table: the replica, flag and setting names come from the installation, high availability, ingress and user management pages. Replica numbers other than \"3 or more\" API servers are not given by the docs. Whether argocd cluster add suits a production rollout versus a declarative cluster Secret is not settled by the pages read.",
         "Code examples are copied from the Argo CD docs pages named under each one. Where two examples from a page are shown together, the caption says so.",
+        "The diagrams simplify the docs: arrows show the main flows described on the architecture and sync pages, not every connection between components.",
+        "Dev or production table: the replica, flag and setting names come from the installation, high availability, ingress and user management pages. Replica numbers other than \"3 or more\" API servers are not given by the docs. Whether argocd cluster add suits a production rollout versus a declarative cluster Secret is not settled by the pages read.",
+        "Code examples are fetched from the Argo CD docs pages named under each one (make examples) and shown as they are. Where several are shown together, they come from the same page, in order.",
+        "The diagrams simplify the docs: arrows show the main flows described on the architecture and sync pages, not every connection between components.",
+        "Dev or production table: the replica, flag and setting names come from the installation, high availability, ingress and user management pages. Replica numbers other than \"3 or more\" API servers are not given by the docs. Whether argocd cluster add suits a production rollout versus a declarative cluster Secret is not settled by the pages read.",
+        "Code examples are fetched from the Argo CD docs pages named under each one (make examples) and shown as they are. Where several are shown together, they come from the same page, in order.",
         "The diagrams simplify the docs: arrows show the main flows described on the architecture and sync pages, not every connection between components."
       ],
       "sources": [

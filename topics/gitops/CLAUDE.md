@@ -24,5 +24,5 @@ page says, nothing more, and names its closest open source alternative in `compa
 
 Learning layout (Argo CD first): an entry can be organised into parts, Overview, Use it, Run it and Reference, with code examples,
 tables, callouts, cards, checklists, icons and diagrams (see docs/data-model.md). When converting an entry, keep every fact: list the old
-items and check each one landed somewhere (names, flags, numbers, versions). Code examples are copied from the official docs with the page
-linked under them; if two are shown together or combined, say so in the example's note.
+items and check each one landed somewhere (names, flags, numbers, versions). Code examples are not copied: give the source page and a
+match string, run `make examples`, and check the result on the page. Do not combine or edit examples.

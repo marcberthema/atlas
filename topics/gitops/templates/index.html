@@ -216,7 +216,8 @@ function item(i,eid){
   if(typeof i==='string')return null;
   switch(i.type){
     case 'code':return '<figure class="code"><div class="ch">'+ic(i.lang==='shell'?'terminal':'file')+'<b>'+esc(i.title||'')+'</b><span class="lang">'+esc(i.lang||'')+'</span><button type="button" class="cp">'+ic('copy')+'Copy</button></div><pre><code>'+esc(i.body)+'</code></pre>'
-      +(i.source?'<figcaption>Source: <a href="'+esc(i.source.url)+'" target="_blank" rel="noopener">'+esc(i.source.label)+'</a>'+(i.note?' &middot; '+md(i.note):'')+'</figcaption>':'')+'</figure>';
+      +(i.source?'<figcaption>'+(i.fetched?'From ':'Source: ')+'<a href="'+esc(i.source.url)+'" target="_blank" rel="noopener">'+esc(i.source.label)+'</a>'
+        +(i.count>1?' &middot; '+i.count+' examples from that page, in order':'')+(i.fetched?' &middot; fetched '+esc(i.fetched):'')+(i.note?' &middot; '+md(i.note):'')+'</figcaption>':'')+'</figure>';
     case 'table':return '<div class="wrap tb"><table>'+(i.caption?'<caption>'+md(i.caption)+'</caption>':'')+'<thead><tr>'+i.columns.map(c=>'<th>'+esc(c)+'</th>').join('')+'</tr></thead><tbody>'
       +i.rows.map(r=>'<tr>'+r.map(c=>'<td>'+md(c)+'</td>').join('')+'</tr>').join('')+'</tbody></table></div>';
     case 'callout':{const k=CALLOUT[i.kind]||CALLOUT.tip;return '<div class="co '+esc(i.kind)+'">'+ic(k[0])+'<div><b>'+esc(i.title||k[1])+'</b>'+md(i.text)+uc(i.unconfirmed)+'</div></div>';}

@@ -59,7 +59,7 @@ Entries without `part` render as before. Either every section of an entry has a 
 | Item | Fields |
 |---|---|
 | text | A string, or `{text, unconfirmed}` to show an unconfirmed badge with the reason next to the claim. |
-| `code` | `title`, `lang` (yaml, shell, text), `body`, `source` (`label`, https `url`, required), optional `note` (for example "two examples shown together"). Copied from the source page, with a copy button. |
+| `code` | `title`, `lang` (yaml, shell, text), `source` (`label`, https `url`) and `match`: a string, or a list for several examples from the same page in order. `make examples` fetches the code block that contains each string (the shortest if several do) into `data/examples.json`, which the build reads; never edit that file. `make check` reports examples that changed upstream or can no longer be found. Text written in the data (`body`) is only allowed with a `note` saying why it cannot be fetched. |
 | `table` | `columns`, `rows` (same length as columns), optional `caption`. |
 | `callout` | `kind`: gotcha, default, prod or tip; `text`; optional `title`, `unconfirmed`. |
 | `cards` | `cards`: `icon`, `title`, `text`. |
@@ -67,4 +67,4 @@ Entries without `part` render as before. Either every section of an entry has a 
 | `diagram` | Same spec as the topologies diagrams: `alt`, `caption`, `w`, `h`, `boxes`, `nodes`, `links`. |
 
 Text can use `code` in backticks and links as [label](url), where the url is https or a relative page of this site.
-`make check LINKS=1` also fetches the code example sources.
+`make check` also checks the code examples (scripts/examples.py). `make check LINKS=1` fetches every source url.

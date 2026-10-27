@@ -24,7 +24,17 @@ def item_problems(it):
     if t is None:
         return [] if it.get("text") else ["an object item needs a type or a text"]
     if t == "code":
-        out = [] if it.get("body") and it.get("lang") in ("yaml", "shell", "text") else ["code needs a body and lang yaml, shell or text"]
+        # Atlas points to the docs: an example is fetched by `match` (scripts/examples.py). Text written here needs a note saying why.
+        m = it.get("match")
+        ok_match = isinstance(m, str) and m or isinstance(m, list) and m and all(isinstance(x, str) and x for x in m)
+        if ok_match and it.get("body"):
+            out = ["code has both a match and a body: drop the body, it is fetched"]
+        elif not ok_match and not (it.get("body") and it.get("note")):
+            out = ["code needs a match (fetched from the source page), or a body with a note saying why it is not fetched"]
+        else:
+            out = []
+        if it.get("lang") not in ("yaml", "shell", "text"):
+            out.append("code needs lang yaml, shell or text")
         src = it.get("source") or {}
         if not src.get("label") or not src.get("url", "").startswith("https://"):
             out.append("code needs a source with a label and an https url")

@@ -42,6 +42,10 @@ work from `file://`: relative links that name `index.html`, no absolute paths, n
   company I work or worked for, a client, or any confidential material: no internal names, architectures, region counts,
   team structures, tools choices, incidents or conventions, not even rephrased or "anonymised". If something would only be
   known from that experience, it does not go in. No credentials, tokens, account or subscription ids either.
+- **Centralise, don't copy.** Atlas gathers knowledge in one place and points to where it lives. Summarise in short plain sentences and link
+  the page. Code examples are not pasted into the data: a script fetches them from the source page by a match string into a generated cache
+  (see `topics/gitops/scripts/examples.py`), shows them unchanged, and `make check` reports when they change upstream. Never stitch or edit an
+  example: show the official snippets as they are, several from one page in their order at most.
 - **Every source is linked.** An entry links to each page it was written from, so a reader can check it. The footer disclaimer
   (`shared/atlas.py`) is on every page; a template must keep its `<!--__FOOTER__-->` marker.
 - **The version analysed is always visible.** Every documented thing records which version of it was analysed, and the page

@@ -1,0 +1,102 @@
+{
+  "https://argo-cd.readthedocs.io/en/stable/getting_started/ | argocd account update-password": {
+    "body": "argocd account update-password",
+    "fetched": "2026-10-27",
+    "checked": "2026-10-27"
+  },
+  "https://argo-cd.readthedocs.io/en/stable/getting_started/ | argocd admin initial-password": {
+    "body": "argocd admin initial-password -n argocd",
+    "fetched": "2026-10-27",
+    "checked": "2026-10-27"
+  },
+  "https://argo-cd.readthedocs.io/en/stable/getting_started/ | argocd app create guestbook": {
+    "body": "argocd app create guestbook --repo https://github.com/argoproj/argocd-example-apps.git --path guestbook --dest-server https://kubernetes.default.svc --dest-namespace default",
+    "fetched": "2026-10-27",
+    "checked": "2026-10-27"
+  },
+  "https://argo-cd.readthedocs.io/en/stable/getting_started/ | argocd app sync guestbook": {
+    "body": "argocd app sync guestbook",
+    "fetched": "2026-10-27",
+    "checked": "2026-10-27"
+  },
+  "https://argo-cd.readthedocs.io/en/stable/getting_started/ | argocd login <ARGOCD_SERVER>": {
+    "body": "argocd login <ARGOCD_SERVER>",
+    "fetched": "2026-10-27",
+    "checked": "2026-10-27"
+  },
+  "https://argo-cd.readthedocs.io/en/stable/getting_started/ | kubectl create namespace argocd": {
+    "body": "kubectl create namespace argocd\nkubectl apply -n argocd --server-side --force-conflicts -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml",
+    "fetched": "2026-10-27",
+    "checked": "2026-10-27"
+  },
+  "https://argo-cd.readthedocs.io/en/stable/getting_started/ | kubectl port-forward svc/argocd-server": {
+    "body": "kubectl port-forward svc/argocd-server -n argocd 8080:443",
+    "fetched": "2026-10-27",
+    "checked": "2026-10-27"
+  },
+  "https://argo-cd.readthedocs.io/en/stable/operator-manual/applicationset/Generators-List/ | kind: ApplicationSet\nmetadata:\n  name: guestbook": {
+    "body": "apiVersion: argoproj.io/v1alpha1\nkind: ApplicationSet\nmetadata:\n  name: guestbook\n  namespace: argocd\nspec:\n  goTemplate: true\n  goTemplateOptions: [\"missingkey=error\"]\n  generators:\n  - list:\n      elements:\n      - cluster: engineering-dev\n        url: https://kubernetes.default.svc\n      # - cluster: engineering-prod\n      #   url: https://kubernetes.default.svc\n  template:\n    metadata:\n      name: '{{.cluster}}-guestbook'\n    spec:\n      project: \"my-project\"\n      source:\n        repoURL: https://github.com/argoproj/argo-cd.git\n        targetRevision: HEAD\n        path: applicationset/examples/list-generator/guestbook/{{.cluster}}\n      destination:\n        server: '{{.url}}'\n        namespace: guestbook",
+    "fetched": "2026-10-27",
+    "checked": "2026-10-27"
+  },
+  "https://argo-cd.readthedocs.io/en/stable/operator-manual/declarative-setup/ | chart: sealed-secrets": {
+    "body": "apiVersion: argoproj.io/v1alpha1\nkind: Application\nmetadata:\n  name: sealed-secrets\n  namespace: argocd\nspec:\n  project: default\n  source:\n    chart: sealed-secrets\n    repoURL: https://bitnami-labs.github.io/sealed-secrets\n    targetRevision: 1.16.1\n    helm:\n      releaseName: sealed-secrets\n  destination:\n    server: \"https://kubernetes.default.svc\"\n    namespace: kubeseal",
+    "fetched": "2026-10-27",
+    "checked": "2026-10-27"
+  },
+  "https://argo-cd.readthedocs.io/en/stable/operator-manual/declarative-setup/ | name: guestbook\n  namespace: argocd\nspec:\n  project: default": {
+    "body": "apiVersion: argoproj.io/v1alpha1\nkind: Application\nmetadata:\n  name: guestbook\n  namespace: argocd\nspec:\n  project: default\n  source:\n    repoURL: https://github.com/argoproj/argocd-example-apps.git\n    targetRevision: HEAD\n    path: guestbook\n  destination:\n    server: https://kubernetes.default.svc\n    namespace: guestbook",
+    "fetched": "2026-10-27",
+    "checked": "2026-10-27"
+  },
+  "https://argo-cd.readthedocs.io/en/stable/operator-manual/notifications/ | kubectl patch app <my-app>": {
+    "body": "kubectl patch app <my-app> -n argocd -p '{\"metadata\": {\"annotations\": {\"notifications.argoproj.io/subscribe.on-sync-succeeded.slack\":\"<my-channel>\"}}}' --type merge",
+    "fetched": "2026-10-27",
+    "checked": "2026-10-27"
+  },
+  "https://argo-cd.readthedocs.io/en/stable/operator-manual/rbac/ | p, my-org:team-alpha, applications, sync": {
+    "body": "apiVersion: v1\nkind: ConfigMap\nmetadata:\n  name: argocd-rbac-cm\n  namespace: argocd\n  labels:\n    app.kubernetes.io/name: argocd-rbac-cm\n    app.kubernetes.io/part-of: argocd\ndata:\n  policy.csv: |\n    p, my-org:team-alpha, applications, sync, my-project/*, allow\n    g, my-org:team-beta, role:admin\n    g, user@example.org, role:admin\n    g, admin, role:admin\n    g, role:admin, role:readonly\n  policy.default: role:readonly\n  scopes: '[groups, email]'",
+    "fetched": "2026-10-27",
+    "checked": "2026-10-27"
+  },
+  "https://argo-cd.readthedocs.io/en/stable/user-guide/auto_sync/ | prune: true": {
+    "body": "spec:\n  syncPolicy:\n    automated:\n      prune: true",
+    "fetched": "2026-10-27",
+    "checked": "2026-10-27"
+  },
+  "https://argo-cd.readthedocs.io/en/stable/user-guide/auto_sync/ | selfHeal: true": {
+    "body": "spec:\n  syncPolicy:\n    automated:\n      selfHeal: true",
+    "fetched": "2026-10-27",
+    "checked": "2026-10-27"
+  },
+  "https://argo-cd.readthedocs.io/en/stable/user-guide/diffing/ | - /spec/replicas": {
+    "body": "spec:\n  ignoreDifferences:\n    - group: apps\n      kind: Deployment\n      jsonPointers:\n        - /spec/replicas",
+    "fetched": "2026-10-27",
+    "checked": "2026-10-27"
+  },
+  "https://argo-cd.readthedocs.io/en/stable/user-guide/helm/ | - values-production.yaml": {
+    "body": "source:\n  helm:\n    valueFiles:\n    - values-production.yaml",
+    "fetched": "2026-10-27",
+    "checked": "2026-10-27"
+  },
+  "https://argo-cd.readthedocs.io/en/stable/user-guide/kustomize/ | name: kustomize-inline-guestbook": {
+    "body": "apiVersion: argoproj.io/v1alpha1\nkind: Application\nmetadata:\n  name: kustomize-inline-guestbook\n  namespace: argocd\n  finalizers:\n    - resources-finalizer.argocd.argoproj.io\nspec:\n  destination:\n    namespace: test1\n    server: https://kubernetes.default.svc\n  project: default\n  source:\n    path: kustomize-guestbook\n    repoURL: https://github.com/argoproj/argocd-example-apps.git\n    targetRevision: master\n    kustomize:\n      patches:\n        - target:\n            kind: Deployment\n            name: guestbook-ui\n          patch: |-\n            - op: replace\n              path: /spec/template/spec/containers/0/ports/0/containerPort\n              value: 443",
+    "fetched": "2026-10-27",
+    "checked": "2026-10-27"
+  },
+  "https://argo-cd.readthedocs.io/en/stable/user-guide/projects/ | sourceNamespaces: []": {
+    "body": "apiVersion: argoproj.io/v1alpha1\nkind: AppProject\nmetadata:\n  name: default\nspec:\n  sourceRepos: []\n  sourceNamespaces: []\n  destinations: []\n  namespaceResourceBlacklist:\n  - group: '*'\n    kind: '*'",
+    "fetched": "2026-10-27",
+    "checked": "2026-10-27"
+  },
+  "https://argo-cd.readthedocs.io/en/stable/user-guide/sync-waves/ | argocd.argoproj.io/hook: PreSync": {
+    "body": "metadata:\n  annotations:\n    argocd.argoproj.io/hook: PreSync",
+    "fetched": "2026-10-27",
+    "checked": "2026-10-27"
+  },
+  "https://argo-cd.readthedocs.io/en/stable/user-guide/sync-waves/ | argocd.argoproj.io/sync-wave: \"5\"": {
+    "body": "metadata:\n  annotations:\n    argocd.argoproj.io/sync-wave: \"5\"",
+    "fetched": "2026-10-27",
+    "checked": "2026-10-27"
+  }
+}
