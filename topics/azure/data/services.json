@@ -4185,8 +4185,8 @@
         "note": "Verified against Learn on 2026-10-24 (azure-sql/database/sql-database-paas-overview): purpose (this entry covers Azure SQL Database; SQL Managed Instance is a separate tier 2 service), facts. Not verified: the managed identity, Key Vault, Log Analytics, Entra ID and Data Factory edges."
       },
       "freshness": {
-        "status": "current",
-        "changed_at": "2026-10-26",
+        "status": "stale",
+        "changed_at": "2026-10-28",
         "sources": {
           "https://learn.microsoft.com/azure/azure-sql/database/sql-database-paas-overview": {
             "changed_at": "2026-10-24",
@@ -4199,9 +4199,9 @@
           "https://learn.microsoft.com/azure/azure-sql/database/free-offer": {
             "http_status": 200,
             "ms_date": "2026-10-12T00:00:00Z",
-            "updated_at": "2026-10-21T17:40:00Z",
-            "latest_hash": "sha256:06ff9b88c85779257b7372a5f0de005464d7dd1996d8e5e4f1c4683e3b2fbd6c",
-            "changed_at": "2026-10-26",
+            "updated_at": "2026-10-27T17:36:00Z",
+            "latest_hash": "sha256:325bfff8262d176b88679d2d1913f4014e53b03555083f54572040249f88989c",
+            "changed_at": "2026-10-28",
             "reviewed_hash": "sha256:06ff9b88c85779257b7372a5f0de005464d7dd1996d8e5e4f1c4683e3b2fbd6c"
           }
         }
