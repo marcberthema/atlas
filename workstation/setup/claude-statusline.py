@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
-"""Claude Code status line: reads the session JSON on stdin, prints two lines.
+"""Claude Code status line: reads the session JSON on stdin, prints one line.
 
-  Opus 5.5 · high · ~/src/atlas · main*
-  ctx ▓▓▓░░░░░░░ 31% · 5h 23% (2h14m) · 7d 41% (Mon 14:00) · $1.84
+  Opus 5.5 · high · ~/src/atlas · main* · ▓▓▓░░░░░░░ 62K/200K · 5h 23% (2h14m) · 7d 41% (Mon 14:00) · $1.84
+
+The bar and the percentages are green under 50%, yellow under 80%, red from 80%.
 
 Fields are documented at https://code.claude.com/docs/en/statusline. A field Claude Code does not send (effort on a model
 without it, rate limits outside Pro and Max or before the first reply) is left out. Python 3 standard library only.
@@ -26,6 +27,11 @@ def level(pct):
 def bar(pct, width=10):
     full = round(pct / 100 * width)
     return "▓" * full + "░" * (width - full)
+
+
+def tokens(n):
+    """62000 -> 62K, 1000000 -> 1M."""
+    return f"{n / 1_000_000:g}M" if n >= 1_000_000 else f"{n / 1000:.0f}K"
 
 
 def until(epoch):
@@ -57,35 +63,36 @@ def main():
     sep = f" {DIM}·{RESET} "
 
     cwd = d.get("workspace", {}).get("current_dir") or d.get("cwd") or os.getcwd()
-    top = [f"{CYAN}{d.get('model', {}).get('display_name', '?')}{RESET}"]
+    parts = [f"{CYAN}{d.get('model', {}).get('display_name', '?')}{RESET}"]
     if d.get("effort", {}).get("level"):
-        top.append(f"{MAGENTA}{d['effort']['level']}{RESET}")
+        parts.append(f"{MAGENTA}{d['effort']['level']}{RESET}")
     if d.get("fast_mode"):
-        top.append(f"{YELLOW}fast{RESET}")
+        parts.append(f"{YELLOW}fast{RESET}")
     home = os.path.expanduser("~")
-    top.append(cwd.replace(home, "~", 1) if cwd.startswith(home) else cwd)
+    parts.append(cwd.replace(home, "~", 1) if cwd.startswith(home) else cwd)
     branch = git_branch(cwd)
     if branch:
-        top.append(f"{GREEN}{branch}{RESET}")
+        parts.append(f"{GREEN}{branch}{RESET}")
 
-    bottom = []
-    ctx = d.get("context_window", {}).get("used_percentage")
+    cw = d.get("context_window", {})
+    ctx = cw.get("used_percentage")
     if ctx is not None:
-        bottom.append(f"ctx {level(ctx)}{bar(ctx)} {ctx:.0f}%{RESET}")
+        size = cw.get("context_window_size")
+        used = cw.get("total_input_tokens")   # the same input-only sum the percentage is calculated from
+        label = f"{tokens(used)}/{tokens(size)}" if used is not None and size else f"{ctx:.0f}%"
+        parts.append(f"{level(ctx)}{bar(ctx)} {label}{RESET}")
     limits = d.get("rate_limits") or {}
     for key, label in (("five_hour", "5h"), ("seven_day", "7d")):
         w = limits.get(key)
         if w and w.get("used_percentage") is not None:
             pct = w["used_percentage"]
             reset = f" {DIM}({until(w['resets_at'])}){RESET}" if w.get("resets_at") else ""
-            bottom.append(f"{label} {level(pct)}{pct:.0f}%{RESET}{reset}")
+            parts.append(f"{label} {level(pct)}{pct:.0f}%{RESET}{reset}")
     cost = d.get("cost", {}).get("total_cost_usd")
     if cost:
-        bottom.append(f"{DIM}${cost:.2f}{RESET}")
+        parts.append(f"{DIM}${cost:.2f}{RESET}")
 
-    print(sep.join(top))
-    if bottom:
-        print(sep.join(bottom))
+    print(sep.join(parts))
 
 
 if __name__ == "__main__":
