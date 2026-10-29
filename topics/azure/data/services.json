@@ -4186,7 +4186,7 @@
       },
       "freshness": {
         "status": "stale",
-        "changed_at": "2026-10-28",
+        "changed_at": "2026-10-29",
         "sources": {
           "https://learn.microsoft.com/azure/azure-sql/database/sql-database-paas-overview": {
             "changed_at": "2026-10-24",
@@ -4199,9 +4199,9 @@
           "https://learn.microsoft.com/azure/azure-sql/database/free-offer": {
             "http_status": 200,
             "ms_date": "2026-10-12T00:00:00Z",
-            "updated_at": "2026-10-27T17:36:00Z",
-            "latest_hash": "sha256:325bfff8262d176b88679d2d1913f4014e53b03555083f54572040249f88989c",
-            "changed_at": "2026-10-28",
+            "updated_at": "2026-10-28T17:36:00Z",
+            "latest_hash": "sha256:6b08da274ee30729a08564c8cf4eecdda35bf4b9c18f1fea2adb06303225575a",
+            "changed_at": "2026-10-29",
             "reviewed_hash": "sha256:06ff9b88c85779257b7372a5f0de005464d7dd1996d8e5e4f1c4683e3b2fbd6c"
           }
         }
