@@ -38,5 +38,6 @@ topologies-%:
 	$(MAKE) -C topics/topologies $*
 patterns-%:
 	$(MAKE) -C topics/patterns $*
+# Not a topic: kept in git, never published (outside dist/). make workstation-build, workstation-check, ...
 workstation-%:
-	$(MAKE) -C topics/workstation $*
+	$(MAKE) -C workstation $*

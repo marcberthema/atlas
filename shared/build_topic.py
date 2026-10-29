@@ -27,8 +27,11 @@ def fill_examples(data, cache, topic):
                     it["count"] = len(got)
 
 
-def build(topic):
-    root = atlas.SITE / "topics" / topic
+def build(topic, root=None, out=None):
+    """A published topic lives in topics/<topic> and builds into dist/<topic>. A resource kept in git but not published passes
+    its own `root` and `out` folder: its banner then names only itself (atlas.apply_standalone)."""
+    standalone = root is not None
+    root = Path(root) if standalone else atlas.SITE / "topics" / topic
     data = json.loads((root / "data" / f"{topic}.json").read_text(encoding="utf-8"))
     view = json.loads((root / "templates" / "view.json").read_text(encoding="utf-8"))
     assert data.get("title") and isinstance(data.get("entries"), list), f"{topic}.json needs a title and an entries list"
@@ -44,11 +47,12 @@ def build(topic):
     marker = "/*__DATA__*/"
     assert page.count(marker) == 1, "template needs exactly one data marker"
     # "</" would end the script element early
-    page = atlas.apply(page.replace(marker, json.dumps(data, ensure_ascii=False).replace("</", "<\\/")), topic)
-    out = atlas.DIST / topic
+    page = page.replace(marker, json.dumps(data, ensure_ascii=False).replace("</", "<\\/"))
+    page = atlas.apply_standalone(page, view["title"]) if standalone else atlas.apply(page, topic)
+    out = Path(out) if out else atlas.DIST / topic
     out.mkdir(parents=True, exist_ok=True)
     (out / "index.html").write_text(page, encoding="utf-8")
-    print(f"built dist/{topic}/index.html ({len(data['entries'])} entries)")
+    print(f"built {(out / 'index.html').relative_to(atlas.SITE)} ({len(data['entries'])} entries)")
 
 
 if __name__ == "__main__":

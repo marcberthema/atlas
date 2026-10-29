@@ -13,6 +13,13 @@ sources  ->  topics/<id>/data/*.json  ->  dist/<id>/index.html     (AI-assisted 
 | Azure with Terraform | What an Azure service provides, needs, costs, and how to build it with Terraform | [topics/azure](topics/azure/README.md) |
 | GitOps | Argo CD and GitOps (just started) | [topics/gitops](topics/gitops/CLAUDE.md) |
 
+## Not published
+
+[Workstation setup](workstation/CLAUDE.md): from a new Windows PC to a working Linux setup in WSL 2 (Ubuntu LTS, zsh, uv,
+fnm, kubectl, Terraform, Azure CLI, Docker, Claude Code). Same format and look as a topic, but it lives in `workstation/`, builds
+into `workstation/site/index.html` and is never deployed. Open that file in a browser, or `make workstation-build` to rebuild it.
+`workstation/setup/` has a script that installs and configures everything from a JSON profile.
+
 ## Use it
 
 ```bash

@@ -15,6 +15,7 @@ DIST = SITE / "dist"
 BANNER_MARK = "<!--__BANNER__-->"
 CSS_MARK = "/*__BANNER_CSS__*/"
 FOOTER_MARK = "<!--__FOOTER__-->"
+PUBLIC = "https://atlas.marcberthelette.com/"  # only for pages outside dist/, which cannot link to it relatively
 
 CSS = """
 .atlas{display:flex;gap:6px;align-items:center;flex-wrap:wrap;border-bottom:1px solid var(--rule);padding:0 0 8px;margin:0 0 12px}
@@ -80,6 +81,14 @@ def apply(page, current):
     """Fill the banner markers of a topic page."""
     assert all(page.count(m) == 1 for m in (BANNER_MARK, CSS_MARK, FOOTER_MARK)), "template needs one banner, one banner css and one footer marker"
     return page.replace(BANNER_MARK, banner(current, "../")).replace(CSS_MARK, CSS).replace(FOOTER_MARK, FOOTER)
+
+
+def apply_standalone(page, label):
+    """Fill the markers of a page kept in git but not published: the banner names only that page and links to the public site."""
+    assert all(page.count(m) == 1 for m in (BANNER_MARK, CSS_MARK, FOOTER_MARK)), "template needs one banner, one banner css and one footer marker"
+    nav = '<nav class="atlas" aria-label="Topics"><a class="home" href="{}">{}</a><a href="index.html" aria-current="page">{}</a></nav>'.format(
+        PUBLIC, html.escape(load()["name"]), html.escape(label))
+    return page.replace(BANNER_MARK, nav).replace(CSS_MARK, CSS).replace(FOOTER_MARK, FOOTER)
 
 
 if __name__ == "__main__":

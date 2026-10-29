@@ -7,7 +7,6 @@
     {"id": "identity", "label": "Identity providers", "description": "Single sign-on and the protocols behind it (OIDC, SAML, LDAP, Kerberos, SCIM), open source identity providers, and how Argo CD and Kubernetes use one."},
     {"id": "certificates", "label": "Certificates", "description": "X.509 and TLS basics, ACME and Let's Encrypt, private CAs, cert-manager and Kubernetes, and OpenSSL commands to inspect and troubleshoot."},
     {"id": "topologies", "label": "Enterprise topologies", "description": "How systems talk to each other: hub-and-spoke, mesh, tree, bus and ring, where each shows up in networks, services, messaging and data, and the products that implement them."},
-    {"id": "patterns", "label": "Architecture and design patterns", "description": "How software is split by structure and responsibility: layered, MVC, hexagonal, microservices, event-driven, resilience patterns and the classic design patterns."},
-    {"id": "workstation", "label": "Workstation setup", "description": "From a new Windows PC to a working Linux setup: WSL 2 with Ubuntu LTS, Windows Terminal, zsh, Python with uv, Node with fnm, and the Kubernetes, Terraform, Azure CLI, Docker and Claude Code tools."}
+    {"id": "patterns", "label": "Architecture and design patterns", "description": "How software is split by structure and responsibility: layered, MVC, hexagonal, microservices, event-driven, resilience patterns and the classic design patterns."}
   ]
 }

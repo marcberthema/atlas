@@ -2,6 +2,7 @@
 
   examples.py <topic>            check: fetch every example and report what changed upstream or can no longer be found (writes nothing)
   examples.py <topic> --refresh  fetch every example and save it to data/examples.json, the cache the build reads
+  examples.py <topic> --dir DIR  for a topic folder outside topics/ (see workstation/)
 
 A code item in a topic's data has a `source` (label, url) and a `match`: a string, or a list of strings for several examples
 from the same page, shown in that order. Each string selects the code block on the page that contains it; when several blocks
@@ -71,8 +72,9 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("topic")
     ap.add_argument("--refresh", action="store_true")
+    ap.add_argument("--dir", help="the topic folder when it is not topics/<topic> (a resource kept outside the published site)")
     args = ap.parse_args()
-    root = SITE / "topics" / args.topic
+    root = Path(args.dir).resolve() if args.dir else SITE / "topics" / args.topic
     DATA, CACHE = root / "data" / f"{args.topic}.json", root / "data" / "examples.json"
     data = json.loads(DATA.read_text(encoding="utf-8"))
     cache = json.loads(CACHE.read_text(encoding="utf-8")) if CACHE.exists() else {}
@@ -101,7 +103,7 @@ def main():
             print("nothing written: fix the match strings above first")
             return 1
         CACHE.write_text(json.dumps(dict(sorted(found.items())), indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
-        print(f"wrote {len(found)} examples to topics/{args.topic}/data/examples.json")
+        print(f"wrote {len(found)} examples to {CACHE.relative_to(SITE)}")
         return 0
     print(f"checked {len(found)} examples, {len(problems)} differences")
     if problems:
