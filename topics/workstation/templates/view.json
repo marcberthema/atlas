@@ -1,0 +1,18 @@
+{
+  "title": "Workstation setup",
+  "tabs": [
+    {"id": "baseline", "label": "Start here"},
+    {"id": "wsl", "label": "WSL and Ubuntu"},
+    {"id": "windows-terminal", "label": "Terminal"},
+    {"id": "zsh", "label": "Shell"},
+    {"id": "uv", "label": "Python"},
+    {"id": "node", "label": "Node"},
+    {"id": "kubectl", "label": "Kubernetes"},
+    {"id": "terraform", "label": "Terraform"},
+    {"id": "azure-cli", "label": "Azure CLI"},
+    {"id": "docker", "label": "Containers"},
+    {"id": "claude-code", "label": "Git and Claude Code"},
+    {"id": "others", "label": "Other tools"},
+    {"id": "compare", "label": "Compare"}
+  ]
+}
