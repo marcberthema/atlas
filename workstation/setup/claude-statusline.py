@@ -1,0 +1,92 @@
+#!/usr/bin/env python3
+"""Claude Code status line: reads the session JSON on stdin, prints two lines.
+
+  Opus 5.5 · high · ~/src/atlas · main*
+  ctx ▓▓▓░░░░░░░ 31% · 5h 23% (2h14m) · 7d 41% (Mon 14:00) · $1.84
+
+Fields are documented at https://code.claude.com/docs/en/statusline. A field Claude Code does not send (effort on a model
+without it, rate limits outside Pro and Max or before the first reply) is left out. Python 3 standard library only.
+setup.sh copies it to ~/.claude/statusline.py and points settings.json at it.
+"""
+import json
+import os
+import subprocess
+import sys
+import time
+
+RESET, DIM = "\033[0m", "\033[2m"
+GREEN, YELLOW, RED, CYAN, MAGENTA = "\033[32m", "\033[33m", "\033[31m", "\033[36m", "\033[35m"
+
+
+def level(pct):
+    """Green under 50%, yellow under 80%, red from 80%."""
+    return GREEN if pct < 50 else YELLOW if pct < 80 else RED
+
+
+def bar(pct, width=10):
+    full = round(pct / 100 * width)
+    return "▓" * full + "░" * (width - full)
+
+
+def until(epoch):
+    """Time left before a reset: 2h14m under a day, the weekday and hour beyond."""
+    left = int(epoch - time.time())
+    if left <= 0:
+        return "now"
+    if left < 86400:
+        return f"{left // 3600}h{left % 3600 // 60:02d}m" if left >= 3600 else f"{left // 60}m"
+    return time.strftime("%a %H:%M", time.localtime(epoch))
+
+
+def git_branch(cwd):
+    """Branch name, with * when the work tree has changes. None outside a repository."""
+    try:
+        run = lambda *a: subprocess.run(["git", "-C", cwd, *a], capture_output=True, text=True, timeout=1)
+        b = run("branch", "--show-current")
+        if b.returncode:
+            return None
+        name = b.stdout.strip() or run("rev-parse", "--short", "HEAD").stdout.strip()
+        dirty = run("status", "--porcelain", "--untracked-files=no").stdout.strip()
+        return name + ("*" if dirty else "")
+    except (OSError, subprocess.TimeoutExpired):
+        return None
+
+
+def main():
+    d = json.load(sys.stdin)
+    sep = f" {DIM}·{RESET} "
+
+    cwd = d.get("workspace", {}).get("current_dir") or d.get("cwd") or os.getcwd()
+    top = [f"{CYAN}{d.get('model', {}).get('display_name', '?')}{RESET}"]
+    if d.get("effort", {}).get("level"):
+        top.append(f"{MAGENTA}{d['effort']['level']}{RESET}")
+    if d.get("fast_mode"):
+        top.append(f"{YELLOW}fast{RESET}")
+    home = os.path.expanduser("~")
+    top.append(cwd.replace(home, "~", 1) if cwd.startswith(home) else cwd)
+    branch = git_branch(cwd)
+    if branch:
+        top.append(f"{GREEN}{branch}{RESET}")
+
+    bottom = []
+    ctx = d.get("context_window", {}).get("used_percentage")
+    if ctx is not None:
+        bottom.append(f"ctx {level(ctx)}{bar(ctx)} {ctx:.0f}%{RESET}")
+    limits = d.get("rate_limits") or {}
+    for key, label in (("five_hour", "5h"), ("seven_day", "7d")):
+        w = limits.get(key)
+        if w and w.get("used_percentage") is not None:
+            pct = w["used_percentage"]
+            reset = f" {DIM}({until(w['resets_at'])}){RESET}" if w.get("resets_at") else ""
+            bottom.append(f"{label} {level(pct)}{pct:.0f}%{RESET}{reset}")
+    cost = d.get("cost", {}).get("total_cost_usd")
+    if cost:
+        bottom.append(f"{DIM}${cost:.2f}{RESET}")
+
+    print(sep.join(top))
+    if bottom:
+        print(sep.join(bottom))
+
+
+if __name__ == "__main__":
+    main()

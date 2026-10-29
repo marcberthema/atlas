@@ -26,6 +26,7 @@
     "azure_cli": true,
     "docker": true,
     "claude_code": true,
+    "claude_statusline": true,
     "zshrc": true
   },
   "settings": {
