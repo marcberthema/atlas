@@ -62,7 +62,7 @@ EOF
 # DESC is shown by --list and --dry-run; CHECK is a command that succeeds when the component is already done.
 declare -A DESC CHECK
 ORDER=(apt_upgrade wsl_conf git gh zsh zsh_plugins fzf zoxide starship uv fnm pnpm kubectl kubectx helm k9s kind kubelogin krew
-       terraform opentofu tflint azure_cli docker claude_code zshrc)
+       terraform opentofu tflint azure_cli docker claude_code claude_statusline zshrc)
 
 in_wsl() { grep -qi microsoft /proc/version; }
 systemd_running() { [[ "$(ps -p 1 -o comm=)" == systemd ]]; }
@@ -343,6 +343,23 @@ EOF
 DESC[claude_code]="Claude Code (native installer; it updates itself)"
 CHECK[claude_code]="[[ -x ~/.local/bin/claude ]]"
 c_claude_code() { curl -fsSL https://claude.ai/install.sh | bash; }
+
+DESC[claude_statusline]="Claude Code status line: model, effort, folder, branch, context, 5h and 7d usage (claude-statusline.py)"
+CHECK[claude_statusline]="cmp -s \"$HERE/claude-statusline.py\" ~/.claude/statusline.py && grep -q statusline.py ~/.claude/settings.json 2>/dev/null"
+c_claude_statusline() {
+  mkdir -p ~/.claude
+  install -m 0755 "$HERE/claude-statusline.py" ~/.claude/statusline.py
+  # Set statusLine and keep every other setting
+  python3 -I - <<'PY'
+import json
+from pathlib import Path
+p = Path.home() / ".claude" / "settings.json"
+s = json.loads(p.read_text()) if p.exists() else {}
+s["statusLine"] = {"type": "command", "command": "~/.claude/statusline.py", "refreshInterval": 60}
+p.write_text(json.dumps(s, indent=2) + "\n")
+PY
+  say "status line set: it shows in the next Claude Code session"
+}
 
 DESC[zshrc]="~/.zshrc and its completions for the tools above (the previous file is backed up once)"
 CHECK[zshrc]="grep -qF \"$MARK\" ~/.zshrc 2>/dev/null"
