@@ -439,6 +439,7 @@
                 "Windows: make Windows Terminal the default terminal and Ubuntu the default profile. [Terminal](#windows-terminal)",
                 "Ubuntu: `sudo apt update && sudo apt upgrade`, check `/etc/wsl.conf` (systemd, default user), set `.wslconfig` limits on Windows.",
                 "Ubuntu: `git config --global user.name` and `user.email`, before any commit. [Git and Claude Code](#claude-code)",
+                "Ubuntu: the GitHub CLI from GitHub's apt repository, then `gh auth login`. [Git and Claude Code](#claude-code)",
                 "Ubuntu: install zsh, make it the login shell, add the plugins and the prompt. [Shell](#zsh)",
                 "Ubuntu: Claude Code. [Git and Claude Code](#claude-code)",
                 "Ubuntu: uv for Python. [Python](#uv)",
@@ -484,7 +485,7 @@
                   "`wsl --update` in PowerShell"
                 ],
                 [
-                  "Ubuntu packages and the apt repositories (kubectl, terraform, az, docker)",
+                  "Ubuntu packages and the apt repositories (kubectl, terraform, az, docker, gh)",
                   "`sudo apt update && sudo apt upgrade`"
                 ],
                 [
@@ -1337,6 +1338,10 @@
                 [
                   "Terraform",
                   "`terraform -install-autocomplete` writes the lines itself"
+                ],
+                [
+                  "GitHub CLI",
+                  "`gh completion -s zsh > <dir on $fpath>/_gh`"
                 ]
               ]
             }
@@ -1417,6 +1422,10 @@
         {
           "label": "fish docs: Fish for bash users",
           "url": "https://fishshell.com/docs/current/fish_for_bash_users.html"
+        },
+        {
+          "label": "GitHub CLI manual: gh completion",
+          "url": "https://cli.github.com/manual/gh_completion"
         }
       ]
     },
@@ -2480,7 +2489,7 @@
       "name": "Git and Claude Code",
       "group": "dev",
       "level": "deep",
-      "summary": "Set git's name and email, then install Claude Code inside WSL with Anthropic's native installer. Claude Code needs a paid Claude plan (Pro, Max, Team, Enterprise) or a Console account.",
+      "summary": "Set git's name and email, install the GitHub CLI and sign in, then install Claude Code inside WSL with Anthropic's native installer. Claude Code needs a paid Claude plan (Pro, Max, Team, Enterprise) or a Console account.",
       "status": "active",
       "started": {
         "date": "2025-02-22",
@@ -2505,6 +2514,7 @@
       },
       "related": [
         "git",
+        "gh",
         "uv",
         "node",
         "wsl"
@@ -2512,7 +2522,8 @@
       "notes": [
         "Claude Code is not open source; its licence refers to Anthropic's Commercial Terms of Service. It is here because it is part of the workflow this topic sets up.",
         "Whether Claude Code's Chrome integration works from inside WSL was not described on the pages read (unconfirmed).",
-        "If login does not open a browser from WSL, copying the printed URL into the Windows browser is common practice (unconfirmed on the pages read)."
+        "If login does not open a browser from WSL, copying the printed URL into the Windows browser is common practice (unconfirmed on the pages read).",
+        "Whether the gh token lands in a credential store or the plain text fallback inside WSL was not checked (no keyring daemon runs by default in WSL, unconfirmed)."
       ],
       "links": [
         {
@@ -2560,9 +2571,51 @@
           ]
         },
         {
-          "title": "Install Claude Code in WSL",
+          "title": "GitHub CLI",
           "part": "use",
           "step": 2,
+          "icon": "login",
+          "intro": "`gh` opens pull requests, reads issues and checks CI from the terminal. Install it from GitHub's apt repository: Ubuntu 26.04's own package is 2.46.0.",
+          "items": [
+            {
+              "type": "code",
+              "title": "GitHub's apt repository and gh",
+              "lang": "shell",
+              "source": {
+                "label": "Installing gh on Linux",
+                "url": "https://github.com/cli/cli/blob/trunk/docs/install_linux.md"
+              },
+              "match": "sudo apt install gh -y"
+            },
+            "Upgrade with `sudo apt update && sudo apt install gh` (or a normal `apt upgrade`). The same page shows how to check the key's fingerprint before installing.",
+            {
+              "type": "code",
+              "title": "Sign in",
+              "lang": "shell",
+              "source": {
+                "label": "gh auth login",
+                "url": "https://cli.github.com/manual/gh_auth_login"
+              },
+              "match": "gh auth login --web --clipboard"
+            },
+            "The default is a browser flow; the token is stored in the system credential store, or in a plain text file when no store is found. Choosing `ssh` as the git protocol detects existing SSH keys and offers to upload one. `GH_TOKEN` is the variable for a fine-grained personal access token.",
+            {
+              "type": "code",
+              "title": "Completion for zsh",
+              "lang": "shell",
+              "source": {
+                "label": "gh completion",
+                "url": "https://cli.github.com/manual/gh_completion"
+              },
+              "match": "gh completion -s zsh"
+            },
+            "Put the `_gh` file in a directory on `$fpath` (for example `~/.zsh/completions` added to `fpath` before `compinit`) if you cannot write to `/usr/local/share`."
+          ]
+        },
+        {
+          "title": "Install Claude Code in WSL",
+          "part": "use",
+          "step": 3,
           "icon": "download",
           "intro": "In the Ubuntu shell, not PowerShell. WSL 2 supports Claude Code's sandboxing; WSL 1 does not.",
           "items": [
@@ -2618,6 +2671,22 @@
         {
           "label": "Launchpad: git in Ubuntu 26.04",
           "url": "https://launchpad.net/ubuntu/resolute/+source/git"
+        },
+        {
+          "label": "GitHub CLI: Installing gh on Linux",
+          "url": "https://github.com/cli/cli/blob/trunk/docs/install_linux.md"
+        },
+        {
+          "label": "GitHub CLI manual: gh auth login",
+          "url": "https://cli.github.com/manual/gh_auth_login"
+        },
+        {
+          "label": "GitHub CLI manual: gh completion",
+          "url": "https://cli.github.com/manual/gh_completion"
+        },
+        {
+          "label": "Launchpad: gh in Ubuntu 26.04",
+          "url": "https://launchpad.net/ubuntu/resolute/+source/gh"
         }
       ]
     },
@@ -3697,6 +3766,79 @@
         {
           "label": "Launchpad: git in Ubuntu 26.04",
           "url": "https://launchpad.net/ubuntu/resolute/+source/git"
+        }
+      ]
+    },
+    {
+      "id": "gh",
+      "name": "GitHub CLI (gh)",
+      "group": "dev",
+      "level": "ref",
+      "summary": "GitHub on the command line: pull requests, issues, releases, Actions runs and the API.",
+      "status": "active",
+      "started": {
+        "date": "2019-10-03",
+        "basis": "GitHub repository cli/cli created",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "Not a CNCF project."
+      },
+      "license": "MIT",
+      "maintainer": "GitHub",
+      "version": {
+        "name": "GitHub CLI",
+        "analysed": "v2.103.3",
+        "released": "2026-10-26",
+        "docs": "cli/cli docs/install_linux.md and cli.github.com/manual. Ubuntu 26.04 ships 2.46.0.",
+        "checked": "2026-10-29"
+      },
+      "track": {
+        "github": "cli/cli"
+      },
+      "related": [
+        "git",
+        "claude-code"
+      ],
+      "links": [
+        {
+          "label": "Manual",
+          "url": "https://cli.github.com/manual/"
+        },
+        {
+          "label": "Install on Linux",
+          "url": "https://github.com/cli/cli/blob/trunk/docs/install_linux.md"
+        },
+        {
+          "label": "Repository",
+          "url": "https://github.com/cli/cli"
+        },
+        {
+          "label": "Releases",
+          "url": "https://github.com/cli/cli/releases"
+        }
+      ],
+      "sections": [
+        {
+          "title": "What it is",
+          "items": [
+            "Install from GitHub's apt repository at cli.github.com/packages (Ubuntu's archive is older). `gh auth login` signs in through the browser. `gh pr create`, `gh pr checkout`, `gh run watch` and `gh api` cover most daily use."
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "GitHub CLI: Installing gh on Linux",
+          "url": "https://github.com/cli/cli/blob/trunk/docs/install_linux.md"
+        },
+        {
+          "label": "GitHub CLI manual: gh auth login",
+          "url": "https://cli.github.com/manual/gh_auth_login"
+        },
+        {
+          "label": "Launchpad: gh in Ubuntu 26.04",
+          "url": "https://launchpad.net/ubuntu/resolute/+source/gh"
         }
       ]
     }
