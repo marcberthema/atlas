@@ -3,12 +3,12 @@
 #
 #   setup.sh                      run every component the profile turns on
 #   setup.sh --profile my.json    another profile (copy profile.json and edit it)
-#   setup.sh --only kubectl,helm  run these components, whatever the profile says
+#   setup.sh --only kubectl,helm  run these components even when installed (upgrades them), whatever the profile says
 #   setup.sh --dry-run            show what would run and what is already installed
 #   setup.sh --list               list the components and whether the profile turns them on
 #
 # Run as your normal user, not root: it asks for sudo once. Safe to run again: a component that is
-# already installed is skipped (apt ones are upgraded by apt_upgrade). Needs python3 (Ubuntu has it) to read the profile.
+# already installed is skipped (apt ones are upgraded by apt_upgrade); name it in --only to upgrade it. Needs python3 (Ubuntu has it) to read the profile.
 # The commands follow each vendor's install page, linked in the guide. When a vendor page changes, update the step here too.
 set -euo pipefail
 
@@ -154,7 +154,7 @@ c_zoxide() { apt_install zoxide; }
 DESC[starship]="Starship prompt (install script) and ~/.config/starship.toml"
 CHECK[starship]="have starship && [[ -f ~/.config/starship.toml ]]"
 c_starship() {
-  have starship || curl -sS https://starship.rs/install.sh | sh -s -- -y
+  curl -sS https://starship.rs/install.sh | sh -s -- -y   # installs or upgrades to the latest
   mkdir -p ~/.config
   if [[ -f ~/.config/starship.toml ]] && ! grep -qF "$MARK" ~/.config/starship.toml; then
     say "~/.config/starship.toml exists and is yours: left as is"; return 0
@@ -179,11 +179,11 @@ disabled = true              # false for a clock
 EOF
 }
 
-DESC[uv]="uv (Astral installer) and a Python from uv (settings.python)"
+DESC[uv]="uv (Astral installer, or uv self update) and a Python from uv (settings.python)"
 CHECK[uv]="[[ -x ~/.local/bin/uv ]]"
 c_uv() {
   # The managed ~/.zshrc puts ~/.local/bin on PATH, so the installer must not edit shell files
-  [[ -x ~/.local/bin/uv ]] || curl -LsSf https://astral.sh/uv/install.sh | env UV_NO_MODIFY_PATH=1 sh
+  if [[ -x ~/.local/bin/uv ]]; then ~/.local/bin/uv self update; else curl -LsSf https://astral.sh/uv/install.sh | env UV_NO_MODIFY_PATH=1 sh; fi
   case "$S_python" in
     "") ;;
     latest) ~/.local/bin/uv python install ;;
@@ -195,7 +195,7 @@ DESC[fnm]="fnm (installer, --skip-shell) and Node (settings.node: lts or a versi
 CHECK[fnm]="[[ -x ~/.local/share/fnm/fnm ]]"
 c_fnm() {
   have unzip || apt_install unzip
-  [[ -x ~/.local/share/fnm/fnm ]] || curl -fsSL https://fnm.vercel.app/install | bash -s -- --skip-shell
+  curl -fsSL https://fnm.vercel.app/install | bash -s -- --skip-shell   # rerunning the installer upgrades fnm
   local fnm="$HOME/.local/share/fnm/fnm"
   eval "$("$fnm" env --shell bash)"
   if [[ "$S_node" == lts ]]; then
@@ -228,7 +228,7 @@ DESC[kubectx]="kubectx and kubens from apt"
 CHECK[kubectx]="have kubectx"
 c_kubectx() { apt_install kubectx; }
 
-DESC[helm]="Helm 4 (get-helm-4 script; rerun the component to upgrade)"
+DESC[helm]="Helm 4 (get-helm-4 script, latest release)"
 CHECK[helm]="have helm"
 c_helm() {
   local s; s="$(mktemp)"
@@ -420,7 +420,9 @@ if [[ $LIST == 1 || $DRY == 1 ]]; then
       [[ $LIST == 1 ]] && printf '  %s%-12s off%s  %s\n' "$Y" "$c" "$N" "${DESC[$c]}"
       continue
     fi
-    if [[ $DRY == 1 ]] && eval "${CHECK[$c]}" 2>/dev/null; then state="${G}done${N}"; else state="${B}run ${N}"; fi
+    if [[ $DRY == 1 ]] && eval "${CHECK[$c]}" 2>/dev/null; then
+      if [[ -n "$ONLY" ]]; then state="${B}upgr${N}"; else state="${G}done${N}"; fi
+    else state="${B}run ${N}"; fi
     [[ $LIST == 1 ]] && state="${G}on ${N}"
     printf '  %-12s %s  %s\n' "$c" "$state" "${DESC[$c]}"
   done
@@ -444,7 +446,7 @@ apt_install ca-certificates curl wget gpg unzip git
 declare -a DONE SKIPPED FAILED
 for c in "${ORDER[@]}"; do
   selected "$c" || continue
-  if [[ "$c" != apt_upgrade && "$c" != zshrc && "$c" != git ]] && eval "${CHECK[$c]}" 2>/dev/null; then
+  if [[ -z "$ONLY" && "$c" != apt_upgrade && "$c" != zshrc && "$c" != git ]] && eval "${CHECK[$c]}" 2>/dev/null; then
     SKIPPED+=("$c"); continue
   fi
   step "$c: ${DESC[$c]}"
