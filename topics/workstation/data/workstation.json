@@ -1,0 +1,3704 @@
+{
+  "title": "Workstation setup",
+  "intro": "From a new Windows PC to a working Linux development setup: WSL 2 with Ubuntu LTS, Windows Terminal, zsh, uv and fnm, and the Kubernetes, Terraform, Azure, Docker and Claude Code tools.",
+  "checked": "2026-10-29",
+  "scope": "Free to use tools first, installed per user inside WSL. A tool with a paid plan or a licence that is not open source (Docker Desktop, Claude Code, Terraform) says so and names the free alternative.",
+  "groups": [
+    {
+      "id": "start",
+      "label": "Start here",
+      "about": "The order of the steps and why the work happens in WSL."
+    },
+    {
+      "id": "windows",
+      "label": "Windows side",
+      "about": "What is installed on Windows itself: WSL, the terminal and the apps that stay native."
+    },
+    {
+      "id": "shell",
+      "label": "Shell",
+      "about": "zsh and the small tools that make it pleasant: prompt, suggestions, highlighting, fuzzy search, directory jumping."
+    },
+    {
+      "id": "languages",
+      "label": "Python and Node",
+      "about": "Language runtimes managed per user, never with sudo and never from Ubuntu's own Python or Node."
+    },
+    {
+      "id": "kubernetes",
+      "label": "Kubernetes",
+      "about": "Clients to talk to clusters and a way to run a local one."
+    },
+    {
+      "id": "cloud",
+      "label": "Terraform and Azure",
+      "about": "Infrastructure as code and the Azure command line."
+    },
+    {
+      "id": "containers",
+      "label": "Containers",
+      "about": "Docker inside WSL, or Docker Desktop on Windows."
+    },
+    {
+      "id": "dev",
+      "label": "Git and AI",
+      "about": "Version control and Claude Code."
+    }
+  ],
+  "comparisons": [
+    {
+      "id": "shells",
+      "title": "Shells",
+      "about": "From each shell's docs and the tools' completion pages. zsh is the one set up here; bash stays the system shell for scripts.",
+      "columns": [
+        "bash",
+        "zsh",
+        "fish"
+      ],
+      "rows": [
+        {
+          "label": "In Ubuntu 26.04",
+          "cells": [
+            "Default login shell",
+            "5.9 from apt",
+            "4.2.1 from apt"
+          ]
+        },
+        {
+          "label": "Runs bash snippets from docs",
+          "cells": [
+            "Yes",
+            "Mostly",
+            "No: intentionally not POSIX compatible"
+          ]
+        },
+        {
+          "label": "Suggestions as you type",
+          "cells": [
+            "No",
+            "With zsh-autosuggestions",
+            "Built in"
+          ]
+        },
+        {
+          "label": "Syntax highlighting",
+          "cells": [
+            "No",
+            "With zsh-syntax-highlighting",
+            "Built in"
+          ]
+        },
+        {
+          "label": "Supported by kubectl, uv, fnm, fzf",
+          "cells": [
+            "Yes (kubectl needs bash-completion)",
+            "Yes",
+            "Yes"
+          ]
+        },
+        {
+          "label": "Config file",
+          "cells": [
+            "~/.bashrc",
+            "~/.zshrc",
+            "~/.config/fish/config.fish"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "toolchains",
+      "title": "Python and Node side by side",
+      "about": "The same jobs in uv and in fnm with pnpm.",
+      "columns": [
+        "Python (uv)",
+        "Node (fnm, pnpm)"
+      ],
+      "rows": [
+        {
+          "label": "Install a runtime",
+          "cells": [
+            "uv python install (or automatic)",
+            "fnm install --lts"
+          ]
+        },
+        {
+          "label": "Pin the version",
+          "cells": [
+            ".python-version (uv python pin)",
+            ".node-version or .nvmrc"
+          ]
+        },
+        {
+          "label": "Project packages",
+          "cells": [
+            ".venv/",
+            "node_modules/"
+          ]
+        },
+        {
+          "label": "Lockfile",
+          "cells": [
+            "uv.lock",
+            "pnpm-lock.yaml"
+          ]
+        },
+        {
+          "label": "Add a dependency",
+          "cells": [
+            "uv add <pkg>",
+            "pnpm add <pkg>"
+          ]
+        },
+        {
+          "label": "Run a tool once",
+          "cells": [
+            "uvx <tool>",
+            "pnx <pkg>"
+          ]
+        },
+        {
+          "label": "Update the manager",
+          "cells": [
+            "uv self update",
+            "pnpm self-update; rerun fnm's installer"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "local-k8s",
+      "title": "A Kubernetes cluster on the workstation",
+      "about": "From the kind and kubeadm docs.",
+      "columns": [
+        "kind",
+        "kubeadm"
+      ],
+      "rows": [
+        {
+          "label": "What it makes",
+          "cells": [
+            "A cluster whose nodes are Docker containers",
+            "Real nodes on machines or VMs"
+          ]
+        },
+        {
+          "label": "Needs",
+          "cells": [
+            "Docker, Podman or nerdctl",
+            "A container runtime and kubelet on each node, 2 GB RAM, 2 CPUs for the control plane, swap handled"
+          ]
+        },
+        {
+          "label": "Good for",
+          "cells": [
+            "Daily development and tests",
+            "Learning how clusters are built, homelabs"
+          ]
+        }
+      ]
+    }
+  ],
+  "entries": [
+    {
+      "id": "baseline",
+      "name": "Start here: the baseline",
+      "group": "start",
+      "level": "deep",
+      "summary": "A new Windows PC to a working Linux development setup: WSL 2 with Ubuntu 26.04 LTS, Windows Terminal, zsh, uv, fnm and pnpm, kubectl, Terraform, the Azure CLI, Docker and Claude Code.",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "Not a product",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "A how-to."
+      },
+      "license": "n/a",
+      "version": {
+        "name": "Baseline",
+        "analysed": "Ubuntu 26.04 LTS on WSL 3.0.3",
+        "released": "2026-10-09",
+        "docs": "The tool pages linked from each tab, read 2026-10-29. The date is the WSL release.",
+        "checked": "2026-10-29"
+      },
+      "related": [
+        "wsl",
+        "windows-terminal",
+        "zsh",
+        "uv",
+        "node",
+        "kubectl",
+        "terraform",
+        "azure-cli",
+        "docker",
+        "claude-code"
+      ],
+      "notes": [
+        "The split (WSL for development, Windows for the browser, games and Windows-only apps) is a choice, not a vendor recommendation. Microsoft's own guidance is to keep files on the same side as the tools that use them."
+      ],
+      "links": [
+        {
+          "label": "WSL documentation",
+          "url": "https://learn.microsoft.com/en-us/windows/wsl/"
+        },
+        {
+          "label": "Ubuntu on WSL documentation",
+          "url": "https://documentation.ubuntu.com/wsl/latest/"
+        }
+      ],
+      "sections": [
+        {
+          "title": "In one minute",
+          "part": "overview",
+          "icon": "eye",
+          "items": [
+            "Windows keeps the browser, Office, games and anything Windows-only. Development happens in Ubuntu running in WSL 2: a real Linux userland, the same commands as the docs and as CI, and its ports reachable from the Windows browser on `localhost`.",
+            {
+              "type": "diagram",
+              "alt": "Windows 11 runs Windows Terminal and the browser. WSL 2 runs a lightweight VM with Ubuntu 26.04 inside. In Ubuntu the user's home holds the shell, runtimes, cluster and cloud tools, Docker Engine and the repositories. The browser reaches services in Ubuntu through localhost.",
+              "caption": "What runs where.",
+              "w": 720,
+              "h": 250,
+              "boxes": [
+                {
+                  "x": 10,
+                  "y": 14,
+                  "w": 200,
+                  "h": 222,
+                  "label": "Windows 11"
+                },
+                {
+                  "x": 240,
+                  "y": 14,
+                  "w": 470,
+                  "h": 222,
+                  "label": "WSL 2 VM: Ubuntu 26.04 LTS"
+                }
+              ],
+              "nodes": [
+                {
+                  "id": "wt",
+                  "x": 110,
+                  "y": 75,
+                  "w": 160,
+                  "h": 36,
+                  "label": "Windows Terminal"
+                },
+                {
+                  "id": "br",
+                  "x": 110,
+                  "y": 175,
+                  "w": 160,
+                  "h": 36,
+                  "label": "Browser, apps, games"
+                },
+                {
+                  "id": "sh",
+                  "x": 360,
+                  "y": 75,
+                  "w": 180,
+                  "h": 36,
+                  "label": "zsh",
+                  "sub": "starship, fzf, zoxide",
+                  "kind": "hub"
+                },
+                {
+                  "id": "rt",
+                  "x": 590,
+                  "y": 75,
+                  "w": 190,
+                  "h": 36,
+                  "label": "uv, fnm, pnpm"
+                },
+                {
+                  "id": "ops",
+                  "x": 590,
+                  "y": 135,
+                  "w": 190,
+                  "h": 36,
+                  "label": "kubectl, terraform, az"
+                },
+                {
+                  "id": "dk",
+                  "x": 590,
+                  "y": 195,
+                  "w": 190,
+                  "h": 36,
+                  "label": "Docker Engine, kind"
+                },
+                {
+                  "id": "svc",
+                  "x": 360,
+                  "y": 135,
+                  "w": 180,
+                  "h": 36,
+                  "label": "Dev servers",
+                  "sub": "ports 3000, 8000, ..."
+                },
+                {
+                  "id": "src",
+                  "x": 360,
+                  "y": 195,
+                  "w": 180,
+                  "h": 36,
+                  "label": "~/src",
+                  "sub": "repositories",
+                  "kind": "store"
+                }
+              ],
+              "links": [
+                {
+                  "from": "wt",
+                  "to": "sh",
+                  "label": "opens",
+                  "arrow": "to"
+                },
+                {
+                  "from": "br",
+                  "to": "svc",
+                  "label": "localhost",
+                  "arrow": "to",
+                  "dashed": true
+                }
+              ]
+            },
+            {
+              "type": "cards",
+              "cards": [
+                {
+                  "icon": "server",
+                  "title": "Linux first",
+                  "text": "Docs, scripts and CI assume Linux. WSL runs them unmodified."
+                },
+                {
+                  "icon": "file",
+                  "title": "Files in Linux",
+                  "text": "Repositories live in `~/src`, not `/mnt/c`. Crossing file systems is slow."
+                },
+                {
+                  "icon": "users",
+                  "title": "Your user, not root",
+                  "text": "Install every per-user tool as your normal user. Check with `whoami`."
+                },
+                {
+                  "icon": "up",
+                  "title": "You update it",
+                  "text": "Windows does not upgrade the distribution. Run apt and the tool updaters yourself."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Why WSL, not the alternatives",
+          "part": "overview",
+          "icon": "scale",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Option",
+                "Good",
+                "Cost"
+              ],
+              "rows": [
+                [
+                  "WSL 2 (chosen)",
+                  "Linux userland next to Windows apps. `localhostForwarding` is on by default, so a server in WSL opens in the Windows browser.",
+                  "A VM that takes memory (half of Windows RAM by default). You maintain the distribution."
+                ],
+                [
+                  "A separate Linux machine over SSH",
+                  "Real hardware, good for long-running services and networking labs.",
+                  "A second machine, and the browser on Windows reaches services only over the network."
+                ],
+                [
+                  "Native Windows only",
+                  "No VM.",
+                  "Linux-first docs and scripts need translating. Package managers: winget or Scoop."
+                ]
+              ],
+              "caption": "The judgement is this page's; the facts in the WSL row come from the WSL settings page."
+            }
+          ]
+        },
+        {
+          "title": "The order",
+          "part": "use",
+          "step": 1,
+          "icon": "list",
+          "intro": "Each line is a tab on this page.",
+          "items": [
+            {
+              "type": "checklist",
+              "items": [
+                "Windows: run `wsl --install` in an admin PowerShell, reboot, create the Linux user. [WSL and Ubuntu](#wsl)",
+                "Windows: make Windows Terminal the default terminal and Ubuntu the default profile. [Terminal](#windows-terminal)",
+                "Ubuntu: `sudo apt update && sudo apt upgrade`, check `/etc/wsl.conf` (systemd, default user), set `.wslconfig` limits on Windows.",
+                "Ubuntu: `git config --global user.name` and `user.email`, before any commit. [Git and Claude Code](#claude-code)",
+                "Ubuntu: install zsh, make it the login shell, add the plugins and the prompt. [Shell](#zsh)",
+                "Ubuntu: Claude Code. [Git and Claude Code](#claude-code)",
+                "Ubuntu: uv for Python. [Python](#uv)",
+                "Ubuntu: fnm for Node, then pnpm. [Node](#node)",
+                "Ubuntu: kubectl and the cluster tools. [Kubernetes](#kubectl)",
+                "Ubuntu: Terraform (or OpenTofu) and the Azure CLI. [Terraform](#terraform), [Azure CLI](#azure-cli)",
+                "Ubuntu: Docker Engine, then kind for a local cluster. [Containers](#docker)"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Rules that save time",
+          "part": "use",
+          "step": 2,
+          "icon": "shield",
+          "items": [
+            {
+              "type": "callout",
+              "kind": "gotcha",
+              "title": "Never install a user tool as root",
+              "text": "uv, fnm, pnpm, starship and Claude Code install into the current user's home (`~/.local/bin`, `~/.local/share`). Run as root by mistake, they land in `/root` and your user does not see them. If WSL starts as root, set `[user] default=<name>` in `/etc/wsl.conf`."
+            },
+            "Use `sudo` only for apt and for files under `/etc`. Never `sudo npm` or `sudo pip`.",
+            "Ubuntu's `python3` belongs to the system. PEP 668 marks it externally managed, so `pip install` outside a virtual environment is refused. Use uv.",
+            "Prefer the vendor's apt repository (kubectl, Terraform, Azure CLI, Docker) over a downloaded binary: `apt upgrade` then updates it."
+          ]
+        },
+        {
+          "title": "Keeping it current",
+          "part": "run",
+          "icon": "up",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "What",
+                "Update with"
+              ],
+              "rows": [
+                [
+                  "WSL itself and its kernel",
+                  "`wsl --update` in PowerShell"
+                ],
+                [
+                  "Ubuntu packages and the apt repositories (kubectl, terraform, az, docker)",
+                  "`sudo apt update && sudo apt upgrade`"
+                ],
+                [
+                  "kubectl to a new minor version",
+                  "Change the version in `/etc/apt/sources.list.d/kubernetes.list`, then apt"
+                ],
+                [
+                  "uv",
+                  "`uv self update`"
+                ],
+                [
+                  "pnpm",
+                  "`pnpm self-update`"
+                ],
+                [
+                  "fnm",
+                  "Rerun the installer with `--skip-shell`"
+                ],
+                [
+                  "Node",
+                  "`fnm install --lts`"
+                ],
+                [
+                  "Claude Code",
+                  "Updates itself in the background; `claude doctor` shows the last attempt"
+                ],
+                [
+                  "Windows Terminal",
+                  "The Microsoft Store updates it; a GitHub install does not update itself"
+                ]
+              ]
+            },
+            {
+              "type": "callout",
+              "kind": "tip",
+              "title": "Free the memory",
+              "text": "`wsl --shutdown` stops every distribution and the WSL 2 VM. `wsl --terminate <distro>` stops only one."
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "Microsoft Learn: Install WSL",
+          "url": "https://learn.microsoft.com/en-us/windows/wsl/install",
+          "date": "2025-08-06"
+        },
+        {
+          "label": "Microsoft Learn: Advanced settings configuration in WSL",
+          "url": "https://learn.microsoft.com/en-us/windows/wsl/wsl-config",
+          "date": "2026-10-16"
+        },
+        {
+          "label": "Microsoft Learn: Working across Windows and Linux file systems",
+          "url": "https://learn.microsoft.com/en-us/windows/wsl/filesystems",
+          "date": "2022-03-03"
+        },
+        {
+          "label": "Microsoft Learn: Set up a WSL development environment",
+          "url": "https://learn.microsoft.com/en-us/windows/wsl/setup/environment",
+          "date": "2026-04-16"
+        },
+        {
+          "label": "Microsoft Learn: Basic commands for WSL",
+          "url": "https://learn.microsoft.com/en-us/windows/wsl/basic-commands",
+          "date": "2025-12-01"
+        },
+        {
+          "label": "PEP 668: Marking Python base environments as externally managed",
+          "url": "https://peps.python.org/pep-0668/"
+        },
+        {
+          "label": "kubernetes.io: Install and set up kubectl on Linux",
+          "url": "https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/",
+          "date": "2026-09-09"
+        },
+        {
+          "label": "uv docs: Installation",
+          "url": "https://docs.astral.sh/uv/getting-started/installation/"
+        },
+        {
+          "label": "pnpm: Installation",
+          "url": "https://pnpm.io/installation"
+        },
+        {
+          "label": "Schniz/fnm README",
+          "url": "https://github.com/Schniz/fnm"
+        },
+        {
+          "label": "Claude Code docs: Set up Claude Code",
+          "url": "https://code.claude.com/docs/en/setup"
+        }
+      ]
+    },
+    {
+      "id": "wsl",
+      "name": "WSL and Ubuntu",
+      "group": "windows",
+      "level": "deep",
+      "summary": "Windows Subsystem for Linux 2 runs a Linux distribution in a lightweight VM. Install it with one command, with Ubuntu 26.04 LTS, then tune it with /etc/wsl.conf and %UserProfile%\\.wslconfig.",
+      "status": "active",
+      "started": {
+        "date": "2016-04-06",
+        "basis": "GitHub repository microsoft/WSL created",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "Not a CNCF project."
+      },
+      "license": "MIT",
+      "maintainer": "Microsoft",
+      "version": {
+        "name": "WSL",
+        "analysed": "3.0.3",
+        "released": "2026-10-09",
+        "docs": "learn.microsoft.com/windows/wsl (no version on the pages); Ubuntu 26.04.1 LTS from documentation.ubuntu.com/wsl",
+        "checked": "2026-10-29"
+      },
+      "track": {
+        "github": "microsoft/WSL"
+      },
+      "related": [
+        "windows-terminal",
+        "docker",
+        "baseline"
+      ],
+      "notes": [
+        "The pages read give no WSL version. 3.0.3 is the latest GitHub release that is not a prerelease; 3.0.4 (2026-10-20) is a prerelease.",
+        "Ubuntu 26.04 release date: the image files on releases.ubuntu.com are dated 2026-04-23 (unconfirmed as the announcement date).",
+        "Microsoft documents systemd as off by default in wsl.conf; whether the Ubuntu 26.04 image turns it on was not stated on the pages read (unconfirmed). Check the file.",
+        "Some games' anti-cheat may object to the hypervisor WSL 2 needs (unconfirmed, not on the pages read)."
+      ],
+      "links": [
+        {
+          "label": "WSL documentation",
+          "url": "https://learn.microsoft.com/en-us/windows/wsl/"
+        },
+        {
+          "label": "wsl.conf and .wslconfig reference",
+          "url": "https://learn.microsoft.com/en-us/windows/wsl/wsl-config"
+        },
+        {
+          "label": "Basic commands",
+          "url": "https://learn.microsoft.com/en-us/windows/wsl/basic-commands"
+        },
+        {
+          "label": "Ubuntu on WSL",
+          "url": "https://documentation.ubuntu.com/wsl/latest/"
+        },
+        {
+          "label": "Repository",
+          "url": "https://github.com/microsoft/WSL"
+        },
+        {
+          "label": "Releases",
+          "url": "https://github.com/microsoft/WSL/releases"
+        }
+      ],
+      "sections": [
+        {
+          "title": "In one minute",
+          "part": "overview",
+          "icon": "eye",
+          "items": [
+            "WSL 2 runs Linux distributions in a lightweight utility VM managed by Windows. `wsl --install` enables the features and installs Ubuntu by default. New installs use WSL 2.",
+            "Two config files: `/etc/wsl.conf` inside each distribution (systemd, default user, automount, interop) and `%UserProfile%\\.wslconfig` on Windows for the VM (memory, processors, networking). Changes apply after the VM stops: `wsl --shutdown`, or wait about 8 seconds after closing every shell.",
+            "The `Ubuntu` distribution always tracks the latest LTS, today 26.04 LTS (Resolute Raccoon). `Ubuntu-26.04` pins that release. Interim releases are not offered on WSL."
+          ]
+        },
+        {
+          "title": "Install WSL and Ubuntu",
+          "part": "use",
+          "step": 1,
+          "icon": "download",
+          "intro": "In PowerShell run as administrator, then reboot. Needs Windows 10 2004 (build 19041) or later, or Windows 11, and virtualisation on in the firmware.",
+          "items": [
+            {
+              "type": "code",
+              "title": "Install WSL with the default distribution",
+              "lang": "shell",
+              "source": {
+                "label": "Install WSL",
+                "url": "https://learn.microsoft.com/en-us/windows/wsl/install"
+              },
+              "match": "wsl --install"
+            },
+            {
+              "type": "code",
+              "title": "Or pick a release from the list",
+              "lang": "text",
+              "source": {
+                "label": "Install Ubuntu on WSL 2",
+                "url": "https://documentation.ubuntu.com/wsl/latest/howto/install-ubuntu-wsl2/"
+              },
+              "match": "Ubuntu-26.04"
+            },
+            "`wsl --install Ubuntu-26.04` installs that release. If the download hangs at 0.0%, add `--web-download`.",
+            "On first start Ubuntu asks for a Linux user name and password. They are not your Windows account; this user is the distribution's administrator (`sudo`)."
+          ]
+        },
+        {
+          "title": "First commands in Ubuntu",
+          "part": "use",
+          "step": 2,
+          "icon": "play",
+          "items": [
+            {
+              "type": "code",
+              "title": "Update the packages",
+              "lang": "shell",
+              "source": {
+                "label": "Set up a WSL development environment",
+                "url": "https://learn.microsoft.com/en-us/windows/wsl/setup/environment"
+              },
+              "match": "sudo apt update && sudo apt upgrade"
+            },
+            "Windows does not update or upgrade the distribution. Run this regularly.",
+            "Make a home for code in the Linux file system, for example `mkdir ~/src`. `explorer.exe .` opens the current directory in File Explorer; from Windows the path is `\\\\wsl$\\<distro>\\home\\<user>`.",
+            {
+              "type": "callout",
+              "kind": "gotcha",
+              "title": "Keep repositories out of /mnt/c",
+              "text": "Files under `/mnt/c` are on Windows and every access crosses file systems, which is much slower for Linux tools (git, node, Claude Code's search). Microsoft recommends storing files on the side of the tools that use them."
+            }
+          ]
+        },
+        {
+          "title": "wsl.conf: systemd and the default user",
+          "part": "use",
+          "step": 3,
+          "icon": "wrench",
+          "intro": "Edit with `sudo nano /etc/wsl.conf`, then `wsl --shutdown` from PowerShell.",
+          "items": [
+            {
+              "type": "code",
+              "title": "Turn on systemd",
+              "lang": "text",
+              "source": {
+                "label": "Advanced settings configuration in WSL",
+                "url": "https://learn.microsoft.com/en-us/windows/wsl/wsl-config"
+              },
+              "match": "systemd=true"
+            },
+            "Microsoft's systemd page shows snap and microk8s on WSL; Docker Engine runs as a systemd service. Check with `systemctl list-unit-files --type=service`. Ubuntu recommends keeping systemd and interop on.",
+            "Default user: `[user]` then `default=<name>`. The old `ubuntu config --default-user <name>` needs the distribution's .exe launcher, which the new tar-based (.wsl) images do not have, so use wsl.conf.",
+            "Other keys: `[interop] appendWindowsPath=false` keeps Windows' PATH out of Linux; `[network] generateResolvConf=false` lets you write your own `/etc/resolv.conf`."
+          ]
+        },
+        {
+          "title": ".wslconfig: memory, processors, networking",
+          "part": "use",
+          "step": 4,
+          "icon": "server",
+          "intro": "In `%UserProfile%\\.wslconfig` on Windows. WSL Settings in the Start menu edits the same values.",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Key",
+                "Default",
+                "Use"
+              ],
+              "rows": [
+                [
+                  "`[wsl2] memory`",
+                  "50% of Windows memory",
+                  "Cap the VM, for example `memory=8GB`."
+                ],
+                [
+                  "`[wsl2] processors`",
+                  "All logical processors",
+                  "Cap the CPUs."
+                ],
+                [
+                  "`[wsl2] swap`",
+                  "25% of memory",
+                  "`0` for no swap file."
+                ],
+                [
+                  "`[wsl2] networkingMode`",
+                  "`nat`",
+                  "`mirrored` (Windows 11 22H2+): Windows and Linux share interfaces, both reach each other on `127.0.0.1`, IPv6 works. Microsoft recommends trying it, and it can help with VPNs."
+                ],
+                [
+                  "`[wsl2] localhostForwarding`",
+                  "`true`",
+                  "Ports opened in WSL are reachable on Windows `localhost`. Ignored in mirrored mode."
+                ],
+                [
+                  "`[wsl2] vmIdleTimeout`",
+                  "`60000` ms",
+                  "The VM stops after this idle time (Windows 11)."
+                ],
+                [
+                  "`[experimental] autoMemoryReclaim`",
+                  "`dropCache`",
+                  "`gradual` returns cached memory to Windows slowly instead of at once; `disabled` turns it off."
+                ],
+                [
+                  "`[experimental] sparseVhd`",
+                  "`false`",
+                  "New virtual disks are sparse and give space back."
+                ]
+              ]
+            },
+            {
+              "type": "code",
+              "title": "Microsoft's example .wslconfig",
+              "lang": "text",
+              "source": {
+                "label": "Advanced settings configuration in WSL",
+                "url": "https://learn.microsoft.com/en-us/windows/wsl/wsl-config"
+              },
+              "match": "memory=4GB"
+            }
+          ]
+        },
+        {
+          "title": "Daily operations",
+          "part": "run",
+          "icon": "clock",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Command (PowerShell)",
+                "Does"
+              ],
+              "rows": [
+                [
+                  "`wsl -l -v`",
+                  "List distributions, their state and WSL version."
+                ],
+                [
+                  "`wsl --shutdown`",
+                  "Stop every distribution and the VM. Frees the memory and applies config changes."
+                ],
+                [
+                  "`wsl --terminate <distro>`",
+                  "Stop one distribution."
+                ],
+                [
+                  "`wsl --update`",
+                  "Update WSL from the Microsoft Store (`--web-download` for GitHub)."
+                ],
+                [
+                  "`wsl --version`",
+                  "Show the WSL version."
+                ],
+                [
+                  "`wsl -u root`",
+                  "Open as root, for example to reset a forgotten password with `passwd <user>`."
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Reference",
+          "part": "reference",
+          "icon": "book",
+          "items": [
+            "The Ubuntu `Ubuntu` app is upgraded to a new LTS once its first point release ships; numbered apps such as `Ubuntu-26.04` stay on that release with five years of standard support.",
+            "cloud-init can pre-configure a new instance from `%UserProfile%\\.cloud-init\\<distro>.user-data`. It runs once, on first start, and needs systemd and interop.",
+            "`[boot] command=` runs a command as root when the distribution starts (Windows 11). `[automount] options` sets permissions for Windows drives under `/mnt`."
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "Microsoft Learn: Install WSL",
+          "url": "https://learn.microsoft.com/en-us/windows/wsl/install",
+          "date": "2025-08-06"
+        },
+        {
+          "label": "Microsoft Learn: Advanced settings configuration in WSL",
+          "url": "https://learn.microsoft.com/en-us/windows/wsl/wsl-config",
+          "date": "2026-10-16"
+        },
+        {
+          "label": "Microsoft Learn: Working across Windows and Linux file systems",
+          "url": "https://learn.microsoft.com/en-us/windows/wsl/filesystems",
+          "date": "2022-03-03"
+        },
+        {
+          "label": "Microsoft Learn: Accessing network applications with WSL",
+          "url": "https://learn.microsoft.com/en-us/windows/wsl/networking",
+          "date": "2025-08-06"
+        },
+        {
+          "label": "Microsoft Learn: Use systemd to manage Linux services with WSL",
+          "url": "https://learn.microsoft.com/en-us/windows/wsl/systemd",
+          "date": "2025-03-17"
+        },
+        {
+          "label": "Microsoft Learn: Basic commands for WSL",
+          "url": "https://learn.microsoft.com/en-us/windows/wsl/basic-commands",
+          "date": "2025-12-01"
+        },
+        {
+          "label": "Microsoft Learn: Set up a WSL development environment",
+          "url": "https://learn.microsoft.com/en-us/windows/wsl/setup/environment",
+          "date": "2026-04-16"
+        },
+        {
+          "label": "Ubuntu on WSL: Install Ubuntu on WSL 2",
+          "url": "https://documentation.ubuntu.com/wsl/latest/howto/install-ubuntu-wsl2/",
+          "date": "2026-10-20"
+        },
+        {
+          "label": "Ubuntu on WSL: Distributions",
+          "url": "https://documentation.ubuntu.com/wsl/latest/reference/distributions/",
+          "date": "2026-09-29"
+        },
+        {
+          "label": "Ubuntu on WSL: WSL instance configuration",
+          "url": "https://documentation.ubuntu.com/wsl/latest/reference/instance_configuration/",
+          "date": "2026-07-15"
+        },
+        {
+          "label": "releases.ubuntu.com: Ubuntu 26.04.1 LTS (Resolute Raccoon)",
+          "url": "https://releases.ubuntu.com/resolute/"
+        },
+        {
+          "label": "microsoft/WSL releases",
+          "url": "https://github.com/microsoft/WSL/releases"
+        }
+      ]
+    },
+    {
+      "id": "windows-terminal",
+      "name": "Windows Terminal",
+      "group": "windows",
+      "level": "deep",
+      "summary": "Microsoft's tabbed, GPU-rendered terminal. Make it the default terminal application so Ubuntu no longer opens in the old console host, and set Ubuntu as the default profile.",
+      "status": "active",
+      "started": {
+        "date": "2017-08-11",
+        "basis": "GitHub repository microsoft/terminal created",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "Not a CNCF project."
+      },
+      "license": "MIT",
+      "maintainer": "Microsoft",
+      "version": {
+        "name": "Windows Terminal",
+        "analysed": "v1.25.2733.0",
+        "released": "2026-10-02",
+        "docs": "learn.microsoft.com/windows/terminal (no version on the pages)",
+        "checked": "2026-10-29"
+      },
+      "track": {
+        "github": "microsoft/terminal"
+      },
+      "related": [
+        "wsl",
+        "zsh"
+      ],
+      "notes": [
+        "Middle-click paste was not described on the settings pages read (unconfirmed). Copy on select makes right-click paste."
+      ],
+      "links": [
+        {
+          "label": "Documentation",
+          "url": "https://learn.microsoft.com/en-us/windows/terminal/"
+        },
+        {
+          "label": "Repository",
+          "url": "https://github.com/microsoft/terminal"
+        },
+        {
+          "label": "Releases",
+          "url": "https://github.com/microsoft/terminal/releases"
+        }
+      ],
+      "sections": [
+        {
+          "title": "In one minute",
+          "part": "overview",
+          "icon": "eye",
+          "items": [
+            "A Start menu shortcut can open Ubuntu in the legacy console host. Windows Terminal adds tabs, panes, Unicode, themes and settings in a UI or a JSON file. It creates a profile for each WSL distribution automatically."
+          ]
+        },
+        {
+          "title": "Install and make it the default",
+          "part": "use",
+          "step": 1,
+          "icon": "download",
+          "items": [
+            "Install from the Microsoft Store (updates itself). A GitHub release does not update itself.",
+            {
+              "type": "code",
+              "title": "Or with winget, in PowerShell",
+              "lang": "shell",
+              "source": {
+                "label": "microsoft/terminal README",
+                "url": "https://github.com/microsoft/terminal"
+              },
+              "match": "winget install --id Microsoft.WindowsTerminal -e"
+            },
+            "Settings (`Ctrl+,`) > Startup > Default terminal application: Windows Terminal. Every console program then opens in it.",
+            "Settings > Startup > Default profile: Ubuntu. New tabs (`Ctrl+Shift+T`) open Ubuntu."
+          ]
+        },
+        {
+          "title": "Settings worth changing",
+          "part": "use",
+          "step": 2,
+          "icon": "wrench",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Setting",
+                "Key",
+                "Effect"
+              ],
+              "rows": [
+                [
+                  "Interaction > Automatically copy selection to clipboard",
+                  "`copyOnSelect`",
+                  "Selecting copies to the Windows clipboard; right-click pastes. Default off."
+                ],
+                [
+                  "Interaction > Trim trailing whitespace on paste",
+                  "`trimPaste`",
+                  "Trims trailing spaces on paste."
+                ],
+                [
+                  "Startup > Launch on machine startup",
+                  "`startOnUserLogin`",
+                  "Opens with Windows."
+                ]
+              ]
+            },
+            "Starship needs a Nerd Font installed and set as the Ubuntu profile's font."
+          ]
+        },
+        {
+          "title": "Shortcuts",
+          "part": "run",
+          "icon": "grid",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Keys",
+                "Action"
+              ],
+              "rows": [
+                [
+                  "`Ctrl+Shift+P`",
+                  "Command palette"
+                ],
+                [
+                  "`Alt+Shift+D`",
+                  "Duplicate the pane"
+                ],
+                [
+                  "`Alt+Shift++` / `Alt+Shift+-`",
+                  "Split vertically / horizontally"
+                ],
+                [
+                  "`Ctrl+Shift+V`, `Shift+Insert`",
+                  "Paste"
+                ],
+                [
+                  "Shift + Settings",
+                  "Open settings.json"
+                ]
+              ]
+            },
+            "settings.json (Store install): `%LOCALAPPDATA%\\Packages\\Microsoft.WindowsTerminal_8wekyb3d8bbwe\\LocalState\\settings.json`."
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "Microsoft Learn: Install and set up Windows Terminal",
+          "url": "https://learn.microsoft.com/en-us/windows/terminal/install",
+          "date": "2025-11-12"
+        },
+        {
+          "label": "Microsoft Learn: Interaction settings in Windows Terminal",
+          "url": "https://learn.microsoft.com/en-us/windows/terminal/customize-settings/interaction",
+          "date": "2025-10-21"
+        },
+        {
+          "label": "Microsoft Learn: Startup settings in Windows Terminal",
+          "url": "https://learn.microsoft.com/en-us/windows/terminal/customize-settings/startup",
+          "date": "2022-11-03"
+        },
+        {
+          "label": "Microsoft Learn: Actions in Windows Terminal",
+          "url": "https://learn.microsoft.com/en-us/windows/terminal/customize-settings/actions",
+          "date": "2024-10-29"
+        },
+        {
+          "label": "microsoft/terminal README",
+          "url": "https://github.com/microsoft/terminal"
+        },
+        {
+          "label": "Microsoft Learn: Set up a WSL development environment",
+          "url": "https://learn.microsoft.com/en-us/windows/wsl/setup/environment",
+          "date": "2026-04-16"
+        }
+      ]
+    },
+    {
+      "id": "zsh",
+      "name": "zsh",
+      "group": "shell",
+      "level": "deep",
+      "summary": "The recommended interactive shell here: bash-like syntax, the best completion support across the tools on this page, and plugins for suggestions and highlighting from Ubuntu's archive.",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "First release not checked",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "Not a CNCF project."
+      },
+      "license": "Zsh licence (MIT-style)",
+      "version": {
+        "name": "zsh",
+        "analysed": "5.9 (Ubuntu 5.9-8ubuntu3)",
+        "released": "2022-05-14",
+        "docs": "Ubuntu 26.04 package 5.9-8ubuntu3. Upstream is at 5.9.2 (2026-07-12) per zsh.org news.",
+        "checked": "2026-10-29"
+      },
+      "compare": [
+        {
+          "with": "fish",
+          "text": "fish has suggestions and highlighting built in but is not POSIX compatible, so copied bash snippets often fail. zsh runs most of them."
+        },
+        {
+          "with": "oh-my-zsh",
+          "text": "Oh My Zsh is a framework of plugins and themes on top of zsh. This page uses two plugins from apt and Starship instead, which is less to load and update."
+        }
+      ],
+      "related": [
+        "starship",
+        "fzf",
+        "zoxide",
+        "oh-my-zsh",
+        "fish",
+        "windows-terminal"
+      ],
+      "notes": [
+        "\"Best shell\" is a judgement: zsh is chosen because every tool here documents zsh completion (kubectl, uv, fnm, fzf, zoxide, starship) and bash snippets from docs mostly work in it. bash stays the system shell for scripts.",
+        "The licence is zsh's own LICENCE file: a permissive licence, with some shell functions under GPL versions per that file. The first release date was not checked.",
+        "The Azure CLI's completion under zsh was not described on the pages read (unconfirmed)."
+      ],
+      "links": [
+        {
+          "label": "zsh.org",
+          "url": "https://zsh.sourceforge.io/"
+        },
+        {
+          "label": "Manual",
+          "url": "https://zsh.sourceforge.io/Doc/"
+        },
+        {
+          "label": "zsh-autosuggestions",
+          "url": "https://github.com/zsh-users/zsh-autosuggestions"
+        },
+        {
+          "label": "zsh-syntax-highlighting",
+          "url": "https://github.com/zsh-users/zsh-syntax-highlighting"
+        }
+      ],
+      "sections": [
+        {
+          "title": "In one minute",
+          "part": "overview",
+          "icon": "eye",
+          "items": [
+            "zsh is designed for interactive use and took many features of bash, ksh and tcsh. Ubuntu's default login shell is bash; this step makes zsh the login shell for your user only. Scripts keep their own `#!/bin/bash` line and are unaffected.",
+            {
+              "type": "cards",
+              "cards": [
+                {
+                  "icon": "play",
+                  "title": "zsh",
+                  "text": "The shell, from apt."
+                },
+                {
+                  "icon": "eye",
+                  "title": "Starship",
+                  "text": "A fast prompt showing git branch, Kubernetes context, Python and Node versions."
+                },
+                {
+                  "icon": "list",
+                  "title": "Suggestions and highlighting",
+                  "text": "zsh-autosuggestions and zsh-syntax-highlighting, both from apt."
+                },
+                {
+                  "icon": "grid",
+                  "title": "fzf and zoxide",
+                  "text": "Fuzzy history search (`Ctrl+R`) and `z <dir>` to jump."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Install zsh and make it the login shell",
+          "part": "use",
+          "step": 1,
+          "icon": "download",
+          "items": [
+            {
+              "type": "code",
+              "title": "Install",
+              "lang": "shell",
+              "source": {
+                "label": "Installing ZSH",
+                "url": "https://github.com/ohmyzsh/ohmyzsh/wiki/Installing-ZSH"
+              },
+              "match": "apt install zsh"
+            },
+            "Use `sudo apt install zsh`.",
+            {
+              "type": "code",
+              "title": "Make it your shell",
+              "lang": "shell",
+              "source": {
+                "label": "Installing ZSH",
+                "url": "https://github.com/ohmyzsh/ohmyzsh/wiki/Installing-ZSH"
+              },
+              "match": "chsh -s $(which zsh)"
+            },
+            "Close every Ubuntu tab and open a new one (or `wsl --terminate Ubuntu`). `echo $SHELL` shows `/usr/bin/zsh`. The first start offers a setup menu; `0` creates an empty `~/.zshrc`."
+          ]
+        },
+        {
+          "title": "Plugins from apt",
+          "part": "use",
+          "step": 2,
+          "icon": "box",
+          "items": [
+            "`sudo apt install zsh-autosuggestions zsh-syntax-highlighting` (Ubuntu 26.04: 0.7.1 and 0.8.0).",
+            "Add `source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh` to `~/.zshrc` (the path is the Debian package's).",
+            {
+              "type": "code",
+              "title": "Syntax highlighting, sourced last",
+              "lang": "shell",
+              "source": {
+                "label": "INSTALL.md",
+                "url": "https://github.com/zsh-users/zsh-syntax-highlighting/blob/master/INSTALL.md"
+              },
+              "match": "source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+            },
+            {
+              "type": "callout",
+              "kind": "gotcha",
+              "title": "Order matters",
+              "text": "zsh-syntax-highlighting must be the last plugin sourced, at the end of `~/.zshrc`. Its authors recommend this manual setup over a plugin manager."
+            }
+          ]
+        },
+        {
+          "title": "Prompt, fuzzy search, jumping",
+          "part": "use",
+          "step": 3,
+          "icon": "eye",
+          "items": [
+            {
+              "type": "code",
+              "title": "Install Starship",
+              "lang": "shell",
+              "source": {
+                "label": "Installation",
+                "url": "https://starship.rs/guide/"
+              },
+              "match": "curl -sS https://starship.rs/install.sh | sh"
+            },
+            {
+              "type": "code",
+              "title": "Starship in ~/.zshrc",
+              "lang": "shell",
+              "source": {
+                "label": "Installation",
+                "url": "https://starship.rs/guide/"
+              },
+              "match": "eval \"$(starship init zsh)\""
+            },
+            "Starship needs a Nerd Font in the terminal for its icons.",
+            "`sudo apt install fzf zoxide` (Ubuntu 26.04: fzf 0.67.0, zoxide 0.9.8).",
+            {
+              "type": "code",
+              "title": "fzf key bindings and completion",
+              "lang": "shell",
+              "source": {
+                "label": "junegunn/fzf README",
+                "url": "https://github.com/junegunn/fzf"
+              },
+              "match": "source <(fzf --zsh)"
+            },
+            "`--zsh` exists from fzf 0.48.0; older versions source files from the package's `shell` directory instead.",
+            {
+              "type": "code",
+              "title": "zoxide, at the end of ~/.zshrc",
+              "lang": "shell",
+              "source": {
+                "label": "ajeetdsouza/zoxide README",
+                "url": "https://github.com/ajeetdsouza/zoxide"
+              },
+              "match": "eval \"$(zoxide init zsh)\""
+            }
+          ]
+        },
+        {
+          "title": "Completions for the tools on this page",
+          "part": "use",
+          "step": 4,
+          "icon": "check",
+          "intro": "Lines for `~/.zshrc`, each from the tool's own docs. Put them after `autoload -Uz compinit && compinit`.",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Tool",
+                "Line"
+              ],
+              "rows": [
+                [
+                  "kubectl",
+                  "`source <(kubectl completion zsh)`"
+                ],
+                [
+                  "uv",
+                  "`eval \"$(uv generate-shell-completion zsh)\"`"
+                ],
+                [
+                  "uvx",
+                  "`eval \"$(uvx --generate-shell-completion zsh)\"`"
+                ],
+                [
+                  "fnm",
+                  "`eval \"$(fnm env --use-on-cd --shell zsh)\"` (environment), `fnm completions --shell zsh` (completion)"
+                ],
+                [
+                  "Terraform",
+                  "`terraform -install-autocomplete` writes the lines itself"
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Reference",
+          "part": "reference",
+          "icon": "book",
+          "items": [
+            "`~/.zshrc` is read by interactive shells. Tool installers that append to `~/.bashrc` (fnm, pnpm, uv when run from bash) must be repeated for zsh or their line copied over.",
+            "`exec zsh` reloads the shell after editing `~/.zshrc`."
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "zsh.org: The Z shell",
+          "url": "https://zsh.sourceforge.io/"
+        },
+        {
+          "label": "zsh.org: News",
+          "url": "https://zsh.sourceforge.io/News/"
+        },
+        {
+          "label": "Launchpad: zsh in Ubuntu 26.04",
+          "url": "https://launchpad.net/ubuntu/resolute/+source/zsh"
+        },
+        {
+          "label": "Oh My Zsh wiki: Installing ZSH",
+          "url": "https://github.com/ohmyzsh/ohmyzsh/wiki/Installing-ZSH"
+        },
+        {
+          "label": "zsh-autosuggestions: INSTALL.md",
+          "url": "https://github.com/zsh-users/zsh-autosuggestions/blob/master/INSTALL.md"
+        },
+        {
+          "label": "Debian: zsh-autosuggestions file list",
+          "url": "https://packages.debian.org/sid/all/zsh-autosuggestions/filelist"
+        },
+        {
+          "label": "zsh-syntax-highlighting: INSTALL.md",
+          "url": "https://github.com/zsh-users/zsh-syntax-highlighting/blob/master/INSTALL.md"
+        },
+        {
+          "label": "Starship: Installation",
+          "url": "https://starship.rs/guide/"
+        },
+        {
+          "label": "junegunn/fzf README",
+          "url": "https://github.com/junegunn/fzf"
+        },
+        {
+          "label": "fzf CHANGELOG",
+          "url": "https://github.com/junegunn/fzf/blob/master/CHANGELOG.md"
+        },
+        {
+          "label": "ajeetdsouza/zoxide README",
+          "url": "https://github.com/ajeetdsouza/zoxide"
+        },
+        {
+          "label": "kubernetes.io: Install and set up kubectl on Linux",
+          "url": "https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/",
+          "date": "2026-09-09"
+        },
+        {
+          "label": "uv docs: Installation",
+          "url": "https://docs.astral.sh/uv/getting-started/installation/"
+        },
+        {
+          "label": "Schniz/fnm README",
+          "url": "https://github.com/Schniz/fnm"
+        },
+        {
+          "label": "HashiCorp tutorial: Install Terraform",
+          "url": "https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli"
+        },
+        {
+          "label": "fish docs: Fish for bash users",
+          "url": "https://fishshell.com/docs/current/fish_for_bash_users.html"
+        }
+      ]
+    },
+    {
+      "id": "uv",
+      "name": "Python with uv",
+      "group": "languages",
+      "level": "deep",
+      "summary": "Astral's Python package and project manager. It installs Python versions, creates a .venv per project from pyproject.toml and uv.lock, and runs tools without installing them.",
+      "status": "active",
+      "started": {
+        "date": "2023-10-02",
+        "basis": "GitHub repository astral-sh/uv created",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "Not a CNCF project."
+      },
+      "license": "Apache-2.0",
+      "maintainer": "Astral",
+      "version": {
+        "name": "uv",
+        "analysed": "0.13.6",
+        "released": "2026-10-27",
+        "docs": "docs.astral.sh/uv (the install page names 0.13.6)",
+        "checked": "2026-10-29"
+      },
+      "track": {
+        "github": "astral-sh/uv"
+      },
+      "related": [
+        "node",
+        "mise",
+        "zsh"
+      ],
+      "notes": [
+        "Releases come several times a week; the page's commands rarely change between them."
+      ],
+      "links": [
+        {
+          "label": "Documentation",
+          "url": "https://docs.astral.sh/uv/"
+        },
+        {
+          "label": "Installation",
+          "url": "https://docs.astral.sh/uv/getting-started/installation/"
+        },
+        {
+          "label": "Projects guide",
+          "url": "https://docs.astral.sh/uv/guides/projects/"
+        },
+        {
+          "label": "Repository",
+          "url": "https://github.com/astral-sh/uv"
+        },
+        {
+          "label": "Releases",
+          "url": "https://github.com/astral-sh/uv/releases"
+        }
+      ],
+      "sections": [
+        {
+          "title": "In one minute",
+          "part": "overview",
+          "icon": "eye",
+          "items": [
+            "Ubuntu's `python3` belongs to the system, and PEP 668 makes `pip install` outside a virtual environment fail. uv keeps everything in your home and in each project.",
+            {
+              "type": "table",
+              "columns": [
+                "What",
+                "Where (Linux)",
+                "Scope"
+              ],
+              "rows": [
+                [
+                  "uv itself, Python executables, tool commands",
+                  "`~/.local/bin`",
+                  "User"
+                ],
+                [
+                  "Python versions",
+                  "`~/.local/share/uv/python`",
+                  "Shared by projects"
+                ],
+                [
+                  "Package cache",
+                  "`~/.cache/uv`",
+                  "Shared, linked into each .venv"
+                ],
+                [
+                  "Tools (`uv tool install`)",
+                  "`~/.local/share/uv/tools`",
+                  "One isolated environment per tool"
+                ],
+                [
+                  "Project packages",
+                  "`<project>/.venv`",
+                  "Per project"
+                ]
+              ]
+            },
+            "The cache should be on the same file system as the virtual environments, one more reason to keep projects in `~/src`."
+          ]
+        },
+        {
+          "title": "Install",
+          "part": "use",
+          "step": 1,
+          "icon": "download",
+          "items": [
+            {
+              "type": "code",
+              "title": "Standalone installer, as your user",
+              "lang": "shell",
+              "source": {
+                "label": "Installation",
+                "url": "https://docs.astral.sh/uv/getting-started/installation/"
+              },
+              "match": "curl -LsSf https://astral.sh/uv/install.sh | sh"
+            },
+            {
+              "type": "code",
+              "title": "Shell completion for zsh",
+              "lang": "shell",
+              "source": {
+                "label": "Installation",
+                "url": "https://docs.astral.sh/uv/getting-started/installation/"
+              },
+              "match": "echo 'eval \"$(uv generate-shell-completion zsh)\"' >> ~/.zshrc"
+            },
+            "Update with `uv self update`. A uv on Windows is a separate install (`winget install --id=astral-sh.uv -e`)."
+          ]
+        },
+        {
+          "title": "A project",
+          "part": "use",
+          "step": 2,
+          "icon": "box",
+          "items": [
+            {
+              "type": "code",
+              "title": "Create a project",
+              "lang": "shell",
+              "source": {
+                "label": "Working on projects",
+                "url": "https://docs.astral.sh/uv/guides/projects/"
+              },
+              "match": "uv init hello-world"
+            },
+            {
+              "type": "code",
+              "title": "Add a dependency",
+              "lang": "shell",
+              "source": {
+                "label": "Working on projects",
+                "url": "https://docs.astral.sh/uv/guides/projects/"
+              },
+              "match": "uv add requests"
+            },
+            "`uv run <cmd>` runs in the project environment after checking the lockfile is current; no `activate` needed. `uv sync` rebuilds `.venv` from `pyproject.toml` and `uv.lock`.",
+            "`uv python pin 3.13` writes `.python-version`. uv downloads a missing Python on its own when a command needs it.",
+            {
+              "type": "callout",
+              "kind": "tip",
+              "title": "What to commit",
+              "text": "Commit `pyproject.toml`, `uv.lock` and `.python-version`. Do not edit `uv.lock` by hand, and leave `.venv` out of git (`uv init` writes a .gitignore)."
+            }
+          ]
+        },
+        {
+          "title": "Tools",
+          "part": "use",
+          "step": 3,
+          "icon": "wrench",
+          "items": [
+            "`uvx ruff check .` runs a tool in a throwaway environment. `uvx` is the same as `uv tool run`.",
+            "`uv tool install ruff` installs it for good, in its own environment, with the command in `~/.local/bin`."
+          ]
+        },
+        {
+          "title": "Reference",
+          "part": "reference",
+          "icon": "book",
+          "items": [
+            "Locations follow XDG: `$XDG_CACHE_HOME/uv`, `$XDG_DATA_HOME/uv`, `$XDG_BIN_HOME`. `uv cache dir` and `uv python dir` print them.",
+            "Installed as root by mistake, uv and its data are under `/root/.local` and `/root/.cache`: remove them and reinstall as your user."
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "uv docs: Installation",
+          "url": "https://docs.astral.sh/uv/getting-started/installation/"
+        },
+        {
+          "label": "uv docs: Working on projects",
+          "url": "https://docs.astral.sh/uv/guides/projects/"
+        },
+        {
+          "label": "uv docs: Python versions",
+          "url": "https://docs.astral.sh/uv/concepts/python-versions/"
+        },
+        {
+          "label": "uv docs: Storage",
+          "url": "https://docs.astral.sh/uv/reference/storage/"
+        },
+        {
+          "label": "uv docs: Tools",
+          "url": "https://docs.astral.sh/uv/concepts/tools/"
+        },
+        {
+          "label": "PEP 668: Marking Python base environments as externally managed",
+          "url": "https://peps.python.org/pep-0668/"
+        }
+      ]
+    },
+    {
+      "id": "node",
+      "name": "Node.js with fnm",
+      "group": "languages",
+      "level": "deep",
+      "summary": "fnm (Fast Node Manager) installs Node.js versions in your home and switches them per directory from .node-version or .nvmrc. Node 26 is the current LTS. pnpm is the package manager.",
+      "status": "active",
+      "started": {
+        "date": "2019-01-16",
+        "basis": "GitHub repository Schniz/fnm created",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "Not a CNCF project."
+      },
+      "license": "GPL-3.0",
+      "version": {
+        "name": "fnm",
+        "analysed": "v1.39.0",
+        "released": "2026-03-06",
+        "docs": "fnm README and docs/commands.md on GitHub; Node v26.13.0 LTS (2026-10-28) from nodejs.org",
+        "checked": "2026-10-29"
+      },
+      "track": {
+        "github": "Schniz/fnm"
+      },
+      "compare": [
+        {
+          "with": "mise",
+          "text": "mise manages Node, Python and many CLIs from one mise.toml. fnm does Node only."
+        }
+      ],
+      "related": [
+        "pnpm",
+        "uv",
+        "mise",
+        "zsh"
+      ],
+      "notes": [
+        "Whether fnm's installer writes `--use-on-cd` into the shell file was not stated in the README (unconfirmed). Installing with `--skip-shell` and adding the README's line avoids the question.",
+        "Corepack is not shipped with Node.js 25 and later, so `corepack enable pnpm` does not work on Node 26 unless Corepack is installed separately."
+      ],
+      "links": [
+        {
+          "label": "fnm repository",
+          "url": "https://github.com/Schniz/fnm"
+        },
+        {
+          "label": "fnm commands",
+          "url": "https://github.com/Schniz/fnm/blob/master/docs/commands.md"
+        },
+        {
+          "label": "fnm releases",
+          "url": "https://github.com/Schniz/fnm/releases"
+        },
+        {
+          "label": "Node.js releases",
+          "url": "https://nodejs.org/en/about/previous-releases"
+        }
+      ],
+      "sections": [
+        {
+          "title": "In one minute",
+          "part": "overview",
+          "icon": "eye",
+          "items": [
+            "Ubuntu's Node package lags and global installs need sudo. fnm puts each Node version in your home and changes version when you `cd` into a project.",
+            "Node.js 26 is LTS (v26.13.0 on 2026-10-28); 24 (Krypton) and 22 (Jod) are still LTS. From Node 27 releases are yearly and every major version becomes LTS after six months as Current."
+          ]
+        },
+        {
+          "title": "Install fnm and Node",
+          "part": "use",
+          "step": 1,
+          "icon": "download",
+          "intro": "Needs `curl` and `unzip`.",
+          "items": [
+            {
+              "type": "code",
+              "title": "Install without touching the shell files",
+              "lang": "shell",
+              "source": {
+                "label": "Schniz/fnm README",
+                "url": "https://github.com/Schniz/fnm"
+              },
+              "match": "curl -fsSL https://fnm.vercel.app/install | bash -s -- --skip-shell"
+            },
+            {
+              "type": "code",
+              "title": "Then in ~/.zshrc",
+              "lang": "shell",
+              "source": {
+                "label": "Schniz/fnm README",
+                "url": "https://github.com/Schniz/fnm"
+              },
+              "match": "eval \"$(fnm env --use-on-cd --shell zsh)\""
+            },
+            "`fnm install --lts` installs the latest LTS. `fnm default <version>` sets the version used outside projects. fnm lives in `~/.local/share/fnm`.",
+            "Rerun the same install command to upgrade fnm."
+          ]
+        },
+        {
+          "title": "Per project",
+          "part": "use",
+          "step": 2,
+          "icon": "box",
+          "items": [
+            "`node --version > .node-version` pins the version; `.nvmrc` works too. With `--use-on-cd`, entering the directory switches Node.",
+            {
+              "type": "callout",
+              "kind": "gotcha",
+              "title": "No sudo, no global project tools",
+              "text": "Never `sudo npm`. A global `npm install -g` belongs to one Node version and disappears when you switch. Put project tools in devDependencies and run them through the package manager."
+            }
+          ]
+        },
+        {
+          "title": "pnpm",
+          "part": "use",
+          "step": 3,
+          "icon": "layers",
+          "items": [
+            "pnpm 12 is a native executable and runs without Node.js once installed.",
+            {
+              "type": "code",
+              "title": "Install pnpm",
+              "lang": "shell",
+              "source": {
+                "label": "Installation",
+                "url": "https://pnpm.io/installation"
+              },
+              "match": "curl -fsSL https://get.pnpm.io/install.sh | sh -"
+            },
+            "Update with `pnpm self-update`. In a project, set `\"packageManager\": \"pnpm@<version>\"` in package.json; inside such a project `self-update` only updates that pin.",
+            "`pnx <pkg>` (alias `pnpm dlx`) runs a package without adding it, like `npx` or `uvx`."
+          ]
+        },
+        {
+          "title": "Reference",
+          "part": "reference",
+          "icon": "book",
+          "items": [
+            "Upgrading fnm: rerun the installer with `--skip-shell` to avoid a second loader in the shell file.",
+            "`fnm list-remote --lts` lists LTS versions. The `--corepack-enabled` option (or `FNM_COREPACK_ENABLED`) makes fnm call `corepack enable` on every Node install, where Corepack exists."
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "Schniz/fnm README",
+          "url": "https://github.com/Schniz/fnm"
+        },
+        {
+          "label": "fnm docs: commands",
+          "url": "https://github.com/Schniz/fnm/blob/master/docs/commands.md"
+        },
+        {
+          "label": "nodejs.org: Node.js releases",
+          "url": "https://nodejs.org/en/about/previous-releases"
+        },
+        {
+          "label": "nodejs.org: release index (index.json)",
+          "url": "https://nodejs.org/dist/index.json"
+        },
+        {
+          "label": "Node.js docs: Corepack",
+          "url": "https://nodejs.org/api/corepack.html"
+        },
+        {
+          "label": "pnpm: Installation",
+          "url": "https://pnpm.io/installation"
+        },
+        {
+          "label": "pnpm: pnx (pnpm dlx)",
+          "url": "https://pnpm.io/cli/dlx"
+        }
+      ]
+    },
+    {
+      "id": "kubectl",
+      "name": "Kubernetes tools",
+      "group": "kubernetes",
+      "level": "deep",
+      "summary": "kubectl from the Kubernetes apt repository, then Helm, k9s, kubectx and kubens, kubelogin for AKS, and kind to run a local cluster in Docker. kubeadm is for building cluster nodes, not for a workstation.",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "Not checked",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "graduated",
+        "text": "Kubernetes was accepted to CNCF on March 10, 2016 at the Incubating maturity level and moved to Graduated on March 6, 2018."
+      },
+      "license": "Apache-2.0",
+      "maintainer": "Kubernetes project (CNCF)",
+      "version": {
+        "name": "Kubernetes (kubectl)",
+        "analysed": "v1.37.2",
+        "released": "2026-10-28",
+        "docs": "kubernetes.io install page for v1.37, last modified 2026-09-09",
+        "checked": "2026-10-29"
+      },
+      "track": {
+        "github": "kubernetes/kubernetes",
+        "cncf": "kubernetes"
+      },
+      "compare": [
+        {
+          "with": "kubeadm",
+          "text": "kubeadm builds real cluster nodes (kubelet, container runtime, swap off). kind gives a throwaway cluster in Docker in one command."
+        }
+      ],
+      "related": [
+        "helm",
+        "kind",
+        "k9s",
+        "kubectx",
+        "krew",
+        "kubelogin",
+        "kubeadm",
+        "docker"
+      ],
+      "notes": [
+        "The Kubernetes apt repository serves one minor version per URL; that is why a minor upgrade means editing the list file."
+      ],
+      "links": [
+        {
+          "label": "Install tools",
+          "url": "https://kubernetes.io/docs/tasks/tools/"
+        },
+        {
+          "label": "kubectl on Linux",
+          "url": "https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/"
+        },
+        {
+          "label": "kubectl reference",
+          "url": "https://kubernetes.io/docs/reference/kubectl/"
+        },
+        {
+          "label": "Releases",
+          "url": "https://kubernetes.io/releases/"
+        },
+        {
+          "label": "Repository",
+          "url": "https://github.com/kubernetes/kubernetes"
+        }
+      ],
+      "sections": [
+        {
+          "title": "In one minute",
+          "part": "overview",
+          "icon": "eye",
+          "items": [
+            "kubectl must be within one minor version of the cluster: a v1.37 client talks to v1.36, v1.37 and v1.38 control planes.",
+            {
+              "type": "cards",
+              "cards": [
+                {
+                  "icon": "play",
+                  "title": "kubectl",
+                  "text": "The client. From pkgs.k8s.io with apt."
+                },
+                {
+                  "icon": "box",
+                  "title": "Helm",
+                  "text": "Charts. From its script or apt repository."
+                },
+                {
+                  "icon": "eye",
+                  "title": "k9s",
+                  "text": "A terminal UI for clusters."
+                },
+                {
+                  "icon": "sync",
+                  "title": "kubectx, kubens",
+                  "text": "Switch context and namespace. `sudo apt install kubectx`."
+                },
+                {
+                  "icon": "key",
+                  "title": "kubelogin",
+                  "text": "Entra ID sign-in for AKS. `az aks install-cli`."
+                },
+                {
+                  "icon": "server",
+                  "title": "kind",
+                  "text": "A local cluster in Docker containers."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": "kubectl from apt",
+          "part": "use",
+          "step": 1,
+          "icon": "download",
+          "items": [
+            {
+              "type": "code",
+              "title": "Repository and install",
+              "lang": "shell",
+              "source": {
+                "label": "Install and set up kubectl on Linux",
+                "url": "https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/"
+              },
+              "match": [
+                "sudo apt-get install -y apt-transport-https ca-certificates curl gnupg",
+                "sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg",
+                "sudo tee /etc/apt/sources.list.d/kubernetes.list",
+                "sudo apt-get install -y kubectl"
+              ]
+            },
+            {
+              "type": "callout",
+              "kind": "gotcha",
+              "title": "One minor version per repository",
+              "text": "The repository URL names a minor version (`v1.37`). `apt upgrade` brings patches only. For the next minor, change the version in `/etc/apt/sources.list.d/kubernetes.list`, then `apt-get update` and `upgrade`."
+            },
+            {
+              "type": "code",
+              "title": "Completion in ~/.zshrc",
+              "lang": "shell",
+              "source": {
+                "label": "Install and set up kubectl on Linux",
+                "url": "https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/"
+              },
+              "match": "source <(kubectl completion zsh)"
+            },
+            "`kubectl version --client` checks the install. An alias such as `k` gets the same completion."
+          ]
+        },
+        {
+          "title": "Helm and the helpers",
+          "part": "use",
+          "step": 2,
+          "icon": "box",
+          "items": [
+            {
+              "type": "code",
+              "title": "Helm 4 installer script",
+              "lang": "shell",
+              "source": {
+                "label": "Installing Helm",
+                "url": "https://helm.sh/docs/intro/install/"
+              },
+              "match": "get-helm-4"
+            },
+            "Helm also has a community apt repository hosted by Buildkite (on the same page). Helm 3 still gets releases (v3.22.1 on 2026-10-15).",
+            "k9s: download the `.deb` from its releases and `sudo apt install ./k9s_linux_amd64.deb`, as its README shows.",
+            "kubectx and kubens: `sudo apt install kubectx`.",
+            "kubelogin (AKS with Entra ID): `az aks install-cli` installs it with kubectl; or download a release.",
+            "krew, the kubectl plugin manager, installs plugins as `kubectl <name>`."
+          ]
+        },
+        {
+          "title": "A local cluster with kind",
+          "part": "use",
+          "step": 3,
+          "icon": "server",
+          "intro": "Needs Docker (see Containers).",
+          "items": [
+            {
+              "type": "code",
+              "title": "Install the kind binary",
+              "lang": "shell",
+              "source": {
+                "label": "Quick Start",
+                "url": "https://kind.sigs.k8s.io/docs/user/quick-start/"
+              },
+              "match": "kind-linux-amd64"
+            },
+            "`kind create cluster` creates a cluster; its kubectl context is `kind-kind`. `kind delete cluster` removes it."
+          ]
+        },
+        {
+          "title": "kubeadm on a workstation?",
+          "part": "run",
+          "icon": "wrench",
+          "items": [
+            "kubeadm bootstraps cluster nodes. It needs a container runtime and kubelet on every machine, 2 GB of RAM and 2 CPUs for a control plane, and kubelet fails on swap unless configured. It does not install kubelet or kubectl for you.",
+            "Learn it on VMs or a homelab; for daily development a kind cluster is faster and disposable. Install kubeadm only where you build nodes."
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "kubernetes.io: Install and set up kubectl on Linux",
+          "url": "https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/",
+          "date": "2026-09-09"
+        },
+        {
+          "label": "kubernetes.io: Installing kubeadm",
+          "url": "https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/",
+          "date": "2026-09-09"
+        },
+        {
+          "label": "kubernetes/kubernetes releases",
+          "url": "https://github.com/kubernetes/kubernetes/releases"
+        },
+        {
+          "label": "Helm docs: Installing Helm",
+          "url": "https://helm.sh/docs/intro/install/"
+        },
+        {
+          "label": "kind.sigs.k8s.io",
+          "url": "https://kind.sigs.k8s.io/"
+        },
+        {
+          "label": "kind: Quick Start",
+          "url": "https://kind.sigs.k8s.io/docs/user/quick-start/"
+        },
+        {
+          "label": "derailed/k9s README",
+          "url": "https://github.com/derailed/k9s"
+        },
+        {
+          "label": "ahmetb/kubectx README",
+          "url": "https://github.com/ahmetb/kubectx"
+        },
+        {
+          "label": "Krew: Installing",
+          "url": "https://krew.sigs.k8s.io/docs/user-guide/setup/install/"
+        },
+        {
+          "label": "kubelogin docs: Installation",
+          "url": "https://azure.github.io/kubelogin/install.html"
+        }
+      ]
+    },
+    {
+      "id": "terraform",
+      "name": "Terraform",
+      "group": "cloud",
+      "level": "deep",
+      "summary": "HashiCorp's infrastructure as code CLI, from HashiCorp's apt repository. Licensed under the Business Source License since 1.6, so not open source; OpenTofu is the open source fork.",
+      "status": "active",
+      "started": {
+        "date": "2014-03-13",
+        "basis": "GitHub repository hashicorp/terraform created",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "Not a CNCF project."
+      },
+      "license": "BUSL-1.1",
+      "maintainer": "HashiCorp (IBM)",
+      "version": {
+        "name": "Terraform",
+        "analysed": "v1.17.1",
+        "released": "2026-10-28",
+        "docs": "developer.hashicorp.com/terraform/install (lists 1.17.1 as latest)",
+        "checked": "2026-10-29"
+      },
+      "track": {
+        "github": "hashicorp/terraform"
+      },
+      "compare": [
+        {
+          "with": "opentofu",
+          "text": "OpenTofu is the MPL-2.0 fork, a CNCF sandbox project, with its own apt repository and the `tofu` command."
+        }
+      ],
+      "related": [
+        "opentofu",
+        "tflint",
+        "azure-cli"
+      ],
+      "notes": [
+        "GitHub reports the licence as NOASSERTION; the LICENSE file is the Business Source License for Terraform 1.6.0 and later."
+      ],
+      "links": [
+        {
+          "label": "Install",
+          "url": "https://developer.hashicorp.com/terraform/install"
+        },
+        {
+          "label": "Documentation",
+          "url": "https://developer.hashicorp.com/terraform/docs"
+        },
+        {
+          "label": "Repository",
+          "url": "https://github.com/hashicorp/terraform"
+        }
+      ],
+      "sections": [
+        {
+          "title": "In one minute",
+          "part": "overview",
+          "icon": "eye",
+          "items": [
+            "Install from HashiCorp's apt repository so `apt upgrade` keeps it current. How to write Azure resources is in [Azure with Terraform](../azure/index.html)."
+          ]
+        },
+        {
+          "title": "Install",
+          "part": "use",
+          "step": 1,
+          "icon": "download",
+          "items": [
+            {
+              "type": "code",
+              "title": "HashiCorp apt repository and Terraform",
+              "lang": "shell",
+              "source": {
+                "label": "Install Terraform",
+                "url": "https://developer.hashicorp.com/terraform/install"
+              },
+              "match": "apt.releases.hashicorp.com/gpg | sudo gpg --dearmor"
+            },
+            "The repository line uses Ubuntu's codename (`resolute` on 26.04), read from `/etc/os-release`.",
+            {
+              "type": "code",
+              "title": "Shell completion",
+              "lang": "shell",
+              "source": {
+                "label": "Install Terraform",
+                "url": "https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli"
+              },
+              "match": "terraform -install-autocomplete"
+            },
+            "Restart the shell after `-install-autocomplete`."
+          ]
+        },
+        {
+          "title": "Linting",
+          "part": "use",
+          "step": 2,
+          "icon": "check",
+          "items": [
+            "TFLint is a pluggable linter: the Terraform language ruleset is bundled, and AWS, Azure and Google Cloud rulesets are plugins that find errors such as invalid instance types. See [TFLint](#tflint)."
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "HashiCorp: Install Terraform",
+          "url": "https://developer.hashicorp.com/terraform/install"
+        },
+        {
+          "label": "HashiCorp tutorial: Install Terraform",
+          "url": "https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli"
+        },
+        {
+          "label": "hashicorp/terraform LICENSE",
+          "url": "https://github.com/hashicorp/terraform/blob/main/LICENSE"
+        },
+        {
+          "label": "OpenTofu: Installing on .deb-based Linux",
+          "url": "https://opentofu.org/docs/intro/install/deb/"
+        },
+        {
+          "label": "CNCF: OpenTofu",
+          "url": "https://www.cncf.io/projects/opentofu/"
+        }
+      ]
+    },
+    {
+      "id": "azure-cli",
+      "name": "Azure CLI",
+      "group": "cloud",
+      "level": "deep",
+      "summary": "The `az` command, from Microsoft's apt repository. On Linux and WSL it signs in through the browser, or with a device code when no browser opens.",
+      "status": "active",
+      "started": {
+        "date": "2016-02-04",
+        "basis": "GitHub repository Azure/azure-cli created",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "Not a CNCF project."
+      },
+      "license": "MIT",
+      "maintainer": "Microsoft",
+      "version": {
+        "name": "Azure CLI",
+        "analysed": "azure-cli-2.91.0",
+        "released": "2026-10-05",
+        "docs": "learn.microsoft.com install page (2026-09-01) lists Ubuntu 22.04, 24.04 and 26.04",
+        "checked": "2026-10-29"
+      },
+      "track": {
+        "github": "Azure/azure-cli",
+        "tag": "^azure-cli-"
+      },
+      "related": [
+        "terraform",
+        "kubelogin"
+      ],
+      "notes": [
+        "Shell completion for zsh was not described on the pages read (unconfirmed)."
+      ],
+      "links": [
+        {
+          "label": "Install on Linux",
+          "url": "https://learn.microsoft.com/en-us/cli/azure/install-azure-cli-linux"
+        },
+        {
+          "label": "Sign in",
+          "url": "https://learn.microsoft.com/en-us/cli/azure/authenticate-azure-cli-interactively"
+        },
+        {
+          "label": "Reference",
+          "url": "https://learn.microsoft.com/en-us/cli/azure/reference-index"
+        },
+        {
+          "label": "Repository",
+          "url": "https://github.com/Azure/azure-cli"
+        },
+        {
+          "label": "Releases",
+          "url": "https://github.com/Azure/azure-cli/releases"
+        }
+      ],
+      "sections": [
+        {
+          "title": "Install",
+          "part": "use",
+          "step": 1,
+          "icon": "download",
+          "items": [
+            {
+              "type": "code",
+              "title": "One command (installs the apt repository and azure-cli)",
+              "lang": "shell",
+              "source": {
+                "label": "Install the Azure CLI on Linux",
+                "url": "https://learn.microsoft.com/en-us/cli/azure/install-azure-cli-linux"
+              },
+              "match": "deb_install.sh"
+            },
+            "Download the script first to read it, or follow the step-by-step option on the same page. Ubuntu 22.04, 24.04 and 26.04 are listed. Updates come with `sudo apt upgrade`."
+          ]
+        },
+        {
+          "title": "Sign in",
+          "part": "use",
+          "step": 2,
+          "icon": "login",
+          "items": [
+            "`az login` opens the default browser (authorization code flow) or falls back to a device code at aka.ms/devicelogin. `az login --use-device-code` forces the device code, useful when WSL cannot open the Windows browser.",
+            "After sign-in a subscription selector lists your subscriptions (64-bit Windows, Linux and macOS, `az login` only)."
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "Microsoft Learn: Install the Azure CLI on Linux",
+          "url": "https://learn.microsoft.com/en-us/cli/azure/install-azure-cli-linux",
+          "date": "2026-09-01"
+        },
+        {
+          "label": "Microsoft Learn: Sign in interactively with the Azure CLI",
+          "url": "https://learn.microsoft.com/en-us/cli/azure/authenticate-azure-cli-interactively",
+          "date": "2026-10-09"
+        }
+      ]
+    },
+    {
+      "id": "docker",
+      "name": "Docker in WSL",
+      "group": "containers",
+      "level": "deep",
+      "summary": "Docker Engine installed inside Ubuntu from Docker's apt repository, run by systemd. The alternative is Docker Desktop on Windows with its WSL 2 backend, which needs a paid subscription in larger companies.",
+      "status": "active",
+      "started": {
+        "date": "2013-01-18",
+        "basis": "GitHub repository moby/moby created",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "Not a CNCF project."
+      },
+      "license": "Apache-2.0",
+      "maintainer": "Docker, Inc. and the Moby project",
+      "version": {
+        "name": "Docker Engine",
+        "analysed": "docker-v29.9.2",
+        "released": "2026-10-20",
+        "docs": "docs.docker.com install page for Ubuntu (lists Ubuntu 26.04)",
+        "checked": "2026-10-29"
+      },
+      "track": {
+        "github": "moby/moby",
+        "tag": "^docker-v"
+      },
+      "compare": [
+        {
+          "with": "docker-desktop",
+          "text": "Docker Desktop runs the engine for you with a Windows UI and its own integration into WSL distributions. Do not run both: uninstall the engine from WSL before installing Desktop."
+        }
+      ],
+      "related": [
+        "docker-desktop",
+        "kind",
+        "wsl"
+      ],
+      "notes": [
+        "Docker Engine's apt package is docker-ce; the version tracked is the moby/moby docker-v tag."
+      ],
+      "links": [
+        {
+          "label": "Install on Ubuntu",
+          "url": "https://docs.docker.com/engine/install/ubuntu/"
+        },
+        {
+          "label": "Post-installation",
+          "url": "https://docs.docker.com/engine/install/linux-postinstall/"
+        },
+        {
+          "label": "Docker docs",
+          "url": "https://docs.docker.com/"
+        }
+      ],
+      "sections": [
+        {
+          "title": "In one minute",
+          "part": "overview",
+          "icon": "eye",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "",
+                "Docker Engine in Ubuntu",
+                "Docker Desktop (WSL 2 backend)"
+              ],
+              "rows": [
+                [
+                  "Runs",
+                  "dockerd under systemd in the distribution",
+                  "Its own WSL distribution, with integration into yours"
+                ],
+                [
+                  "Licence",
+                  "Apache-2.0",
+                  "Free for personal use, education and companies under 250 employees and $10 million revenue; otherwise a paid subscription"
+                ],
+                [
+                  "Needs",
+                  "systemd on in wsl.conf (dockerd is a systemd service)",
+                  "Docker Desktop for Windows"
+                ],
+                [
+                  "Extras",
+                  "Command line only",
+                  "Windows UI, extensions"
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Install Docker Engine",
+          "part": "use",
+          "step": 1,
+          "icon": "download",
+          "intro": "With systemd on (WSL tab, step 3).",
+          "items": [
+            {
+              "type": "code",
+              "title": "Docker's apt repository",
+              "lang": "shell",
+              "source": {
+                "label": "Install Docker Engine on Ubuntu",
+                "url": "https://docs.docker.com/engine/install/ubuntu/"
+              },
+              "match": "sudo tee /etc/apt/sources.list.d/docker.sources"
+            },
+            {
+              "type": "code",
+              "title": "Install the packages",
+              "lang": "shell",
+              "source": {
+                "label": "Install Docker Engine on Ubuntu",
+                "url": "https://docs.docker.com/engine/install/ubuntu/"
+              },
+              "match": "sudo apt install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin"
+            },
+            "`sudo docker run hello-world` checks it."
+          ]
+        },
+        {
+          "title": "Run without sudo",
+          "part": "use",
+          "step": 2,
+          "icon": "users",
+          "items": [
+            {
+              "type": "code",
+              "title": "Add your user to the docker group",
+              "lang": "shell",
+              "source": {
+                "label": "Linux post-installation steps",
+                "url": "https://docs.docker.com/engine/install/linux-postinstall/"
+              },
+              "match": "sudo usermod -aG docker $USER"
+            },
+            "Then close every shell and `wsl --terminate Ubuntu` so the group applies.",
+            {
+              "type": "callout",
+              "kind": "gotcha",
+              "title": "The docker group is root",
+              "text": "Membership of the docker group grants root-level privileges on the machine. Rootless mode is the alternative."
+            }
+          ]
+        },
+        {
+          "title": "Reference",
+          "part": "reference",
+          "icon": "book",
+          "items": [
+            "Firewall rules made with nft are not supported where Docker is installed, and container ports exposed with Docker bypass ufw and firewalld rules.",
+            "`sudo systemctl enable docker.service` and `sudo systemctl enable containerd.service` start the engine with the distribution."
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "Docker docs: Install Docker Engine on Ubuntu",
+          "url": "https://docs.docker.com/engine/install/ubuntu/"
+        },
+        {
+          "label": "Docker docs: Linux post-installation steps",
+          "url": "https://docs.docker.com/engine/install/linux-postinstall/"
+        },
+        {
+          "label": "Docker docs: Docker Desktop WSL 2 backend",
+          "url": "https://docs.docker.com/desktop/features/wsl/"
+        },
+        {
+          "label": "Docker docs: Docker Desktop license agreement",
+          "url": "https://docs.docker.com/subscription/desktop-license/"
+        }
+      ]
+    },
+    {
+      "id": "claude-code",
+      "name": "Git and Claude Code",
+      "group": "dev",
+      "level": "deep",
+      "summary": "Set git's name and email, then install Claude Code inside WSL with Anthropic's native installer. Claude Code needs a paid Claude plan (Pro, Max, Team, Enterprise) or a Console account.",
+      "status": "active",
+      "started": {
+        "date": "2025-02-22",
+        "basis": "GitHub repository anthropics/claude-code created",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "Not a CNCF project."
+      },
+      "license": "Proprietary",
+      "maintainer": "Anthropic",
+      "version": {
+        "name": "Claude Code",
+        "analysed": "v2.1.312",
+        "released": "2026-10-27",
+        "docs": "code.claude.com/docs/en/setup",
+        "checked": "2026-10-29"
+      },
+      "track": {
+        "github": "anthropics/claude-code"
+      },
+      "related": [
+        "git",
+        "uv",
+        "node",
+        "wsl"
+      ],
+      "notes": [
+        "Claude Code is not open source; its licence refers to Anthropic's Commercial Terms of Service. It is here because it is part of the workflow this topic sets up.",
+        "Whether Claude Code's Chrome integration works from inside WSL was not described on the pages read (unconfirmed).",
+        "If login does not open a browser from WSL, copying the printed URL into the Windows browser is common practice (unconfirmed on the pages read)."
+      ],
+      "links": [
+        {
+          "label": "Setup",
+          "url": "https://code.claude.com/docs/en/setup"
+        },
+        {
+          "label": "Troubleshooting",
+          "url": "https://code.claude.com/docs/en/troubleshooting"
+        },
+        {
+          "label": "Documentation",
+          "url": "https://code.claude.com/docs/"
+        },
+        {
+          "label": "Releases",
+          "url": "https://github.com/anthropics/claude-code/releases"
+        }
+      ],
+      "sections": [
+        {
+          "title": "Git first",
+          "part": "use",
+          "step": 1,
+          "icon": "file",
+          "items": [
+            "Ubuntu 26.04 ships git 2.53.0 (`sudo apt install git` if missing).",
+            {
+              "type": "code",
+              "title": "Name and email, once per machine",
+              "lang": "shell",
+              "source": {
+                "label": "First-Time Git Setup",
+                "url": "https://git-scm.com/book/en/v2/Getting-Started-First-Time-Git-Setup"
+              },
+              "match": "git config --global user.name"
+            },
+            {
+              "type": "callout",
+              "kind": "gotcha",
+              "title": "Do it before the first commit",
+              "text": "A new Ubuntu has no git identity. `git commit` then stops with \"Author identity unknown ... Please tell me who you are\" and `fatal: empty ident name`. Set both values once with `--global`; `git config --global --list` shows them. Run it as your own user: root has its own `~/.gitconfig`."
+            },
+            "Credentials: install Git for Windows and WSL's git can use Git Credential Manager, which stores tokens in the Windows Credential Manager. Or use SSH keys in `~/.ssh`. GCM only works with HTTPS remotes."
+          ]
+        },
+        {
+          "title": "Install Claude Code in WSL",
+          "part": "use",
+          "step": 2,
+          "icon": "download",
+          "intro": "In the Ubuntu shell, not PowerShell. WSL 2 supports Claude Code's sandboxing; WSL 1 does not.",
+          "items": [
+            {
+              "type": "code",
+              "title": "Native installer",
+              "lang": "shell",
+              "source": {
+                "label": "Set up Claude Code",
+                "url": "https://code.claude.com/docs/en/setup"
+              },
+              "match": "curl -fsSL https://claude.ai/install.sh | bash"
+            },
+            "Open a new shell and run `claude --version`, then `claude` to log in. The launcher is `~/.local/bin/claude`, a link into `~/.local/share/claude/versions/`.",
+            "`claude doctor` prints install health, settings errors and the last update attempt.",
+            {
+              "type": "callout",
+              "kind": "default",
+              "title": "Updates",
+              "text": "The native install updates itself in the background. The `autoUpdatesChannel` setting picks `latest` (default) or `stable` (typically about a week old, skipping releases with major regressions). apt, Homebrew and WinGet installs do not update themselves."
+            }
+          ]
+        },
+        {
+          "title": "Working well in WSL",
+          "part": "run",
+          "icon": "wrench",
+          "items": [
+            "Keep projects under `/home`, not `/mnt/c`: across file systems Claude Code's search can return fewer results.",
+            "An npm package also exists; never install it with `sudo npm install -g`.",
+            "A project's `CLAUDE.md` can state the toolchain: `uv run` and `uv add` instead of pip, pnpm for Node."
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "Claude Code docs: Set up Claude Code",
+          "url": "https://code.claude.com/docs/en/setup"
+        },
+        {
+          "label": "Claude Code docs: Troubleshooting",
+          "url": "https://code.claude.com/docs/en/troubleshooting"
+        },
+        {
+          "label": "Pro Git: First-Time Git Setup",
+          "url": "https://git-scm.com/book/en/v2/Getting-Started-First-Time-Git-Setup"
+        },
+        {
+          "label": "Microsoft Learn: Get started using Git on WSL",
+          "url": "https://learn.microsoft.com/en-us/windows/wsl/tutorials/wsl-git",
+          "date": "2025-10-03"
+        },
+        {
+          "label": "Launchpad: git in Ubuntu 26.04",
+          "url": "https://launchpad.net/ubuntu/resolute/+source/git"
+        }
+      ]
+    },
+    {
+      "id": "starship",
+      "name": "Starship",
+      "group": "shell",
+      "level": "ref",
+      "summary": "A fast, cross-shell prompt written in Rust: git, Kubernetes context, language versions.",
+      "status": "active",
+      "started": {
+        "date": "2019-04-02",
+        "basis": "GitHub repository created",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "Not a CNCF project."
+      },
+      "license": "ISC",
+      "version": {
+        "name": "Starship",
+        "analysed": "v1.27.0",
+        "released": "2026-10-17",
+        "docs": "starship.rs/guide",
+        "checked": "2026-10-29"
+      },
+      "track": {
+        "github": "starship/starship"
+      },
+      "related": [
+        "zsh"
+      ],
+      "links": [
+        {
+          "label": "Guide",
+          "url": "https://starship.rs/guide/"
+        },
+        {
+          "label": "Configuration",
+          "url": "https://starship.rs/config/"
+        },
+        {
+          "label": "Repository",
+          "url": "https://github.com/starship/starship"
+        }
+      ],
+      "sections": [
+        {
+          "title": "What it is",
+          "items": [
+            "Install with its script or a package manager, then `eval \"$(starship init zsh)\"` at the end of `~/.zshrc`. Needs a Nerd Font. Configured in `~/.config/starship.toml`."
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "Starship: Installation",
+          "url": "https://starship.rs/guide/"
+        }
+      ]
+    },
+    {
+      "id": "fzf",
+      "name": "fzf",
+      "group": "shell",
+      "level": "ref",
+      "summary": "A general-purpose command-line fuzzy finder with key bindings for history (Ctrl+R), files (Ctrl+T) and directories (Alt+C).",
+      "status": "active",
+      "started": {
+        "date": "2013-10-23",
+        "basis": "GitHub repository created",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "Not a CNCF project."
+      },
+      "license": "MIT",
+      "version": {
+        "name": "fzf",
+        "analysed": "v0.74.5",
+        "released": "2026-10-11",
+        "docs": "GitHub README. Ubuntu 26.04 ships 0.67.0.",
+        "checked": "2026-10-29"
+      },
+      "track": {
+        "github": "junegunn/fzf"
+      },
+      "related": [
+        "zsh"
+      ],
+      "links": [
+        {
+          "label": "Repository",
+          "url": "https://github.com/junegunn/fzf"
+        },
+        {
+          "label": "Releases",
+          "url": "https://github.com/junegunn/fzf/releases"
+        }
+      ],
+      "sections": [
+        {
+          "title": "What it is",
+          "items": [
+            "`sudo apt install fzf`, then `source <(fzf --zsh)` in `~/.zshrc` (fzf 0.48.0 and later). Setting `FZF_CTRL_R_COMMAND=` and friends to empty disables a binding."
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "junegunn/fzf README",
+          "url": "https://github.com/junegunn/fzf"
+        },
+        {
+          "label": "fzf CHANGELOG",
+          "url": "https://github.com/junegunn/fzf/blob/master/CHANGELOG.md"
+        }
+      ]
+    },
+    {
+      "id": "zoxide",
+      "name": "zoxide",
+      "group": "shell",
+      "level": "ref",
+      "summary": "A smarter cd: `z <part of a path>` jumps to the most used matching directory.",
+      "status": "active",
+      "started": {
+        "date": "2020-03-05",
+        "basis": "GitHub repository created",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "Not a CNCF project."
+      },
+      "license": "MIT",
+      "version": {
+        "name": "zoxide",
+        "analysed": "v0.10.0",
+        "released": "2026-07-04",
+        "docs": "GitHub README. Ubuntu 26.04 ships 0.9.8.",
+        "checked": "2026-10-29"
+      },
+      "track": {
+        "github": "ajeetdsouza/zoxide"
+      },
+      "related": [
+        "zsh"
+      ],
+      "links": [
+        {
+          "label": "Repository",
+          "url": "https://github.com/ajeetdsouza/zoxide"
+        }
+      ],
+      "sections": [
+        {
+          "title": "What it is",
+          "items": [
+            "`sudo apt install zoxide`, then `eval \"$(zoxide init zsh)\"` at the end of `~/.zshrc`."
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "ajeetdsouza/zoxide README",
+          "url": "https://github.com/ajeetdsouza/zoxide"
+        }
+      ]
+    },
+    {
+      "id": "oh-my-zsh",
+      "name": "Oh My Zsh",
+      "group": "shell",
+      "level": "ref",
+      "summary": "A community framework for zsh configuration with 300+ plugins and 140+ themes.",
+      "status": "active",
+      "started": {
+        "date": "2009-08-28",
+        "basis": "GitHub repository created",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "Not a CNCF project."
+      },
+      "license": "MIT",
+      "version": {
+        "name": "Oh My Zsh",
+        "analysed": "master (no releases)",
+        "released": "2026-10-29",
+        "docs": "GitHub README read on the check date; the project publishes no releases",
+        "checked": "2026-10-29"
+      },
+      "related": [
+        "zsh"
+      ],
+      "notes": [
+        "No releases, so there is no version to track: the README date is the version."
+      ],
+      "links": [
+        {
+          "label": "Repository",
+          "url": "https://github.com/ohmyzsh/ohmyzsh"
+        },
+        {
+          "label": "Wiki",
+          "url": "https://github.com/ohmyzsh/ohmyzsh/wiki"
+        }
+      ],
+      "sections": [
+        {
+          "title": "What it is",
+          "items": [
+            "Installs with a script into `~/.oh-my-zsh` and rewrites `~/.zshrc`. Plugins are listed in `plugins=(...)`. An alternative to the hand-made setup on the Shell tab, with more to load."
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "ohmyzsh/ohmyzsh README",
+          "url": "https://github.com/ohmyzsh/ohmyzsh"
+        }
+      ]
+    },
+    {
+      "id": "fish",
+      "name": "fish",
+      "group": "shell",
+      "level": "ref",
+      "summary": "A friendly shell with suggestions, highlighting and completions built in. Intentionally not POSIX compatible.",
+      "status": "active",
+      "started": {
+        "date": "2012-05-10",
+        "basis": "GitHub repository created",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "Not a CNCF project."
+      },
+      "license": "NOASSERTION",
+      "version": {
+        "name": "fish",
+        "analysed": "4.9.3",
+        "released": "2026-09-08",
+        "docs": "fishshell.com and docs. Ubuntu 26.04 ships 4.2.1.",
+        "checked": "2026-10-29"
+      },
+      "track": {
+        "github": "fish-shell/fish-shell"
+      },
+      "related": [
+        "zsh"
+      ],
+      "notes": [
+        "GitHub reports the licence as NOASSERTION; the COPYING file was not read beyond its header."
+      ],
+      "links": [
+        {
+          "label": "Website",
+          "url": "https://fishshell.com/"
+        },
+        {
+          "label": "Fish for bash users",
+          "url": "https://fishshell.com/docs/current/fish_for_bash_users.html"
+        },
+        {
+          "label": "Repository",
+          "url": "https://github.com/fish-shell/fish-shell"
+        }
+      ],
+      "sections": [
+        {
+          "title": "What it is",
+          "items": [
+            "Works well out of the box, but it is intentionally not POSIX compatible: bash syntax such as `[[` does not work, so snippets from docs need translating. kubectl, uv, fnm and fzf all support fish."
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "fishshell.com",
+          "url": "https://fishshell.com/"
+        },
+        {
+          "label": "fish docs: Fish for bash users",
+          "url": "https://fishshell.com/docs/current/fish_for_bash_users.html"
+        }
+      ]
+    },
+    {
+      "id": "pnpm",
+      "name": "pnpm",
+      "group": "languages",
+      "level": "ref",
+      "summary": "A fast Node.js package manager with a shared content-addressed store. pnpm 12 is a native executable.",
+      "status": "active",
+      "started": {
+        "date": "2016-01-28",
+        "basis": "GitHub repository created",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "Not a CNCF project."
+      },
+      "license": "MIT",
+      "version": {
+        "name": "pnpm",
+        "analysed": "v12.16.1",
+        "released": "2026-10-27",
+        "docs": "pnpm.io/installation",
+        "checked": "2026-10-29"
+      },
+      "track": {
+        "github": "pnpm/pnpm"
+      },
+      "related": [
+        "node"
+      ],
+      "links": [
+        {
+          "label": "Installation",
+          "url": "https://pnpm.io/installation"
+        },
+        {
+          "label": "Documentation",
+          "url": "https://pnpm.io/"
+        },
+        {
+          "label": "Repository",
+          "url": "https://github.com/pnpm/pnpm"
+        }
+      ],
+      "sections": [
+        {
+          "title": "What it is",
+          "items": [
+            "Install with `curl -fsSL https://get.pnpm.io/install.sh | sh -`; update with `pnpm self-update`. pnpm 10, 11 and 12 support Node 22 to 26. `pnx` (alias `pnpm dlx`) runs a package without installing it."
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "pnpm: Installation",
+          "url": "https://pnpm.io/installation"
+        },
+        {
+          "label": "pnpm: pnx (pnpm dlx)",
+          "url": "https://pnpm.io/cli/dlx"
+        }
+      ]
+    },
+    {
+      "id": "mise",
+      "name": "mise",
+      "group": "languages",
+      "level": "ref",
+      "summary": "One tool to install and switch versions of Node, Python, kubectl, Terraform and more per project, plus env vars and tasks, from mise.toml.",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "Not checked",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "Not a CNCF project."
+      },
+      "license": "MIT",
+      "version": {
+        "name": "mise",
+        "analysed": "v2026.10.23",
+        "released": "2026-10-29",
+        "docs": "mise.jdx.dev getting started",
+        "checked": "2026-10-29"
+      },
+      "track": {
+        "github": "jdx/mise"
+      },
+      "related": [
+        "node",
+        "uv"
+      ],
+      "notes": [
+        "Releases come almost daily, so `make check` will often list it."
+      ],
+      "links": [
+        {
+          "label": "Getting started",
+          "url": "https://mise.jdx.dev/getting-started.html"
+        },
+        {
+          "label": "Repository",
+          "url": "https://github.com/jdx/mise"
+        }
+      ],
+      "sections": [
+        {
+          "title": "What it is",
+          "items": [
+            "`curl -fsSL https://mise.run | sh` puts `mise` in `~/.local/bin`. `mise use node@24` installs and records the version in `mise.toml`. An alternative to fnm and uv's Python management when one file for every tool matters more."
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "mise: Getting started",
+          "url": "https://mise.jdx.dev/getting-started.html"
+        }
+      ]
+    },
+    {
+      "id": "kubeadm",
+      "name": "kubeadm",
+      "group": "kubernetes",
+      "level": "ref",
+      "summary": "The Kubernetes tool to bootstrap cluster nodes. Not needed on a workstation that only talks to clusters.",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "Not checked",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "graduated",
+        "text": "Kubernetes was accepted to CNCF on March 10, 2016 at the Incubating maturity level and moved to Graduated on March 6, 2018."
+      },
+      "license": "Apache-2.0",
+      "version": {
+        "name": "Kubernetes (kubeadm)",
+        "analysed": "v1.37.2",
+        "released": "2026-10-28",
+        "docs": "kubernetes.io Installing kubeadm (2026-09-09)",
+        "checked": "2026-10-29"
+      },
+      "track": {
+        "github": "kubernetes/kubernetes"
+      },
+      "compare": [
+        {
+          "with": "kind",
+          "text": "kind runs a whole cluster in Docker with one command; kubeadm sets up real nodes."
+        }
+      ],
+      "related": [
+        "kubectl"
+      ],
+      "links": [
+        {
+          "label": "Installing kubeadm",
+          "url": "https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/"
+        },
+        {
+          "label": "Creating a cluster",
+          "url": "https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/"
+        }
+      ],
+      "sections": [
+        {
+          "title": "What it is",
+          "items": [
+            "Installed with kubelet and kubectl from the same pkgs.k8s.io repository on every node. Needs 2 GB RAM, 2 CPUs on a control plane, a container runtime, and swap off or tolerated by kubelet."
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "kubernetes.io: Installing kubeadm",
+          "url": "https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/",
+          "date": "2026-09-09"
+        }
+      ]
+    },
+    {
+      "id": "helm",
+      "name": "Helm",
+      "group": "kubernetes",
+      "level": "ref",
+      "summary": "The Kubernetes package manager. Helm 4 is current; Helm 3 still gets releases.",
+      "status": "active",
+      "started": {
+        "date": "2015-10-06",
+        "basis": "GitHub repository created",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "graduated",
+        "text": "Helm was accepted to CNCF on June 1, 2018 at the Incubating maturity level and moved to Graduated on May 1, 2020."
+      },
+      "license": "Apache-2.0",
+      "version": {
+        "name": "Helm",
+        "analysed": "v4.3.1",
+        "released": "2026-10-15",
+        "docs": "helm.sh/docs/intro/install",
+        "checked": "2026-10-29"
+      },
+      "track": {
+        "github": "helm/helm",
+        "cncf": "helm"
+      },
+      "related": [
+        "kubectl"
+      ],
+      "links": [
+        {
+          "label": "Install",
+          "url": "https://helm.sh/docs/intro/install/"
+        },
+        {
+          "label": "Repository",
+          "url": "https://github.com/helm/helm"
+        }
+      ],
+      "sections": [
+        {
+          "title": "What it is",
+          "items": [
+            "Install with the `get-helm-4` script or the community apt repository. Charts, values and commands are covered in [GitOps: Helm](../gitops/index.html#helm)."
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "Helm docs: Installing Helm",
+          "url": "https://helm.sh/docs/intro/install/"
+        }
+      ]
+    },
+    {
+      "id": "kind",
+      "name": "kind",
+      "group": "kubernetes",
+      "level": "ref",
+      "summary": "Kubernetes IN Docker: local clusters whose nodes are Docker containers.",
+      "status": "active",
+      "started": {
+        "date": "2018-09-12",
+        "basis": "GitHub repository created",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "A Kubernetes SIG project (kubernetes-sigs), not listed as its own CNCF project."
+      },
+      "license": "Apache-2.0",
+      "version": {
+        "name": "kind",
+        "analysed": "v0.33.0",
+        "released": "2026-08-26",
+        "docs": "kind.sigs.k8s.io quick start",
+        "checked": "2026-10-29"
+      },
+      "track": {
+        "github": "kubernetes-sigs/kind"
+      },
+      "related": [
+        "kubectl",
+        "docker"
+      ],
+      "links": [
+        {
+          "label": "Website",
+          "url": "https://kind.sigs.k8s.io/"
+        },
+        {
+          "label": "Quick start",
+          "url": "https://kind.sigs.k8s.io/docs/user/quick-start/"
+        },
+        {
+          "label": "Repository",
+          "url": "https://github.com/kubernetes-sigs/kind"
+        }
+      ],
+      "sections": [
+        {
+          "title": "What it is",
+          "items": [
+            "Needs Docker, Podman or nerdctl. Download the binary from the quick start, then `kind create cluster`. Still pre-1.0."
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "kind.sigs.k8s.io",
+          "url": "https://kind.sigs.k8s.io/"
+        },
+        {
+          "label": "kind: Quick Start",
+          "url": "https://kind.sigs.k8s.io/docs/user/quick-start/"
+        }
+      ]
+    },
+    {
+      "id": "k9s",
+      "name": "k9s",
+      "group": "kubernetes",
+      "level": "ref",
+      "summary": "A terminal UI to watch and manage a Kubernetes cluster.",
+      "status": "active",
+      "started": {
+        "date": "2019-01-25",
+        "basis": "GitHub repository created",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "Not a CNCF project."
+      },
+      "license": "Apache-2.0",
+      "version": {
+        "name": "k9s",
+        "analysed": "v0.51.0",
+        "released": "2026-06-06",
+        "docs": "GitHub README",
+        "checked": "2026-10-29"
+      },
+      "track": {
+        "github": "derailed/k9s"
+      },
+      "related": [
+        "kubectl"
+      ],
+      "links": [
+        {
+          "label": "Website",
+          "url": "https://k9scli.io/"
+        },
+        {
+          "label": "Repository",
+          "url": "https://github.com/derailed/k9s"
+        }
+      ],
+      "sections": [
+        {
+          "title": "What it is",
+          "items": [
+            "On Ubuntu: download `k9s_linux_amd64.deb` from the latest release and `sudo apt install ./k9s_linux_amd64.deb`. It uses the current kubectl context."
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "derailed/k9s README",
+          "url": "https://github.com/derailed/k9s"
+        }
+      ]
+    },
+    {
+      "id": "kubectx",
+      "name": "kubectx and kubens",
+      "group": "kubernetes",
+      "level": "ref",
+      "summary": "Switch kubectl contexts (kubectx) and namespaces (kubens) quickly.",
+      "status": "active",
+      "started": {
+        "date": "2017-03-30",
+        "basis": "GitHub repository created",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "Not a CNCF project."
+      },
+      "license": "Apache-2.0",
+      "version": {
+        "name": "kubectx",
+        "analysed": "v0.11.0",
+        "released": "2026-03-27",
+        "docs": "GitHub README",
+        "checked": "2026-10-29"
+      },
+      "track": {
+        "github": "ahmetb/kubectx"
+      },
+      "related": [
+        "kubectl",
+        "krew"
+      ],
+      "links": [
+        {
+          "label": "Repository",
+          "url": "https://github.com/ahmetb/kubectx"
+        }
+      ],
+      "sections": [
+        {
+          "title": "What it is",
+          "items": [
+            "`sudo apt install kubectx` installs both. Also available as krew plugins `ctx` and `ns`."
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "ahmetb/kubectx README",
+          "url": "https://github.com/ahmetb/kubectx"
+        }
+      ]
+    },
+    {
+      "id": "krew",
+      "name": "krew",
+      "group": "kubernetes",
+      "level": "ref",
+      "summary": "The plugin manager for kubectl.",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "Not checked",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "A Kubernetes SIG project (kubernetes-sigs), not listed as its own CNCF project."
+      },
+      "license": "Apache-2.0",
+      "version": {
+        "name": "krew",
+        "analysed": "v0.5.0",
+        "released": "2026-02-26",
+        "docs": "krew.sigs.k8s.io install page",
+        "checked": "2026-10-29"
+      },
+      "track": {
+        "github": "kubernetes-sigs/krew"
+      },
+      "related": [
+        "kubectl"
+      ],
+      "links": [
+        {
+          "label": "Install",
+          "url": "https://krew.sigs.k8s.io/docs/user-guide/setup/install/"
+        },
+        {
+          "label": "Repository",
+          "url": "https://github.com/kubernetes-sigs/krew"
+        }
+      ],
+      "sections": [
+        {
+          "title": "What it is",
+          "items": [
+            "Plugins install as `kubectl <name>`, for example `kubectl krew install ctx`. Needs kubectl 1.12 or later."
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "Krew: Installing",
+          "url": "https://krew.sigs.k8s.io/docs/user-guide/setup/install/"
+        }
+      ]
+    },
+    {
+      "id": "kubelogin",
+      "name": "kubelogin (Azure)",
+      "group": "kubernetes",
+      "level": "ref",
+      "summary": "A client-go credential (exec) plugin for Azure authentication, used by AKS clusters with Microsoft Entra ID.",
+      "status": "active",
+      "started": {
+        "date": "2020-03-25",
+        "basis": "GitHub repository created",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "Not a CNCF project."
+      },
+      "license": "MIT",
+      "maintainer": "Microsoft",
+      "version": {
+        "name": "kubelogin",
+        "analysed": "v0.2.22",
+        "released": "2026-10-24",
+        "docs": "azure.github.io/kubelogin install page",
+        "checked": "2026-10-29"
+      },
+      "track": {
+        "github": "Azure/kubelogin"
+      },
+      "related": [
+        "kubectl",
+        "azure-cli"
+      ],
+      "links": [
+        {
+          "label": "Documentation",
+          "url": "https://azure.github.io/kubelogin/"
+        },
+        {
+          "label": "Install",
+          "url": "https://azure.github.io/kubelogin/install.html"
+        },
+        {
+          "label": "Repository",
+          "url": "https://github.com/Azure/kubelogin"
+        }
+      ],
+      "sections": [
+        {
+          "title": "What it is",
+          "items": [
+            "`az aks install-cli` installs kubectl and kubelogin; or copy a release binary onto the PATH. Supported with kubectl 1.11 and later."
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "Azure/kubelogin README",
+          "url": "https://github.com/Azure/kubelogin"
+        },
+        {
+          "label": "kubelogin docs: Installation",
+          "url": "https://azure.github.io/kubelogin/install.html"
+        }
+      ]
+    },
+    {
+      "id": "opentofu",
+      "name": "OpenTofu",
+      "group": "cloud",
+      "level": "ref",
+      "summary": "The open source fork of Terraform (MPL-2.0), a CNCF sandbox project. The command is `tofu`.",
+      "status": "active",
+      "started": {
+        "date": "2023-08-16",
+        "basis": "GitHub repository created",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "sandbox",
+        "text": "OpenTofu was accepted to CNCF on April 23, 2025 at the Sandbox maturity level."
+      },
+      "license": "MPL-2.0",
+      "version": {
+        "name": "OpenTofu",
+        "analysed": "v1.13.2",
+        "released": "2026-10-21",
+        "docs": "opentofu.org .deb install page",
+        "checked": "2026-10-29"
+      },
+      "track": {
+        "github": "opentofu/opentofu",
+        "cncf": "opentofu"
+      },
+      "compare": [
+        {
+          "with": "terraform",
+          "text": "Terraform is BUSL-1.1 since 1.6; OpenTofu stays open source."
+        }
+      ],
+      "related": [
+        "terraform"
+      ],
+      "links": [
+        {
+          "label": "Install on .deb",
+          "url": "https://opentofu.org/docs/intro/install/deb/"
+        },
+        {
+          "label": "Documentation",
+          "url": "https://opentofu.org/docs/"
+        },
+        {
+          "label": "Repository",
+          "url": "https://github.com/opentofu/opentofu"
+        }
+      ],
+      "sections": [
+        {
+          "title": "What it is",
+          "items": [
+            "Install from its apt repository at packages.opentofu.org, or with its installer script and `--install-method deb`."
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "OpenTofu: Installing on .deb-based Linux",
+          "url": "https://opentofu.org/docs/intro/install/deb/"
+        },
+        {
+          "label": "CNCF: OpenTofu",
+          "url": "https://www.cncf.io/projects/opentofu/"
+        }
+      ]
+    },
+    {
+      "id": "tflint",
+      "name": "TFLint",
+      "group": "cloud",
+      "level": "ref",
+      "summary": "A pluggable Terraform linter. The Terraform language ruleset is bundled; AWS, Azure and Google Cloud rulesets are plugins.",
+      "status": "active",
+      "started": {
+        "date": "2016-10-20",
+        "basis": "GitHub repository created",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "Not a CNCF project."
+      },
+      "license": "MPL-2.0",
+      "version": {
+        "name": "TFLint",
+        "analysed": "v0.65.0",
+        "released": "2026-10-22",
+        "docs": "GitHub README",
+        "checked": "2026-10-29"
+      },
+      "track": {
+        "github": "terraform-linters/tflint"
+      },
+      "related": [
+        "terraform"
+      ],
+      "links": [
+        {
+          "label": "Repository",
+          "url": "https://github.com/terraform-linters/tflint"
+        },
+        {
+          "label": "Releases",
+          "url": "https://github.com/terraform-linters/tflint/releases"
+        }
+      ],
+      "sections": [
+        {
+          "title": "What it is",
+          "items": [
+            "On Linux, download `tflint_linux_amd64.zip` from the latest release and unzip it onto the PATH."
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "terraform-linters/tflint README",
+          "url": "https://github.com/terraform-linters/tflint"
+        }
+      ]
+    },
+    {
+      "id": "docker-desktop",
+      "name": "Docker Desktop",
+      "group": "containers",
+      "level": "ref",
+      "summary": "Docker's Windows app; its WSL 2 backend runs the engine in WSL. Free for personal use, education and small businesses; a paid subscription otherwise.",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "Not checked",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "Not a CNCF project."
+      },
+      "license": "Proprietary",
+      "version": {
+        "name": "Docker Desktop",
+        "analysed": "docs page",
+        "released": "2026-10-29",
+        "docs": "docs.docker.com WSL 2 backend and licence pages, read on the check date (no version on the pages)",
+        "checked": "2026-10-29"
+      },
+      "compare": [
+        {
+          "with": "docker",
+          "text": "Docker Engine in Ubuntu is free and command line only."
+        }
+      ],
+      "related": [
+        "docker"
+      ],
+      "notes": [
+        "Prices and limits are the vendor's and change; read the licence page before relying on them."
+      ],
+      "links": [
+        {
+          "label": "WSL 2 backend",
+          "url": "https://docs.docker.com/desktop/features/wsl/"
+        },
+        {
+          "label": "Licence",
+          "url": "https://docs.docker.com/subscription/desktop-license/"
+        }
+      ],
+      "sections": [
+        {
+          "title": "What it is",
+          "items": [
+            "Free for small businesses (fewer than 250 employees and less than $10 million annual revenue), personal use and education. Larger organisations need Pro, Team or Business. Uninstall any Docker Engine inside WSL first: both together conflict. Terms change; check the licence page."
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "Docker docs: Docker Desktop WSL 2 backend",
+          "url": "https://docs.docker.com/desktop/features/wsl/"
+        },
+        {
+          "label": "Docker docs: Docker Desktop license agreement",
+          "url": "https://docs.docker.com/subscription/desktop-license/"
+        }
+      ]
+    },
+    {
+      "id": "git",
+      "name": "git",
+      "group": "dev",
+      "level": "ref",
+      "summary": "Version control. Ubuntu 26.04 ships 2.53.0.",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "Not checked",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "Not a CNCF project."
+      },
+      "license": "GPL-2.0",
+      "version": {
+        "name": "git",
+        "analysed": "2.53.0 (Ubuntu 1:2.53.0-1ubuntu1.1)",
+        "released": "2026-10-29",
+        "docs": "Ubuntu 26.04 package from Launchpad; Pro Git book first-time setup. The upstream release date was not checked.",
+        "checked": "2026-10-29"
+      },
+      "related": [
+        "claude-code"
+      ],
+      "notes": [
+        "`released` is the check date: the date of git 2.53.0 was not checked."
+      ],
+      "links": [
+        {
+          "label": "git-scm.com",
+          "url": "https://git-scm.com/"
+        },
+        {
+          "label": "Pro Git: first-time setup",
+          "url": "https://git-scm.com/book/en/v2/Getting-Started-First-Time-Git-Setup"
+        },
+        {
+          "label": "Git on WSL",
+          "url": "https://learn.microsoft.com/en-us/windows/wsl/tutorials/wsl-git"
+        }
+      ],
+      "sections": [
+        {
+          "title": "What it is",
+          "items": [
+            "Set `user.name` and `user.email` with `git config --global`. In WSL, Git Credential Manager from Git for Windows stores HTTPS tokens in the Windows Credential Manager."
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "Pro Git: First-Time Git Setup",
+          "url": "https://git-scm.com/book/en/v2/Getting-Started-First-Time-Git-Setup"
+        },
+        {
+          "label": "Microsoft Learn: Get started using Git on WSL",
+          "url": "https://learn.microsoft.com/en-us/windows/wsl/tutorials/wsl-git",
+          "date": "2025-10-03"
+        },
+        {
+          "label": "Launchpad: git in Ubuntu 26.04",
+          "url": "https://launchpad.net/ubuntu/resolute/+source/git"
+        }
+      ]
+    }
+  ]
+}

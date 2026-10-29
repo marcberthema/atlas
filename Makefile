@@ -38,3 +38,5 @@ topologies-%:
 	$(MAKE) -C topics/topologies $*
 patterns-%:
 	$(MAKE) -C topics/patterns $*
+workstation-%:
+	$(MAKE) -C topics/workstation $*

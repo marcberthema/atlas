@@ -1,0 +1,177 @@
+{
+  "https://code.claude.com/docs/en/setup | curl -fsSL https://claude.ai/install.sh | bash": {
+    "body": "curl -fsSL https://claude.ai/install.sh | bash",
+    "fetched": "2026-10-29",
+    "checked": "2026-10-29"
+  },
+  "https://developer.hashicorp.com/terraform/install | apt.releases.hashicorp.com/gpg | sudo gpg --dearmor": {
+    "body": "wget -O - https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg\necho \"deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(grep -oP '(?<=UBUNTU_CODENAME=).*' /etc/os-release || lsb_release -cs) main\" | sudo tee /etc/apt/sources.list.d/hashicorp.list\nsudo apt update && sudo apt install terraform",
+    "fetched": "2026-10-29",
+    "checked": "2026-10-29"
+  },
+  "https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli | terraform -install-autocomplete": {
+    "body": "$ terraform -install-autocomplete",
+    "fetched": "2026-10-29",
+    "checked": "2026-10-29"
+  },
+  "https://docs.astral.sh/uv/getting-started/installation/ | curl -LsSf https://astral.sh/uv/install.sh | sh": {
+    "body": "$ curl -LsSf https://astral.sh/uv/install.sh | sh",
+    "fetched": "2026-10-29",
+    "checked": "2026-10-29"
+  },
+  "https://docs.astral.sh/uv/getting-started/installation/ | echo 'eval \"$(uv generate-shell-completion zsh)\"' >> ~/.zshrc": {
+    "body": "echo 'eval \"$(uv generate-shell-completion zsh)\"' >> ~/.zshrc",
+    "fetched": "2026-10-29",
+    "checked": "2026-10-29"
+  },
+  "https://docs.astral.sh/uv/guides/projects/ | uv add requests": {
+    "body": "$ uv add requests",
+    "fetched": "2026-10-29",
+    "checked": "2026-10-29"
+  },
+  "https://docs.astral.sh/uv/guides/projects/ | uv init hello-world": {
+    "body": "$ uv init hello-world\n$ cd hello-world",
+    "fetched": "2026-10-29",
+    "checked": "2026-10-29"
+  },
+  "https://docs.docker.com/engine/install/linux-postinstall/ | sudo usermod -aG docker $USER": {
+    "body": "$ sudo usermod -aG docker $USER",
+    "fetched": "2026-10-29",
+    "checked": "2026-10-29"
+  },
+  "https://docs.docker.com/engine/install/ubuntu/ | sudo apt install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin": {
+    "body": "$ sudo apt install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin",
+    "fetched": "2026-10-29",
+    "checked": "2026-10-29"
+  },
+  "https://docs.docker.com/engine/install/ubuntu/ | sudo tee /etc/apt/sources.list.d/docker.sources": {
+    "body": "# Add Docker's official GPG key:\nsudo apt update\nsudo apt install ca-certificates curl\nsudo install -m 0755 -d /etc/apt/keyrings\nsudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc\nsudo chmod a+r /etc/apt/keyrings/docker.asc\n\n# Add the repository to Apt sources:\nsudo tee /etc/apt/sources.list.d/docker.sources <<EOF\nTypes: deb\nURIs: https://download.docker.com/linux/ubuntu\nSuites: $(. /etc/os-release && echo \"${UBUNTU_CODENAME:-$VERSION_CODENAME}\")\nComponents: stable\nArchitectures: $(dpkg --print-architecture)\nSigned-By: /etc/apt/keyrings/docker.asc\nEOF\n\nsudo apt update",
+    "fetched": "2026-10-29",
+    "checked": "2026-10-29"
+  },
+  "https://documentation.ubuntu.com/wsl/latest/howto/install-ubuntu-wsl2/ | Ubuntu-26.04": {
+    "body": "The following is a list of valid distributions that can be installed.\nInstall using 'wsl --install <Distro>'.\n\n  NAME                            FRIENDLY NAME\n  Ubuntu                          Ubuntu\n  Ubuntu-26.04                    Ubuntu 26.04 LTS\n  Ubuntu-24.04                    Ubuntu 24.04 LTS\n  Ubuntu-22.04                    Ubuntu 22.04 LTS\n  ...\n  archlinux                       Arch Linux\n  FedoraLinux-44                  Fedora Linux 44\n  FedoraLinux-43                  Fedora Linux 43\n  eLxr                            eLxr 12.12.0.0 GNU/Linux\n  OracleLinux_7_9                 Oracle Linux 7.9\n  OracleLinux_8_10                Oracle Linux 8.10\n  OracleLinux_9_5                 Oracle Linux 9.5\n  SUSE-Linux-Enterprise-15-SP6    SUSE Linux Enterprise 15 SP6",
+    "fetched": "2026-10-29",
+    "checked": "2026-10-29"
+  },
+  "https://git-scm.com/book/en/v2/Getting-Started-First-Time-Git-Setup | git config --global user.name": {
+    "body": "$ git config --global user.name \"John Doe\"\n$ git config --global user.email johndoe@example.com",
+    "fetched": "2026-10-29",
+    "checked": "2026-10-29"
+  },
+  "https://github.com/Schniz/fnm | curl -fsSL https://fnm.vercel.app/install | bash -s -- --skip-shell": {
+    "body": "curl -fsSL https://fnm.vercel.app/install | bash -s -- --skip-shell",
+    "fetched": "2026-10-29",
+    "checked": "2026-10-29"
+  },
+  "https://github.com/Schniz/fnm | eval \"$(fnm env --use-on-cd --shell zsh)\"": {
+    "body": "eval \"$(fnm env --use-on-cd --shell zsh)\"",
+    "fetched": "2026-10-29",
+    "checked": "2026-10-29"
+  },
+  "https://github.com/ajeetdsouza/zoxide | eval \"$(zoxide init zsh)\"": {
+    "body": "eval \"$(zoxide init zsh)\"",
+    "fetched": "2026-10-29",
+    "checked": "2026-10-29"
+  },
+  "https://github.com/junegunn/fzf | source <(fzf --zsh)": {
+    "body": "# Set up fzf key bindings and fuzzy completion\nsource <(fzf --zsh)",
+    "fetched": "2026-10-29",
+    "checked": "2026-10-29"
+  },
+  "https://github.com/microsoft/terminal | winget install --id Microsoft.WindowsTerminal -e": {
+    "body": "winget install --id Microsoft.WindowsTerminal -e",
+    "fetched": "2026-10-29",
+    "checked": "2026-10-29"
+  },
+  "https://github.com/ohmyzsh/ohmyzsh/wiki/Installing-ZSH | apt install zsh": {
+    "body": "apt install zsh",
+    "fetched": "2026-10-29",
+    "checked": "2026-10-29"
+  },
+  "https://github.com/ohmyzsh/ohmyzsh/wiki/Installing-ZSH | chsh -s $(which zsh)": {
+    "body": "chsh -s $(which zsh)",
+    "fetched": "2026-10-29",
+    "checked": "2026-10-29"
+  },
+  "https://github.com/zsh-users/zsh-syntax-highlighting/blob/master/INSTALL.md | source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh": {
+    "body": "echo \"source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh\" >> ${ZDOTDIR:-$HOME}/.zshrc",
+    "fetched": "2026-10-29",
+    "checked": "2026-10-29"
+  },
+  "https://helm.sh/docs/intro/install/ | get-helm-4": {
+    "body": "curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-4\nchmod 700 get_helm.sh\n./get_helm.sh",
+    "fetched": "2026-10-29",
+    "checked": "2026-10-29"
+  },
+  "https://kind.sigs.k8s.io/docs/user/quick-start/ | kind-linux-amd64": {
+    "body": "# For AMD64 / x86_64\n[ $(uname -m) = x86_64 ] && curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.33.0/kind-linux-amd64\n# For ARM64\n[ $(uname -m) = aarch64 ] && curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.33.0/kind-linux-arm64\nchmod +x ./kind\nsudo mv ./kind /usr/local/bin/kind",
+    "fetched": "2026-10-29",
+    "checked": "2026-10-29"
+  },
+  "https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/ | source <(kubectl completion zsh)": {
+    "body": "source <(kubectl completion zsh)",
+    "fetched": "2026-10-29",
+    "checked": "2026-10-29"
+  },
+  "https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/ | sudo apt-get install -y apt-transport-https ca-certificates curl gnupg": {
+    "body": "sudo apt-get update\n# apt-transport-https may be a dummy package; if so, you can skip that package\nsudo apt-get install -y apt-transport-https ca-certificates curl gnupg",
+    "fetched": "2026-10-29",
+    "checked": "2026-10-29"
+  },
+  "https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/ | sudo apt-get install -y kubectl": {
+    "body": "sudo apt-get update\nsudo apt-get install -y kubectl",
+    "fetched": "2026-10-29",
+    "checked": "2026-10-29"
+  },
+  "https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/ | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg": {
+    "body": "# If the folder `/etc/apt/keyrings` does not exist, it should be created before the curl command, read the note below.\n# sudo mkdir -p -m 755 /etc/apt/keyrings\ncurl -fsSL https://pkgs.k8s.io/core:/stable:/v1.37/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg\nsudo chmod 644 /etc/apt/keyrings/kubernetes-apt-keyring.gpg # allow unprivileged APT programs to read this keyring",
+    "fetched": "2026-10-29",
+    "checked": "2026-10-29"
+  },
+  "https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/ | sudo tee /etc/apt/sources.list.d/kubernetes.list": {
+    "body": "# This overwrites any existing configuration in /etc/apt/sources.list.d/kubernetes.list\necho 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.37/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list\nsudo chmod 644 /etc/apt/sources.list.d/kubernetes.list   # helps tools such as command-not-found to work correctly",
+    "fetched": "2026-10-29",
+    "checked": "2026-10-29"
+  },
+  "https://learn.microsoft.com/en-us/cli/azure/install-azure-cli-linux | deb_install.sh": {
+    "body": "curl -fsSL 'https://azurecliprod.blob.core.windows.net/$root/deb_install.sh' | sudo bash",
+    "fetched": "2026-10-29",
+    "checked": "2026-10-29"
+  },
+  "https://learn.microsoft.com/en-us/windows/wsl/install | wsl --install": {
+    "body": "wsl --install",
+    "fetched": "2026-10-29",
+    "checked": "2026-10-29"
+  },
+  "https://learn.microsoft.com/en-us/windows/wsl/setup/environment | sudo apt update && sudo apt upgrade": {
+    "body": "sudo apt update && sudo apt upgrade",
+    "fetched": "2026-10-29",
+    "checked": "2026-10-29"
+  },
+  "https://learn.microsoft.com/en-us/windows/wsl/wsl-config | memory=4GB": {
+    "body": "# Settings apply across all Linux distros running on WSL 2\n[wsl2]\n\n# Limits VM memory to use no more than 4 GB, this can be set as whole numbers using GB or MB\nmemory=4GB\n\n# Sets the VM to use two virtual processors\nprocessors=2\n\n# Specify a custom Linux kernel to use with your installed distros. The default kernel used can be found at https://github.com/microsoft/WSL2-Linux-Kernel\nkernel=C:\\\\temp\\\\myCustomKernel\n\n# Specify the modules VHD for the custom Linux kernel to use with your installed distros.\nkernelModules=C:\\\\temp\\\\modules.vhdx\n\n# Sets additional kernel parameters, in this case enabling older Linux base images such as Centos 6\nkernelCommandLine = vsyscall=emulate\n\n# Sets amount of swap storage space to 8GB, default is 25% of available RAM\nswap=8GB\n\n# Sets swapfile path location, default is %UserProfile%\\AppData\\Local\\Temp\\swap.vhdx\nswapfile=C:\\\\temp\\\\wsl-swap.vhdx\n\n# Turn on default connection to bind WSL 2 localhost to Windows localhost. Setting is ignored when networkingMode=mirrored\nlocalhostforwarding=true\n\n# Disables nested virtualization\nnestedVirtualization=false\n\n# Turns on output console showing contents of dmesg when opening a WSL 2 distro for debugging\ndebugConsole=true\n\n# Sets the maximum number of crash dump files to retain (default is 10)\nmaxCrashDumpCount=10\n\n# Enable experimental features\n[experimental]\nsparseVhd=true",
+    "fetched": "2026-10-29",
+    "checked": "2026-10-29"
+  },
+  "https://learn.microsoft.com/en-us/windows/wsl/wsl-config | systemd=true": {
+    "body": "[boot]\nsystemd=true",
+    "fetched": "2026-10-29",
+    "checked": "2026-10-29"
+  },
+  "https://pnpm.io/installation | curl -fsSL https://get.pnpm.io/install.sh | sh -": {
+    "body": "curl -fsSL https://get.pnpm.io/install.sh | sh -",
+    "fetched": "2026-10-29",
+    "checked": "2026-10-29"
+  },
+  "https://starship.rs/guide/ | curl -sS https://starship.rs/install.sh | sh": {
+    "body": "curl -sS https://starship.rs/install.sh | sh",
+    "fetched": "2026-10-29",
+    "checked": "2026-10-29"
+  },
+  "https://starship.rs/guide/ | eval \"$(starship init zsh)\"": {
+    "body": "eval \"$(starship init zsh)\"",
+    "fetched": "2026-10-29",
+    "checked": "2026-10-29"
+  }
+}
