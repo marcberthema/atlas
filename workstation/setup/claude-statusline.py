@@ -3,12 +3,16 @@
 
   Opus 5.5 · high · ~/src/atlas · main* · ▓▓▓░░░░░░░ 62K/200K · 5h 23% (2h14m) · 7d 41% (Mon 14:00) · $1.84
 
-The bar and the percentages are green under 50%, yellow under 80%, red from 80%.
+The bar and the percentages are green under 50%, yellow under 80%, red from 80%. The last figure is the session cost, then the
+cost of the week: Claude Code only sends the session's cost, so each run adds the growth since the last run to a ledger,
+~/.claude/statusline-cost.json, and sums the entries inside the 7-day window (the same reset as the 7d figure). It counts from
+the first run, on this machine only. Costs are estimates at list price, not a bill.
 
 Fields are documented at https://code.claude.com/docs/en/statusline. A field Claude Code does not send (effort on a model
 without it, rate limits outside Pro and Max or before the first reply) is left out. Python 3 standard library only.
 setup.sh copies it to ~/.claude/statusline.py and points settings.json at it.
 """
+import fcntl
 import json
 import os
 import subprocess
@@ -58,6 +62,44 @@ def git_branch(cwd):
         return None
 
 
+WEEK = 7 * 86400
+
+
+def week_cost(d, window_start):
+    """Record how much this session's cost grew since the last run and return the cost of the window. None when it cannot be kept."""
+    path = os.environ.get("CLAUDE_STATUSLINE_LEDGER") or os.path.expanduser("~/.claude/statusline-cost.json")
+    try:
+        with open(path + ".lock", "a") as lock:
+            fcntl.flock(lock, fcntl.LOCK_EX)   # several sessions can run this at once
+            try:
+                ledger = json.load(open(path))
+            except (OSError, ValueError):
+                ledger = {}
+            sessions, entries = ledger.get("sessions", {}), ledger.get("entries", [])
+            now, sid = time.time(), d.get("session_id")
+            cost = d.get("cost", {}).get("total_cost_usd")
+            if sid and cost is not None:
+                seen = sessions.get(sid)
+                if seen is None:
+                    # first sight: count the spend so far only if the session is young enough to have started inside the window
+                    age = d.get("cost", {}).get("total_duration_ms", 0) / 1000
+                    delta = cost if now - age >= window_start else 0
+                else:
+                    delta = cost - seen["last"] if cost >= seen["last"] else cost   # a lower cost means it was reset
+                if delta > 0:
+                    entries.append([now, round(delta, 4)])
+                sessions[sid] = {"last": cost, "seen": now}
+            entries = [e for e in entries if e[0] >= now - WEEK - 86400]
+            sessions = {k: v for k, v in sessions.items() if v["seen"] >= now - WEEK - 86400}
+            tmp = path + ".tmp"
+            with open(tmp, "w") as f:
+                json.dump({"sessions": sessions, "entries": entries}, f)
+            os.replace(tmp, path)
+            return sum(delta for ts, delta in entries if ts >= window_start)
+    except OSError:
+        return None
+
+
 def main():
     d = json.load(sys.stdin)
     sep = f" {DIM}·{RESET} "
@@ -89,8 +131,10 @@ def main():
             reset = f" {DIM}({until(w['resets_at'])}){RESET}" if w.get("resets_at") else ""
             parts.append(f"{label} {level(pct)}{pct:.0f}%{RESET}{reset}")
     cost = d.get("cost", {}).get("total_cost_usd")
-    if cost:
-        parts.append(f"{DIM}${cost:.2f}{RESET}")
+    reset = (limits.get("seven_day") or {}).get("resets_at")
+    week = week_cost(d, reset - WEEK if reset else time.time() - WEEK)
+    if cost or week:
+        parts.append(f"{DIM}${cost or 0:.2f}" + (f" · ${week:.0f} wk" if week else "") + RESET)
 
     print(sep.join(parts))
 
