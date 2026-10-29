@@ -1,0 +1,50 @@
+{
+  "about": "Default profile for setup.sh. Turn a component off with false, or copy this file and pass it with --profile. No secrets here: the repository is public.",
+  "components": {
+    "apt_upgrade": true,
+    "wsl_conf": true,
+    "git": true,
+    "gh": true,
+    "zsh": true,
+    "zsh_plugins": true,
+    "fzf": true,
+    "zoxide": true,
+    "starship": true,
+    "uv": true,
+    "fnm": true,
+    "pnpm": true,
+    "kubectl": true,
+    "kubectx": true,
+    "helm": true,
+    "k9s": true,
+    "kind": true,
+    "kubelogin": true,
+    "krew": false,
+    "terraform": true,
+    "opentofu": false,
+    "tflint": true,
+    "azure_cli": true,
+    "docker": true,
+    "claude_code": true,
+    "zshrc": true
+  },
+  "settings": {
+    "git": {
+      "name": "",
+      "email": "",
+      "default_branch": "main"
+    },
+    "python": "latest",
+    "node": "lts",
+    "kubectl_minor": "v1.37",
+    "docker_group": true,
+    "starship_kubernetes": true,
+    "aliases": {
+      "ll": "ls -alFh --color=auto --group-directories-first",
+      "la": "ls -A --color=auto",
+      "ls": "ls --color=auto",
+      "grep": "grep --color=auto",
+      "k": "kubectl"
+    }
+  }
+}

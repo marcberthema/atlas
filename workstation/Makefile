@@ -10,13 +10,13 @@ validate:  ## Check data/workstation.json is consistent (exit 1 on problems)
 
 check:  ## Network: releases, archived flags, CNCF levels and code examples against the data (ONLY=id, LINKS=1 also checks source links, STRICT=1 fails on differences)
 	$(PY) scripts/check_updates.py $(if $(ONLY),--only $(ONLY)) $(if $(LINKS),--links) $(if $(STRICT),--strict)
-	$(PY) ../../shared/examples.py workstation
+	$(PY) ../shared/examples.py workstation --dir .
 
 examples:  ## Network: fetch the code examples from their docs pages into data/examples.json (the build reads it)
-	$(PY) ../../shared/examples.py workstation --refresh
+	$(PY) ../shared/examples.py workstation --dir . --refresh
 
-build: validate  ## Generate ../../dist/workstation/index.html
+build: validate  ## Generate site/index.html (not published: outside dist/)
 	$(PY) scripts/build.py
 
 clean:  ## Remove generated output
-	rm -rf ../../dist/workstation
+	rm -rf site

@@ -1,9 +1,12 @@
-# Workstation setup (Atlas topic)
+# Workstation setup (kept in git, not published)
 
-Rules for this topic. The site-wide rules are in the repo root `CLAUDE.md`. Run commands from `topics/workstation/`.
+Not an Atlas topic: it is not in `topics.json`, not in the banner or the landing page, and never deployed. It keeps the same
+data model, checks and shared page so it looks the same. The site-wide content rules in the repo root `CLAUDE.md` still apply.
+Run commands from `workstation/` (or `make workstation-<target>` from the root).
 
-Same shape as the Certificates topic: `data/workstation.json` is the only place content lives, `scripts/build.py` turns it into
-`../../dist/workstation/index.html` with the shared page. Python 3 standard library only.
+`data/workstation.json` is the only place content lives, `scripts/build.py` turns it into `site/index.html` (outside `dist/`) with the
+shared page and a banner that names only this page. Links to Atlas topics are absolute (https://atlas.marcberthelette.com/...), since
+this page is not next to them. Python 3 standard library only.
 
 `data/workstation.json` holds `groups`, `entries` and `comparisons`. See `docs/data-model.md` for the format. `scripts/validate.py` (`make validate`)
 checks it. Content collected with AI help goes into the JSON with its source URLs. Say "unconfirmed" in `notes` when it can't be verified.
@@ -26,3 +29,9 @@ a minor or major version changed. When Ubuntu ships a new LTS, re-check every ap
 Page: this topic uses the shared page (`shared/topic.html`). Tab entries use the learning layout (parts, steps, tables, callouts, cards,
 checklists, fetched code examples: see `topics/gitops/docs/data-model.md`); short entries are flat. Examples are fetched by reference
 (`make examples`), never pasted: install scripts change, so the page shows the vendor's current command.
+
+Setup script: `setup/setup.sh` installs and configures the baseline from `setup/profile.json` (components on or off, settings such as
+git identity, kubectl minor version, aliases). It is the one place commands are written out rather than fetched, so when a step in the
+data changes (a vendor's install command, a repository line), change the matching `c_<component>` function too, and keep the components
+in the guide's order. It must stay idempotent: each component has a `CHECK` and is skipped when done. Test with `--dry-run` and `--list`;
+`bash -n` for syntax. The profile is public: no secrets, and git name and email stay empty (the script asks).

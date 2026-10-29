@@ -448,6 +448,12 @@
                 "Ubuntu: Terraform (or OpenTofu) and the Azure CLI. [Terraform](#terraform), [Azure CLI](#azure-cli)",
                 "Ubuntu: Docker Engine, then kind for a local cluster. [Containers](#docker)"
               ]
+            },
+            {
+              "type": "callout",
+              "kind": "tip",
+              "title": "Or run it all at once",
+              "text": "[setup.sh](../setup/setup.sh) runs these steps inside Ubuntu from a profile, [profile.json](../setup/profile.json), where each component is on or off. `--dry-run` shows what it would do, `--only kubectl,helm` runs just those, and it is safe to run again. WSL and Windows Terminal are still done by hand on Windows first."
             }
           ]
         },
@@ -2137,7 +2143,7 @@
           "part": "overview",
           "icon": "eye",
           "items": [
-            "Install from HashiCorp's apt repository so `apt upgrade` keeps it current. How to write Azure resources is in [Azure with Terraform](../azure/index.html)."
+            "Install from HashiCorp's apt repository so `apt upgrade` keeps it current. How to write Azure resources is in [Azure with Terraform](https://atlas.marcberthelette.com/azure/index.html)."
           ]
         },
         {
@@ -3209,7 +3215,7 @@
         {
           "title": "What it is",
           "items": [
-            "Install with the `get-helm-4` script or the community apt repository. Charts, values and commands are covered in [GitOps: Helm](../gitops/index.html#helm)."
+            "Install with the `get-helm-4` script or the community apt repository. Charts, values and commands are covered in [GitOps: Helm](https://atlas.marcberthelette.com/gitops/index.html#helm)."
           ]
         }
       ],
