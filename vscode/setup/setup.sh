@@ -133,7 +133,7 @@ DONE=(); SKIPPED=(); FAILED=()
 install_extensions() {
   step "extensions"
   if [[ -z "$CODE" ]]; then
-    warn "VS Code was not found. Install it on Windows (winget install Microsoft.VisualStudioCode, or code.visualstudio.com) and check 'Add to PATH'."
+    warn "VS Code was not found. Install it on Windows (winget.exe install Microsoft.VisualStudioCode from WSL, or code.visualstudio.com) and check 'Add to PATH'."
     return 1
   fi
   say "VS Code: $VSCODE_PATH  ($(win_code --version 2>/dev/null | head -1 | tr -d '\r'))"
@@ -316,6 +316,6 @@ if [[ $DRY == 0 ]]; then
   say ""
   say "Next: open a folder from Ubuntu with 'code .' (the first time VS Code installs its WSL server), then run"
   say "'Developer: Reload Window' once. Sign in from inside VS Code to: Claude Code, GitHub (pull requests, Actions), Azure."
-  say "For the terminal_font setting, install a Nerd Font on Windows (PowerShell): winget install DEVCOM.JetBrainsMonoNerdFont"
+  say "For the terminal_font setting, install a Nerd Font on Windows (from WSL, no PowerShell needed): winget.exe install DEVCOM.JetBrainsMonoNerdFont"
 fi
 exit $rc

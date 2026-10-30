@@ -2754,7 +2754,8 @@
       "notes": [
         "The exact Windows family name of the Nerd Font was not confirmed. The setting lists four spellings and VS Code uses the first that is installed; the Nerd Fonts FAQ says to use a font with 'Nerd Font Mono' (NFM) in the name for monospaced icons, and VS Code's docs show a Nerd Font as 'Hack NF'.",
         "The path of the Remote (WSL) settings file was not in the pages read, so the script writes only to the user settings file. The user settings apply in WSL windows too.",
-        "`files.trimTrailingWhitespace` is off for Markdown because two trailing spaces end a line there; that rule is Markdown's, not from the VS Code pages read."
+        "`files.trimTrailingWhitespace` is off for Markdown because two trailing spaces end a line there; that rule is Markdown's, not from the VS Code pages read.",
+        "Whether `terraform fmt` output differs between Terraform versions was not checked. ESLint was not compared with a CI command here; its README was not read for how it picks the project's ESLint."
       ],
       "related": [
         "start",
@@ -2884,12 +2885,65 @@
           ]
         },
         {
-          "title": "Install the font",
+          "title": "Format like CI does",
           "part": "use",
           "step": 2,
+          "icon": "check",
+          "items": [
+            "Format Document is `Shift+Alt+F` on Windows (`Ctrl+K Ctrl+F` formats the selection). It is VS Code's default, so setup.sh does not set it. It and format on save call the same formatter, so what they produce is what the extension's tool produces.",
+            "To match CI, the formatter must be the tool the pipeline runs, with the same version and the same config file. The profile already picks the same tool; the rest depends on the project:",
+            {
+              "type": "table",
+              "columns": [
+                "Language",
+                "Formats with",
+                "CI command it matches",
+                "What must also agree"
+              ],
+              "rows": [
+                [
+                  "Terraform",
+                  "`terraform fmt`, through the HashiCorp extension",
+                  "`terraform fmt -check -recursive`",
+                  "`terraform` on the PATH inside Ubuntu. If it is not found, formatting silently fails."
+                ],
+                [
+                  "Python",
+                  "`ruff format`, through the Ruff extension",
+                  "`ruff format --check`",
+                  "The Ruff version. The extension ships its own, but prefers the one in the project's Python environment, then the PATH. Pin the CI version in the project."
+                ],
+                [
+                  "JavaScript and TypeScript",
+                  "Prettier extension",
+                  "`prettier --check`",
+                  "The extension uses the project's own `prettier` in `node_modules` when there is one, and reads the project's config file. With `prettier.requireConfig` on, a project without one is not formatted."
+                ]
+              ],
+              "caption": "Commands from the Terraform, Ruff and Prettier CLI docs; extension behaviour from their READMEs."
+            },
+            {
+              "type": "callout",
+              "kind": "gotcha",
+              "title": "tflint is not a formatter",
+              "text": "TFLint is a linter, run from the command line or in the pipeline. Its README mentions no VS Code extension, and it describes no formatter (its `--fix` fixes lint issues). Run `tflint` in the Ubuntu terminal for the same result as CI; format on save is `terraform fmt`."
+            },
+            {
+              "type": "callout",
+              "kind": "default",
+              "title": "Ruff format does not sort imports",
+              "text": "The Ruff docs say the formatter does not sort imports; that is done by `ruff check --select I --fix`. The profile sorts imports on save through a separate code action. If CI only runs `ruff format --check`, imports are not what it checks."
+            },
+            "To see which Ruff is in use, run `Ruff: Print debug information` or `Ruff: Show server logs`. Terraform's `terraform fmt` has no config file. For Prettier and Ruff, the project's own `.prettierrc` or `ruff.toml` decides, which is also what CI reads."
+          ]
+        },
+        {
+          "title": "Install the font",
+          "part": "use",
+          "step": 3,
           "icon": "download",
           "items": [
-            "In PowerShell: `winget install DEVCOM.JetBrainsMonoNerdFont` (the package exists in the winget-pkgs repository). Then restart VS Code. Windows Terminal needs the same font set in its Ubuntu profile."
+            "From WSL bash: `winget.exe install DEVCOM.JetBrainsMonoNerdFont` (winget.exe is on the WSL PATH; PowerShell is not needed) (the package exists in the winget-pkgs repository). Then restart VS Code. Windows Terminal needs the same font set in its Ubuntu profile."
           ]
         },
         {
@@ -2936,6 +2990,39 @@
         {
           "label": "winget-pkgs: DEVCOM.JetBrainsMonoNerdFont",
           "url": "https://github.com/microsoft/winget-pkgs/tree/master/manifests/d/DEVCOM/JetBrainsMonoNerdFont"
+        },
+        {
+          "label": "Ruff docs: The Ruff Formatter",
+          "url": "https://docs.astral.sh/ruff/formatter/"
+        },
+        {
+          "label": "Terraform CLI: terraform fmt",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/fmt"
+        },
+        {
+          "label": "Prettier docs: CLI",
+          "url": "https://prettier.io/docs/cli"
+        },
+        {
+          "label": "ruff-vscode README",
+          "url": "https://github.com/astral-sh/ruff-vscode"
+        },
+        {
+          "label": "prettier-vscode README",
+          "url": "https://github.com/prettier/prettier-vscode"
+        },
+        {
+          "label": "vscode-terraform README",
+          "url": "https://github.com/hashicorp/vscode-terraform"
+        },
+        {
+          "label": "TFLint README",
+          "url": "https://github.com/terraform-linters/tflint"
+        },
+        {
+          "label": "VS Code docs: Basic editing",
+          "url": "https://code.visualstudio.com/docs/editing/codebasics",
+          "date": "2026-10-28"
         }
       ]
     },
