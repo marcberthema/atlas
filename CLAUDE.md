@@ -3,7 +3,7 @@
 A personal knowledge base: a collection of references to look things up in, not Q&A. Each topic is a set of facts kept in
 JSON, generated into static HTML. Published as a Cloudflare Worker with static assets at atlas.marcberthelette.com; only `dist/` is exposed.
 Built with AI assistance. Topics now: Azure with Terraform, GitOps, Identity providers, Certificates, Enterprise topologies, Architecture and design patterns.
-Kept in git but not published: Workstation setup (`workstation/`).
+Kept in git but not published: Workstation setup (`workstation/`) and Visual Studio Code setup (`vscode/`).
 
 ---
 
@@ -33,6 +33,8 @@ topics.json + shared/ -> the top banner on every page and the landing page, dist
 - `dist/` is generated and committed. Deploy with `make deploy` (wrangler, one Worker named `atlas` serving `dist/`); there is no build on Cloudflare.
 - `workstation/` is not a topic: same data model, checks and shared page, but it builds into `workstation/site/index.html`
   (outside `dist/`, so never deployed) with a banner that names only itself. It is not in `topics.json`. Read `workstation/CLAUDE.md`.
+- `vscode/` is the same kind of unpublished resource (`vscode/site/index.html`). Its entries are VS Code extensions, tracked against the
+  Marketplace by `make vscode-check`, and its `setup/profile.json` must agree with them (`make vscode-validate` checks). Read `vscode/CLAUDE.md`.
 - Adding a topic: create `topics/<id>/` (data, scripts/build.py, templates/index.html, Makefile, CLAUDE.md), add it to
   `topics.json` and to `TOPICS` and the pattern rules in the root `Makefile`.
 

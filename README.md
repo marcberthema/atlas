@@ -20,6 +20,11 @@ fnm, kubectl, Terraform, Azure CLI, Docker, Claude Code). Same format and look a
 into `workstation/site/index.html` and is never deployed. Open that file in a browser, or `make workstation-build` to rebuild it.
 `workstation/setup/` has a script that installs and configures everything from a JSON profile.
 
+[Visual Studio Code setup](vscode/CLAUDE.md): the extensions that fit that toolchain and how each is configured, for VS Code on Windows
+working in WSL. Same arrangement: it lives in `vscode/`, builds into `vscode/site/index.html` and is never deployed
+(`make vscode-build`; `make vscode-check` compares the extension versions with the Marketplace). `vscode/setup/setup.sh` installs the
+extensions and merges the settings from `vscode/setup/profile.json`.
+
 ## Use it
 
 ```bash

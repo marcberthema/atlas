@@ -1,0 +1,18 @@
+{
+  "title": "Visual Studio Code setup",
+  "tabs": [
+    {"id": "start", "label": "Start here"},
+    {"id": "wsl", "label": "WSL"},
+    {"id": "claude-code", "label": "Claude Code"},
+    {"id": "g-python", "label": "Python", "group": "g-python"},
+    {"id": "g-node", "label": "JavaScript", "group": "g-node"},
+    {"id": "g-k8s", "label": "Kubernetes", "group": "g-k8s"},
+    {"id": "g-iac", "label": "Terraform and Azure", "group": "g-iac"},
+    {"id": "g-containers", "label": "Containers", "group": "g-containers"},
+    {"id": "g-git", "label": "Git and GitHub", "group": "g-git"},
+    {"id": "g-files", "label": "Shell and files", "group": "g-files"},
+    {"id": "settings", "label": "Settings"},
+    {"id": "others", "label": "Not installed"},
+    {"id": "compare", "label": "Compare"}
+  ]
+}
