@@ -1,7 +1,7 @@
 {
   "title": "Workstation setup",
   "intro": "From a new Windows PC to a working Linux development setup: WSL 2 with Ubuntu LTS, Windows Terminal, zsh, uv and fnm, and the Kubernetes, Terraform, Azure, Docker and Claude Code tools.",
-  "checked": "2026-10-29",
+  "checked": "2026-10-31",
   "scope": "Free to use tools first, installed per user inside WSL. A tool with a paid plan or a licence that is not open source (Docker Desktop, Claude Code, Terraform) says so and names the free alternative.",
   "groups": [
     {
@@ -2862,6 +2862,65 @@
         {
           "label": "ajeetdsouza/zoxide README",
           "url": "https://github.com/ajeetdsouza/zoxide"
+        }
+      ]
+    },
+    {
+      "id": "jq",
+      "name": "jq",
+      "group": "shell",
+      "level": "ref",
+      "summary": "A command line JSON processor: filter, reshape and pretty print JSON from `curl`, `kubectl -o json`, `az` and `gh`.",
+      "status": "active",
+      "started": {
+        "date": "2012-07-18",
+        "basis": "GitHub repository created",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "Not a CNCF project."
+      },
+      "license": "MIT",
+      "version": {
+        "name": "jq",
+        "analysed": "1.8.2",
+        "released": "2026-06-20",
+        "docs": "jq manual and GitHub releases. Ubuntu 26.04 ships 1.8.1.",
+        "checked": "2026-10-31"
+      },
+      "track": {
+        "github": "jqlang/jq"
+      },
+      "related": [
+        "zsh"
+      ],
+      "links": [
+        {
+          "label": "Repository",
+          "url": "https://github.com/jqlang/jq"
+        },
+        {
+          "label": "Manual",
+          "url": "https://jqlang.org/manual/"
+        }
+      ],
+      "sections": [
+        {
+          "title": "What it is",
+          "items": [
+            "`sudo apt install jq`, then for example `kubectl get pods -o json | jq '.items[].metadata.name'`."
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "jqlang/jq README",
+          "url": "https://github.com/jqlang/jq"
+        },
+        {
+          "label": "jq manual",
+          "url": "https://jqlang.org/manual/"
         }
       ]
     },

@@ -61,7 +61,7 @@ EOF
 # --- Components: one function each, in the guide's order ------------------------
 # DESC is shown by --list and --dry-run; CHECK is a command that succeeds when the component is already done.
 declare -A DESC CHECK
-ORDER=(apt_upgrade wsl_conf git gh zsh zsh_plugins fzf zoxide starship uv fnm pnpm kubectl kubectx helm k9s kind kubelogin krew
+ORDER=(apt_upgrade wsl_conf git gh zsh zsh_plugins fzf zoxide jq starship uv fnm pnpm kubectl kubectx helm k9s kind kubelogin krew
        terraform opentofu tflint azure_cli docker claude_code claude_statusline zshrc)
 
 in_wsl() { grep -qi microsoft /proc/version; }
@@ -150,6 +150,10 @@ c_fzf() { apt_install fzf; }
 DESC[zoxide]="zoxide from apt (z <dir>)"
 CHECK[zoxide]="have zoxide"
 c_zoxide() { apt_install zoxide; }
+
+DESC[jq]="jq from apt (JSON on the command line)"
+CHECK[jq]="have jq"
+c_jq() { apt_install jq; }
 
 DESC[starship]="Starship prompt (install script) and ~/.config/starship.toml"
 CHECK[starship]="have starship && [[ -f ~/.config/starship.toml ]]"
