@@ -1,0 +1,84 @@
+{
+  "about": "Default profile for setup.sh. Turn an extension or a settings group off with false, or copy this file and pass it with --profile. 'where' is wsl (installed inside Ubuntu, where your tools are) or windows (the UI side, for the WSL extension itself). No secrets here: the repository is public.",
+  "extensions": {
+    "ms-vscode-remote.remote-wsl": {"on": true, "where": "windows"},
+    "anthropic.claude-code": {"on": true, "where": "wsl"},
+    "ms-python.python": {"on": true, "where": "wsl"},
+    "charliermarsh.ruff": {"on": true, "where": "wsl"},
+    "dbaeumer.vscode-eslint": {"on": true, "where": "wsl"},
+    "esbenp.prettier-vscode": {"on": true, "where": "wsl"},
+    "ms-kubernetes-tools.vscode-kubernetes-tools": {"on": true, "where": "wsl"},
+    "redhat.vscode-yaml": {"on": true, "where": "wsl"},
+    "ms-kubernetes-tools.vscode-aks-tools": {"on": true, "where": "wsl"},
+    "hashicorp.terraform": {"on": true, "where": "wsl"},
+    "ms-azuretools.vscode-azureresourcegroups": {"on": true, "where": "wsl"},
+    "ms-azuretools.vscode-containers": {"on": true, "where": "wsl"},
+    "ms-vscode-remote.remote-containers": {"on": false, "where": "windows"},
+    "github.vscode-pull-request-github": {"on": true, "where": "wsl"},
+    "github.vscode-github-actions": {"on": true, "where": "wsl"},
+    "eamodio.gitlens": {"on": false, "where": "wsl"},
+    "timonwong.shellcheck": {"on": true, "where": "wsl"},
+    "tamasfe.even-better-toml": {"on": false, "where": "wsl"},
+    "editorconfig.editorconfig": {"on": false, "where": "wsl"}
+  },
+  "settings": {
+    "files": {
+      "on": true,
+      "values": {
+        "files.eol": "\n",
+        "files.insertFinalNewline": true,
+        "files.trimTrailingWhitespace": true,
+        "[markdown]": {"files.trimTrailingWhitespace": false}
+      }
+    },
+    "python_ruff": {
+      "on": true,
+      "needs": ["charliermarsh.ruff"],
+      "values": {
+        "[python]": {
+          "editor.formatOnSave": true,
+          "editor.codeActionsOnSave": {"source.fixAll": "explicit", "source.organizeImports": "explicit"},
+          "editor.defaultFormatter": "charliermarsh.ruff"
+        }
+      }
+    },
+    "eslint": {
+      "on": true,
+      "needs": ["dbaeumer.vscode-eslint"],
+      "values": {
+        "editor.codeActionsOnSave": {"source.fixAll.eslint": "explicit"}
+      }
+    },
+    "prettier": {
+      "on": true,
+      "needs": ["esbenp.prettier-vscode"],
+      "values": {
+        "prettier.requireConfig": true,
+        "[javascript]": {"editor.defaultFormatter": "esbenp.prettier-vscode", "editor.formatOnSave": true},
+        "[javascriptreact]": {"editor.defaultFormatter": "esbenp.prettier-vscode", "editor.formatOnSave": true},
+        "[typescript]": {"editor.defaultFormatter": "esbenp.prettier-vscode", "editor.formatOnSave": true},
+        "[typescriptreact]": {"editor.defaultFormatter": "esbenp.prettier-vscode", "editor.formatOnSave": true}
+      }
+    },
+    "terraform": {
+      "on": true,
+      "needs": ["hashicorp.terraform"],
+      "values": {
+        "[terraform]": {"editor.defaultFormatter": "hashicorp.terraform", "editor.formatOnSave": true, "editor.formatOnSaveMode": "file"},
+        "[terraform-vars]": {"editor.defaultFormatter": "hashicorp.terraform", "editor.formatOnSave": true, "editor.formatOnSaveMode": "file"}
+      }
+    },
+    "terminal_font": {
+      "on": true,
+      "values": {
+        "terminal.integrated.fontFamily": "'JetBrainsMono Nerd Font Mono', 'JetBrainsMono NFM', 'JetBrainsMono Nerd Font', 'JetBrainsMono NF', monospace"
+      }
+    },
+    "hide_copilot": {
+      "on": false,
+      "values": {
+        "chat.disableAIFeatures": true
+      }
+    }
+  }
+}

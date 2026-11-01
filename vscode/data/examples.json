@@ -1,0 +1,57 @@
+{
+  "https://code.visualstudio.com/docs/configure/extensions/extension-marketplace | \"recommendations\"": {
+    "body": "{\n  \"recommendations\": [\"dbaeumer.vscode-eslint\", \"esbenp.prettier-vscode\"]\n}",
+    "fetched": "2026-10-29",
+    "checked": "2026-10-29"
+  },
+  "https://code.visualstudio.com/docs/python/environments | \"python-envs.alwaysUseUv\": true": {
+    "body": "{\n  \"python-envs.alwaysUseUv\": true\n}",
+    "fetched": "2026-10-29",
+    "checked": "2026-10-29"
+  },
+  "https://code.visualstudio.com/docs/remote/troubleshooting | text=auto eol=lf": {
+    "body": "* text=auto eol=lf\n*.{cmd,[cC][mM][dD]} text eol=crlf\n*.{bat,[bB][aA][tT]} text eol=crlf",
+    "fetched": "2026-10-29",
+    "checked": "2026-10-29"
+  },
+  "https://code.visualstudio.com/docs/remote/wsl | \"ms-azuretools.vscode-containers\"": {
+    "body": "\"remote.extensionKind\": {\n    \"ms-azuretools.vscode-containers\": [ \"ui\" ],\n    \"ms-vscode-remote.remote-ssh-edit\": [ \"workspace\" ]\n}",
+    "fetched": "2026-10-29",
+    "checked": "2026-10-29"
+  },
+  "https://code.visualstudio.com/docs/terminal/appearance | Hack NF": {
+    "body": "\"terminal.integrated.fontFamily\": \"'Hack NF'\"",
+    "fetched": "2026-10-29",
+    "checked": "2026-10-29"
+  },
+  "https://github.com/astral-sh/ruff-vscode | \"source.organizeImports\": \"explicit\"\n    },\n    \"editor.defaultFormatter\": \"charliermarsh.ruff\"": {
+    "body": "{\n  \"[python]\": {\n    \"editor.formatOnSave\": true,\n    \"editor.codeActionsOnSave\": {\n      \"source.fixAll\": \"explicit\",\n      \"source.organizeImports\": \"explicit\"\n    },\n    \"editor.defaultFormatter\": \"charliermarsh.ruff\"\n  }\n}",
+    "fetched": "2026-10-29",
+    "checked": "2026-10-29"
+  },
+  "https://github.com/hashicorp/vscode-terraform | \"editor.formatOnSaveMode\": \"file\"": {
+    "body": "\"[terraform]\": {\n  \"editor.defaultFormatter\": \"hashicorp.terraform\",\n  \"editor.formatOnSave\": true,\n  \"editor.formatOnSaveMode\": \"file\"\n},\n\"[terraform-vars]\": {\n  \"editor.defaultFormatter\": \"hashicorp.terraform\",\n  \"editor.formatOnSave\": true,\n  \"editor.formatOnSaveMode\": \"file\"\n},\n\"[terraform-stack]\": {\n  \"editor.defaultFormatter\": \"hashicorp.terraform\",\n  \"editor.formatOnSave\": true,\n  \"editor.formatOnSaveMode\": \"file\"\n},\n\"[terraform-deploy]\": {\n  \"editor.defaultFormatter\": \"hashicorp.terraform\",\n  \"editor.formatOnSave\": true,\n  \"editor.formatOnSaveMode\": \"file\"\n},\n\"[terraform-test]\": {\n  \"editor.defaultFormatter\": \"hashicorp.terraform\",\n  \"editor.formatOnSave\": true,\n  \"editor.formatOnSaveMode\": \"file\"\n},\n\"[terraform-mock]\": {\n  \"editor.defaultFormatter\": \"hashicorp.terraform\",\n  \"editor.formatOnSave\": true,\n  \"editor.formatOnSaveMode\": \"file\"\n},\n\"[terraform-search]\": {\n  \"editor.defaultFormatter\": \"hashicorp.terraform\",\n  \"editor.formatOnSave\": true,\n  \"editor.formatOnSaveMode\": \"file\"\n},\n\"[terraform-policy]\": {\n  \"editor.defaultFormatter\": \"hashicorp.terraform\",\n  \"editor.formatOnSave\": true,\n  \"editor.formatOnSaveMode\": \"file\"\n},\n\"[terraform-policytest]\": {\n  \"editor.defaultFormatter\": \"hashicorp.terraform\",\n  \"editor.formatOnSave\": true,\n  \"editor.formatOnSaveMode\": \"file\"\n}",
+    "fetched": "2026-10-29",
+    "checked": "2026-10-29"
+  },
+  "https://github.com/microsoft/vscode-eslint | \"source.fixAll.eslint\": \"explicit\"": {
+    "body": "{\n  \"editor.codeActionsOnSave\": {\n    \"source.fixAll.eslint\": \"explicit\"\n  }\n}",
+    "fetched": "2026-10-29",
+    "checked": "2026-10-29"
+  },
+  "https://github.com/prettier/prettier-vscode | \"esbenp.prettier-vscode\",\n  \"[javascript]\": {\n    \"editor.defaultFormatter\": \"esbenp.prettier-vscode\"": {
+    "body": "{\n  \"editor.defaultFormatter\": \"esbenp.prettier-vscode\",\n  \"[javascript]\": {\n    \"editor.defaultFormatter\": \"esbenp.prettier-vscode\"\n  }\n}",
+    "fetched": "2026-10-29",
+    "checked": "2026-10-29"
+  },
+  "https://github.com/redhat-developer/vscode-yaml | # yaml-language-server: $schema=<schema-url-or-path>": {
+    "body": "# yaml-language-server: $schema=<schema-url-or-path>",
+    "fetched": "2026-10-29",
+    "checked": "2026-10-29"
+  },
+  "https://github.com/vscode-shellcheck/vscode-shellcheck | code --install-extension timonwong.shellcheck": {
+    "body": "code --install-extension timonwong.shellcheck",
+    "fetched": "2026-10-29",
+    "checked": "2026-10-29"
+  }
+}

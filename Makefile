@@ -41,3 +41,6 @@ patterns-%:
 # Not a topic: kept in git, never published (outside dist/). make workstation-build, workstation-check, ...
 workstation-%:
 	$(MAKE) -C workstation $*
+# Same for the VS Code setup: make vscode-build, vscode-check, ...
+vscode-%:
+	$(MAKE) -C vscode $*
