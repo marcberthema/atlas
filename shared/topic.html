@@ -12,7 +12,7 @@ h2{font-size:1.05rem;color:var(--acc);margin:20px 0 2px;border-bottom:1px solid 
 .sub{color:var(--mut);margin:0 0 12px;font-size:.95rem}
 .note{border-left:4px solid var(--acc);background:var(--card);padding:8px 12px;border-radius:4px;font-size:.92rem;margin-bottom:12px}
 .about{color:var(--mut);font-size:.9rem;margin:0 0 6px}
-.bar{position:sticky;top:0;background:var(--bg);padding:8px 0;border-bottom:1px solid var(--rule);z-index:2}
+.bar{position:sticky;top:var(--atlash,0px);background:var(--bg);padding:8px 0;border-bottom:1px solid var(--rule);z-index:2}
 input[type=search]{font:inherit;width:100%;padding:8px 10px;border:1px solid var(--rule);border-radius:8px;background:var(--card);color:var(--fg)}
 .tabs{display:flex;gap:4px;margin-bottom:8px;flex-wrap:wrap}
 .tab{font:inherit;color:var(--fg);background:transparent;border:0;border-bottom:3px solid transparent;padding:4px 10px;cursor:pointer}
@@ -59,6 +59,10 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
 .chips{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 4px}
 .chip{font-size:.8rem;border:1px solid var(--rule);background:var(--card);border-radius:999px;padding:1px 10px;white-space:nowrap}
 .chip b{font-weight:600}
+.chip.main{font-size:.9rem;border-color:var(--acc);padding:2px 12px}
+.chips .more{display:contents}
+.chips .more .chip{font-size:.74rem;color:var(--mut);background:transparent}
+.chips .more .chip.ok{color:var(--ok)}
 .chip.ok{color:var(--ok);border-color:var(--ok)}
 details.ae{font-size:.88rem;color:var(--mut);margin:4px 0 8px}
 details.ae summary{cursor:pointer}
@@ -67,15 +71,15 @@ details.ae .ver{color:var(--fg)}
 .pills a{display:inline-flex;gap:5px;align-items:center;text-decoration:none;border:1px solid var(--rule);border-radius:8px;padding:3px 10px;font-size:.88rem}
 .pills a:hover{border-color:var(--acc)}
 .pills .ic{width:14px;height:14px}
-.jump{position:sticky;top:var(--barh,0);z-index:1;background:var(--bg);display:flex;gap:4px;overflow-x:auto;padding:6px 0;border-bottom:1px solid var(--rule);margin:8px 0 4px}
+.jump{position:sticky;top:calc(var(--atlash,0px) + var(--barh,0px));z-index:1;background:var(--bg);display:flex;gap:4px;overflow-x:auto;padding:6px 0;border-bottom:1px solid var(--rule);margin:8px 0 4px}
 dialog .jump{position:static}
 .jump a{display:inline-flex;gap:6px;align-items:center;white-space:nowrap;text-decoration:none;padding:4px 10px;border-radius:999px;font-size:.9rem}
 .jump a:hover,.jump a.on{background:var(--card)}
-.part{margin-top:22px;scroll-margin-top:calc(var(--barh,0px) + 56px)}
+.part{margin-top:22px;scroll-margin-top:calc(var(--atlash,0px) + var(--barh,0px) + 56px)}
 .ph{display:flex;align-items:center;gap:10px;font-size:1.15rem;color:var(--acc);margin:0 0 4px;padding:6px 0;border-bottom:2px solid var(--acc)}
 .ph .ic{width:24px;height:24px}
 .ph small{font-weight:400;color:var(--mut);font-size:.88rem;margin-left:auto}
-.sec{margin:14px 0 4px;scroll-margin-top:calc(var(--barh,0px) + 56px)}
+.sec{margin:14px 0 4px;scroll-margin-top:calc(var(--atlash,0px) + var(--barh,0px) + 56px)}
 .sec>h4,details.sec>summary{display:flex;align-items:center;gap:8px;margin:0 0 6px;font-size:1rem;color:var(--fg)}
 .sec>h4 .ic{color:var(--acc)}
 .step{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--acc);color:var(--bg);font-size:.8rem;font-weight:700;flex:none}
@@ -254,8 +258,8 @@ function svgDiagram(d){
 function learning(e){
   const v=e.version,pid=p=>'p-'+e.id+'-'+p;
   let h='<h3>'+esc(e.name)+'</h3><p class="meta">'+esc(e.summary)+'</p>'
-    +'<div class="chips"><span class="chip"><b>Version analysed</b> '+esc(v.name)+' '+esc(v.analysed)+'</span><span class="chip">released '+esc(v.released)+'</span><span class="chip">checked '+esc(v.checked)+'</span>'
-    +'<span class="chip">started '+started(e)+'</span><span class="chip '+(e.status==='active'?'ok':'')+'">'+esc(e.status)+'</span><span class="chip">'+esc(e.license)+'</span>'+cncf(e).replace('class="badge','class="chip')+'</div>'
+    +'<div class="chips"><span class="chip main"><b>Version analysed</b> '+esc(v.name)+' '+esc(v.analysed)+'</span><span class="more"><span class="chip">released '+esc(v.released)+'</span><span class="chip">checked '+esc(v.checked)+'</span>'
+    +'<span class="chip">started '+started(e)+'</span><span class="chip '+(e.status==='active'?'ok':'')+'">'+esc(e.status)+'</span><span class="chip">'+esc(e.license)+'</span>'+cncf(e).replace('class="badge','class="chip')+'</span></div>'
     +'<details class="ae"><summary>About this entry: sources and how it was checked</summary><div class="ver"><div><span>Source:</span> '+esc(v.docs||'')+'</div>'
     +'<div><span>Started:</span> '+started(e)+' <span>('+esc(e.started.basis)+')</span></div>'+(e.maintainer?'<div><span>Maintainer:</span> '+esc(e.maintainer)+'</div>':'')
     +'<div><span>CNCF:</span> '+esc(e.cncf.text)+'</div></div></details>';
