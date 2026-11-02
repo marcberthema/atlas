@@ -18,8 +18,9 @@ body{font:16px/1.45 system-ui,sans-serif;background:var(--bg);color:var(--fg);ma
 h1{font-size:1.4rem;color:var(--acc);margin:0 0 2px}
 .sub{color:var(--mut);margin:0 0 12px;font-size:.95rem}
 .note{border-left:4px solid var(--acc);background:var(--card);padding:8px 12px;border-radius:4px;font-size:.92rem;margin-bottom:12px}
-.bar{position:sticky;top:0;background:var(--bg);padding:8px 0;border-bottom:1px solid var(--rule);z-index:2}
-.chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+.bar{position:sticky;top:var(--atlash,0px);background:var(--bg);padding:8px 0;border-bottom:1px solid var(--rule);z-index:2}
+.chips{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:8px}
+.chips .lbl{color:var(--mut);font-size:.9rem}
 .chip{font:inherit;color:var(--fg);border:2px solid;border-radius:999px;padding:5px 14px;cursor:pointer;display:inline-flex;gap:6px;align-items:center}
 .chip[data-t="0"]{background:var(--t0-bg);border-color:var(--t0-bd)}
 .chip[data-t="1"]{background:var(--t1-bg);border-color:var(--t1-bd)}
@@ -36,10 +37,11 @@ button.svc:hover,button.rel:hover{filter:brightness(.97);box-shadow:0 0 0 2px va
 button:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
 .svc b,.rel b{display:block}
 .svc span,.rel small{color:var(--mut);font-size:.92rem;display:block}
-[data-t="0"].svc,[data-t="0"].rel{background:var(--t0-bg);border-color:var(--t0-bd)}
-[data-t="1"].svc,[data-t="1"].rel{background:var(--t1-bg);border-color:var(--t1-bd)}
-[data-t="2"].svc,[data-t="2"].rel{background:var(--t2-bg);border-color:var(--t2-bd)}
-[data-t="3"].svc,[data-t="3"].rel{background:var(--t3-bg);border-color:var(--t3-bd)}
+.svc,.rel{background:var(--card);border-color:var(--rule)}
+[data-t="0"].svc,[data-t="0"].rel{border-left-color:var(--t0-bd)}
+[data-t="1"].svc,[data-t="1"].rel{border-left-color:var(--t1-bd)}
+[data-t="2"].svc,[data-t="2"].rel{border-left-color:var(--t2-bd)}
+[data-t="3"].svc,[data-t="3"].rel{border-left-color:var(--t3-bd)}
 .tag{float:right;font-size:.75rem;color:var(--mut);margin-left:6px}
 .badges{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
 .badge{font-size:.74rem;border:1px solid var(--rule);background:var(--bg);color:var(--mut);border-radius:999px;padding:0 8px;white-space:nowrap}
@@ -148,7 +150,7 @@ const SUBSIMPLE=D.tiers.filter(t=>on[t.tier]).map(t=>t.label+': '+t.description)
 const SUBFULL=SUBSIMPLE.replace(/ Click a card.*$/,'')+' Click a card for what it provides, what it needs, and how to build it with Terraform.';
 document.getElementById('note').textContent='Generated from data/services.json. Entries marked unconfirmed were imported from a hand-drafted page and not yet checked against Microsoft Learn. Third-party Marketplace services are deliberately left out.';
 const chips=document.getElementById('chips');
-chips.innerHTML=tiersShown.map(t=>'<button class="chip" type="button" data-t="'+t+'" aria-pressed="true">'+esc(D.tiers.find(x=>x.tier===t).label)+' <small>('+D.services.filter(s=>s.tier===t).length+')</small></button>').join('');
+chips.innerHTML='<span class="lbl">Show:</span>'+tiersShown.map(t=>'<button class="chip" type="button" data-t="'+t+'" aria-pressed="true">'+esc(D.tiers.find(x=>x.tier===t).label)+' <small>('+D.services.filter(s=>s.tier===t).length+')</small></button>').join('');
 
 function tfLab(t){
   const l=TFLABEL[t.status];

@@ -6,19 +6,51 @@
 @media(prefers-color-scheme:dark){:root{--bg:#14181d;--fg:#e8ecef;--mut:#9aa6b2;--acc:#7fb2e5;--rule:#2b333b;--card:#1c2229}}
 *{box-sizing:border-box}
 body{font:16px/1.45 system-ui,sans-serif;background:var(--bg);color:var(--fg);margin:0;padding:16px;max-width:1100px;margin-inline:auto}
-h1{font-size:1.4rem;color:var(--acc);margin:0 0 2px}
+h1{font-size:1.6rem;color:var(--acc);margin:18px 0 2px}
 .sub{color:var(--mut);margin:0 0 16px}
-.topics{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:8px}
-a.topic{color:inherit;text-decoration:none;border:1px solid var(--rule);border-left:6px solid var(--acc);border-radius:8px;padding:10px 12px;background:var(--card);display:block}
-a.topic:hover{box-shadow:0 0 0 2px var(--acc)}
-a.topic:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
-a.topic b{display:block}
-a.topic span{color:var(--mut);font-size:.92rem}
+input[type=search]{font:inherit;width:100%;padding:12px 14px;border:1px solid var(--rule);border-radius:10px;background:var(--card);color:var(--fg)}
+input[type=search]:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+.hint{color:var(--mut);font-size:.85rem;margin:6px 0 0}
+h2{font-size:1rem;color:var(--acc);text-transform:uppercase;letter-spacing:.04em;margin:0 0 8px}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px;align-items:start;margin-top:22px}
+.topics{display:grid;gap:8px}
+a.topic,a.hit{color:inherit;text-decoration:none;border:1px solid var(--rule);border-left:6px solid var(--acc);border-radius:8px;padding:10px 12px;background:var(--card);display:block}
+a.topic:hover,a.hit:hover{box-shadow:0 0 0 2px var(--acc)}
+a.topic:focus-visible,a.hit:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+a.topic b,a.hit b{display:block}
+a.topic span,a.hit span{color:var(--mut);font-size:.92rem;display:block}
+a.topic small,a.hit small{color:var(--acc);font-size:.8rem}
+#res{margin-top:16px;display:grid;gap:8px}
+[hidden]{display:none!important}
+#res .count{color:var(--mut);font-size:.9rem}
 /*__BANNER_CSS__*/
 </style></head><body>
 <!--__BANNER__-->
+<main>
 <h1>__NAME__</h1>
 <p class="sub">__TAGLINE__</p>
-<main class="topics"><!--__TOPICS__--></main>
+<input type="search" id="q" placeholder="Search every topic: name or keyword" aria-label="Search every topic" autocomplete="off">
+<p class="hint">Press / to search. Pick a family above to see only its topics.</p>
+<div id="res" role="region" aria-live="polite" aria-label="Search results" hidden></div>
+<div class="cols" id="fams"><!--__TOPICS__--></div>
+</main>
 <!--__FOOTER__-->
+<script id="idx" type="application/json">/*__INDEX__*/</script>
+<script>
+// Rows are [topic id, topic label, entry id, name, summary]; a hit opens the entry in its topic.
+const I=JSON.parse(document.getElementById('idx').textContent),q=document.getElementById('q'),res=document.getElementById('res'),fams=document.getElementById('fams');
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function run(){
+  const w=q.value.toLowerCase().split(/\s+/).filter(Boolean);
+  fams.hidden=w.length>0;res.hidden=!w.length;
+  if(!w.length)return;
+  const hits=I.map(r=>{const n=r[3].toLowerCase(),all=(n+' '+r[4].toLowerCase());
+    return w.every(x=>all.includes(x))?[w.every(x=>n.includes(x))?0:1,r]:null}).filter(Boolean).sort((a,b)=>a[0]-b[0]).slice(0,40);
+  res.innerHTML='<p class="count">'+hits.length+(hits.length===40?'+':'')+' result'+(hits.length===1?'':'s')+'</p>'
+    +hits.map(h=>{const r=h[1];return '<a class="hit" href="'+r[0]+'/index.html#'+encodeURIComponent(r[2])+'"><small>'+esc(r[1])+'</small><b>'+esc(r[3])+'</b><span>'+esc(r[4])+'</span></a>'}).join('');
+}
+q.addEventListener('input',run);
+q.addEventListener('keydown',e=>{if(e.key==='Escape'){q.value='';run()}});
+addEventListener('keydown',e=>{if(e.key==='/'&&document.activeElement!==q&&!e.ctrlKey&&!e.metaKey){e.preventDefault();q.focus()}});
+</script>
 </body></html>
