@@ -30,6 +30,8 @@ azure-%:
 	$(MAKE) -C topics/azure $*
 gitops-%:
 	$(MAKE) -C topics/gitops $*
+terraform-%:
+	$(MAKE) -C topics/terraform $*
 identity-%:
 	$(MAKE) -C topics/identity $*
 certificates-%:

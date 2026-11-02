@@ -1,0 +1,142 @@
+{
+  "https://developer.hashicorp.com/terraform/cli/commands/apply | terraform apply -var-file='my-vars.tfvars'": {
+    "body": "$ terraform apply -var-file='my-vars.tfvars'",
+    "fetched": "2026-11-02",
+    "checked": "2026-11-02"
+  },
+  "https://developer.hashicorp.com/terraform/cli/commands/destroy | terraform apply -destroy": {
+    "body": "terraform apply -destroy",
+    "fetched": "2026-11-02",
+    "checked": "2026-11-02"
+  },
+  "https://developer.hashicorp.com/terraform/cli/commands/destroy | terraform plan -destroy": {
+    "body": "terraform plan -destroy",
+    "fetched": "2026-11-02",
+    "checked": "2026-11-02"
+  },
+  "https://developer.hashicorp.com/terraform/cli/commands/import | terraform import aws_instance.foo i-abcd1234": {
+    "body": "$ terraform import aws_instance.foo i-abcd1234",
+    "fetched": "2026-11-02",
+    "checked": "2026-11-02"
+  },
+  "https://developer.hashicorp.com/terraform/cli/commands/output | terraform output -json instance_ips": {
+    "body": "$ terraform output -json instance_ips | jq -r '.[0]'\n54.43.114.12",
+    "fetched": "2026-11-02",
+    "checked": "2026-11-02"
+  },
+  "https://developer.hashicorp.com/terraform/cli/commands/plan | terraform plan -var='env=prod'": {
+    "body": "$ terraform plan -var='env=prod'",
+    "fetched": "2026-11-02",
+    "checked": "2026-11-02"
+  },
+  "https://developer.hashicorp.com/terraform/cli/commands/providers/lock | -platform=windows_amd64": {
+    "body": "terraform providers lock \\\n  -platform=windows_amd64 \\ # 64-bit Windows\n  -platform=darwin_amd64 \\  # 64-bit macOS\n  -platform=linux_amd64     # 64-bit Linux",
+    "fetched": "2026-11-02",
+    "checked": "2026-11-02"
+  },
+  "https://developer.hashicorp.com/terraform/cli/commands/state/list | terraform state list aws_instance.bar": {
+    "body": "$ terraform state list aws_instance.bar\naws_instance.bar[0]\naws_instance.bar[1]",
+    "fetched": "2026-11-02",
+    "checked": "2026-11-02"
+  },
+  "https://developer.hashicorp.com/terraform/cli/commands/state/mv | terraform state mv packet_device.worker module.worker.packet_device.worker": {
+    "body": "terraform state mv packet_device.worker module.worker.packet_device.worker",
+    "fetched": "2026-11-02",
+    "checked": "2026-11-02"
+  },
+  "https://developer.hashicorp.com/terraform/cli/commands/state/mv | terraform state mv packet_device.worker packet_device.helper": {
+    "body": "terraform state mv packet_device.worker packet_device.helper",
+    "fetched": "2026-11-02",
+    "checked": "2026-11-02"
+  },
+  "https://developer.hashicorp.com/terraform/cli/commands/state/rm | terraform state rm 'packet_device.worker'": {
+    "body": "$ terraform state rm 'packet_device.worker'",
+    "fetched": "2026-11-02",
+    "checked": "2026-11-02"
+  },
+  "https://developer.hashicorp.com/terraform/cli/commands/state/show | terraform state show 'packet_device.worker'": {
+    "body": "$ terraform state show 'packet_device.worker'\n# packet_device.worker:\nresource \"packet_device\" \"worker\" {\n    billing_cycle = \"hourly\"\n    created       = \"2015-12-17T00:06:56Z\"\n    facility      = \"ewr1\"\n    hostname      = \"prod-xyz01\"\n    id            = \"6015bg2b-b8c4-4925-aad2-f0671d5d3b13\"\n    locked        = false\n}",
+    "fetched": "2026-11-02",
+    "checked": "2026-11-02"
+  },
+  "https://developer.hashicorp.com/terraform/cli/commands/taint | terraform apply -replace=\"aws_instance.example[0]\"": {
+    "body": "$ terraform apply -replace=\"aws_instance.example[0]\"",
+    "fetched": "2026-11-02",
+    "checked": "2026-11-02"
+  },
+  "https://developer.hashicorp.com/terraform/cli/commands/test | run \"true_is_true\"": {
+    "body": "# example_1.tftest.hcl\nrun \"true_is_true\" {\n  assert {\n    condition     = local.true == \"true\"\n    error_message = \"local.true did not match expected value\"\n  }\n}",
+    "fetched": "2026-11-02",
+    "checked": "2026-11-02"
+  },
+  "https://developer.hashicorp.com/terraform/cli/commands/test | terraform test -filter=tests/validations.tftest.hcl": {
+    "body": "terraform test -filter=tests/validations.tftest.hcl",
+    "fetched": "2026-11-02",
+    "checked": "2026-11-02"
+  },
+  "https://developer.hashicorp.com/terraform/cli/commands/validate | terraform init -backend=false": {
+    "body": "$ terraform init -backend=false",
+    "fetched": "2026-11-02",
+    "checked": "2026-11-02"
+  },
+  "https://developer.hashicorp.com/terraform/cli/commands/workspace/new | terraform workspace new example": {
+    "body": "$ terraform workspace new example\nCreated and switched to workspace \"example\"!\n \nYou're now on a new, empty workspace. Workspaces isolate their state,\nso if you run \"terraform plan\" Terraform will not see any existing state\nfor this configuration.",
+    "fetched": "2026-11-02",
+    "checked": "2026-11-02"
+  },
+  "https://developer.hashicorp.com/terraform/language/backend | terraform init -backend-config=\"./state.config\"": {
+    "body": "$ `terraform init -backend-config=\"./state.config\"`",
+    "fetched": "2026-11-02",
+    "checked": "2026-11-02"
+  },
+  "https://developer.hashicorp.com/terraform/language/backend/s3 | bucket = \"mybucket\"": {
+    "body": "terraform {\n  backend \"s3\" {\n    bucket = \"mybucket\"\n    key    = \"path/to/my/key\"\n    region = \"us-east-1\"\n  }\n}",
+    "fetched": "2026-11-02",
+    "checked": "2026-11-02"
+  },
+  "https://developer.hashicorp.com/terraform/language/block/import | to = TYPE.LABEL": {
+    "body": "import {\n  to = TYPE.LABEL\n  id = \"<RESOURCE-ID>\"\n}\n\nresource \"<TYPE>\" \"<LABEL>\" {\n  # \n}",
+    "fetched": "2026-11-02",
+    "checked": "2026-11-02"
+  },
+  "https://developer.hashicorp.com/terraform/language/block/moved | from = aws_instance.a": {
+    "body": "moved {\n  from = aws_instance.a\n  to   = aws_instance.b\n}",
+    "fetched": "2026-11-02",
+    "checked": "2026-11-02"
+  },
+  "https://developer.hashicorp.com/terraform/language/block/removed | from = <TYPE>.<NAME>": {
+    "body": "removed {\n  from = <TYPE>.<NAME>\n}",
+    "fetched": "2026-11-02",
+    "checked": "2026-11-02"
+  },
+  "https://developer.hashicorp.com/terraform/language/expressions/version-constraints | version = \">= 1.2.0, < 2.0.0\"": {
+    "body": "version = \">= 1.2.0, < 2.0.0\"",
+    "fetched": "2026-11-02",
+    "checked": "2026-11-02"
+  },
+  "https://developer.hashicorp.com/terraform/language/meta-arguments/for_each | for_each = tomap({": {
+    "body": "resource \"azurerm_resource_group\" \"rg\" {\n  for_each = tomap({\n    a_group       = \"eastus\"\n    another_group = \"westus2\"\n  })\n  name     = each.key\n  location = each.value\n}",
+    "fetched": "2026-11-02",
+    "checked": "2026-11-02"
+  },
+  "https://developer.hashicorp.com/terraform/language/meta-arguments/lifecycle | Error: Resource postcondition failed": {
+    "body": "│ Error: Resource postcondition failed\n│\n│   on main.tf line 31, in data \"aws_ebs_volume\" \"example\":\n│   31:       condition     = self.encrypted\n│     ├────────────────\n│     │ self.encrypted is false\n│\n│ The server's root volume is not encrypted.",
+    "fetched": "2026-11-02",
+    "checked": "2026-11-02"
+  },
+  "https://developer.hashicorp.com/terraform/language/meta-arguments/lifecycle | ignore_changes = [tags]": {
+    "body": "resource \"aws_instance\" \"example\" {\n   # ...\n\n   lifecycle {\n      ignore_changes = [tags]\n   }\n}",
+    "fetched": "2026-11-02",
+    "checked": "2026-11-02"
+  },
+  "https://developer.hashicorp.com/terraform/language/meta-arguments/lifecycle | replace_triggered_by = [": {
+    "body": "resource \"aws_appautoscaling_target\" \"ecs_target\" {\n   # ...\n   lifecycle {\n   replace_triggered_by = [\n      aws_ecs_service.svc.id\n     ]\n   }\n}",
+    "fetched": "2026-11-02",
+    "checked": "2026-11-02"
+  },
+  "https://developer.hashicorp.com/terraform/language/providers/requirements | \"mycorp/mycloud\"": {
+    "body": "terraform {\n  required_providers {\n    mycloud = {\n      source  = \"mycorp/mycloud\"\n      version = \"~> 1.0\"\n    }\n  }\n}",
+    "fetched": "2026-11-02",
+    "checked": "2026-11-02"
+  }
+}

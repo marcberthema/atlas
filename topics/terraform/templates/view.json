@@ -1,0 +1,41 @@
+{
+  "title": "Terraform",
+  "tabs": [
+    {
+      "id": "workflow",
+      "label": "Core workflow"
+    },
+    {
+      "id": "commands",
+      "label": "Useful commands"
+    },
+    {
+      "id": "configuration",
+      "label": "Configuration"
+    },
+    {
+      "id": "state",
+      "label": "State"
+    },
+    {
+      "id": "dependencies",
+      "label": "Providers and modules"
+    },
+    {
+      "id": "testing",
+      "label": "Check and test"
+    },
+    {
+      "id": "troubleshooting",
+      "label": "Debug and recover"
+    },
+    {
+      "id": "others",
+      "label": "Other tools"
+    },
+    {
+      "id": "compare",
+      "label": "Compare"
+    }
+  ]
+}
