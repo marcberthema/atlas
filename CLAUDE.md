@@ -1,4 +1,4 @@
-# Atlas
+﻿# Atlas
 
 A personal knowledge base: a collection of references to look things up in, not Q&A. Each topic is a set of facts kept in
 JSON, generated into static HTML. Published as a Cloudflare Worker with static assets at atlas.marcberthelette.com; only `dist/` is exposed.
@@ -16,7 +16,7 @@ topics.json + shared/ -> the top banner on every page and the landing page, dist
 
 - Each topic owns its `data/`, `scripts/`, `templates/`, `docs/` and its own `CLAUDE.md` with the topic's rules. Read it
   before working in a topic.
-- `topics.json` is the topic registry (name, tagline, topics). The banner and the landing page are built from it.
+- `topics.json` is the topic registry (name, tagline, families, topics). Each published topic names its `family` (an id from `families`: DevOps, Development, Enterprise). The banner (two rows: families, then the selected family's topics, sticky) and the landing page (a search over every entry, then one column per family) are built from it. A page's own sticky bars sit below the banner through `--atlash`.
   An entry with `"draft": true` is an idea, not a topic: it needs only `id` and `label`, may carry any extra keys
   (`description`, `notes`, ...), is never built or shown, and has no folder. To publish it, remove `draft`, add a
   `description`, create `topics/<id>/` and add its `<topic>-%` rule to the root `Makefile`. `make validate` checks all of this.
