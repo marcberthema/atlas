@@ -93,7 +93,7 @@ fi
 have git || { echo "git not found: install Git for Windows first" >&2; exit 2; }
 [[ $DRY -eq 1 ]] && say "${B}dry run: nothing is changed${N}"
 FAILED=()
-export PATH="$SCOOP_U/shims:$PATH"   # tools installed in this run are usable at once
+export PATH="$SCOOP_U/apps/python/current:$SCOOP_U/shims:$PATH"   # tools installed in this run are usable at once (python.exe lives in its app folder, python3 is a shim)
 
 # --- Scoop ------------------------------------------------------------------
 scoop() { ps "\$env:SCOOP='$SCOOP_W'; & '$SCOOP_W\\shims\\scoop.ps1' $*"; }

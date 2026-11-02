@@ -68,8 +68,8 @@ window after the run for the PATH.
 
 ### What it installs (`setup/profile-windows.json`)
 
-Scoop under `C:\work\tools\scoop` (user environment variable `SCOOP`), then: make, GitHub CLI, jq, fzf, zoxide, starship, uv, fnm, pnpm, kubectl,
-kubectx, helm, k9s, kind, kubelogin, Terraform, tflint, Azure CLI, Claude Code. It then installs the latest Python with uv and the Node LTS with fnm (set as default; `settings.python` and `settings.node` in the profile; `python` is not put on the PATH, use `uv run` or `uv venv`). Off by default: OpenTofu. It also installs the Claude Code status line (`~/.claude/statusline.py`, run with uv, which also provides Python; turn off with `claude_statusline` in the profile), sets your git identity when
+Scoop under `C:\work\tools\scoop` (user environment variable `SCOOP`), then: make, Python (the real python.org build: `python` and `python3` work in Git Bash, ahead of the Microsoft Store stub), GitHub CLI, jq, fzf, zoxide, starship, uv, fnm, pnpm, kubectl,
+kubectx, helm, k9s, kind, kubelogin, Terraform, tflint, Azure CLI, Claude Code. It then installs the Node LTS with fnm (set as default; `settings.node` in the profile; `settings.python` makes uv fetch a Python for projects that pin one; the Scoop `python` package is the one on the PATH). Off by default: OpenTofu. It also installs the Claude Code status line (`~/.claude/statusline.py`, run with uv, which also provides Python; turn off with `claude_statusline` in the profile), sets your git identity when
 empty, writes a managed block in `~/.bashrc` (backed up first; your own lines go in `~/.bashrc.local`), and clones `repos` into `C:\work\git`.
 
 ### Not covered (needs admin)

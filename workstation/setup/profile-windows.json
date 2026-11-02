@@ -3,6 +3,7 @@
   "root": "C:/work",
   "packages": {
     "make": true,
+    "python": true,
     "gh": true,
     "jq": true,
     "fzf": true,
