@@ -40,8 +40,15 @@ warn() { printf '%s!   %s%s\n' "$Y" "$*" "$N"; }
 
 [[ -f "$PROFILE" ]] || { echo "profile not found: $PROFILE" >&2; exit 2; }
 
+# A python that runs: on Windows `python3` may be the Microsoft Store stub, which exists but fails (uv installs python3.NN).
+PY=""
+for c in python3 python python3.15 python3.14 python3.13 python3.12 python3.11; do
+  if command -v "$c" >/dev/null 2>&1 && "$c" -c 'import sys; sys.exit(sys.version_info < (3, 8))' >/dev/null 2>&1; then PY="$c"; break; fi
+done
+[[ -n "$PY" ]] || { echo "no working python3 found (install one, e.g. 'uv python install' or python.org)" >&2; exit 2; }
+
 # --- Profile: one line per extension "id|on|where", read once ----------------------------------------------------------
-mapfile -t EXT_LINES < <(python3 -I - "$PROFILE" <<'PY'
+mapfile -t EXT_LINES < <("$PY" -I - "$PROFILE" <<'PY'
 import json, sys
 for k, v in json.load(open(sys.argv[1]))["extensions"].items():
     print(f'{k}|{1 if v["on"] else 0}|{v["where"]}')
@@ -67,7 +74,7 @@ resolve_only() {
   echo "$1"
 }
 FORCED_EXT=(); FORCED_GROUPS=()
-GROUPS_IN_PROFILE="$(python3 -I - "$PROFILE" <<'PY'
+GROUPS_IN_PROFILE="$("$PY" -I - "$PROFILE" <<'PY'
 import json, sys
 print(" ".join(json.load(open(sys.argv[1])).get("settings", {})))
 PY
@@ -90,7 +97,7 @@ if [[ $LIST == 1 ]]; then
   for id in "${EXT_IDS[@]}"; do
     if [[ "${EXT_ON[$id]}" == 1 ]]; then printf '  %s on %s  %-46s %s\n' "$G" "$N" "$id" "${EXT_WHERE[$id]}"; else printf '  %s off%s  %-46s %s\n' "$Y" "$N" "$id" "${EXT_WHERE[$id]}"; fi
   done
-  python3 -I - "$PROFILE" <<'PY'
+  "$PY" -I - "$PROFILE" <<'PY'
 import json, sys
 for k, g in json.load(open(sys.argv[1])).get("settings", {}).items():
     print(f'  settings  {k:<16} {"on " if g["on"] else "off"}  {len(g["values"])} key(s)' + (f'  needs {", ".join(g["needs"])}' if g.get("needs") else ""))
@@ -185,7 +192,7 @@ merge_settings() {
   local present="" id
   for id in "${EXT_IDS[@]}"; do { [[ "${EXT_ON[$id]}" == 1 ]] || forced "$id"; } && present+="${id,,} "; done
   present+="$(wsl_installed | tr '\n' ' ') $(win_installed | tr '\n' ' ')"
-  python3 -I - "$PROFILE" "$target" "$DRY" "$present" "${FORCED_GROUPS[*]:-}" "${ONLY:+1}" <<'PY'
+  "$PY" -I - "$PROFILE" "$target" "$DRY" "$present" "${FORCED_GROUPS[*]:-}" "${ONLY:+1}" <<'PY'
 import datetime, json, os, shutil, sys
 profile, target, dry, present, forced, only = sys.argv[1], sys.argv[2], sys.argv[3] == "1", set(sys.argv[4].lower().split()), set(sys.argv[5].split()), bool(sys.argv[6])
 
