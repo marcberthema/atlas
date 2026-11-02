@@ -155,7 +155,8 @@ install_extensions() {
       say "  + $id ($pass)"
       local out rc=0
       if [[ $pass == windows ]]; then out="$(win_code --install-extension "$id" --force 2>&1)" || rc=$?; else out="$("$CODE" --install-extension "$id" --force 2>&1)" || rc=$?; fi
-      if [[ $rc -ne 0 ]] || grep -qi "failed installing\|not found\|incompatible\|error" <<<"$out"; then
+      # Success is the CLI saying so: matching words like "error" also catches Node's deprecation warnings
+      if [[ $rc -ne 0 ]] || ! grep -qi "successfully installed\|is already installed" <<<"$out" || grep -qi "failed installing" <<<"$out"; then
         printf '%s' "$out" | tail -3 | sed 's/^/      /'
         FAILED+=("$id"); continue
       fi
