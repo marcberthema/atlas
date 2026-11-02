@@ -29,6 +29,8 @@
       "email": "",
       "default_branch": "main"
     },
+    "python": "latest",
+    "node": "lts",
     "bashrc": true,
     "claude_statusline": true,
     "aliases": {

@@ -54,10 +54,12 @@ foreach (\$r in @(\$p.repos)) { if (\$r -is [string]) { 'repo' + [char]9 + \$r +
 'root' + [char]9 + \$p.root + [char]9
 'git' + [char]9 + [string]\$p.settings.git.name + [char]9 + [string]\$p.settings.git.email + [char]9 + [string]\$p.settings.git.default_branch
 'bashrc' + [char]9 + [int][bool]\$p.settings.bashrc + [char]9
+'python' + [char]9 + [string]\$p.settings.python + [char]9
+'node' + [char]9 + [string]\$p.settings.node + [char]9
 'statusline' + [char]9 + [int][bool]\$p.settings.claude_statusline + [char]9
 \$p.settings.aliases.PSObject.Properties | ForEach-Object { 'alias' + [char]9 + \$_.Name + [char]9 + \$_.Value }")
 
-PKGS=(); declare -A PKG_ON; REPOS=(); REPO_DIRS=(); ALIASES=(); ROOT=""; G_NAME=""; G_EMAIL=""; G_BRANCH=""; BASHRC=0; STATUSLINE=0
+PKGS=(); declare -A PKG_ON; REPOS=(); REPO_DIRS=(); ALIASES=(); ROOT=""; G_NAME=""; G_EMAIL=""; G_BRANCH=""; BASHRC=0; STATUSLINE=0; S_PYTHON=""; S_NODE=""
 for l in "${LINES[@]}"; do
   IFS=$'\t' read -r kind a b c <<<"$l"
   case "$kind" in
@@ -67,6 +69,8 @@ for l in "${LINES[@]}"; do
     git) G_NAME="$a"; G_EMAIL="$b"; G_BRANCH="$c" ;;
     bashrc) BASHRC="$a" ;;
     statusline) STATUSLINE="$a" ;;
+    python) S_PYTHON="$a" ;;
+    node) S_NODE="$a" ;;
     alias) ALIASES+=("alias $a='$b'") ;;
   esac
 done
@@ -121,6 +125,24 @@ install_tools() {
     elif [[ $DRY -eq 1 ]]; then say "$k: would be installed"
     else say "$k: installing"; scoop install "$k" || FAILED+=("package $k"); fi
   done
+}
+
+# uv and fnm are only managers: they still have to fetch a Python and a Node (settings.python: latest or a version, settings.node: lts or a version)
+install_runtimes() {
+  step "Python (uv) and Node (fnm)"
+  if ! have uv; then warn "uv not found: Python skipped"
+  elif [[ -z "$S_PYTHON" ]]; then say "python: off in the profile"
+  elif [[ $DRY -eq 1 ]]; then say "python: would run uv python install ${S_PYTHON/latest/}"
+  else uv python install $([[ "$S_PYTHON" == latest ]] || echo "$S_PYTHON") || FAILED+=("python"); fi
+  if ! have fnm; then warn "fnm not found: Node skipped"
+  elif [[ -z "$S_NODE" ]]; then say "node: off in the profile"
+  elif [[ $DRY -eq 1 ]]; then say "node: would run fnm install and set it as default ($S_NODE)"
+  else
+    eval "$(fnm env --shell bash)"
+    if [[ "$S_NODE" == lts ]]; then fnm install --lts && fnm default lts-latest || FAILED+=("node")
+    else fnm install "$S_NODE" && fnm default "$S_NODE" || FAILED+=("node"); fi
+    fnm list
+  fi
 }
 
 # --- Git identity and shell -------------------------------------------------
@@ -193,7 +215,7 @@ clone_repos() {
 }
 
 if [[ $DO_TOOLS -eq 1 ]]; then install_tools || FAILED+=("scoop"); fi
-if [[ -z "$ONLY" && $DO_TOOLS -eq 1 ]]; then configure_git; configure_bashrc; configure_statusline; fi
+if [[ -z "$ONLY" && $DO_TOOLS -eq 1 ]]; then install_runtimes; configure_git; configure_bashrc; configure_statusline; fi
 if [[ -z "$ONLY" && $DO_REPOS -eq 1 ]]; then clone_repos; fi
 
 step "summary"
