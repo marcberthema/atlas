@@ -10,3 +10,6 @@ topics/*/data/snapshots/
 !.dev.vars.example
 .env*
 !.env.example
+
+# local setup profiles (may name private repositories)
+**/setup/*.local.json

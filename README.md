@@ -15,15 +15,16 @@ sources  ->  topics/<id>/data/*.json  ->  dist/<id>/index.html     (AI-assisted 
 
 ## Not published
 
-[Workstation setup](workstation/CLAUDE.md): from a new Windows PC to a working Linux setup in WSL 2 (Ubuntu LTS, zsh, uv,
+[Workstation setup](workstation/README.md): from a new Windows PC to a working Linux setup in WSL 2 (Ubuntu LTS, zsh, uv,
 fnm, kubectl, Terraform, Azure CLI, Docker, Claude Code). Same format and look as a topic, but it lives in `workstation/`, builds
 into `workstation/site/index.html` and is never deployed. Open that file in a browser, or `make workstation-build` to rebuild it.
-`workstation/setup/` has a script that installs and configures everything from a JSON profile.
+`workstation/setup/` has a script that installs and configures everything from a JSON profile (`make workstation-setup` in WSL), a Git Bash
+variant for Windows with no admin rights (`make workstation-win-setup`), and both can clone a list of git repositories (`~/git`, `C:\work\git`).
 
-[Visual Studio Code setup](vscode/CLAUDE.md): the extensions that fit that toolchain and how each is configured, for VS Code on Windows
+[Visual Studio Code setup](vscode/README.md): the extensions that fit that toolchain and how each is configured, for VS Code on Windows
 working in WSL. Same arrangement: it lives in `vscode/`, builds into `vscode/site/index.html` and is never deployed
 (`make vscode-build`; `make vscode-check` compares the extension versions with the Marketplace). `vscode/setup/setup.sh` installs the
-extensions and merges the settings from `vscode/setup/profile.json`.
+extensions and merges the settings from `vscode/setup/profile.json` (`make vscode-setup`). New workstation steps are in `vscode/README.md`.
 
 ## Use it
 

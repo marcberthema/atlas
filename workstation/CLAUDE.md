@@ -35,3 +35,17 @@ git identity, kubectl minor version, aliases). It is the one place commands are 
 data changes (a vendor's install command, a repository line), change the matching `c_<component>` function too, and keep the components
 in the guide's order. It must stay idempotent: each component has a `CHECK` and is skipped when done. Test with `--dry-run` and `--list`;
 `bash -n` for syntax. The profile is public: no secrets, and git name and email stay empty (the script asks).
+
+## Setup scripts
+
+- `setup/setup.sh` + `profile.json`: WSL Ubuntu. `repos` in the profile are cloned into `~/git` (a folder that exists is skipped).
+- `setup/setup-windows.sh` + `profile-windows.json`: Git Bash on Windows, no admin. Scoop installs the packages under `<root>/tools/scoop`
+  (root is `C:/work`), `repos` are cloned into `<root>/git`. Docker and anything else that needs admin is out of scope. It also installs the Claude Code status line
+  (`claude-statusline.py`, shared with WSL: `fcntl` or `msvcrt` locking, UTF-8 stdio) and runs it with `uv run --script`; untested on Windows.
+  Tested from WSL with `--list`, `--dry-run` and local repositories; a real Scoop install on Windows has not been run yet.
+- The repository is public: keep `repos` empty in the committed profiles. Put private urls in `setup/*.local.json` (git-ignored) and pass `--profile`.
+- The guide (`data/workstation.json`) does not describe the Windows script yet.
+
+`README.md` is the end user's guide (prerequisites, how to run each script, what is installed). It is for people: keep status and test notes
+here. Update it when a component, a profile key or a prerequisite changes.
+- Windows: Git for Windows is a prerequisite the script checks but does not install (README gives the steps); `make` comes from Scoop. The `winget` line and the installer choices in the README are unverified: confirm against git-scm.com before relying on them.

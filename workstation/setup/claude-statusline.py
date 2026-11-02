@@ -9,10 +9,9 @@ cost of the week: Claude Code only sends the session's cost, so each run adds th
 the first run, on this machine only. Costs are estimates at list price, not a bill.
 
 Fields are documented at https://code.claude.com/docs/en/statusline. A field Claude Code does not send (effort on a model
-without it, rate limits outside Pro and Max or before the first reply) is left out. Python 3 standard library only.
-setup.sh copies it to ~/.claude/statusline.py and points settings.json at it.
+without it, rate limits outside Pro and Max or before the first reply) is left out. Python 3 standard library only, on Linux and Windows.
+setup.sh copies it to ~/.claude/statusline.py and points settings.json at it; setup-windows.sh does the same and runs it with uv.
 """
-import fcntl
 import json
 import os
 import subprocess
@@ -64,13 +63,25 @@ def git_branch(cwd):
 
 WEEK = 7 * 86400
 
+try:
+    import fcntl
+
+    def lock_file(f):
+        fcntl.flock(f, fcntl.LOCK_EX)
+except ImportError:   # Windows
+    import msvcrt
+
+    def lock_file(f):
+        f.seek(0)
+        msvcrt.locking(f.fileno(), msvcrt.LK_LOCK, 1)   # waits about 10 s, then raises OSError
+
 
 def week_cost(d, window_start):
     """Record how much this session's cost grew since the last run and return the cost of the window. None when it cannot be kept."""
     path = os.environ.get("CLAUDE_STATUSLINE_LEDGER") or os.path.expanduser("~/.claude/statusline-cost.json")
     try:
         with open(path + ".lock", "a") as lock:
-            fcntl.flock(lock, fcntl.LOCK_EX)   # several sessions can run this at once
+            lock_file(lock)   # several sessions can run this at once
             try:
                 ledger = json.load(open(path))
             except (OSError, ValueError):
@@ -101,6 +112,9 @@ def week_cost(d, window_start):
 
 
 def main():
+    # Windows pipes use the legacy code page: the bar and the dots are not in it
+    sys.stdin.reconfigure(encoding="utf-8")
+    sys.stdout.reconfigure(encoding="utf-8")
     d = json.load(sys.stdin)
     sep = f" {DIM}·{RESET} "
 

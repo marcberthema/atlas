@@ -50,3 +50,8 @@ The guide and the profile must agree: `make validate` fails when an extension is
 `make check` lists the extensions whose stable version or minimum VS Code changed (`LINKS=1` also checks every source and link).
 Update `version`, `extension.engine`, and the facts that changed together, and re-read the README when a major version changed.
 The Marketplace metadata is read from its public query API; nothing needs an account.
+
+## For the user
+
+`README.md` is the end user's guide for a new workstation (steps, prerequisites). It is for people, not for the agent: keep rules, test notes and
+status here in `CLAUDE.md`. `make setup`, `setup-dry-run` and `setup-list` wrap `setup/setup.sh`; update the README when its options change.

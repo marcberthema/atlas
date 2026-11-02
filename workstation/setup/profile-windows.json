@@ -1,0 +1,44 @@
+{
+  "about": "Default profile for setup-windows.sh (Git Bash on Windows, no admin). Turn a package off with false, or copy this file to profile-windows.local.json (git-ignored) and pass it with --profile. The repository is public: put private repository urls in the local copy only. No secrets here.",
+  "root": "C:/work",
+  "packages": {
+    "make": true,
+    "gh": true,
+    "jq": true,
+    "fzf": true,
+    "zoxide": true,
+    "starship": true,
+    "uv": true,
+    "fnm": true,
+    "pnpm": true,
+    "kubectl": true,
+    "kubectx": true,
+    "helm": true,
+    "k9s": true,
+    "kind": true,
+    "kubelogin": true,
+    "terraform": true,
+    "opentofu": false,
+    "tflint": true,
+    "azure-cli": true,
+    "claude-code": true
+  },
+  "settings": {
+    "git": {
+      "name": "",
+      "email": "",
+      "default_branch": "main"
+    },
+    "python": "latest",
+    "node": "lts",
+    "bashrc": true,
+    "claude_statusline": true,
+    "aliases": {
+      "ll": "ls -alFh --color=auto --group-directories-first",
+      "la": "ls -A --color=auto",
+      "grep": "grep --color=auto",
+      "k": "kubectl"
+    }
+  },
+  "repos": []
+}

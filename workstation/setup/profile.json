@@ -9,7 +9,7 @@
     "zsh_plugins": true,
     "fzf": true,
     "zoxide": true,
-  "jq": true,
+    "jq": true,
     "starship": true,
     "uv": true,
     "fnm": true,
@@ -28,6 +28,7 @@
     "docker": true,
     "claude_code": true,
     "claude_statusline": true,
+    "repos": true,
     "zshrc": true
   },
   "settings": {
@@ -48,5 +49,6 @@
       "grep": "grep --color=auto",
       "k": "kubectl"
     }
-  }
+  },
+  "repos": []
 }

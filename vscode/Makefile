@@ -1,6 +1,6 @@
 PY ?= python3
 
-.PHONY: help validate build check examples clean
+.PHONY: help validate build check examples clean setup setup-dry-run setup-list
 
 help:  ## List the targets
 	@grep -E '^[a-z-]+:.*## ' $(MAKEFILE_LIST) | awk -F':.*## ' '{printf "  make %-14s %s\n", $$1, $$2}'
@@ -17,6 +17,15 @@ examples:  ## Network: fetch the code examples from their docs pages into data/e
 
 build: validate  ## Generate site/index.html (not published: outside dist/)
 	$(PY) scripts/build.py
+
+setup-list:  ## List what the profile turns on (changes nothing)
+	setup/setup.sh --list
+
+setup-dry-run:  ## Show what setup would install and change (changes nothing)
+	setup/setup.sh --dry-run
+
+setup:  ## Install the extensions and merge the settings from setup/profile.json (run in WSL; ARGS="--only ruff" passes options)
+	setup/setup.sh $(ARGS)
 
 clean:  ## Remove generated output
 	rm -rf site
