@@ -35,6 +35,8 @@ The guide and the profile must agree: `make validate` fails when an extension is
   A match string that is too loose picks a smaller block: check the result in `data/examples.json`.
 - The setup script must stay idempotent, must never rewrite a settings file that has comments, and must back up before it writes.
   Test it against a stand-in for VS Code before a real run: see the cases in the commit that added it.
+- An install counts as done only when the CLI says "successfully installed" or "is already installed". Never decide failure by grepping for
+  words like "error": Node's deprecation warnings in the output contain them (that marked every extension as failed once).
 
 ## Adding an extension
 
