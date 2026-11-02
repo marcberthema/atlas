@@ -7,6 +7,7 @@
 #   setup.sh --dry-run            show what would run and what is already installed
 #   setup.sh --list               list the components and whether the profile turns them on
 #
+# Repos: list urls (or {"url","dir"}) under "repos" in the profile; they are cloned into ~/git. Put private ones in a copy named *.local.json (git-ignored).
 # Run as your normal user, not root: it asks for sudo once. Safe to run again: a component that is
 # already installed is skipped (apt ones are upgraded by apt_upgrade); name it in --only to upgrade it. Needs python3 (Ubuntu has it) to read the profile.
 # The commands follow each vendor's install page, linked in the guide. When a vendor page changes, update the step here too.
@@ -54,6 +55,9 @@ for k, v in (("git_name", g.get("name", "")), ("git_email", g.get("email", "")),
              ("docker_group", "1" if s.get("docker_group", True) else "0"), ("starship_k8s", "1" if s.get("starship_kubernetes", True) else "0")):
     print(f"S_{k}={shlex.quote(str(v))}")
 print("ALIASES=" + shlex.quote("\n".join(f"alias {k}={shlex.quote(v)}" for k, v in s.get("aliases", {}).items())))
+repos = [r if isinstance(r, dict) else {"url": r} for r in p.get("repos", [])]
+print("REPO_URLS=(" + " ".join(shlex.quote(r["url"]) for r in repos) + ")")
+print("REPO_DIRS=(" + " ".join(shlex.quote(r.get("dir", "")) for r in repos) + ")")
 print("COMPONENTS=" + shlex.quote(" ".join(p["components"])))
 EOF
 )"
@@ -62,7 +66,7 @@ EOF
 # DESC is shown by --list and --dry-run; CHECK is a command that succeeds when the component is already done.
 declare -A DESC CHECK
 ORDER=(apt_upgrade wsl_conf git gh zsh zsh_plugins fzf zoxide jq starship uv fnm pnpm kubectl kubectx helm k9s kind kubelogin krew
-       terraform opentofu tflint azure_cli docker claude_code claude_statusline zshrc)
+       terraform opentofu tflint azure_cli docker claude_code claude_statusline zshrc repos)
 
 in_wsl() { grep -qi microsoft /proc/version; }
 systemd_running() { [[ "$(ps -p 1 -o comm=)" == systemd ]]; }
@@ -421,6 +425,22 @@ command -v starship >/dev/null && eval "\$(starship init zsh)"
 EOF
   if have zsh; then zsh -n ~/.zshrc; fi
   say "~/.zshrc written: open a new tab or run 'exec zsh'"
+}
+
+DESC[repos]="git clone the profile's repos into ~/git over ssh (a folder that exists is skipped; needs your ssh key)"
+CHECK[repos]="false"
+c_repos() {
+  [[ ${#REPO_URLS[@]} -gt 0 ]] || { say "no repos in the profile"; return 0; }
+  mkdir -p ~/git
+  local i url dir n failed=0
+  for i in "${!REPO_URLS[@]}"; do
+    url="${REPO_URLS[$i]}"; n="${url##*/}"; n="${n##*:}"; dir="${REPO_DIRS[$i]:-${n%.git}}"
+    if [[ -e ~/git/$dir ]]; then say "$dir: exists, skipped"; continue; fi
+    say "$dir: cloning"
+    # BatchMode: never wait for a password; accept-new: trust a host seen for the first time, still fail if its key changes
+    GIT_SSH_COMMAND="ssh -o BatchMode=yes -o StrictHostKeyChecking=accept-new" git clone "$url" ~/git/"$dir" || { warn "$dir: clone failed"; failed=1; }
+  done
+  return $failed
 }
 
 # --- Run --------------------------------------------------------------------
