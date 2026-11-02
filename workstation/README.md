@@ -69,7 +69,7 @@ window after the run for the PATH.
 ### What it installs (`setup/profile-windows.json`)
 
 Scoop under `C:\work\tools\scoop` (user environment variable `SCOOP`), then: make, GitHub CLI, jq, fzf, zoxide, starship, uv, fnm, pnpm, kubectl,
-kubectx, helm, k9s, kind, kubelogin, Terraform, tflint, Azure CLI, Claude Code. Off by default: OpenTofu. It also sets your git identity when
+kubectx, helm, k9s, kind, kubelogin, Terraform, tflint, Azure CLI, Claude Code. Off by default: OpenTofu. It also installs the Claude Code status line (`~/.claude/statusline.py`, run with uv, which also provides Python; turn off with `claude_statusline` in the profile), sets your git identity when
 empty, writes a managed block in `~/.bashrc` (backed up first; your own lines go in `~/.bashrc.local`), and clones `repos` into `C:\work\git`.
 
 ### Not covered (needs admin)

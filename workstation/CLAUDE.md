@@ -40,7 +40,8 @@ in the guide's order. It must stay idempotent: each component has a `CHECK` and 
 
 - `setup/setup.sh` + `profile.json`: WSL Ubuntu. `repos` in the profile are cloned into `~/git` (a folder that exists is skipped).
 - `setup/setup-windows.sh` + `profile-windows.json`: Git Bash on Windows, no admin. Scoop installs the packages under `<root>/tools/scoop`
-  (root is `C:/work`), `repos` are cloned into `<root>/git`. Docker and anything else that needs admin is out of scope.
+  (root is `C:/work`), `repos` are cloned into `<root>/git`. Docker and anything else that needs admin is out of scope. It also installs the Claude Code status line
+  (`claude-statusline.py`, shared with WSL: `fcntl` or `msvcrt` locking, UTF-8 stdio) and runs it with `uv run --script`; untested on Windows.
   Tested from WSL with `--list`, `--dry-run` and local repositories; a real Scoop install on Windows has not been run yet.
 - The repository is public: keep `repos` empty in the committed profiles. Put private urls in `setup/*.local.json` (git-ignored) and pass `--profile`.
 - The guide (`data/workstation.json`) does not describe the Windows script yet.

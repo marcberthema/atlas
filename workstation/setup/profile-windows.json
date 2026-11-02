@@ -30,6 +30,7 @@
       "default_branch": "main"
     },
     "bashrc": true,
+    "claude_statusline": true,
     "aliases": {
       "ll": "ls -alFh --color=auto --group-directories-first",
       "la": "ls -A --color=auto",

@@ -54,9 +54,10 @@ foreach (\$r in @(\$p.repos)) { if (\$r -is [string]) { 'repo' + [char]9 + \$r +
 'root' + [char]9 + \$p.root + [char]9
 'git' + [char]9 + [string]\$p.settings.git.name + [char]9 + [string]\$p.settings.git.email + [char]9 + [string]\$p.settings.git.default_branch
 'bashrc' + [char]9 + [int][bool]\$p.settings.bashrc + [char]9
+'statusline' + [char]9 + [int][bool]\$p.settings.claude_statusline + [char]9
 \$p.settings.aliases.PSObject.Properties | ForEach-Object { 'alias' + [char]9 + \$_.Name + [char]9 + \$_.Value }")
 
-PKGS=(); declare -A PKG_ON; REPOS=(); REPO_DIRS=(); ALIASES=(); ROOT=""; G_NAME=""; G_EMAIL=""; G_BRANCH=""; BASHRC=0
+PKGS=(); declare -A PKG_ON; REPOS=(); REPO_DIRS=(); ALIASES=(); ROOT=""; G_NAME=""; G_EMAIL=""; G_BRANCH=""; BASHRC=0; STATUSLINE=0
 for l in "${LINES[@]}"; do
   IFS=$'\t' read -r kind a b c <<<"$l"
   case "$kind" in
@@ -65,6 +66,7 @@ for l in "${LINES[@]}"; do
     root) ROOT="$a" ;;
     git) G_NAME="$a"; G_EMAIL="$b"; G_BRANCH="$c" ;;
     bashrc) BASHRC="$a" ;;
+    statusline) STATUSLINE="$a" ;;
     alias) ALIASES+=("alias $a='$b'") ;;
   esac
 done
@@ -87,6 +89,7 @@ fi
 have git || { echo "git not found: install Git for Windows first" >&2; exit 2; }
 [[ $DRY -eq 1 ]] && say "${B}dry run: nothing is changed${N}"
 FAILED=()
+export PATH="$SCOOP_U/shims:$PATH"   # tools installed in this run are usable at once
 
 # --- Scoop ------------------------------------------------------------------
 scoop() { ps "\$env:SCOOP='$SCOOP_W'; & '$SCOOP_W\\shims\\scoop.ps1' $*"; }
@@ -150,6 +153,27 @@ $end"
   say "written (backup: $f.bak); open a new Git Bash window"
 }
 
+# Claude Code status line: the same script as in WSL, run with uv (Python comes from uv, no admin). Needs uv and claude-code installed.
+configure_statusline() {
+  step "Claude Code status line"
+  [[ "$STATUSLINE" -eq 1 ]] || { say "off in the profile"; return; }
+  [[ $DRY -eq 1 ]] && { say "would copy claude-statusline.py to ~/.claude/statusline.py and set statusLine in ~/.claude/settings.json"; return; }
+  have uv || { warn "uv not found: install the uv package first (open a new Git Bash if it was just installed)"; FAILED+=("statusline"); return; }
+  mkdir -p ~/.claude
+  cp "$HERE/claude-statusline.py" ~/.claude/statusline.py
+  uv python install >/dev/null 2>&1 || warn "uv could not install Python; the status line needs one"
+  # Set statusLine and keep every other setting
+  uv run --quiet python -I - <<'PY' || { FAILED+=("statusline"); return; }
+import json
+from pathlib import Path
+p = Path.home() / ".claude" / "settings.json"
+s = json.loads(p.read_text(encoding="utf-8")) if p.exists() else {}
+s["statusLine"] = {"type": "command", "command": "uv run --quiet --script ~/.claude/statusline.py", "refreshInterval": 60}
+p.write_text(json.dumps(s, indent=2) + "\n", encoding="utf-8")
+PY
+  say "status line set: it shows in the next Claude Code session"
+}
+
 # --- Repositories -----------------------------------------------------------
 clone_repos() {
   step "repositories into $ROOT_W\\git"
@@ -169,7 +193,7 @@ clone_repos() {
 }
 
 if [[ $DO_TOOLS -eq 1 ]]; then install_tools || FAILED+=("scoop"); fi
-if [[ -z "$ONLY" && $DO_TOOLS -eq 1 ]]; then configure_git; configure_bashrc; fi
+if [[ -z "$ONLY" && $DO_TOOLS -eq 1 ]]; then configure_git; configure_bashrc; configure_statusline; fi
 if [[ -z "$ONLY" && $DO_REPOS -eq 1 ]]; then clone_repos; fi
 
 step "summary"
