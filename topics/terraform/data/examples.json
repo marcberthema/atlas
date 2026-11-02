@@ -1,4 +1,9 @@
 {
+  "https://developer.hashicorp.com/terraform/cli/commands/apply | terraform apply -invoke='action.aws_lambda_invoke.test`": {
+    "body": "$ terraform apply -invoke='action.aws_lambda_invoke.test`",
+    "fetched": "2026-11-02",
+    "checked": "2026-11-02"
+  },
   "https://developer.hashicorp.com/terraform/cli/commands/apply | terraform apply -var-file='my-vars.tfvars'": {
     "body": "$ terraform apply -var-file='my-vars.tfvars'",
     "fetched": "2026-11-02",
@@ -94,8 +99,63 @@
     "fetched": "2026-11-02",
     "checked": "2026-11-02"
   },
+  "https://developer.hashicorp.com/terraform/language/block/action | \"123456789012:function:my-function:1\"": {
+    "body": "action \"aws_lambda_invoke\" \"example\" {\n  config {\n    function_name = \"123456789012:function:my-function:1\"\n    payload = jsonencode({\n      key1 = \"value1\"\n      key2 = \"value2\"\n    })\n  }\n}",
+    "fetched": "2026-11-02",
+    "checked": "2026-11-02"
+  },
+  "https://developer.hashicorp.com/terraform/language/block/check | check \"<LABEL>\"": {
+    "body": "check \"<LABEL>\" {\n data \"<TYPE>\" \"<LABEL>\" {\n   <DATA_CONFIGURATION>\n }\n\n assert {\n   condition     = <EXPRESSION>\n   error_message = \"<error message string>\"\n }\n}",
+    "fetched": "2026-11-02",
+    "checked": "2026-11-02"
+  },
+  "https://developer.hashicorp.com/terraform/language/block/check | check \"health_check\"": {
+    "body": "check \"health_check\" {\n data \"http\" \"endpoint\" {\n   url = \"https://api.example.com/health\"\n }\n\n assert {\n   condition     = data.http.endpoint.status_code == 200\n   error_message = \"Health check failed: ${data.http.endpoint.url} returned ${data.http.endpoint.status_code}\"\n }\n}",
+    "fetched": "2026-11-02",
+    "checked": "2026-11-02"
+  },
+  "https://developer.hashicorp.com/terraform/language/block/data | <PROVIDER-SPECIFIC ARGUMENTS>": {
+    "body": "data \"<TYPE>\" \"<LABEL>\" {\n   <PROVIDER-SPECIFIC ARGUMENTS>\n   count = <NUMBER>      # `count` and `for_each` are mutually exclusive\n   depends_on = [ <RESOURCE.ADDRESS.EXPRESSION> ]\n   for_each = {          # `for_each` and `count` are mutually exclusive\n      <KEY> = <VALUE>\n   }\n   for_each = [       # `for_each` accepts a map or a set of strings\n    \"<VALUE>\",\n    \"<VALUE>\"\n   ]\n   provider = <REFERENCE.TO.ALIAS>\n   lifecycle {\n      precondition {\n         condition = <EXPRESSION>\n         error_message = \"<STRING>\"\n    }\n    postcondition {\n      condition = <EXPRESSION>\n      error_message = \"<STRING>\"\n    }\n  }\n}",
+    "fetched": "2026-11-02",
+    "checked": "2026-11-02"
+  },
+  "https://developer.hashicorp.com/terraform/language/block/ephemeral | ephemeral \"aws_secretsmanager_secret_version\" \"db_master\" {": {
+    "body": "ephemeral \"aws_secretsmanager_secret_version\" \"db_master\" {\n  secret_id = aws_secretsmanager_secret_version.db_password.secret_id\n}\n\nlocals {\n  credentials = jsondecode(ephemeral.aws_secretsmanager_secret_version.db_master.secret_string)\n}\n\nprovider \"postgresql\" {\n  host     = aws_db_instance.example.address\n  port     = aws_db_instance.example.port\n  username = local.credentials[\"username\"]\n  password = local.credentials[\"password\"]\n# …\n}",
+    "fetched": "2026-11-02",
+    "checked": "2026-11-02"
+  },
+  "https://developer.hashicorp.com/terraform/language/block/import | id = \"cloud-provider-id\"": {
+    "body": "import {\n  to = resource.type.address\n  id = \"cloud-provider-id\"    \n  for_each = {                # `for_each` accepts a map or a set of strings \n    <KEY> = <VALUE>\n  }\n  for_each = [            # `for_each` accepts a map or a set of strings \n    \"<VALUE>\", \n    \"<VALUE>\"\n  ]\n  provider = provider-name.alias\n}",
+    "fetched": "2026-11-02",
+    "checked": "2026-11-02"
+  },
   "https://developer.hashicorp.com/terraform/language/block/import | to = TYPE.LABEL": {
     "body": "import {\n  to = TYPE.LABEL\n  id = \"<RESOURCE-ID>\"\n}\n\nresource \"<TYPE>\" \"<LABEL>\" {\n  # \n}",
+    "fetched": "2026-11-02",
+    "checked": "2026-11-02"
+  },
+  "https://developer.hashicorp.com/terraform/language/block/import | to = aws_s3_bucket.this": {
+    "body": "import {\n    to = aws_s3_bucket.this\n    id = \"example-bucket\"\n}\n\nresource \"aws_s3_bucket\" \"this\" {\n}\n  # …\n}",
+    "fetched": "2026-11-02",
+    "checked": "2026-11-02"
+  },
+  "https://developer.hashicorp.com/terraform/language/block/module | <module-specific-inputs>": {
+    "body": "module \"<LABEL>\" {\n  <module-specific-inputs>\n  source = \"<location-of-module-sources>\"\n  version = \"<constraint>\" # only available for modules listed in a registry\n  count = <number> # mutually exclusive with `for_each`\n  for_each = {          # mutually exclusive with `count`\n      <KEY> = <VALUE>\n   }\n   for_each = [       # `for_each` accepts a map or a set of strings\n    \"<VALUE>\",\n    \"<VALUE>\"\n   ]\n  providers = {\n    \"<provider-name-in-child-module>\" = \"<provider-name-from-parent-module>\"\n  }\n  depends_on = [ <resource.address.reference> ]\n  ignore_nested_deprecations = <true|false>\n}",
+    "fetched": "2026-11-02",
+    "checked": "2026-11-02"
+  },
+  "https://developer.hashicorp.com/terraform/language/block/module | source = \"./<PATH-TO-MODULE>\"": {
+    "body": "module \"<LABEL>\" {\n  source = \"./<PATH-TO-MODULE>\"\n  #...\n}",
+    "fetched": "2026-11-02",
+    "checked": "2026-11-02"
+  },
+  "https://developer.hashicorp.com/terraform/language/block/module | source = \"<NAMESPACE>/<NAME>/<PROVIDER>\"": {
+    "body": "module \"<LABEL>\" {\n  source = \"<NAMESPACE>/<NAME>/<PROVIDER>\"\n  #...\n}",
+    "fetched": "2026-11-02",
+    "checked": "2026-11-02"
+  },
+  "https://developer.hashicorp.com/terraform/language/block/module | source = \"github.com/<ORGANIZATION>/<MODULE-FOLDER>\"": {
+    "body": "module \"<LABEL>\" {\n  source = \"github.com/<ORGANIZATION>/<MODULE-FOLDER>\"\n  #...\n}",
     "fetched": "2026-11-02",
     "checked": "2026-11-02"
   },
@@ -104,8 +164,68 @@
     "fetched": "2026-11-02",
     "checked": "2026-11-02"
   },
+  "https://developer.hashicorp.com/terraform/language/block/output | sensitive = <boolean>": {
+    "body": "output \"admin_password\" {\n  value     = <expression-to-evaluate>\n  sensitive = <boolean>\n}",
+    "fetched": "2026-11-02",
+    "checked": "2026-11-02"
+  },
+  "https://developer.hashicorp.com/terraform/language/block/output | type        = <TYPE>": {
+    "body": "output \"<LABEL>\" {\n  type        = <TYPE>\n  value       = <EXPRESSION>\n  description = \"<STRING>\"\n  sensitive   = <true|false>\n  ephemeral   = <true|false>\n  depends_on  = [<REFERENCE>]\n  deprecated  = \"<STRING>\"\n\n  precondition {\n    condition     = <EXPRESSION>\n    error_message = \"<STRING>\"\n  }\n}",
+    "fetched": "2026-11-02",
+    "checked": "2026-11-02"
+  },
+  "https://developer.hashicorp.com/terraform/language/block/provider | alias   = \"<ALIAS_NAME>\"": {
+    "body": "provider \"<PROVIDER_NAME>\" {\n  <PROVIDER_ARGUMENTS>\n  alias   = \"<ALIAS_NAME>\"\n  version = \"<VERSION_CONSTRAINT>\"  # Deprecated\n}",
+    "fetched": "2026-11-02",
+    "checked": "2026-11-02"
+  },
+  "https://developer.hashicorp.com/terraform/language/block/provider | alias  = \"west\"": {
+    "body": "provider \"aws\" {\n  region = \"us-east-1\"\n}\n\nprovider \"aws\" {\n  alias  = \"west\"\n  region = \"us-west-2\"\n}",
+    "fetched": "2026-11-02",
+    "checked": "2026-11-02"
+  },
+  "https://developer.hashicorp.com/terraform/language/block/provider | project = \"acme-app\"": {
+    "body": "provider \"google\" {\n  project = \"acme-app\"\n  region  = \"us-central1\"\n}",
+    "fetched": "2026-11-02",
+    "checked": "2026-11-02"
+  },
+  "https://developer.hashicorp.com/terraform/language/block/removed | from = \"<resource.address>\"": {
+    "body": "removed {\n  from = \"<resource.address>\"\n  lifecycle {\n    destroy = < true || false >\n  }\n  connection {\n    <connection-settings>\n  }\n  provisioner \"<TYPE>\" {\n    when = destroy\n    <provisioner-type-arguments>\n  }\n}",
+    "fetched": "2026-11-02",
+    "checked": "2026-11-02"
+  },
   "https://developer.hashicorp.com/terraform/language/block/removed | from = <TYPE>.<NAME>": {
     "body": "removed {\n  from = <TYPE>.<NAME>\n}",
+    "fetched": "2026-11-02",
+    "checked": "2026-11-02"
+  },
+  "https://developer.hashicorp.com/terraform/language/block/resource | count = <NUMBER>": {
+    "body": "resource \"<TYPE>\" \"<LABEL>\" {\n  <PROVIDER_ARGUMENTS>\n  count = <NUMBER>      # `for_each` and `count` are mutually exclusive\n  depends_on = [ <RESOURCE.ADDRESS.EXPRESSION> ]\n  for_each = {          # `for_each` and `count` are mutually exclusive\n    <KEY> = <VALUE>\n  }\n  for_each = [       # `for_each` accepts a map or a set of strings\n    \"<VALUE>\",\n    \"<VALUE>\"\n  ]\n  provider = <REFERENCE.TO.ALIAS>\n  lifecycle {\n    action_trigger {\n      events = [        # specify one or more lifecycle events as a list\n        before_create,\n        after_create,\n        before_update,\n        after_update,\n        before_destroy,\n        after_destroy\n      ]\n      condition = <EXPRESSION>\n      actions = [ action.<TYPE>.<LABEL> ]\n      on_failure = <halt || continue || taint>\n    }\n    create_before_destroy = <true || false>\n    prevent_destroy = <true || false>\n    ignore_changes = [ <ATTRIBUTE> ]\n    replace_triggered_by = [ <RESOURCE.ADDRESS.EXPRESSION> ]\n    precondition {\n      condition = <EXPRESSION>\n      error_message = \"<STRING>\"\n    }\n    postcondition {\n      condition = <EXPRESSION>\n      error_message = \"<STRING>\"\n    }\n  }\n  connection {\n    type = <\"ssh\" or \"winrm\">\n    host = <EXPRESSION>\n    <DEFAULT_CONNECTION_SETTINGS>\n  }\n  provisioner \"<TYPE>\" {\n    source = \"<PATH>\"\n    destination = \"<PATH>\"\n    content = \"<CONTENT TO COPY TO `destination`>\"\n    command = <COMMAND>\n    working_dir = \"<PATH TO DIR WHERE TERRAFORM EXECUTES `command`>\"\n    interpreter = [\n      \"<PATH TO INTERPRETER EXECUTABLE>\",\n      \"<COMMAND> <ARGUMENTS>\"\n    ]\n    environment {\n      \"<KEY>\" = \"<VALUE>\"\n    }\n    when = <TERRAFORM COMMAND>\n    quiet = <true || false>\n    inline = [ \"<COMMAND>\" ]\n    script = \"<PATH>\"\n    scripts = [\n      \"<PATH>\"\n    ]\n    on_failure = <continue || fail>\n    connection {\n      type = <\"ssh\" or \"winrm\">\n      host = <EXPRESSION>\n      <SPECIFIC_CONNECTION_SETTINGS>\n    }\n  }\n}",
+    "fetched": "2026-11-02",
+    "checked": "2026-11-02"
+  },
+  "https://developer.hashicorp.com/terraform/language/block/terraform | required_version = \"<Terraform version>\"": {
+    "body": "terraform {\n  required_version = \"<Terraform version>\"\n  # . . .\n}",
+    "fetched": "2026-11-02",
+    "checked": "2026-11-02"
+  },
+  "https://developer.hashicorp.com/terraform/language/block/terraform | required_version = \"<version>\"": {
+    "body": "terraform {\n  required_version = \"<version>\"\n  required_providers {\n    <PROVIDER> {\n      version = \"<version-constraint>\"\n      source = \"<provider-address>\"\n    }\n  }\n  provider_meta \"<LABEL>\" { \n    # Shown for completeness but only used for specific cases     \n  }\n  backend \"<TYPE>\" {        \n    # `backend` is mutually exclusive with `cloud` \n    \"<ARGUMENTS>\"\n  }\n  cloud {                   \n    # `cloud` is mutually exclusive with `backend` \n    organization = \"<organization-name>\"\n    workspaces {\n      tags = [ \"<tag>\" ]\n      name = \"<workspace-name>\"\n      project = \"<project-name>\"\n    }\n    hostname = \"app.terraform.io\"\n    token = \"<TOKEN>\"\n  }\n  experiments = [ \"<feature-name>\" ]\n}",
+    "fetched": "2026-11-02",
+    "checked": "2026-11-02"
+  },
+  "https://developer.hashicorp.com/terraform/language/block/variable | default     = <DEFAULT_VALUE>": {
+    "body": "variable \"<LABEL>\" {\n  type        = <TYPE>\n  default     = <DEFAULT_VALUE>\n  description = \"<DESCRIPTION>\"\n  sensitive   = <true|false>\n  nullable    = <true|false>\n  ephemeral   = <true|false>\n  const       = <true|false>\n  deprecated  = \"<STRING>\"\n\n  validation {\n    condition     = <EXPRESSION>\n    error_message = \"<ERROR_MESSAGE>\"\n  }\n}",
+    "fetched": "2026-11-02",
+    "checked": "2026-11-02"
+  },
+  "https://developer.hashicorp.com/terraform/language/block/variable | ephemeral = true": {
+    "body": "variable \"session_token\" {\n  type      = string\n  ephemeral = true\n}",
+    "fetched": "2026-11-02",
+    "checked": "2026-11-02"
+  },
+  "https://developer.hashicorp.com/terraform/language/block/variable | variable \"user_password\"": {
+    "body": "variable \"user_password\" {\n  type      = string\n  sensitive = true\n}",
     "fetched": "2026-11-02",
     "checked": "2026-11-02"
   },
@@ -136,6 +256,11 @@
   },
   "https://developer.hashicorp.com/terraform/language/providers/requirements | \"mycorp/mycloud\"": {
     "body": "terraform {\n  required_providers {\n    mycloud = {\n      source  = \"mycorp/mycloud\"\n      version = \"~> 1.0\"\n    }\n  }\n}",
+    "fetched": "2026-11-02",
+    "checked": "2026-11-02"
+  },
+  "https://developer.hashicorp.com/terraform/language/values/locals | # Naming convention": {
+    "body": "locals {\n  # Naming convention\n  resource_name = \"${var.project_name}-${var.environment}\"\n\n  # Process the subnet list\n  primary_public_subnet = var.subnet_ids[0]\n  subnet_count          = length(var.subnet_ids)\n\n  # Environmental deployment settings\n  is_production      = var.environment == \"prod\"\n  monitoring_enabled = var.monitoring || local.is_production\n}",
     "fetched": "2026-11-02",
     "checked": "2026-11-02"
   }

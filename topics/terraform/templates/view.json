@@ -14,6 +14,62 @@
       "label": "Configuration"
     },
     {
+      "id": "terraform",
+      "label": "terraform"
+    },
+    {
+      "id": "provider",
+      "label": "provider"
+    },
+    {
+      "id": "resource",
+      "label": "resource"
+    },
+    {
+      "id": "data",
+      "label": "data"
+    },
+    {
+      "id": "variable",
+      "label": "variable"
+    },
+    {
+      "id": "output",
+      "label": "output"
+    },
+    {
+      "id": "locals",
+      "label": "locals"
+    },
+    {
+      "id": "module",
+      "label": "module"
+    },
+    {
+      "id": "import",
+      "label": "import"
+    },
+    {
+      "id": "moved",
+      "label": "moved"
+    },
+    {
+      "id": "removed",
+      "label": "removed"
+    },
+    {
+      "id": "check",
+      "label": "check"
+    },
+    {
+      "id": "action",
+      "label": "action"
+    },
+    {
+      "id": "ephemeral",
+      "label": "ephemeral"
+    },
+    {
       "id": "state",
       "label": "State"
     },

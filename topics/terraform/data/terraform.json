@@ -10,6 +10,11 @@
       "about": "The CLI, the language, state and dependencies."
     },
     {
+      "id": "blocks",
+      "label": "Language blocks",
+      "about": "One entry per block type of the language."
+    },
+    {
       "id": "tools",
       "label": "Companion tools",
       "about": "Linters, scanners, wrappers and automation around Terraform."
@@ -1334,6 +1339,1946 @@
       ],
       "notes": [
         "The `resource`, `module` and `provider` blocks are described here in one line each from the page overview; read their pages for the full argument lists."
+      ]
+    },
+    {
+      "id": "terraform",
+      "name": "terraform",
+      "group": "blocks",
+      "summary": "Settings for Terraform itself: the CLI version it needs, the providers it needs, and where state is kept.",
+      "level": "deep",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "first tag v0.1.0 has no dated release; the repository was created 2014-03-13",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "Not a CNCF project."
+      },
+      "license": "BUSL-1.1",
+      "version": {
+        "name": "Terraform CLI",
+        "analysed": "v1.17.1",
+        "released": "2026-10-28",
+        "docs": "developer.hashicorp.com/terraform, v1.17.x (latest) docs, and the v1.17 CHANGELOG",
+        "checked": "2026-11-02"
+      },
+      "track": {
+        "github": "hashicorp/terraform",
+        "tag": "^v\\d+\\.\\d+\\.\\d+$"
+      },
+      "links": [
+        {
+          "label": "terraform block reference",
+          "url": "https://developer.hashicorp.com/terraform/language/block/terraform"
+        },
+        {
+          "label": "Terraform documentation",
+          "url": "https://developer.hashicorp.com/terraform"
+        }
+      ],
+      "sections": [
+        {
+          "title": "In one minute",
+          "part": "overview",
+          "icon": "eye",
+          "items": [
+            "The `terraform` block configures Terraform's own behavior: the allowed CLI version, the backend or HCP Terraform integration, and the required providers.",
+            {
+              "type": "callout",
+              "kind": "gotcha",
+              "text": "Only constant values are allowed in this block. It cannot refer to resources or input variables, and it cannot use functions.",
+              "title": "Constants only"
+            },
+            {
+              "type": "code",
+              "title": "All the arguments",
+              "lang": "text",
+              "match": "required_version = \"<version>\"",
+              "source": {
+                "label": "terraform block",
+                "url": "https://developer.hashicorp.com/terraform/language/block/terraform"
+              }
+            }
+          ]
+        },
+        {
+          "title": "Arguments and nested blocks",
+          "part": "use",
+          "icon": "list",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Argument",
+                "Meaning"
+              ],
+              "rows": [
+                [
+                  "`required_version`",
+                  "The Terraform CLI versions allowed to run the configuration. Terraform prints an error and exits if yours does not match. Constraints in modules also apply. It says nothing about provider versions"
+                ],
+                [
+                  "`required_providers`",
+                  "Each provider's local name, `source` address and `version` constraint (see [Providers, modules and versions](#dependencies))"
+                ],
+                [
+                  "`backend \"TYPE\"`",
+                  "Where state is stored (see [State](#state)). Mutually exclusive with `cloud`"
+                ],
+                [
+                  "`cloud`",
+                  "Connects to HCP Terraform. Needs `organization`; `workspaces` takes `tags` or a `name`, plus an optional `project`; `hostname` defaults to `app.terraform.io`; `token` is also accepted"
+                ],
+                [
+                  "`provider_meta \"LABEL\"`",
+                  "Shown for completeness, only used in specific cases"
+                ],
+                [
+                  "`experiments`",
+                  "A list of experimental feature names"
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "title": "In use",
+          "part": "use",
+          "icon": "play",
+          "items": [
+            {
+              "type": "code",
+              "title": "A required_version constraint",
+              "lang": "text",
+              "match": "required_version = \"<Terraform version>\"",
+              "source": {
+                "label": "terraform block",
+                "url": "https://developer.hashicorp.com/terraform/language/block/terraform"
+              }
+            },
+            "Use `required_version` in a team so everyone runs the same version, or at least a minimum that has the behavior the configuration expects."
+          ]
+        },
+        {
+          "title": "Rules and gotchas",
+          "part": "reference",
+          "icon": "alert",
+          "items": [
+            "A configuration can have only one `backend` block, and `backend` and `cloud` are mutually exclusive.",
+            "Version constraint syntax is on the [Providers, modules and versions](#dependencies) tab."
+          ]
+        }
+      ],
+      "related": [
+        "state",
+        "dependencies"
+      ],
+      "sources": [
+        {
+          "label": "terraform block reference",
+          "url": "https://developer.hashicorp.com/terraform/language/block/terraform"
+        },
+        {
+          "label": "Backend block configuration",
+          "url": "https://developer.hashicorp.com/terraform/language/backend"
+        },
+        {
+          "label": "Version constraints",
+          "url": "https://developer.hashicorp.com/terraform/language/expressions/version-constraints"
+        }
+      ]
+    },
+    {
+      "id": "provider",
+      "name": "provider",
+      "group": "blocks",
+      "summary": "Configures a provider plugin: its credentials, region and other settings. Aliases give you several configurations of one provider.",
+      "level": "deep",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "first tag v0.1.0 has no dated release; the repository was created 2014-03-13",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "Not a CNCF project."
+      },
+      "license": "BUSL-1.1",
+      "version": {
+        "name": "Terraform CLI",
+        "analysed": "v1.17.1",
+        "released": "2026-10-28",
+        "docs": "developer.hashicorp.com/terraform, v1.17.x (latest) docs, and the v1.17 CHANGELOG",
+        "checked": "2026-11-02"
+      },
+      "track": {
+        "github": "hashicorp/terraform",
+        "tag": "^v\\d+\\.\\d+\\.\\d+$"
+      },
+      "links": [
+        {
+          "label": "provider block reference",
+          "url": "https://developer.hashicorp.com/terraform/language/block/provider"
+        },
+        {
+          "label": "Terraform documentation",
+          "url": "https://developer.hashicorp.com/terraform"
+        }
+      ],
+      "sections": [
+        {
+          "title": "In one minute",
+          "part": "overview",
+          "icon": "eye",
+          "items": [
+            "A provider is a plugin that lets Terraform talk to a cloud, a SaaS or another API. The `provider` block configures one.",
+            "Define provider blocks in the root module. Child modules receive their provider configurations from the parent, so defining provider blocks in child modules is strongly discouraged.",
+            {
+              "type": "code",
+              "title": "The arguments",
+              "lang": "text",
+              "match": "alias   = \"<ALIAS_NAME>\"",
+              "source": {
+                "label": "provider block",
+                "url": "https://developer.hashicorp.com/terraform/language/block/provider"
+              }
+            }
+          ]
+        },
+        {
+          "title": "Arguments and nested blocks",
+          "part": "use",
+          "icon": "list",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Argument",
+                "Meaning"
+              ],
+              "rows": [
+                [
+                  "provider-specific",
+                  "Defined by the provider. Read its documentation (for registry providers, the versioned page)"
+                ],
+                [
+                  "`alias`",
+                  "A unique name for an extra configuration of the same provider"
+                ],
+                [
+                  "`version`",
+                  "Deprecated. Use `required_providers` in the `terraform` block instead. It cannot be combined with `alias` in one block"
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "title": "In use",
+          "part": "use",
+          "icon": "play",
+          "items": [
+            {
+              "type": "code",
+              "title": "Two configurations with an alias",
+              "lang": "text",
+              "match": "alias  = \"west\"",
+              "source": {
+                "label": "provider block",
+                "url": "https://developer.hashicorp.com/terraform/language/block/provider"
+              }
+            },
+            "Refer to an alias as `<PROVIDER_NAME>.<ALIAS>` in the `provider` argument of a `resource`, `data` or `module` block. The block without an `alias` is the default for that provider.",
+            {
+              "type": "code",
+              "title": "A basic configuration",
+              "lang": "text",
+              "match": "project = \"acme-app\"",
+              "source": {
+                "label": "provider block",
+                "url": "https://developer.hashicorp.com/terraform/language/block/provider"
+              }
+            }
+          ]
+        },
+        {
+          "title": "Rules and gotchas",
+          "part": "reference",
+          "icon": "alert",
+          "items": [
+            "Without a `provider` block, Terraform creates an empty default configuration. If the provider has required arguments, that is an error.",
+            "Arguments can use expressions, but only values known before apply: input variables and arguments written in the configuration, not computed resource attributes.",
+            "Many providers read environment variables, which keeps credentials out of version-controlled files. Check the provider's documentation."
+          ]
+        }
+      ],
+      "related": [
+        "dependencies",
+        "terraform"
+      ],
+      "sources": [
+        {
+          "label": "provider block reference",
+          "url": "https://developer.hashicorp.com/terraform/language/block/provider"
+        },
+        {
+          "label": "Provider requirements",
+          "url": "https://developer.hashicorp.com/terraform/language/providers/requirements"
+        }
+      ]
+    },
+    {
+      "id": "resource",
+      "name": "resource",
+      "group": "blocks",
+      "summary": "Declares one infrastructure object that Terraform creates, updates and destroys. The arguments depend on the provider.",
+      "level": "deep",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "first tag v0.1.0 has no dated release; the repository was created 2014-03-13",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "Not a CNCF project."
+      },
+      "license": "BUSL-1.1",
+      "version": {
+        "name": "Terraform CLI",
+        "analysed": "v1.17.1",
+        "released": "2026-10-28",
+        "docs": "developer.hashicorp.com/terraform, v1.17.x (latest) docs, and the v1.17 CHANGELOG",
+        "checked": "2026-11-02"
+      },
+      "track": {
+        "github": "hashicorp/terraform",
+        "tag": "^v\\d+\\.\\d+\\.\\d+$"
+      },
+      "links": [
+        {
+          "label": "resource block reference",
+          "url": "https://developer.hashicorp.com/terraform/language/block/resource"
+        },
+        {
+          "label": "Terraform documentation",
+          "url": "https://developer.hashicorp.com/terraform"
+        }
+      ],
+      "sections": [
+        {
+          "title": "In one minute",
+          "part": "overview",
+          "icon": "eye",
+          "items": [
+            "`resource \"TYPE\" \"LABEL\"` defines a piece of infrastructure and its settings. The type and its arguments come from the provider; the label is your name for it. `TYPE.LABEL` is the address other blocks and commands use.",
+            {
+              "type": "code",
+              "title": "All the built-in arguments",
+              "lang": "text",
+              "match": "count = <NUMBER>",
+              "source": {
+                "label": "resource block",
+                "url": "https://developer.hashicorp.com/terraform/language/block/resource"
+              }
+            }
+          ]
+        },
+        {
+          "title": "Arguments and nested blocks",
+          "part": "use",
+          "icon": "list",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Argument",
+                "Meaning"
+              ],
+              "rows": [
+                [
+                  "provider-specific",
+                  "Defined by the provider. See its documentation"
+                ],
+                [
+                  "`count`",
+                  "A number of instances. Mutually exclusive with `for_each`"
+                ],
+                [
+                  "`for_each`",
+                  "A map or set of strings, one instance per item. Mutually exclusive with `count`"
+                ],
+                [
+                  "`depends_on`",
+                  "A list of references for hidden dependencies"
+                ],
+                [
+                  "`provider`",
+                  "An alternate provider configuration: `PROVIDER.ALIAS`"
+                ],
+                [
+                  "`lifecycle`",
+                  "`create_before_destroy`, `prevent_destroy`, `ignore_changes`, `replace_triggered_by`, `precondition`, `postcondition`, and `action_trigger` (events, condition, actions, `on_failure` of halt, continue or taint)"
+                ],
+                [
+                  "`connection`",
+                  "How provisioners reach the object (type, user, host, port, keys and more)"
+                ],
+                [
+                  "`provisioner \"TYPE\"`",
+                  "Runs a command or script, for example `local-exec` or `remote-exec`. Has `when` and `on_failure`"
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "title": "In use",
+          "part": "use",
+          "icon": "play",
+          "items": [
+            "The meta-arguments are explained on the [Configuration](#configuration) tab.",
+            {
+              "type": "code",
+              "title": "replace_triggered_by",
+              "lang": "text",
+              "match": "replace_triggered_by = [",
+              "source": {
+                "label": "lifecycle",
+                "url": "https://developer.hashicorp.com/terraform/language/meta-arguments/lifecycle"
+              }
+            },
+            "`action_trigger` runs an [action](#action) before or after create, update or destroy (`before_create`, `after_create`, `before_update`, `after_update`, `before_destroy`, `after_destroy`)."
+          ]
+        },
+        {
+          "title": "Rules and gotchas",
+          "part": "reference",
+          "icon": "alert",
+          "items": [
+            "Renaming a resource block makes Terraform plan to destroy the old object and create a new one. Add a [moved](#moved) block to keep the object.",
+            "A resource that was in the configuration and is deleted is destroyed, whatever lifecycle rules it had. Use [removed](#removed) to stop managing it instead."
+          ]
+        }
+      ],
+      "related": [
+        "configuration",
+        "moved",
+        "removed",
+        "action"
+      ],
+      "sources": [
+        {
+          "label": "resource block reference",
+          "url": "https://developer.hashicorp.com/terraform/language/block/resource"
+        },
+        {
+          "label": "lifecycle",
+          "url": "https://developer.hashicorp.com/terraform/language/meta-arguments/lifecycle"
+        },
+        {
+          "label": "count",
+          "url": "https://developer.hashicorp.com/terraform/language/meta-arguments/count"
+        },
+        {
+          "label": "for_each",
+          "url": "https://developer.hashicorp.com/terraform/language/meta-arguments/for_each"
+        }
+      ]
+    },
+    {
+      "id": "data",
+      "name": "data",
+      "group": "blocks",
+      "summary": "Reads information about an existing object from the provider, without creating anything.",
+      "level": "deep",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "first tag v0.1.0 has no dated release; the repository was created 2014-03-13",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "Not a CNCF project."
+      },
+      "license": "BUSL-1.1",
+      "version": {
+        "name": "Terraform CLI",
+        "analysed": "v1.17.1",
+        "released": "2026-10-28",
+        "docs": "developer.hashicorp.com/terraform, v1.17.x (latest) docs, and the v1.17 CHANGELOG",
+        "checked": "2026-11-02"
+      },
+      "track": {
+        "github": "hashicorp/terraform",
+        "tag": "^v\\d+\\.\\d+\\.\\d+$"
+      },
+      "links": [
+        {
+          "label": "data block reference",
+          "url": "https://developer.hashicorp.com/terraform/language/block/data"
+        },
+        {
+          "label": "Terraform documentation",
+          "url": "https://developer.hashicorp.com/terraform"
+        }
+      ],
+      "sections": [
+        {
+          "title": "In one minute",
+          "part": "overview",
+          "icon": "eye",
+          "items": [
+            "The `data` block fetches data from the provider so other blocks can use it, which avoids hardcoding values. The source type, arguments and attributes depend on the provider.",
+            {
+              "type": "code",
+              "title": "All the built-in arguments",
+              "lang": "text",
+              "match": "<PROVIDER-SPECIFIC ARGUMENTS>",
+              "source": {
+                "label": "data block",
+                "url": "https://developer.hashicorp.com/terraform/language/block/data"
+              }
+            }
+          ]
+        },
+        {
+          "title": "Arguments and nested blocks",
+          "part": "use",
+          "icon": "list",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Argument",
+                "Meaning"
+              ],
+              "rows": [
+                [
+                  "provider-specific",
+                  "Defined by the provider. See its documentation"
+                ],
+                [
+                  "`count`",
+                  "A number of instances. Mutually exclusive with `for_each`"
+                ],
+                [
+                  "`for_each`",
+                  "A map or set of strings. Mutually exclusive with `count`"
+                ],
+                [
+                  "`depends_on`",
+                  "A list of references"
+                ],
+                [
+                  "`provider`",
+                  "An alternate provider configuration"
+                ],
+                [
+                  "`lifecycle`",
+                  "`precondition` and `postcondition` blocks"
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "title": "In use",
+          "part": "use",
+          "icon": "play",
+          "items": [
+            "Use a data source to look up something Terraform does not manage, or that another configuration manages. Compare with [resource](#resource), which creates the object.",
+            "A data source can also be nested in a [check](#check) block, where it is read at the end of the run."
+          ]
+        },
+        {
+          "title": "Rules and gotchas",
+          "part": "reference",
+          "icon": "alert",
+          "items": [
+            "Which data sources exist is up to the provider. Check its documentation."
+          ]
+        }
+      ],
+      "related": [
+        "resource",
+        "check"
+      ],
+      "sources": [
+        {
+          "label": "data block reference",
+          "url": "https://developer.hashicorp.com/terraform/language/block/data"
+        },
+        {
+          "label": "lifecycle",
+          "url": "https://developer.hashicorp.com/terraform/language/meta-arguments/lifecycle"
+        }
+      ]
+    },
+    {
+      "id": "variable",
+      "name": "variable",
+      "group": "blocks",
+      "summary": "An input to a module: a typed, documented, optionally validated value that callers set.",
+      "level": "deep",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "first tag v0.1.0 has no dated release; the repository was created 2014-03-13",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "Not a CNCF project."
+      },
+      "license": "BUSL-1.1",
+      "version": {
+        "name": "Terraform CLI",
+        "analysed": "v1.17.1",
+        "released": "2026-10-28",
+        "docs": "developer.hashicorp.com/terraform, v1.17.x (latest) docs, and the v1.17 CHANGELOG",
+        "checked": "2026-11-02"
+      },
+      "track": {
+        "github": "hashicorp/terraform",
+        "tag": "^v\\d+\\.\\d+\\.\\d+$"
+      },
+      "links": [
+        {
+          "label": "variable block reference",
+          "url": "https://developer.hashicorp.com/terraform/language/block/variable"
+        },
+        {
+          "label": "Terraform documentation",
+          "url": "https://developer.hashicorp.com/terraform"
+        }
+      ],
+      "sections": [
+        {
+          "title": "In one minute",
+          "part": "overview",
+          "icon": "eye",
+          "items": [
+            "The `variable` block parameterizes a module so users can customize it without changing the source. It works like a function argument.",
+            "In the root module, set values with CLI options, environment variables, variable files, or an HCP Terraform workspace. In a child module, the parent passes values as arguments in the `module` block.",
+            {
+              "type": "code",
+              "title": "All the arguments",
+              "lang": "text",
+              "match": "default     = <DEFAULT_VALUE>",
+              "source": {
+                "label": "variable block",
+                "url": "https://developer.hashicorp.com/terraform/language/block/variable"
+              }
+            }
+          ]
+        },
+        {
+          "title": "Arguments and nested blocks",
+          "part": "use",
+          "icon": "list",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Argument",
+                "Meaning"
+              ],
+              "rows": [
+                [
+                  "`type`",
+                  "A type constraint. Without one, any type is accepted"
+                ],
+                [
+                  "`default`",
+                  "Makes the variable optional. Must be a literal value and cannot refer to other objects; it must convert to `type`"
+                ],
+                [
+                  "`description`",
+                  "What the variable is for and what it expects"
+                ],
+                [
+                  "`validation`",
+                  "A `condition` and an `error_message` the value must satisfy, as well as the type"
+                ],
+                [
+                  "`sensitive`",
+                  "Hide the value in CLI output (it is still stored in state)"
+                ],
+                [
+                  "`nullable`",
+                  "Whether the value may be `null`"
+                ],
+                [
+                  "`ephemeral`",
+                  "Keep the value out of state and plan files"
+                ],
+                [
+                  "`const`",
+                  "Lets the variable be used during early operations such as init (for example in a module `source`)"
+                ],
+                [
+                  "`deprecated`",
+                  "A deprecation message"
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "title": "In use",
+          "part": "use",
+          "icon": "play",
+          "items": [
+            {
+              "type": "code",
+              "title": "A sensitive variable",
+              "lang": "text",
+              "match": "variable \"user_password\"",
+              "source": {
+                "label": "variable block",
+                "url": "https://developer.hashicorp.com/terraform/language/block/variable"
+              }
+            },
+            {
+              "type": "code",
+              "title": "An ephemeral variable",
+              "lang": "text",
+              "match": "ephemeral = true",
+              "source": {
+                "label": "variable block",
+                "url": "https://developer.hashicorp.com/terraform/language/block/variable"
+              }
+            },
+            "The order in which sources override each other is on the [Configuration](#configuration) tab."
+          ]
+        },
+        {
+          "title": "Rules and gotchas",
+          "part": "reference",
+          "icon": "alert",
+          "items": [
+            "The label must be unique among the variables of the module. Some names are reserved (the page lists them, including `source`, `version`, `providers` and `count`).",
+            "`sensitive` only hides the value in output; `ephemeral` keeps it out of state."
+          ]
+        }
+      ],
+      "related": [
+        "configuration",
+        "output",
+        "locals"
+      ],
+      "sources": [
+        {
+          "label": "variable block reference",
+          "url": "https://developer.hashicorp.com/terraform/language/block/variable"
+        },
+        {
+          "label": "Variables",
+          "url": "https://developer.hashicorp.com/terraform/language/values/variables"
+        }
+      ]
+    },
+    {
+      "id": "output",
+      "name": "output",
+      "group": "blocks",
+      "summary": "A value a module returns: to its parent, to the CLI, or to other configurations.",
+      "level": "deep",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "first tag v0.1.0 has no dated release; the repository was created 2014-03-13",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "Not a CNCF project."
+      },
+      "license": "BUSL-1.1",
+      "version": {
+        "name": "Terraform CLI",
+        "analysed": "v1.17.1",
+        "released": "2026-10-28",
+        "docs": "developer.hashicorp.com/terraform, v1.17.x (latest) docs, and the v1.17 CHANGELOG",
+        "checked": "2026-11-02"
+      },
+      "track": {
+        "github": "hashicorp/terraform",
+        "tag": "^v\\d+\\.\\d+\\.\\d+$"
+      },
+      "links": [
+        {
+          "label": "output block reference",
+          "url": "https://developer.hashicorp.com/terraform/language/block/output"
+        },
+        {
+          "label": "Terraform documentation",
+          "url": "https://developer.hashicorp.com/terraform"
+        }
+      ],
+      "sections": [
+        {
+          "title": "In one minute",
+          "part": "overview",
+          "icon": "eye",
+          "items": [
+            "The `output` block exposes information. Child modules give values to their parents; the root module prints them after apply and lets other configurations read them through `terraform_remote_state`; automation tools can read them too.",
+            {
+              "type": "code",
+              "title": "All the arguments",
+              "lang": "text",
+              "match": "type        = <TYPE>",
+              "source": {
+                "label": "output block",
+                "url": "https://developer.hashicorp.com/terraform/language/block/output"
+              }
+            }
+          ]
+        },
+        {
+          "title": "Arguments and nested blocks",
+          "part": "use",
+          "icon": "list",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Argument",
+                "Meaning"
+              ],
+              "rows": [
+                [
+                  "`value`",
+                  "Required. The expression to return. Its result is stored in state"
+                ],
+                [
+                  "`type`",
+                  "A type constraint for the value"
+                ],
+                [
+                  "`description`",
+                  "What it is and how to use it"
+                ],
+                [
+                  "`sensitive`",
+                  "Hide the value in CLI output"
+                ],
+                [
+                  "`ephemeral`",
+                  "Keep the value out of state"
+                ],
+                [
+                  "`depends_on`",
+                  "Explicit dependencies"
+                ],
+                [
+                  "`precondition`",
+                  "A condition to check before computing the output or storing it"
+                ],
+                [
+                  "`deprecated`",
+                  "A deprecation message. Only valid in child modules"
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "title": "In use",
+          "part": "use",
+          "icon": "play",
+          "items": [
+            {
+              "type": "code",
+              "title": "A sensitive output",
+              "lang": "text",
+              "match": "sensitive = <boolean>",
+              "source": {
+                "label": "output block",
+                "url": "https://developer.hashicorp.com/terraform/language/block/output"
+              }
+            },
+            "Read outputs with `terraform output`, `-json` or `-raw` (see [Useful commands](#commands))."
+          ]
+        },
+        {
+          "title": "Rules and gotchas",
+          "part": "reference",
+          "icon": "alert",
+          "items": [
+            "In HCP Terraform, output values appear in the UI after an apply, and you can mark them sensitive to hide them there and in API responses.",
+            "A sensitive output is still stored in state."
+          ]
+        }
+      ],
+      "related": [
+        "variable",
+        "module",
+        "commands"
+      ],
+      "sources": [
+        {
+          "label": "output block reference",
+          "url": "https://developer.hashicorp.com/terraform/language/block/output"
+        },
+        {
+          "label": "Outputs",
+          "url": "https://developer.hashicorp.com/terraform/language/values/outputs"
+        }
+      ]
+    },
+    {
+      "id": "locals",
+      "name": "locals",
+      "group": "blocks",
+      "summary": "Names for expressions you reuse inside one module.",
+      "level": "deep",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "first tag v0.1.0 has no dated release; the repository was created 2014-03-13",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "Not a CNCF project."
+      },
+      "license": "BUSL-1.1",
+      "version": {
+        "name": "Terraform CLI",
+        "analysed": "v1.17.1",
+        "released": "2026-10-28",
+        "docs": "developer.hashicorp.com/terraform, v1.17.x (latest) docs, and the v1.17 CHANGELOG",
+        "checked": "2026-11-02"
+      },
+      "track": {
+        "github": "hashicorp/terraform",
+        "tag": "^v\\d+\\.\\d+\\.\\d+$"
+      },
+      "links": [
+        {
+          "label": "locals block reference",
+          "url": "https://developer.hashicorp.com/terraform/language/block/locals"
+        },
+        {
+          "label": "Terraform documentation",
+          "url": "https://developer.hashicorp.com/terraform"
+        }
+      ],
+      "sections": [
+        {
+          "title": "In one minute",
+          "part": "overview",
+          "icon": "eye",
+          "items": [
+            "A `locals` block assigns names to expressions, like function-scoped variables in other languages. Define it in any module, and use any expression: variables, resource attributes, function results, other locals.",
+            {
+              "type": "code",
+              "title": "A locals block",
+              "lang": "text",
+              "match": "# Naming convention",
+              "source": {
+                "label": "Locals",
+                "url": "https://developer.hashicorp.com/terraform/language/values/locals"
+              }
+            }
+          ]
+        },
+        {
+          "title": "Arguments and nested blocks",
+          "part": "use",
+          "icon": "list",
+          "items": [
+            "There are no arguments with a fixed meaning: each argument you write inside `locals` defines one local value."
+          ]
+        },
+        {
+          "title": "In use",
+          "part": "use",
+          "icon": "play",
+          "items": [
+            "Reference a local with the singular `local.<NAME>`, although the block is called `locals`.",
+            "A local is visible only in the module that defines it. Pass it to a child module as an argument if needed."
+          ]
+        },
+        {
+          "title": "Rules and gotchas",
+          "part": "reference",
+          "icon": "alert",
+          "items": [
+            "Locals avoid repeating a value, but they can hide where a value comes from. Use them when a value is reused, or an expression needs a meaningful name."
+          ]
+        }
+      ],
+      "related": [
+        "variable",
+        "configuration"
+      ],
+      "sources": [
+        {
+          "label": "Locals",
+          "url": "https://developer.hashicorp.com/terraform/language/values/locals"
+        }
+      ]
+    },
+    {
+      "id": "module",
+      "name": "module",
+      "group": "blocks",
+      "summary": "Calls a module: a set of resources Terraform manages together, from a local folder or a remote source.",
+      "level": "deep",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "first tag v0.1.0 has no dated release; the repository was created 2014-03-13",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "Not a CNCF project."
+      },
+      "license": "BUSL-1.1",
+      "version": {
+        "name": "Terraform CLI",
+        "analysed": "v1.17.1",
+        "released": "2026-10-28",
+        "docs": "developer.hashicorp.com/terraform, v1.17.x (latest) docs, and the v1.17 CHANGELOG",
+        "checked": "2026-11-02"
+      },
+      "track": {
+        "github": "hashicorp/terraform",
+        "tag": "^v\\d+\\.\\d+\\.\\d+$"
+      },
+      "links": [
+        {
+          "label": "module block reference",
+          "url": "https://developer.hashicorp.com/terraform/language/block/module"
+        },
+        {
+          "label": "Terraform documentation",
+          "url": "https://developer.hashicorp.com/terraform"
+        }
+      ],
+      "sections": [
+        {
+          "title": "In one minute",
+          "part": "overview",
+          "icon": "eye",
+          "items": [
+            "A module is a collection of resources managed together. The `module` block creates the resources defined in a local or remote module. Its label is the local name.",
+            {
+              "type": "code",
+              "title": "All the arguments",
+              "lang": "text",
+              "match": "<module-specific-inputs>",
+              "source": {
+                "label": "module block",
+                "url": "https://developer.hashicorp.com/terraform/language/block/module"
+              }
+            }
+          ]
+        },
+        {
+          "title": "Arguments and nested blocks",
+          "part": "use",
+          "icon": "list",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Argument",
+                "Meaning"
+              ],
+              "rows": [
+                [
+                  "module inputs",
+                  "Defined by the module's own variables. Some are required"
+                ],
+                [
+                  "`source`",
+                  "Required. A literal string: where to get the module code. A variable in it must declare `const = true`"
+                ],
+                [
+                  "`version`",
+                  "Only for modules from a registry"
+                ],
+                [
+                  "`count`, `for_each`",
+                  "Several instances (mutually exclusive)"
+                ],
+                [
+                  "`providers`",
+                  "A map from the child module's provider names to the parent's configurations"
+                ],
+                [
+                  "`depends_on`",
+                  "Explicit dependencies"
+                ],
+                [
+                  "`ignore_nested_deprecations`",
+                  "A boolean"
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "title": "In use",
+          "part": "use",
+          "icon": "play",
+          "items": [
+            {
+              "type": "code",
+              "title": "A local module",
+              "lang": "text",
+              "match": "source = \"./<PATH-TO-MODULE>\"",
+              "source": {
+                "label": "module block",
+                "url": "https://developer.hashicorp.com/terraform/language/block/module"
+              }
+            },
+            {
+              "type": "code",
+              "title": "From the registry",
+              "lang": "text",
+              "match": "source = \"<NAMESPACE>/<NAME>/<PROVIDER>\"",
+              "source": {
+                "label": "module block",
+                "url": "https://developer.hashicorp.com/terraform/language/block/module"
+              }
+            },
+            {
+              "type": "code",
+              "title": "From GitHub",
+              "lang": "text",
+              "match": "source = \"github.com/<ORGANIZATION>/<MODULE-FOLDER>\"",
+              "source": {
+                "label": "module block",
+                "url": "https://developer.hashicorp.com/terraform/language/block/module"
+              }
+            },
+            "Read a child module's output as `module.<label>.<output>`."
+          ]
+        },
+        {
+          "title": "Rules and gotchas",
+          "part": "reference",
+          "icon": "alert",
+          "items": [
+            "Run `terraform init` after changing `source`.",
+            "The same source can appear in several `module` blocks if each has a unique label. That makes several copies of its resources with different settings.",
+            "For a package in a version control repository or archive, `//` in the source path marks a subdirectory. Terraform extracts the whole package and reads the module from the subdirectory.",
+            "Absolute filesystem paths are not recommended. Use `./` or `../` for local modules."
+          ]
+        }
+      ],
+      "related": [
+        "dependencies",
+        "variable",
+        "output"
+      ],
+      "sources": [
+        {
+          "label": "module block reference",
+          "url": "https://developer.hashicorp.com/terraform/language/block/module"
+        },
+        {
+          "label": "Module configuration",
+          "url": "https://developer.hashicorp.com/terraform/language/modules/configuration"
+        }
+      ]
+    },
+    {
+      "id": "import",
+      "name": "import",
+      "group": "blocks",
+      "summary": "Brings an existing object under Terraform's management when you apply, instead of running terraform import by hand.",
+      "level": "deep",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "first tag v0.1.0 has no dated release; the repository was created 2014-03-13",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "Not a CNCF project."
+      },
+      "license": "BUSL-1.1",
+      "version": {
+        "name": "Terraform CLI",
+        "analysed": "v1.17.1",
+        "released": "2026-10-28",
+        "docs": "developer.hashicorp.com/terraform, v1.17.x (latest) docs, and the v1.17 CHANGELOG",
+        "checked": "2026-11-02"
+      },
+      "track": {
+        "github": "hashicorp/terraform",
+        "tag": "^v\\d+\\.\\d+\\.\\d+$"
+      },
+      "links": [
+        {
+          "label": "import block reference",
+          "url": "https://developer.hashicorp.com/terraform/language/block/import"
+        },
+        {
+          "label": "Terraform documentation",
+          "url": "https://developer.hashicorp.com/terraform"
+        }
+      ],
+      "sections": [
+        {
+          "title": "In one minute",
+          "part": "overview",
+          "icon": "eye",
+          "items": [
+            "An `import` block imports an existing infrastructure object into state at the address in `to`. It runs on `apply`, so the import shows up in the plan for review. Put the blocks in any file, or in an `imports.tf` of their own.",
+            {
+              "type": "code",
+              "title": "An import block",
+              "lang": "text",
+              "match": "id = \"cloud-provider-id\"",
+              "source": {
+                "label": "import block",
+                "url": "https://developer.hashicorp.com/terraform/language/block/import"
+              }
+            }
+          ]
+        },
+        {
+          "title": "Arguments and nested blocks",
+          "part": "use",
+          "icon": "list",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Argument",
+                "Meaning"
+              ],
+              "rows": [
+                [
+                  "`to`",
+                  "Required. The resource address to bind to (`TYPE.LABEL`)"
+                ],
+                [
+                  "`id`",
+                  "The object's ID, in the format the provider documents"
+                ],
+                [
+                  "`identity`",
+                  "A map that identifies the object. Mutually exclusive with `id`"
+                ],
+                [
+                  "`for_each`",
+                  "A map or set of strings, to import several objects"
+                ],
+                [
+                  "`provider`",
+                  "The provider configuration to use"
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "title": "In use",
+          "part": "use",
+          "icon": "play",
+          "items": [
+            {
+              "type": "code",
+              "title": "Import one resource",
+              "lang": "text",
+              "match": "to = aws_s3_bucket.this",
+              "source": {
+                "label": "import block",
+                "url": "https://developer.hashicorp.com/terraform/language/block/import"
+              }
+            },
+            "`terraform plan -generate-config-out=PATH` writes configuration for resources with no block yet (experimental)."
+          ]
+        },
+        {
+          "title": "Rules and gotchas",
+          "part": "reference",
+          "icon": "alert",
+          "items": [
+            "The `resource` block you import into must exist in the configuration unless you generate it.",
+            "Import each remote object to one address only."
+          ]
+        }
+      ],
+      "related": [
+        "commands",
+        "moved",
+        "removed"
+      ],
+      "sources": [
+        {
+          "label": "import block reference",
+          "url": "https://developer.hashicorp.com/terraform/language/block/import"
+        },
+        {
+          "label": "terraform import",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/import"
+        },
+        {
+          "label": "terraform plan",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/plan"
+        }
+      ]
+    },
+    {
+      "id": "moved",
+      "name": "moved",
+      "group": "blocks",
+      "summary": "Tells Terraform a resource, or a module, has a new address, so the object is kept instead of destroyed and recreated.",
+      "level": "deep",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "first tag v0.1.0 has no dated release; the repository was created 2014-03-13",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "Not a CNCF project."
+      },
+      "license": "BUSL-1.1",
+      "version": {
+        "name": "Terraform CLI",
+        "analysed": "v1.17.1",
+        "released": "2026-10-28",
+        "docs": "developer.hashicorp.com/terraform, v1.17.x (latest) docs, and the v1.17 CHANGELOG",
+        "checked": "2026-11-02"
+      },
+      "track": {
+        "github": "hashicorp/terraform",
+        "tag": "^v\\d+\\.\\d+\\.\\d+$"
+      },
+      "links": [
+        {
+          "label": "moved block reference",
+          "url": "https://developer.hashicorp.com/terraform/language/block/moved"
+        },
+        {
+          "label": "Terraform documentation",
+          "url": "https://developer.hashicorp.com/terraform"
+        }
+      ],
+      "sections": [
+        {
+          "title": "In one minute",
+          "part": "overview",
+          "icon": "eye",
+          "items": [
+            "The `moved` block changes the address of a resource programmatically. Before planning the `to` address, Terraform looks in state for an object at the `from` address and renames it.",
+            {
+              "type": "code",
+              "title": "A moved block",
+              "lang": "text",
+              "match": "from = aws_instance.a",
+              "source": {
+                "label": "moved block",
+                "url": "https://developer.hashicorp.com/terraform/language/block/moved"
+              }
+            }
+          ]
+        },
+        {
+          "title": "Arguments and nested blocks",
+          "part": "use",
+          "icon": "list",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Argument",
+                "Meaning"
+              ],
+              "rows": [
+                [
+                  "`from`",
+                  "Required. The previous address. Can select modules, resources and resources inside child modules"
+                ],
+                [
+                  "`to`",
+                  "Required. The new address"
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "title": "In use",
+          "part": "use",
+          "icon": "play",
+          "items": [
+            "Use it after renaming a block or moving it into a module. The change is in the configuration, so it is reviewed and every collaborator gets it.",
+            "`terraform state mv` does the same in state at once (see [Useful commands](#commands))."
+          ]
+        },
+        {
+          "title": "Rules and gotchas",
+          "part": "reference",
+          "icon": "alert",
+          "items": [
+            "Every state that holds the old address needs the block, or its plan will want to destroy and recreate."
+          ]
+        }
+      ],
+      "related": [
+        "commands",
+        "import",
+        "removed"
+      ],
+      "sources": [
+        {
+          "label": "moved block reference",
+          "url": "https://developer.hashicorp.com/terraform/language/block/moved"
+        },
+        {
+          "label": "terraform state mv",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/state/mv"
+        }
+      ]
+    },
+    {
+      "id": "removed",
+      "name": "removed",
+      "group": "blocks",
+      "summary": "Stops managing a resource, with or without destroying the real object.",
+      "level": "deep",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "first tag v0.1.0 has no dated release; the repository was created 2014-03-13",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "Not a CNCF project."
+      },
+      "license": "BUSL-1.1",
+      "version": {
+        "name": "Terraform CLI",
+        "analysed": "v1.17.1",
+        "released": "2026-10-28",
+        "docs": "developer.hashicorp.com/terraform, v1.17.x (latest) docs, and the v1.17 CHANGELOG",
+        "checked": "2026-11-02"
+      },
+      "track": {
+        "github": "hashicorp/terraform",
+        "tag": "^v\\d+\\.\\d+\\.\\d+$"
+      },
+      "links": [
+        {
+          "label": "removed block reference",
+          "url": "https://developer.hashicorp.com/terraform/language/block/removed"
+        },
+        {
+          "label": "Terraform documentation",
+          "url": "https://developer.hashicorp.com/terraform"
+        }
+      ],
+      "sections": [
+        {
+          "title": "In one minute",
+          "part": "overview",
+          "icon": "eye",
+          "items": [
+            "The `removed` block removes a resource from state. The `lifecycle` block's `destroy` argument says what happens to the real object. Unlike `terraform state rm`, you can remove several resources at once and review them in the normal plan and apply.",
+            {
+              "type": "code",
+              "title": "A removed block",
+              "lang": "text",
+              "match": "from = \"<resource.address>\"",
+              "source": {
+                "label": "removed block",
+                "url": "https://developer.hashicorp.com/terraform/language/block/removed"
+              }
+            }
+          ]
+        },
+        {
+          "title": "Arguments and nested blocks",
+          "part": "use",
+          "icon": "list",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Argument",
+                "Meaning"
+              ],
+              "rows": [
+                [
+                  "`from`",
+                  "The address of the resource to remove"
+                ],
+                [
+                  "`lifecycle`",
+                  "Holds `destroy`, a boolean, the only lifecycle argument supported here"
+                ],
+                [
+                  "`connection`, `provisioner`",
+                  "Settings for destroy-time provisioners of the removed resource"
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "title": "In use",
+          "part": "use",
+          "icon": "play",
+          "items": [
+            {
+              "type": "code",
+              "title": "The shortest form",
+              "lang": "text",
+              "match": "from = <TYPE>.<NAME>",
+              "source": {
+                "label": "removed block",
+                "url": "https://developer.hashicorp.com/terraform/language/block/removed"
+              }
+            },
+            "The older way is `terraform state rm ADDRESS`."
+          ]
+        },
+        {
+          "title": "Rules and gotchas",
+          "part": "reference",
+          "icon": "alert",
+          "items": [
+            "Which value of `destroy` leaves the object running, and the default, are on the block reference page; read it before use (not restated here)."
+          ]
+        }
+      ],
+      "related": [
+        "commands",
+        "moved",
+        "import"
+      ],
+      "sources": [
+        {
+          "label": "removed block reference",
+          "url": "https://developer.hashicorp.com/terraform/language/block/removed"
+        },
+        {
+          "label": "terraform state rm",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/state/rm"
+        }
+      ]
+    },
+    {
+      "id": "check",
+      "name": "check",
+      "group": "blocks",
+      "summary": "Validates infrastructure after the run, without blocking it: a failed assertion is a warning.",
+      "level": "deep",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "first tag v0.1.0 has no dated release; the repository was created 2014-03-13",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "Not a CNCF project."
+      },
+      "license": "BUSL-1.1",
+      "version": {
+        "name": "Terraform CLI",
+        "analysed": "v1.17.1",
+        "released": "2026-10-28",
+        "docs": "developer.hashicorp.com/terraform, v1.17.x (latest) docs, and the v1.17 CHANGELOG",
+        "checked": "2026-11-02"
+      },
+      "track": {
+        "github": "hashicorp/terraform",
+        "tag": "^v\\d+\\.\\d+\\.\\d+$"
+      },
+      "links": [
+        {
+          "label": "check block reference",
+          "url": "https://developer.hashicorp.com/terraform/language/block/check"
+        },
+        {
+          "label": "Terraform documentation",
+          "url": "https://developer.hashicorp.com/terraform"
+        }
+      ],
+      "sections": [
+        {
+          "title": "In one minute",
+          "part": "overview",
+          "icon": "eye",
+          "items": [
+            "A `check` block validates your infrastructure outside the normal resource lifecycle. Terraform runs it as the last step of plan or apply. If an assertion fails, Terraform reports a warning and carries on.",
+            {
+              "type": "code",
+              "title": "A check block",
+              "lang": "text",
+              "match": "check \"<LABEL>\"",
+              "source": {
+                "label": "check block",
+                "url": "https://developer.hashicorp.com/terraform/language/block/check"
+              }
+            }
+          ]
+        },
+        {
+          "title": "Arguments and nested blocks",
+          "part": "use",
+          "icon": "list",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Part",
+                "Meaning"
+              ],
+              "rows": [
+                [
+                  "`assert`",
+                  "Required, one or more. Each has a `condition` that must be true and an `error_message` for when it is not"
+                ],
+                [
+                  "`data`",
+                  "Optional. A data source usable only inside this check. It is fetched at the end of the run"
+                ],
+                [
+                  "`depends_on`",
+                  "On the nested data block: an upstream resource to finish first"
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "title": "In use",
+          "part": "use",
+          "icon": "play",
+          "items": [
+            {
+              "type": "code",
+              "title": "An example",
+              "lang": "text",
+              "match": "check \"health_check\"",
+              "source": {
+                "label": "check block",
+                "url": "https://developer.hashicorp.com/terraform/language/block/check"
+              }
+            },
+            "A condition can reference nested data sources and any variables, resources, data sources or module outputs in the module."
+          ]
+        },
+        {
+          "title": "Rules and gotchas",
+          "part": "reference",
+          "icon": "alert",
+          "items": [
+            "Errors raised by a nested data source's provider are masked as warnings and do not stop the run.",
+            "Other validation (variable `validation`, `precondition`, `postcondition`) can block an operation; `check` does not.",
+            "In HCP Terraform you can run health checks on a workspace to execute checks continuously."
+          ]
+        }
+      ],
+      "related": [
+        "testing",
+        "data"
+      ],
+      "sources": [
+        {
+          "label": "check block reference",
+          "url": "https://developer.hashicorp.com/terraform/language/block/check"
+        }
+      ]
+    },
+    {
+      "id": "action",
+      "name": "action",
+      "group": "blocks",
+      "summary": "Declares a provider-defined action to run, from the CLI or when a resource changes.",
+      "level": "deep",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "first tag v0.1.0 has no dated release; the repository was created 2014-03-13",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "Not a CNCF project."
+      },
+      "license": "BUSL-1.1",
+      "version": {
+        "name": "Terraform CLI",
+        "analysed": "v1.17.1",
+        "released": "2026-10-28",
+        "docs": "developer.hashicorp.com/terraform, v1.17.x (latest) docs, and the v1.17 CHANGELOG",
+        "checked": "2026-11-02"
+      },
+      "track": {
+        "github": "hashicorp/terraform",
+        "tag": "^v\\d+\\.\\d+\\.\\d+$"
+      },
+      "links": [
+        {
+          "label": "action block reference",
+          "url": "https://developer.hashicorp.com/terraform/language/block/action"
+        },
+        {
+          "label": "Terraform documentation",
+          "url": "https://developer.hashicorp.com/terraform"
+        }
+      ],
+      "sections": [
+        {
+          "title": "In one minute",
+          "part": "overview",
+          "icon": "eye",
+          "items": [
+            "An `action` block specifies a provider-defined action: a preset operation in a provider that triggers an automation outside Terraform. Invoke it from the CLI or during an apply. Refer to it as `action.<TYPE>.<LABEL>`.",
+            {
+              "type": "code",
+              "title": "An action",
+              "lang": "text",
+              "match": "\"123456789012:function:my-function:1\"",
+              "source": {
+                "label": "action block",
+                "url": "https://developer.hashicorp.com/terraform/language/block/action"
+              }
+            }
+          ]
+        },
+        {
+          "title": "Arguments and nested blocks",
+          "part": "use",
+          "icon": "list",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Argument",
+                "Meaning"
+              ],
+              "rows": [
+                [
+                  "`TYPE`, `LABEL`",
+                  "The action type (defined by the provider) and your name for it"
+                ],
+                [
+                  "`config`",
+                  "The provider's own arguments and nested blocks"
+                ],
+                [
+                  "`count`",
+                  "Invoke several times with one configuration. Mutually exclusive with `for_each`"
+                ],
+                [
+                  "`for_each`",
+                  "Invoke once per item of a list or map"
+                ],
+                [
+                  "`provider`",
+                  "An alternate provider configuration"
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "title": "In use",
+          "part": "use",
+          "icon": "play",
+          "items": [
+            {
+              "type": "code",
+              "title": "Invoke from the CLI",
+              "lang": "shell",
+              "match": "terraform apply -invoke='action.aws_lambda_invoke.test`",
+              "source": {
+                "label": "terraform apply",
+                "url": "https://developer.hashicorp.com/terraform/cli/commands/apply"
+              }
+            },
+            "From a resource, an `action_trigger` in its `lifecycle` block runs the action on create, update or destroy events (see [resource](#resource))."
+          ]
+        },
+        {
+          "title": "Rules and gotchas",
+          "part": "reference",
+          "icon": "alert",
+          "items": [
+            "With `-invoke`, Terraform excludes all other configuration from the plan.",
+            "The action types available depend on the provider. The example uses the AWS provider's `aws_lambda_invoke`."
+          ]
+        }
+      ],
+      "related": [
+        "resource",
+        "commands"
+      ],
+      "sources": [
+        {
+          "label": "action block reference",
+          "url": "https://developer.hashicorp.com/terraform/language/block/action"
+        },
+        {
+          "label": "terraform apply",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/apply"
+        },
+        {
+          "label": "terraform plan",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/plan"
+        }
+      ]
+    },
+    {
+      "id": "ephemeral",
+      "name": "ephemeral",
+      "group": "blocks",
+      "summary": "A temporary resource that exists only during one run and is never written to state or plan files.",
+      "level": "deep",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "first tag v0.1.0 has no dated release; the repository was created 2014-03-13",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "Not a CNCF project."
+      },
+      "license": "BUSL-1.1",
+      "version": {
+        "name": "Terraform CLI",
+        "analysed": "v1.17.1",
+        "released": "2026-10-28",
+        "docs": "developer.hashicorp.com/terraform, v1.17.x (latest) docs, and the v1.17 CHANGELOG",
+        "checked": "2026-11-02"
+      },
+      "track": {
+        "github": "hashicorp/terraform",
+        "tag": "^v\\d+\\.\\d+\\.\\d+$"
+      },
+      "links": [
+        {
+          "label": "ephemeral block reference",
+          "url": "https://developer.hashicorp.com/terraform/language/block/ephemeral"
+        },
+        {
+          "label": "Terraform documentation",
+          "url": "https://developer.hashicorp.com/terraform"
+        }
+      ],
+      "sections": [
+        {
+          "title": "In one minute",
+          "part": "overview",
+          "icon": "eye",
+          "items": [
+            "The `ephemeral` block declares a resource Terraform does not store in state or plan files, which suits secrets and other temporary data. Terraform opens it when it needs the result, renews it if access must last longer than the remote expiry, and closes it when the dependent providers are done.",
+            {
+              "type": "code",
+              "title": "An ephemeral resource",
+              "lang": "text",
+              "match": "ephemeral \"aws_secretsmanager_secret_version\" \"db_master\" {",
+              "source": {
+                "label": "ephemeral block",
+                "url": "https://developer.hashicorp.com/terraform/language/block/ephemeral"
+              }
+            }
+          ]
+        },
+        {
+          "title": "Arguments and nested blocks",
+          "part": "use",
+          "icon": "list",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Argument",
+                "Meaning"
+              ],
+              "rows": [
+                [
+                  "provider-specific",
+                  "Defined by the provider, which also defines the available types"
+                ],
+                [
+                  "`count`, `for_each`",
+                  "Several instances (mutually exclusive)"
+                ],
+                [
+                  "`depends_on`",
+                  "A list of references"
+                ],
+                [
+                  "`provider`",
+                  "An alternate provider configuration"
+                ],
+                [
+                  "`lifecycle`",
+                  "`precondition` and `postcondition`"
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "title": "In use",
+          "part": "use",
+          "icon": "play",
+          "items": [
+            "Valid places to refer to an ephemeral resource:",
+            {
+              "type": "checklist",
+              "items": [
+                "A managed resource's write-only argument",
+                "Another `ephemeral` block",
+                "A `variable` with `ephemeral = true`",
+                "A child module `output` with `ephemeral = true`",
+                "A `provider` block",
+                "A provisioner and its connection"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Rules and gotchas",
+          "part": "reference",
+          "icon": "alert",
+          "items": [
+            "Referring to one anywhere else is an error at plan time.",
+            "If an input is not known until apply, Terraform defers the ephemeral resource to the apply stage."
+          ]
+        }
+      ],
+      "related": [
+        "variable",
+        "output",
+        "provider"
+      ],
+      "sources": [
+        {
+          "label": "ephemeral block reference",
+          "url": "https://developer.hashicorp.com/terraform/language/block/ephemeral"
+        },
+        {
+          "label": "Variables",
+          "url": "https://developer.hashicorp.com/terraform/language/values/variables"
+        }
       ]
     },
     {
