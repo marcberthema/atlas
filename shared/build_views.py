@@ -66,6 +66,8 @@ def main():
     reg = atlas.load()
     template = (atlas.SITE / "shared" / "view.html").read_text(encoding="utf-8")
     for v in reg.get("views", []):
+        if v["id"] not in VIEWS:  # a view with a catalogue of its own has its own builder (shared/build_lenses.py)
+            continue
         body = VIEWS[v["id"]](reg)
         page = (atlas.themed(template).replace("__TITLE__", html.escape(v["label"])).replace("__NAME__", html.escape(reg["name"]))
                 .replace("<!--__CONTENT__-->", body).replace(atlas.BANNER_MARK, atlas.banner(v["id"], "../"))

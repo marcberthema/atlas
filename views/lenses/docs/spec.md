@@ -1,6 +1,6 @@
 # Lenses and the organization level: spec
 
-Status: approved by the owner on 2026-11-03 (location accepted, security and storage roles added to the first batch). No data and no page yet. The visual reference is the mockup `docs/mockups/lenses.html`
+Status: approved by the owner on 2026-11-03 (location accepted, security and storage roles added to the first batch). Data, validator and page are built; the data wording and the place of `siem` and `storage` are not yet reviewed by the owner. The visual reference is the mockup `docs/mockups/lenses.html`
 (sample text, not verified). Format: `docs/topic-spec.md`, adapted for a view that has its own catalogue.
 
 ## Purpose and audience
@@ -46,7 +46,7 @@ Placement and roles: the Microsoft Cloud Adoption Framework and Azure Architectu
 architectures), the Azure Well-Architected Framework, and the product documentation of each open source product. Services and scopes: Microsoft
 Learn (the Azure topic already tracks 42 services with their Learn pages, including the tier 0 "always there" services). Products are
 checked against their own documentation.
-Re-check: each role and organization item carries `sources` (urls) and `checked`. `make lenses-check` (to be written) reports products
+Re-check: each role and organization item carries `sources` (urls) and `checked`. `make lenses-check` (`shared/lenses_check.py links`) reports products
 whose page no longer resolves, and roles whose Azure service ids are missing from `topics/azure/data/services.json`.
 
 ## Data model
@@ -61,7 +61,7 @@ whose page no longer resolves, and roles whose Azure service ids are missing fro
               "at": {"lane":0-4,"col":0-5},            // absent for a setting
               "lenses": ["app", ...],
               "what","where","why",
-              "products": {"azure":[{"name","service":"<azure service id, optional>","note","source"}], "oss":[{"name","note","source"}]},
+              "products": {"az":[{"name","service":"<azure service id, optional>","note","source"}], "oss":[{"name","note","source"}]},
               "aliases": ["kafka", ...],
               "topics": ["<topic id>", ...],           // Atlas topics that document it: empty means "no page yet"
               "sources": [url, ...], "basis": "<url or judgement>", "status": "verified|unconfirmed", "checked"}],
