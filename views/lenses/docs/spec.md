@@ -61,79 +61,77 @@ whose page no longer resolves, and roles whose Azure service ids are missing fro
               "at": {"lane":0-4,"col":0-5},            // absent for a setting
               "lenses": ["app", ...],
               "what","where","why",
-              "products": {"azure":[{"name","service":"<azure service id>","note"}], "oss":[{"name","note"}]},
+              "products": {"azure":[{"name","service":"<azure service id, optional>","note","source"}], "oss":[{"name","note","source"}]},
               "aliases": ["kafka", ...],
               "topics": ["<topic id>", ...],           // Atlas topics that document it: empty means "no page yet"
               "sources": [url, ...], "basis": "<url or judgement>", "status": "verified|unconfirmed", "checked"}],
   "edges":  [{"from","to","label","style":"solid|dash|dot","lenses":[...],"badge":"<role id>"}],
-  "levels": [{"id","generic","azure","about","scope"}],   // tenant, management group, subscription, resource group
-  "org":    [{"id","generic","azure","level","kind":"scope|span|outside","inherits":false,"what","why","sources","status","checked"}] }
+  "levels": [{"id","generic","azure","about","source"}],   // tenant, management group, subscription, resource group
+  "org":    [{"id","generic","azure","levels":[...],"kind":"scope|span|outside","inherits":false,"what","why","sources","status","checked","service","note"}] }
 ```
 
 - Positions are in the data (a lane and a column). An automatic layout is not worth its cost for twenty-two boxes.
 - The page embeds the data as JSON and draws it in the browser, so it works from `file://` and needs no fetch.
 - A role links to the topics that document it. A role with no topic is listed as "no page yet": that list is the backlog for the add-topic skill.
 - Validator (`make validate`): ids unique; every lens, lane, stack, topic and Azure service id exists; every box has a free cell; every edge
-  joins two roles; every role is in at least one lens; every role has `what`, `where`, `why`, `sources` and `checked`; `status` is
+  joins two roles; every role is in at least one lens; every role has `what`, `where`, `why` and `checked`, and `sources` unless it is a convention of the picture (`users`); `status` is
   `verified` only with a source. Warnings: a role with no topic, a product with no source.
 
 ## Coverage
 
-Twenty-two roles, seventeen organization-level items. All are `planned`: the mockup text is sample content and has to be read against the sources
-before it is data.
+Twenty-two roles, seventeen organization-level items. Text and products were read against Microsoft Learn and each product's own site on 2026-11-03: `done` means read and consistent, `partial` means a claim could not be confirmed (the note says which). `siem` and `storage` are new.
 
 | Item | Status | Notes |
 |---|---|---|
-| `users` | planned | users and clients, the start of the request path |
-| `waf` | planned | edge protection and cache (CDN, WAF) |
-| `lb` | planned | load balancer, layer 4 and layer 7 |
-| `web` | planned | web server or reverse proxy |
-| `app` | planned | application service |
-| `db` | planned | relational database |
-| `dns` | planned | name resolution |
-| `secrets` | planned | secrets store |
-| `identity` | planned | identity provider |
-| `broker` | planned | message broker; Kafka is an event streaming platform that often fills this role (to confirm) |
-| `cache` | planned | cache; the network-cost claim varies by provider and stays "check your provider" until sourced |
-| `search` | planned | search index |
-| `worker` | planned | background worker |
-| `vpn` | planned | private connectivity |
-| `bastion` | planned | admin access to private servers |
-| `firewall` | planned | central firewall service at a network boundary |
-| `filter` | planned | traffic filter rules, a setting shown as a shield |
-| `collector` | planned | telemetry collector or agent |
-| `store` | planned | telemetry store |
-| `dash` | planned | dashboards and alerts |
-| `siem` | planned | security events collected and analysed (SIEM); new, not in the mockup, to draw and place |
-| `storage` | planned | object and file storage for uploads, media and backups; new, not in the mockup, to draw and place. Disks belong to the server and are not drawn |
-| `tenant` | planned | the directory, top of the hierarchy |
-| `mg` | planned | management groups |
-| `sub` | planned | subscription |
-| `rg` | planned | resource group |
-| `entra` | planned | Entra ID, tenant level |
-| `condacc` | planned | Conditional Access, tenant level |
-| `pim` | planned | Privileged Identity Management, tenant level |
-| `policy` | planned | Azure Policy, assigned at a scope and inherited |
-| `rbac` | planned | role assignments, any scope, inherited |
-| `cost` | planned | Cost Management, several scopes |
-| `defender` | planned | Defender for Cloud, subscription |
-| `actlog` | planned | activity log, subscription |
-| `advisor` | planned | Advisor, subscription |
-| `arm` | planned | Azure Resource Manager, spans every level |
-| `graph` | planned | Resource Graph, spans subscriptions |
-| `monitor` | planned | Azure Monitor platform; its workspaces are resources in a resource group |
-| `devops` | planned | Azure DevOps, outside the subscriptions, linked to the tenant (to confirm) |
+| `users` | partial | users and clients, the start of the request path. Read 2026-11-03: a convention of the picture, no source applies |
+| `waf` | done | edge protection and cache (CDN, WAF). Read against sources 2026-11-03 |
+| `lb` | done | load balancer, layer 4 and layer 7. Read against sources 2026-11-03 |
+| `web` | done | web server or reverse proxy. Read against sources 2026-11-03 |
+| `app` | done | application service. Read against sources 2026-11-03 |
+| `db` | done | relational database. Read against sources 2026-11-03 |
+| `dns` | done | name resolution. Read against sources 2026-11-03 |
+| `secrets` | done | secrets store. Read against sources 2026-11-03 |
+| `identity` | done | identity provider. Read against sources 2026-11-03 |
+| `broker` | done | message broker; Kafka is an event streaming platform that often fills this role (to confirm). Read against sources 2026-11-03 |
+| `cache` | partial | cache; the network-cost claim varies by provider and stays "check your provider" until sourced. Read 2026-11-03: name and retirement dates confirmed; the same-segment and network-cost advice is not on the Learn pages read |
+| `search` | done | search index. Read against sources 2026-11-03 |
+| `worker` | done | background worker. Read against sources 2026-11-03 |
+| `vpn` | done | private connectivity. Read against sources 2026-11-03 |
+| `bastion` | done | admin access to private servers. Read against sources 2026-11-03 |
+| `firewall` | partial | central firewall service at a network boundary. Read 2026-11-03: Architecture Center: not on every hop; Bastion to firewall to server not shown |
+| `filter` | partial | traffic filter rules, a setting shown as a shield. Read 2026-11-03: NSG confirmed; the iptables/nftables entry has no source |
+| `collector` | done | telemetry collector or agent. Read against sources 2026-11-03 |
+| `store` | done | telemetry store. Read against sources 2026-11-03 |
+| `dash` | done | dashboards and alerts. Read against sources 2026-11-03 |
+| `siem` | done | security events collected and analysed (SIEM); new, not in the mockup, to draw and place. Read against sources 2026-11-03 |
+| `storage` | done | object and file storage for uploads, media and backups; new, not in the mockup, to draw and place. Disks belong to the server and are not drawn. Read against sources 2026-11-03 |
+| `tenant` | done | the directory, top of the hierarchy. Read against sources 2026-11-03 |
+| `mg` | done | management groups. Read against sources 2026-11-03 |
+| `sub` | done | subscription. Read against sources 2026-11-03 |
+| `rg` | done | resource group. Read against sources 2026-11-03 |
+| `entra` | done | Entra ID, tenant level. Read against sources 2026-11-03 |
+| `condacc` | partial | Conditional Access, tenant level. Read 2026-11-03: tenant-level wording not on the page |
+| `pim` | done | Privileged Identity Management, tenant level. Read against sources 2026-11-03 |
+| `policy` | done | Azure Policy, assigned at a scope and inherited. Read against sources 2026-11-03 |
+| `rbac` | done | role assignments, any scope, inherited. Read against sources 2026-11-03 |
+| `cost` | done | Cost Management, several scopes. Read against sources 2026-11-03 |
+| `defender` | partial | Defender for Cloud, subscription. Read 2026-11-03: per-subscription plans and management group option not stated |
+| `actlog` | done | activity log, subscription. Read against sources 2026-11-03 |
+| `advisor` | partial | Advisor, subscription. Read 2026-11-03: resource and management group scope not stated |
+| `arm` | done | Azure Resource Manager, spans every level. Read against sources 2026-11-03 |
+| `graph` | done | Resource Graph, spans subscriptions. Read against sources 2026-11-03 |
+| `monitor` | partial | Azure Monitor platform; its workspaces are resources in a resource group. Read 2026-11-03: workspace in a resource group is inferred from the Resource Manager rule |
+| `devops` | partial | Azure DevOps, outside the subscriptions, linked to the tenant (to confirm). Read 2026-11-03: Entra connection confirmed; "outside the subscriptions" not stated |
 | `stack:aws` | planned | another stack, after generic and Azure are checked |
 | `stack:vsphere` | planned | on-premises stack |
 | `stack:dynatrace` | planned | a monitoring product stack |
 
 ## Known gaps
 
-- Nothing is verified yet: the mockup is sample text. Every role and organization item starts `unconfirmed`.
+- Roles and products were read once, on 2026-11-03, and not re-read since. Placement (lane, column, edges) is a judgement, not a sourced fact. Learn pages for Azure metrics, Ceph, Redis's self-description and OpenSearch Dashboards could not be read or do not say what was asked: unconfirmed.
 - The scope of each organization-level service (tenant, management group, subscription) is from general knowledge, to be read against Learn.
-  Azure DevOps's relation to the tenant, and the current name of Azure's managed Redis service, are unconfirmed.
-- Where filtering happens (shield on the load balancer to servers hop and on the bastion to servers hop) is a pattern, to be checked against the
-  hub-and-spoke reference architecture.
+  Azure DevOps's separation from the subscriptions is unconfirmed (its Entra link is confirmed). Azure Managed Redis is the current name (Azure Cache for Redis retires 2027-03-31 for Enterprise tiers, 2028-09-30 for the others).
+- Where filtering happens: the Architecture Center shows a firewall in parallel with Application Gateway (not on the gateway to server hop) as a common design, and NSGs as less granular than a firewall. The shield on the load balancer and bastion hops is the filter-rules idea, not a claim that a firewall is there. Bastion to firewall to server is not shown on the hub-and-spoke page: unconfirmed.
 - The Generic names for the organization levels are a mapping, not a standard.
 - One base picture shows one common shape of application. Applications that do not look like it (event-driven, data pipelines, single page
   apps with no web tier) fit it only roughly.
