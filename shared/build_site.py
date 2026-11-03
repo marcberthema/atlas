@@ -24,8 +24,9 @@ def main():
         '<section data-fam="{id}"><h2>{fam}</h2><div class="topics">{cards}</div></section>'.format(
             id=f["id"], fam=html.escape(f["label"]),
             cards="".join(
-                '<a class="topic" href="{id}/index.html"><b>{label}</b><span>{desc}</span><small>{n} entries</small></a>'.format(
-                    id=t["id"], label=html.escape(t["label"]), desc=html.escape(t["description"]), n=len(found[t["id"]]))
+                '<a class="topic" href="{id}/index.html"><b>{label}</b><span>{desc}</span><small>{n}</small></a>'.format(
+                    id=t["id"], label=html.escape(t["label"]), desc=html.escape(t["description"]),
+                    n="view" if f["id"] == "views" else f"{len(found[t['id']])} entries")
                 for t in ts))
         for f, ts in atlas.by_family())
     page = (atlas.themed(page).replace("__NAME__", html.escape(reg["name"])).replace("__TAGLINE__", html.escape(reg["tagline"]))

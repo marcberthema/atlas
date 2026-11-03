@@ -60,6 +60,7 @@ resources exist, and commits the result. Learn text is never committed (`data/sn
 - Edges name the real relationship (`enforces`, not `requires`, for Azure Policy). `make validate` checks that every edge names an existing service or
   stub.
 - Tiers 0 and 1 only. Reason unconfirmed beyond "scope for now".
+- DevOps loop stages: deploy, operate, monitor. A judgement made for the DevOps loop view (`docs/views.md`), not a statement from a source.
 
 ## Updating
 

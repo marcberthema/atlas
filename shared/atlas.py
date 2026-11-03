@@ -103,6 +103,11 @@ def published():
     return [t for t in load()["topics"] if not t.get("draft")]
 
 
+def views():
+    """Generated pages that cut across topics (docs/views.md). They are shown as a last family, Views."""
+    return [dict(v, family="views") for v in load().get("views", [])]
+
+
 def check():
     """Exit 1 when topics.json is inconsistent: ids, published topics need a folder, drafts must not leak into dist/."""
     bad, seen = [], set()
@@ -130,6 +135,14 @@ def check():
                 bad.append(f"draft topic {i} has a dist/{i} folder: remove it")
         elif not (SITE / "topics" / i / "Makefile").exists() or not t.get("description"):
             bad.append(f"published topic {i} needs topics/{i}/Makefile and a description (or set \"draft\": true)")
+    for v in load().get("views", []):
+        if not v.get("id") or not v.get("label") or not v.get("description"):
+            bad.append(f"view needs an id, a label and a description: {v}")
+        if v.get("id") in seen:
+            bad.append(f"view id clashes with a topic id: {v.get('id')}")
+    for x in load().get("stages", []):
+        if not x.get("about"):
+            bad.append(f"stage {x.get('id')} needs an about line")
     for line in bad:
         print("bad:", line)
     print(f"topics {len(seen)} published {len(published())} drafts {len(seen) - len(published())} bad {len(bad)}")
@@ -137,10 +150,11 @@ def check():
 
 
 def by_family():
-    """[(family, [published topics])] in the order of "families"; families without a published topic are left out."""
+    """[(family, [published topics])] in the order of "families"; families without a published topic are left out. The views come last, as a family."""
     topics = published()
     groups = [(f, [t for t in topics if t.get("family") == f["id"]]) for f in load()["families"]]
-    return [(f, ts) for f, ts in groups if ts]
+    groups = [(f, ts) for f, ts in groups if ts]
+    return groups + ([({"id": "views", "label": "Views"}, views())] if views() else [])
 
 
 def banner(current, prefix):

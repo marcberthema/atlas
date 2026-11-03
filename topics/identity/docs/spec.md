@@ -62,6 +62,7 @@ and the Argo CD docs for the integration. Re-check with `make identity-check` an
 - Keycloak gets its own tab, the other providers are overviews or references. Reason unconfirmed.
 - The Argo CD and Kubernetes integration is a tab of its own, because it is where identity providers meet the GitOps topic.
 - Cloud services are references, marked not open source. Reason: the owner asked for them (the scope text in the data records this).
+- DevOps loop stages: deploy, operate. A judgement made for the DevOps loop view (`docs/views.md`), not a statement from a source.
 
 ## Updating
 
