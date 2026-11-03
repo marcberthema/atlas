@@ -67,6 +67,7 @@ button.nm{font:inherit;font-weight:600;color:var(--acc);background:none;border:0
 .q{color:var(--warn);font-weight:700;cursor:help}
 .empty{color:var(--mut);padding:16px 0}
 .pg{padding:4px 0 0}
+.pick{margin:14px 0}.pick select{font:inherit;margin-left:6px;padding:4px 8px}
 .gv{border-top:1px solid var(--rule);margin-top:18px;padding-top:12px}
 
 .cmp th:first-child,.cmp td:first-child{white-space:nowrap}
@@ -200,7 +201,7 @@ const byId=Object.fromEntries(D.entries.map(e=>[e.id,e]));
 const STATUS={active:'ok',inactive:'warn',archived:'bad'};
 // Tabs come from the topic's templates/view.json. An entry id opens that entry in full. others and compare are the two lists.
 // A tab with a group shows every entry of that group in full, and its entries are left out of the others list.
-const TABS=[{"id": "workflow", "label": "Core workflow"}, {"id": "commands", "label": "Useful commands"}, {"id": "configuration", "label": "Configuration"}, {"id": "terraform", "label": "terraform"}, {"id": "provider", "label": "provider"}, {"id": "resource", "label": "resource"}, {"id": "data", "label": "data"}, {"id": "variable", "label": "variable"}, {"id": "output", "label": "output"}, {"id": "locals", "label": "locals"}, {"id": "module", "label": "module"}, {"id": "import", "label": "import"}, {"id": "moved", "label": "moved"}, {"id": "removed", "label": "removed"}, {"id": "check", "label": "check"}, {"id": "action", "label": "action"}, {"id": "ephemeral", "label": "ephemeral"}, {"id": "state", "label": "State"}, {"id": "dependencies", "label": "Providers and modules"}, {"id": "testing", "label": "Check and test"}, {"id": "troubleshooting", "label": "Debug and recover"}, {"id": "others", "label": "Other tools"}, {"id": "compare", "label": "Compare"}];
+const TABS=[{"id": "workflow", "label": "Core workflow"}, {"id": "commands", "label": "Useful commands"}, {"id": "configuration", "label": "Configuration"}, {"id": "blocks", "label": "Blocks", "group": "blocks", "pick": "Block type"}, {"id": "state", "label": "State"}, {"id": "dependencies", "label": "Providers and modules"}, {"id": "testing", "label": "Check and test"}, {"id": "troubleshooting", "label": "Debug and recover"}, {"id": "others", "label": "Other tools"}, {"id": "compare", "label": "Compare"}];
 const OWN=new Set(TABS.map(t=>t.id));
 const GROUPTAB=Object.fromEntries(TABS.filter(t=>t.group).map(t=>[t.group,t.id]));
 let view=TABS[0].id;
@@ -238,13 +239,21 @@ function render(){
   $('q').style.display=list?'':'none';
   if(window.setBar)setBar();  // the top bar is shorter without the search box
   const gt=TABS.find(t=>t.id===view&&t.group);
-  $('out').innerHTML=view==='others'?entries(f):view==='compare'?compare(f):gt?groupView(gt.group):'<div class="pg db">'+detail(byId[view])+'</div>';
+  $('out').innerHTML=view==='others'?entries(f):view==='compare'?compare(f):gt?groupView(gt):'<div class="pg db">'+detail(byId[view])+'</div>';
 }
 
-function groupView(gid){
-  const g=D.groups.find(x=>x.id===gid);
-  return '<p class="about">'+esc(g.about)+'</p>'+D.entries.filter(e=>e.group===gid).map(e=>'<section class="pg db gv" id="e-'+esc(e.id)+'">'+detail(e)+'</section>').join('');
+// A group tab with pick shows a list to choose from and one entry at a time, instead of every entry in a row.
+let picked={};
+function groupView(t){
+  const g=D.groups.find(x=>x.id===t.group),list=D.entries.filter(e=>e.group===t.group);
+  const one=t.pick?(list.find(e=>e.id===picked[t.id])||list[0]):null;
+  const bar=t.pick?'<p class="pick"><label>'+esc(t.pick)+' <select id="pick">'+list.map(e=>'<option value="'+esc(e.id)+'"'+(e===one?' selected':'')+'>'+esc(e.name)+'</option>').join('')+'</select></label></p>':'';
+  return '<p class="about">'+esc(g.about)+'</p>'+bar+(t.pick?[one]:list).map(e=>'<section class="pg db gv" id="e-'+esc(e.id)+'">'+detail(e)+'</section>').join('');
 }
+document.addEventListener('change',ev=>{
+  if(ev.target.id!=='pick')return;
+  picked[view]=ev.target.value;render();history.replaceState(null,'','#'+ev.target.value);
+});
 
 function tab(id,push){
   view=id;
@@ -338,7 +347,7 @@ function detail(e){return learning(e);}
 
 function open(id,push){
   const e=byId[id];if(!e)return;
-  if(GROUPTAB[e.group]){if($('dlg').open)$('dlg').close();tab(GROUPTAB[e.group],false);const el=document.getElementById('e-'+id);if(el)el.scrollIntoView();if(push!==false)history.replaceState(null,'','#'+id);return;}
+  if(GROUPTAB[e.group]){if($('dlg').open)$('dlg').close();picked[GROUPTAB[e.group]]=id;tab(GROUPTAB[e.group],false);const el=document.getElementById('e-'+id);if(el)el.scrollIntoView();if(push!==false)history.replaceState(null,'','#'+id);return;}
   if(OWN.has(id)){if($('dlg').open)$('dlg').close();tab(id,push);return;}
   $('dt').textContent=e.name;$('db').innerHTML=detail(e);
   if(!$('dlg').open)$('dlg').showModal();
