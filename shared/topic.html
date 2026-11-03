@@ -68,6 +68,9 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
 .chips .more .chip{font-size:.74rem;color:var(--mut);background:transparent}
 .chips .more .chip.ok{color:var(--ok)}
 .chip.ok{color:var(--ok);border-color:var(--ok)}
+html[data-details=hide] .xd:not(.ent.x .xd){display:none}
+button.dtog{font:inherit;font-size:.74rem;color:var(--mut);background:none;border:0;padding:0 4px;cursor:pointer;text-decoration:underline}
+html[data-details=show] button.dtog{display:none}
 details.ae{font-size:.88rem;color:var(--mut);margin:4px 0 8px}
 details.ae summary{cursor:pointer}
 details.ae .ver{color:var(--fg)}
@@ -161,9 +164,10 @@ const TABS=/*__TABS__*/[];
 const OWN=new Set(TABS.map(t=>t.id));
 const GROUPTAB=Object.fromEntries(TABS.filter(t=>t.group).map(t=>[t.group,t.id]));
 let view=TABS[0].id;
+document.documentElement.dataset.xd='1';  // tells the About window there are details to switch
 $('title').textContent=D.title;
 $('intro').textContent=D.intro;
-$('scope').textContent=D.scope+' Checked '+D.checked+'. Every entry shows the version it was analysed against.';
+$('scope').innerHTML=esc(D.scope)+'<span class="xd"> Checked '+esc(D.checked)+'. Every entry shows the version it was analysed against.</span>';
 
 const text=e=>JSON.stringify(e).toLowerCase();
 const started=e=>esc(e.started.date)+(e.started.confirmed?'':' <span class="q" title="Unconfirmed: '+esc(e.started.basis)+'">?</span>');
@@ -175,8 +179,8 @@ function entries(f){
   return D.groups.map(g=>{
     const rows=D.entries.filter(e=>e.group===g.id&&!OWN.has(e.id)&&!GROUPTAB[e.group]&&(!f||text(e).includes(f)));
     if(!rows.length)return '';
-    return '<h2>'+esc(g.label)+'</h2><p class="about">'+esc(g.about)+'</p><div class="wrap"><table><thead><tr><th>Name</th><th>Started</th><th>Status</th><th>CNCF</th><th>Version analysed</th><th>Licence</th></tr></thead><tbody>'
-      +rows.map(e=>'<tr><td>'+nameBtn(e)+'<small>'+esc(e.summary)+'</small></td><td>'+started(e)+'</td><td><span class="badge '+STATUS[e.status]+'">'+esc(e.status)+'</span></td><td>'+cncf(e)+'</td><td>'+latest(e)+'</td><td>'+esc(e.license)+'</td></tr>').join('')
+    return '<h2>'+esc(g.label)+'</h2><p class="about">'+esc(g.about)+'</p><div class="wrap"><table><thead><tr><th>Name</th><th class="xd">Started</th><th class="xd">Status</th><th class="xd">CNCF</th><th>Version analysed</th><th class="xd">Licence</th></tr></thead><tbody>'
+      +rows.map(e=>'<tr><td>'+nameBtn(e)+'<small>'+esc(e.summary)+'</small></td><td class="xd">'+started(e)+'</td><td class="xd"><span class="badge '+STATUS[e.status]+'">'+esc(e.status)+'</span></td><td class="xd">'+cncf(e)+'</td><td>'+latest(e)+'</td><td class="xd">'+esc(e.license)+'</td></tr>').join('')
       +'</tbody></table></div>';
   }).join('')||'<p class="empty">Nothing matches.</p>';
 }
@@ -278,18 +282,20 @@ function svgDiagram(d){
 }
 function learning(e){
   const v=e.version,pid=p=>'p-'+e.id+'-'+p;
-  let h='<h3>'+esc(e.name)+'</h3><p class="meta">'+esc(e.summary)+'</p>'
-    +'<div class="chips"><span class="chip main"><b>Version analysed</b> '+esc(v.name)+' '+esc(v.analysed)+'</span><span class="more"><span class="chip">released '+esc(v.released)+'</span><span class="chip">checked '+esc(v.checked)+'</span>'
+  const extra=(e.compare&&e.compare.length)||(e.related&&e.related.length)||(e.notes&&e.notes.length);  // else the last section holds only sources
+  // Low-value details (class xd) are hidden unless the About window turns them on, or the entry's own "details" button does.
+  let h='<div class="ent"><h3>'+esc(e.name)+'</h3><p class="meta">'+esc(e.summary)+'</p>'
+    +'<div class="chips"><span class="chip main"><b>Version analysed</b> '+esc(v.name)+' '+esc(v.analysed)+'</span><button type="button" class="dtog" aria-expanded="false">details</button><span class="more xd"><span class="chip">released '+esc(v.released)+'</span><span class="chip">checked '+esc(v.checked)+'</span>'
     +'<span class="chip">started '+started(e)+'</span><span class="chip '+(e.status==='active'?'ok':'')+'">'+esc(e.status)+'</span><span class="chip">'+esc(e.license)+'</span>'+cncf(e).replace('class="badge','class="chip')+'</span></div>'
-    +'<details class="ae"><summary>About this entry: sources and how it was checked</summary><div class="ver"><div><span>Source:</span> '+esc(v.docs||'')+'</div>'
+    +'<details class="ae xd"><summary>About this entry: sources and how it was checked</summary><div class="ver"><div><span>Source:</span> '+esc(v.docs||'')+'</div>'
     +'<div><span>Started:</span> '+started(e)+' <span>('+esc(e.started.basis)+')</span></div>'+(e.maintainer?'<div><span>Maintainer:</span> '+esc(e.maintainer)+'</div>':'')
     +'<div><span>CNCF:</span> '+esc(e.cncf.text)+'</div></div></details>';
   const flat=!e.sections.some(s=>s.part);  // a short entry: its sections one after another, no parts and no jump bar
   const parts=PARTS.filter(p=>e.sections.some(s=>s.part===p.id));
   if(!flat)h+='<nav class="jump" aria-label="On this page">'+parts.map(p=>'<a href="#'+pid(p.id)+'" data-jump="'+pid(p.id)+'">'+ic(p.icon)+esc(p.label)+'</a>').join('')
-    +'<a href="#'+pid('more')+'" data-jump="'+pid('more')+'">'+ic('scale')+'Compared and sources</a></nav>';
+    +'<a'+(extra?'':' class="xd"')+' href="#'+pid('more')+'" data-jump="'+pid('more')+'">'+ic('scale')+'Compared and sources</a></nav>';
   (e.diagrams||[]).forEach(d=>{h+='<figure class="dg">'+svgDiagram(d)+(d.caption?'<figcaption>'+esc(d.caption)+'</figcaption>':'')+'</figure>';});
-  if(e.links&&e.links.length)h+='<div class="pills">'+e.links.map(l=>'<a href="'+esc(l.url)+'" target="_blank" rel="noopener">'+esc(l.label)+ic('ext')+'</a>').join('')+'</div>';
+  if(e.links&&e.links.length)h+='<div class="pills">'+e.links.map((l,n)=>'<a'+(n?' class="xd"':'')+' href="'+esc(l.url)+'" target="_blank" rel="noopener">'+esc(l.label)+ic('ext')+'</a>').join('')+'</div>';
   if(flat)e.sections.forEach(x=>{h+='<div class="sec"><h4>'+(x.icon?ic(x.icon):'')+esc(x.title)+'</h4>'+(x.intro?'<p class="lead">'+md(x.intro)+'</p>':'')+items(x.items,e.id)+'</div>';});
   parts.forEach(p=>{
     h+='<section class="part" id="'+pid(p.id)+'"><h3 class="ph">'+ic(p.icon)+esc(p.label)+'<small>'+esc(p.lead)+'</small></h3>';
@@ -300,11 +306,12 @@ function learning(e){
     });
     h+='</section>';
   });
-  h+=flat?'<section class="part" id="'+pid('more')+'">':'<section class="part" id="'+pid('more')+'"><h3 class="ph">'+ic('scale')+'Compared and sources<small>How it relates, what is not confirmed, where it comes from</small></h3>';
+  const mc='part'+(extra?'':' xd');
+  h+=flat?'<section class="'+mc+'" id="'+pid('more')+'">':'<section class="'+mc+'" id="'+pid('more')+'"><h3 class="ph">'+ic('scale')+'Compared and sources<small>How it relates, what is not confirmed, where it comes from</small></h3>';
   if(e.compare&&e.compare.length)h+='<h4>Compared</h4><ul>'+e.compare.map(c=>'<li>'+link(c.with)+': '+md(c.text)+'</li>').join('')+'</ul>';
   if(e.related&&e.related.length)h+='<h4>Related</h4><p>'+e.related.map(link).join(', ')+'</p>';
   if(e.notes&&e.notes.length)h+='<h4>Unconfirmed and notes</h4><div class="nt"><ul>'+e.notes.map(n=>'<li>'+md(n)+'</li>').join('')+'</ul></div>';
-  h+='<h4>Sources</h4><ul>'+e.sources.map(s=>'<li><a href="'+esc(s.url)+'" target="_blank" rel="noopener">'+esc(s.label)+'</a> <span class="badge">'+(s.date?'page dated '+esc(s.date):'no date on page')+'</span></li>').join('')+'</ul></section>';
+  h+='<div class="xd"><h4>Sources</h4><ul>'+e.sources.map(s=>'<li><a href="'+esc(s.url)+'" target="_blank" rel="noopener">'+esc(s.label)+'</a> <span class="badge">'+(s.date?'page dated '+esc(s.date):'no date on page')+'</span></li>').join('')+'</ul></div></section></div>';
   return h;
 }
 
@@ -321,6 +328,8 @@ function open(id,push){
 }
 
 document.addEventListener('click',ev=>{
+  const d=ev.target.closest('.dtog');
+  if(d){const on=d.closest('.ent').classList.toggle('x');d.textContent=on?'hide details':'details';d.setAttribute('aria-expanded',on);return;}
   const j=ev.target.closest('[data-jump]');
   if(j){ev.preventDefault();const el=document.getElementById(j.dataset.jump);if(el)el.scrollIntoView({behavior:'smooth'});return;}
   const c=ev.target.closest('.cp');

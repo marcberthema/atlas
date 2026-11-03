@@ -19,7 +19,8 @@ build:  ## Build every topic and the landing page into dist/
 serve: build  ## Build and serve dist/ on http://localhost:8000
 	$(PY) -m http.server 8000 --directory dist
 
-deploy: validate build  ## Validate, build and deploy dist/ to atlas.marcberthelette.com with wrangler
+deploy: validate  ## Validate, build (stamping the git ref shown in the About window) and deploy dist/ to atlas.marcberthelette.com with wrangler
+	ATLAS_REF=$$(git describe --always --dirty) $(MAKE) build
 	wrangler deploy
 
 clean:  ## Remove generated output

@@ -26,6 +26,7 @@ topics.json + shared/ -> the top banner on every page and the landing page, dist
 - Every topic except Azure uses one shared page: `shared/topic.html` (look and script), `shared/build_topic.py`, `shared/learning.py` (checks)
   and `shared/examples.py` (code examples fetched from the docs). A topic keeps its data, its `templates/view.json` (title and tabs)
   and a three line `scripts/build.py`. See `topics/gitops/docs/data-model.md` for the entry format (parts, tables, callouts, code, diagrams).
+- The banner has a `?` button that opens the About window: the disclaimer, the git ref and repository, and a switch (remembered in `localStorage`) that shows the low-value details of every entry. Those details (release and check dates, status, CNCF, licence, extra links, sources) carry the class `xd` in `shared/topic.html` and are hidden by default; each entry also has its own "details" button. The version analysed is never hidden. The ref comes from `ATLAS_REF`, which `make deploy` sets; a plain `make build` says `dev`, so committed pages do not change on every commit.
 - `shared/atlas.py` renders the banner. A template carries `<!--__BANNER__-->` after `<body>` and `/*__BANNER_CSS__*/` in
   its style block; the topic build fills both. `shared/build_site.py` builds `dist/index.html`.
 - AI generates content into the JSON files. Python checks for updates and builds the pages. Neither the look nor the stack
