@@ -16,7 +16,7 @@ topics.json + shared/ -> the top banner on every page and the landing page, dist
 
 - Each topic owns its `data/`, `scripts/`, `templates/`, `docs/` and its own `CLAUDE.md` with the topic's rules. Read it
   before working in a topic.
-- `topics.json` is the topic registry (name, tagline, families, topics). Each published topic names its `family` (an id from `families`: DevOps, Development, Enterprise). The banner (two rows: families, then the selected family's topics, sticky) and the landing page (a search over every entry, then one column per family) are built from it. A page's own sticky bars sit below the banner through `--atlash`.
+- `topics.json` is the topic registry (name, tagline, families, stages, topics). `stages` are the eight DevOps stages (plan, code, build, test, release, deploy, operate, monitor); a topic or draft may list the `stages` it belongs to, and `make validate` checks the ids. Two layers only: family, then topic. CI/CD covers application delivery pipelines and the services around them (artifact repositories, scanners, quality gates). Each published topic names its `family` (an id from `families`: IaC, CI/CD, Development, Enterprise). The banner (two rows: families, then the selected family's topics, sticky) and the landing page (a search over every entry, then one column per family) are built from it. A page's own sticky bars sit below the banner through `--atlash`.
   An entry with `"draft": true` is an idea, not a topic: it needs only `id` and `label`, may carry any extra keys
   (`description`, `notes`, ...), is never built or shown, and has no folder. To publish it, remove `draft`, add a
   `description`, create `topics/<id>/` and add its `<topic>-%` rule to the root `Makefile`. `make validate` checks all of this.
@@ -26,11 +26,12 @@ topics.json + shared/ -> the top banner on every page and the landing page, dist
 - Every topic except Azure uses one shared page: `shared/topic.html` (look and script), `shared/build_topic.py`, `shared/learning.py` (checks)
   and `shared/examples.py` (code examples fetched from the docs). A topic keeps its data, its `templates/view.json` (title and tabs)
   and a three line `scripts/build.py`. See `topics/gitops/docs/data-model.md` for the entry format (parts, tables, callouts, code, diagrams).
+- The banner has a `?` button that opens the About window: the disclaimer, the git ref and repository, and a switch (remembered in `localStorage`) that shows the low-value details of every entry. Those details (release and check dates, status, CNCF, licence, extra links, sources) carry the class `xd` in `shared/topic.html` and are hidden by default; each entry also has its own "details" button. The version analysed is never hidden. The version is the release tag in the `VERSION` file (or `ATLAS_REF` when set, as `make deploy` does), so committed pages change only when a release is cut.
 - `shared/atlas.py` renders the banner. A template carries `<!--__BANNER__-->` after `<body>` and `/*__BANNER_CSS__*/` in
   its style block; the topic build fills both. `shared/build_site.py` builds `dist/index.html`.
 - AI generates content into the JSON files. Python checks for updates and builds the pages. Neither the look nor the stack
   of a page may require changing the data.
-- `dist/` is generated and committed. Deploy with `make deploy` (wrangler, one Worker named `atlas` serving `dist/`); there is no build on Cloudflare.
+- `dist/` is generated and committed. Deploy with `make deploy` (wrangler, one Worker named `atlas` serving `dist/`); there is no build on Cloudflare. A push to `main` that changes `dist/` also deploys, through `.github/workflows/deploy.yml` (wrangler, no build), so merging a PR publishes it.
 - `workstation/` is not a topic: same data model, checks and shared page, but it builds into `workstation/site/index.html`
   (outside `dist/`, so never deployed) with a banner that names only itself. It is not in `topics.json`. Read `workstation/CLAUDE.md`.
 - `vscode/` is the same kind of unpublished resource (`vscode/site/index.html`). Its entries are VS Code extensions, tracked against the
@@ -45,6 +46,7 @@ work from `file://`: relative links that name `index.html`, no absolute paths, n
 
 ## Rules for every topic
 
+- **A spec per topic.** `topics/<id>/docs/spec.md` (also `workstation/` and `vscode/`) holds the purpose, scope, layout, sources, coverage, known gaps and decisions. Write it before the entries, get it approved, and change it in the same commit as the data. Format: `docs/topic-spec.md`. The product vision and the order of work are in `docs/vision.md` and `docs/roadmap.md`.
 - **Everything is public, for everyone.** Atlas exists so that I and anyone else can find centralized information in one place.
   Write only from public sources, and write it as general knowledge. Nothing is ever based on, drawn from or shaped by a
   company I work or worked for, a client, or any confidential material: no internal names, architectures, region counts,
@@ -82,6 +84,7 @@ make azure-check # run any target of a topic: make <topic>-<target>
 1. Describe the change. Claude edits the topic's data (or template), runs `make build`, and checks the page in a browser.
 2. Commit after each coherent change, with a message saying what was added or corrected. Commit `dist/` with it.
 3. Branch and PR to `main` after the user confirms.
+4. Release (only when the user asks): write the new tag in `VERSION`, `make build`, commit with `dist/`, PR and squash merge (the push deploys), then `gh release create <tag> --target main`. The tag names the version the About window shows.
 
 ## Feedback Style
 

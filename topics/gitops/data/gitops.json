@@ -1547,20 +1547,8 @@
         "The docs pages show no Argo CD version. They are the stable docs read on 2026-10-26, when the latest release was v3.5.6.",
         "To do, once a test Argo CD is running: compare the API (/swagger-ui on the server) with the CLI commands and the web UI, to list what only one of them can do. Known so far: argocd admin works on the cluster directly, not through the API server; the web terminal is a UI feature (off by default) with no CLI command named in its docs. Everything else is unconfirmed.",
         "Dev or production table: the replica, flag and setting names come from the installation, high availability, ingress and user management pages. Replica numbers other than \"3 or more\" API servers are not given by the docs. Whether argocd cluster add suits a production rollout versus a declarative cluster Secret is not settled by the pages read.",
-        "Code examples are copied from the Argo CD docs pages named under each one. Where two examples from a page are shown together, the caption says so.",
         "The diagrams simplify the docs: arrows show the main flows described on the architecture and sync pages, not every connection between components.",
-        "Dev or production table: the replica, flag and setting names come from the installation, high availability, ingress and user management pages. Replica numbers other than \"3 or more\" API servers are not given by the docs. Whether argocd cluster add suits a production rollout versus a declarative cluster Secret is not settled by the pages read.",
-        "Code examples are copied from the Argo CD docs pages named under each one. Where two examples from a page are shown together, the caption says so.",
-        "The diagrams simplify the docs: arrows show the main flows described on the architecture and sync pages, not every connection between components.",
-        "Dev or production table: the replica, flag and setting names come from the installation, high availability, ingress and user management pages. Replica numbers other than \"3 or more\" API servers are not given by the docs. Whether argocd cluster add suits a production rollout versus a declarative cluster Secret is not settled by the pages read.",
-        "Code examples are copied from the Argo CD docs pages named under each one. Where two examples from a page are shown together, the caption says so.",
-        "The diagrams simplify the docs: arrows show the main flows described on the architecture and sync pages, not every connection between components.",
-        "Dev or production table: the replica, flag and setting names come from the installation, high availability, ingress and user management pages. Replica numbers other than \"3 or more\" API servers are not given by the docs. Whether argocd cluster add suits a production rollout versus a declarative cluster Secret is not settled by the pages read.",
-        "Code examples are fetched from the Argo CD docs pages named under each one (make examples) and shown as they are. Where several are shown together, they come from the same page, in order.",
-        "The diagrams simplify the docs: arrows show the main flows described on the architecture and sync pages, not every connection between components.",
-        "Dev or production table: the replica, flag and setting names come from the installation, high availability, ingress and user management pages. Replica numbers other than \"3 or more\" API servers are not given by the docs. Whether argocd cluster add suits a production rollout versus a declarative cluster Secret is not settled by the pages read.",
-        "Code examples are fetched from the Argo CD docs pages named under each one (make examples) and shown as they are. Where several are shown together, they come from the same page, in order.",
-        "The diagrams simplify the docs: arrows show the main flows described on the architecture and sync pages, not every connection between components."
+        "Code examples are fetched from the Argo CD docs pages named under each one (make examples) and shown as they are. Where several are shown together, they come from the same page, in order."
       ],
       "sources": [
         {

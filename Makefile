@@ -9,6 +9,7 @@ help:  ## List the targets
 
 validate:  ## Validate every topic, and check no verbatim source text is tracked
 	$(PY) shared/atlas.py check
+	$(PY) shared/spec.py
 	@! git ls-files | grep -E '/(snapshots|review)/' || { echo "snapshots or review files are tracked: they must stay local"; exit 1; }
 	@for t in $(TOPICS); do $(MAKE) --no-print-directory -C topics/$$t validate || exit 1; done
 
@@ -19,7 +20,8 @@ build:  ## Build every topic and the landing page into dist/
 serve: build  ## Build and serve dist/ on http://localhost:8000
 	$(PY) -m http.server 8000 --directory dist
 
-deploy: validate build  ## Validate, build and deploy dist/ to atlas.marcberthelette.com with wrangler
+deploy: validate  ## Validate, build (stamping the git ref shown in the About window) and deploy dist/ to atlas.marcberthelette.com with wrangler
+	ATLAS_REF=$$(git describe --tags --always --dirty) $(MAKE) build
 	wrangler deploy
 
 clean:  ## Remove generated output

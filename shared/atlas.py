@@ -8,7 +8,9 @@ Links are relative and name index.html, so they also work from file://.
 """
 import html
 import json
+import os
 import re
+import subprocess
 from pathlib import Path
 
 SITE = Path(__file__).resolve().parent.parent
@@ -27,7 +29,7 @@ CSS = """
 .atlas-foot p{margin:0 0 4px}
 .atlas.two{display:block;position:sticky;top:0;z-index:5;background:var(--bg);margin:0 0 12px;padding:0 0 8px}
 .atlas .fams{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--rule);border-radius:12px;padding:5px 8px}
-.atlas .fams::before{content:"";flex:0 0 130px}
+.atlas .fams::before{content:"";flex:0 0 170px}
 .atlas .fb,.atlas .tops{display:flex;gap:6px;align-items:center;overflow-x:auto;scrollbar-width:none}
 .atlas .fb{flex:1}
 .atlas .fb>:first-child{margin-left:auto}
@@ -42,9 +44,19 @@ CSS = """
 .atlas button:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
 .atlas button[aria-pressed=true]{background:var(--acc);color:var(--bg)}
 .atlas .tops a{white-space:nowrap;font-size:.94rem}
-.atlas .rt{display:flex;align-items:center;justify-content:flex-end;gap:2px;flex:0 0 130px}
+.atlas .rt{display:flex;align-items:center;justify-content:flex-end;gap:2px;flex:0 0 170px}
 .atlas .fams .home{margin:0;padding:4px 8px;white-space:nowrap}
 .atlas .tg{display:inline-flex;padding:5px 8px;color:var(--acc)}
+.atlas dialog.ai{width:min(460px,calc(100vw - 24px));max-height:calc(100vh - 24px);border:1px solid var(--rule);border-radius:12px;background:var(--bg);color:var(--fg);padding:16px 18px;font-size:.92rem}
+.atlas dialog.ai::backdrop{background:rgba(0,0,0,.5)}
+.atlas dialog.ai h2{font-size:1.05rem;color:var(--acc);margin:0 0 8px;border:0;padding:0}
+.atlas dialog.ai p{margin:0 0 8px}
+.atlas dialog.ai .vr{border-top:1px solid var(--rule);padding-top:8px;color:var(--mut)}
+.atlas dialog.ai .vr code{color:var(--fg)}
+.atlas dialog.ai .dx{display:flex;gap:8px;align-items:flex-start;border-top:1px solid var(--rule);padding-top:8px;margin-bottom:8px;cursor:pointer}
+.atlas dialog.ai .dx small{display:block;color:var(--mut)}
+.atlas dialog.ai a{padding:0;text-decoration:underline;color:var(--acc)}
+.atlas dialog.ai .cl{float:right;padding:4px 14px;border-color:var(--rule)}
 .atlas .tg svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 @media(max-width:560px){.atlas .fams::before{display:none}.atlas .rt{flex:none}}
 :root[data-theme=light]{color-scheme:light}
@@ -57,11 +69,29 @@ CSS = """
 """
 
 
-FOOTER = (
-    '<footer class="atlas-foot"><p>Everything here is collected with AI assistance from public sources, and it changes. '
-    'Always check the real source (the links and dates on each entry) before relying on it. '
-    'Entries marked <b>?</b> or "unconfirmed" haven\'t been verified yet.</p>'
-    '<p>This is a personal project, not an official resource of Microsoft, HashiCorp, Argo CD or any other product named here.</p></footer>')
+DISCLAIMER = [
+    "Everything here is collected with AI assistance from public sources, and it changes. Always check the real source (the links and dates on each entry) before relying on it. "
+    "Entries marked <b>?</b> or \"unconfirmed\" haven't been verified yet.",
+    "This is a personal project, not an official resource of Microsoft, HashiCorp, Argo CD or any other product named here.",
+]
+FOOTER = '<footer class="atlas-foot">' + "".join(f"<p>{x}</p>" for x in DISCLAIMER) + "</footer>"
+
+
+def repo_url():
+    """The https address of the git remote, or "" when there is none (the build never fails for it)."""
+    try:
+        u = subprocess.run(["git", "remote", "get-url", "origin"], cwd=SITE, capture_output=True, text=True, check=True).stdout.strip()
+    except (OSError, subprocess.CalledProcessError):
+        return ""
+    m = re.match(r"(?:git@|ssh://git@|https://)([^:/]+)[:/](.+?)(?:\.git)?/?$", u)
+    return f"https://{m[1]}/{m[2]}" if m else ""
+
+
+def ref():
+    """The version shown in the About window: ATLAS_REF if set (`make deploy`), else the release tag in the VERSION file, else "dev".
+    The file changes only when a release is cut, so committed pages do not change on every commit."""
+    v = SITE / "VERSION"
+    return os.environ.get("ATLAS_REF", "").strip() or (v.read_text(encoding="utf-8").strip() if v.exists() else "") or "dev"
 
 
 def load():
@@ -79,10 +109,17 @@ def check():
     families = [f.get("id") for f in load().get("families", [])]
     if not families or len(set(families)) != len(families) or not all(f.get("label") for f in load()["families"]):
         bad.append("families need unique ids and labels")
+    stages = [x.get("id") for x in load().get("stages", [])]
+    if len(set(stages)) != len(stages) or not all(x.get("label") for x in load().get("stages", [])):
+        bad.append("stages need unique ids and labels")
     for t in load()["topics"]:
         i = t.get("id", "")
         if not t.get("draft") and t.get("family") not in families:
             bad.append(f"published topic {i} needs a family from {families}")
+        if t.get("draft") and t.get("family") not in (None, *families):
+            bad.append(f"draft topic {i} names an unknown family: {t['family']}")
+        if any(x not in stages for x in t.get("stages", [])):
+            bad.append(f"topic {i} names an unknown stage: {t['stages']}")
         if not i or not t.get("label"):
             bad.append(f"topic needs an id and a label: {t}")
         if i in seen:
@@ -126,10 +163,27 @@ def banner(current, prefix):
         for f, ts in groups)
     return ('<nav class="atlas two" aria-label="Atlas" data-current="{cur}"><a class="skip" href="#">Skip to content</a>'
             '<div class="fams"><div class="fb" role="group" aria-label="Families">{b}</div>'
-            '<div class="rt"><button type="button" class="tg">{icons}</button>'
+            '<div class="rt"><button type="button" class="tg th">{icons}</button>'
+            '<button type="button" class="tg ab" aria-label="About Atlas" title="About Atlas">{help}</button>'
             '<a class="home" href="{p}index.html" aria-label="{name} home" title="{name} home">&#8962; {name}</a></div></div>'
-            '<div class="tops">{panels}</div><script>{js}</script></nav>').format(
-        cur=cur_fam, b=buttons, p=prefix, name=html.escape(reg["name"]), panels=panels, js=JS, icons=ICONS)
+            '<div class="tops">{panels}</div>{about}<script>{js}</script></nav>').format(
+        cur=cur_fam, b=buttons, p=prefix, name=html.escape(reg["name"]), panels=panels, js=JS, icons=ICONS, help=HELP, about=about())
+
+
+HELP = '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3M12 17h.01"/></svg>'
+
+
+def about():
+    """The About window: disclaimer, where this version came from, and the switch that shows the low-value details of every entry."""
+    url, r = repo_url(), ref()
+    sha = r.removesuffix("-dirty")
+    where = '<a href="{u}" target="_blank" rel="noopener">{u}</a>'.format(u=html.escape(url)) if url else "not available"
+    commit = ('<a href="{u}/commit/{s}" target="_blank" rel="noopener"><code>{r}</code></a>'.format(u=html.escape(url), s=html.escape(sha), r=html.escape(r))
+              if url and r != "dev" else "<code>{}</code>".format(html.escape(r)))
+    return ('<dialog class="ai" aria-labelledby="ai-t"><button type="button" class="cl">Close</button><h2 id="ai-t">About Atlas</h2>{d}'
+            '<label class="dx" hidden><input type="checkbox"><span>Show entry details<small>Release and check dates, status, CNCF, licence, and every source. '
+            'The version analysed is always shown.</small></span></label>'
+            '<p class="vr">Version {c}<br>Source {w}</p></dialog>').format(d="".join(f"<p>{x}</p>" for x in DISCLAIMER), c=commit, w=where)
 
 
 # Sun (shown in dark mode: click for light) and moon (shown in light mode: click for dark).
@@ -142,12 +196,18 @@ function h(){document.documentElement.style.setProperty('--atlash',n.offsetHeigh
 function show(f){sel=f;n.classList.toggle('none',!f);bs.forEach(function(b){b.setAttribute('aria-pressed',b.dataset.fam===f)});ps.forEach(function(p){p.hidden=p.dataset.fam!==f});document.querySelectorAll('main [data-fam]').forEach(function(c){c.hidden=!!f&&c.dataset.fam!==f});h()}
 bs.forEach(function(b){b.addEventListener('click',function(){show(sel===b.dataset.fam&&!keep?'':b.dataset.fam)})});
 n.querySelector('.skip').addEventListener('click',function(e){var m=document.querySelector('main');if(m){e.preventDefault();m.tabIndex=-1;m.focus()}});
-var root=document.documentElement,mq=matchMedia('(prefers-color-scheme:dark)'),tg=n.querySelector('.tg');
+var root=document.documentElement,mq=matchMedia('(prefers-color-scheme:dark)'),tg=n.querySelector('.th');
 function eff(){return root.dataset.theme||(mq.matches?'dark':'light')}
 function paint(){var d=eff()==='dark';tg.querySelector('.sun').toggleAttribute('hidden',!d);tg.querySelector('.moon').toggleAttribute('hidden',d);tg.setAttribute('aria-label',d?'Switch to light mode':'Switch to dark mode');tg.title=tg.getAttribute('aria-label')}
 try{var st=localStorage.getItem('atlas-theme');if(st)root.dataset.theme=st}catch(e){}
 tg.addEventListener('click',function(){var t=eff()==='dark'?'light':'dark';root.dataset.theme=t;try{localStorage.setItem('atlas-theme',t)}catch(e){}paint()});
 if(mq.addEventListener)mq.addEventListener('change',paint);
+var dl=n.querySelector('dialog.ai'),dx=dl.querySelector('.dx'),cb=dx.querySelector('input');
+try{root.dataset.details=localStorage.getItem('atlas-details')==='1'?'show':'hide'}catch(e){root.dataset.details='hide'}
+n.querySelector('.ab').addEventListener('click',function(){dx.hidden=!root.dataset.xd;cb.checked=root.dataset.details==='show';dl.showModal()});
+cb.addEventListener('change',function(){root.dataset.details=cb.checked?'show':'hide';try{localStorage.setItem('atlas-details',cb.checked?'1':'0')}catch(e){}});
+dl.querySelector('.cl').addEventListener('click',function(){dl.close()});
+dl.addEventListener('click',function(e){if(e.target===dl)dl.close()});
 paint();addEventListener('resize',h);show(keep)})();"""
 
 
