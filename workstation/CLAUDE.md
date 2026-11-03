@@ -49,3 +49,5 @@ in the guide's order. It must stay idempotent: each component has a `CHECK` and 
 `README.md` is the end user's guide (prerequisites, how to run each script, what is installed). It is for people: keep status and test notes
 here. Update it when a component, a profile key or a prerequisite changes.
 - Windows: Git for Windows is a prerequisite the script checks but does not install (README gives the steps); `make` comes from Scoop. The `winget` line and the installer choices in the README are unverified: confirm against git-scm.com before relying on them.
+
+Spec: `docs/spec.md` is this topic's plan, coverage and known gaps (format: `docs/topic-spec.md` at the repo root). Read it before changing the topic, and update it in the same commit as the data. `make validate` checks it.

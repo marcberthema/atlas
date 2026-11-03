@@ -9,6 +9,7 @@ help:  ## List the targets
 
 validate:  ## Validate every topic, and check no verbatim source text is tracked
 	$(PY) shared/atlas.py check
+	$(PY) shared/spec.py
 	@! git ls-files | grep -E '/(snapshots|review)/' || { echo "snapshots or review files are tracked: they must stay local"; exit 1; }
 	@for t in $(TOPICS); do $(MAKE) --no-print-directory -C topics/$$t validate || exit 1; done
 

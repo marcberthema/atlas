@@ -26,12 +26,12 @@ topics.json + shared/ -> the top banner on every page and the landing page, dist
 - Every topic except Azure uses one shared page: `shared/topic.html` (look and script), `shared/build_topic.py`, `shared/learning.py` (checks)
   and `shared/examples.py` (code examples fetched from the docs). A topic keeps its data, its `templates/view.json` (title and tabs)
   and a three line `scripts/build.py`. See `topics/gitops/docs/data-model.md` for the entry format (parts, tables, callouts, code, diagrams).
-- The banner has a `?` button that opens the About window: the disclaimer, the git ref and repository, and a switch (remembered in `localStorage`) that shows the low-value details of every entry. Those details (release and check dates, status, CNCF, licence, extra links, sources) carry the class `xd` in `shared/topic.html` and are hidden by default; each entry also has its own "details" button. The version analysed is never hidden. The ref comes from `ATLAS_REF`, which `make deploy` sets; a plain `make build` says `dev`, so committed pages do not change on every commit.
+- The banner has a `?` button that opens the About window: the disclaimer, the git ref and repository, and a switch (remembered in `localStorage`) that shows the low-value details of every entry. Those details (release and check dates, status, CNCF, licence, extra links, sources) carry the class `xd` in `shared/topic.html` and are hidden by default; each entry also has its own "details" button. The version analysed is never hidden. The ref comes from `ATLAS_REF`, which `make deploy` sets; a plain `make build` says `dev`, so committed pages do not change on every commit. The GitHub deploy workflow does not build, so the live site shows `dev` until the workflow stamps the ref (see `docs/roadmap.md`).
 - `shared/atlas.py` renders the banner. A template carries `<!--__BANNER__-->` after `<body>` and `/*__BANNER_CSS__*/` in
   its style block; the topic build fills both. `shared/build_site.py` builds `dist/index.html`.
 - AI generates content into the JSON files. Python checks for updates and builds the pages. Neither the look nor the stack
   of a page may require changing the data.
-- `dist/` is generated and committed. Deploy with `make deploy` (wrangler, one Worker named `atlas` serving `dist/`); there is no build on Cloudflare.
+- `dist/` is generated and committed. Deploy with `make deploy` (wrangler, one Worker named `atlas` serving `dist/`); there is no build on Cloudflare. A push to `main` that changes `dist/` also deploys, through `.github/workflows/deploy.yml` (wrangler, no build), so merging a PR publishes it.
 - `workstation/` is not a topic: same data model, checks and shared page, but it builds into `workstation/site/index.html`
   (outside `dist/`, so never deployed) with a banner that names only itself. It is not in `topics.json`. Read `workstation/CLAUDE.md`.
 - `vscode/` is the same kind of unpublished resource (`vscode/site/index.html`). Its entries are VS Code extensions, tracked against the
@@ -46,6 +46,7 @@ work from `file://`: relative links that name `index.html`, no absolute paths, n
 
 ## Rules for every topic
 
+- **A spec per topic.** `topics/<id>/docs/spec.md` (also `workstation/` and `vscode/`) holds the purpose, scope, layout, sources, coverage, known gaps and decisions. Write it before the entries, get it approved, and change it in the same commit as the data. Format: `docs/topic-spec.md`. The product vision and the order of work are in `docs/vision.md` and `docs/roadmap.md`.
 - **Everything is public, for everyone.** Atlas exists so that I and anyone else can find centralized information in one place.
   Write only from public sources, and write it as general knowledge. Nothing is ever based on, drawn from or shaped by a
   company I work or worked for, a client, or any confidential material: no internal names, architectures, region counts,

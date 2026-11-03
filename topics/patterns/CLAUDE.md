@@ -22,3 +22,5 @@ Review each difference, then update `checked`, `version` and the facts that chan
 Page: this topic uses the shared page (`shared/topic.html`). Its tabs are in `templates/view.json`. Tab entries use the learning layout (parts, steps,
 tables, callouts, cards, diagrams, fetched code examples: see `topics/gitops/docs/data-model.md`); short entries are flat. When converting an entry, keep
 every fact and check nothing was dropped. Examples are fetched by reference (`make examples`), never pasted. Check diagrams in a browser after editing one.
+
+Spec: `docs/spec.md` is this topic's plan, coverage and known gaps (format: `docs/topic-spec.md` at the repo root). Read it before changing the topic, and update it in the same commit as the data. `make validate` checks it.

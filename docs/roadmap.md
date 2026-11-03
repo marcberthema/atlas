@@ -1,0 +1,17 @@
+# Roadmap
+
+Order of work, agreed with the owner. Update the status when something lands.
+
+| # | Item | Status | Notes |
+|---|---|---|---|
+| 1 | Families: IaC, CI/CD, Development, Enterprise, and the eight stages in `topics.json` | done | Branch `families-iac-cicd`. A family with no published topic stays hidden |
+| 2 | About window (`?`) and hidden entry details | done | Same branch. The ref is stamped by `make deploy` |
+| 3 | A spec for every topic and a checker | done | `docs/topic-spec.md`, `shared/spec.py` |
+| 3b | Stamp the git ref in the GitHub deploy workflow | planned | `deploy.yml` publishes the committed `dist/` on every push to `main` that changes it, with no build, so the About window shows `dev` live. Needs a build step with `ATLAS_REF` in the workflow: a change to CI, to agree with the owner first |
+| 4 | Assign `stages` to the existing topics, then the DevOps loop page | planned | Stage assignment is a judgement: agree it with the owner |
+| 5 | The add-topic and refresh-topic skills | planned | The spec is their input. Needs a few archetypes: see `docs/topic-spec.md` |
+| 6 | CI/CD topics | planned | Drafts in `topics.json`: GitHub Actions, GitLab CI/CD, Jenkins, Nexus Repository, JFrog Xray, SonarQube |
+| 7 | Placements, then the Azure estate view and the application view | planned | Areas and the topic-to-area mapping are not designed yet. Write `docs/views.md` first |
+| 8 | A decisions log (`docs/decisions.md`) | planned | Reconstruct old decisions from git history, and mark reasons that are not recorded |
+
+Not scheduled: the Azure topic has its own page and does not use the details switch; the shared page could be extended to cover it.

@@ -24,3 +24,5 @@ how often they are used, a judgement for this page. Then Ecosystem (the tools) a
 tables, callouts, cards, diagrams, fetched code examples: see `topics/gitops/docs/data-model.md`). Code examples are fetched, never pasted:
 give the source page and a `match` string, run `make examples`. HCL examples use `lang: text` because the page only knows yaml, shell and text.
 Check diagrams in a browser after editing one.
+
+Spec: `docs/spec.md` is this topic's plan, coverage and known gaps (format: `docs/topic-spec.md` at the repo root). Read it before changing the topic, and update it in the same commit as the data. `make validate` checks it.

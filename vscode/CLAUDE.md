@@ -57,3 +57,5 @@ The Marketplace metadata is read from its public query API; nothing needs an acc
 
 `README.md` is the end user's guide for a new workstation (steps, prerequisites). It is for people, not for the agent: keep rules, test notes and
 status here in `CLAUDE.md`. `make setup`, `setup-dry-run` and `setup-list` wrap `setup/setup.sh`; update the README when its options change.
+
+Spec: `docs/spec.md` is this topic's plan, coverage and known gaps (format: `docs/topic-spec.md` at the repo root). Read it before changing the topic, and update it in the same commit as the data. `make validate` checks it.

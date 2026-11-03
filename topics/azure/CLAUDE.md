@@ -125,3 +125,5 @@ Onboarding tier 2 and 3 later: add the service entries, remove the matching stub
 
 Be direct. If a relationship, claim or retirement date is uncertain, say so plainly rather than
 guessing. Flag errors in existing entries when you notice them.
+
+Spec: `docs/spec.md` is this topic's plan, coverage and known gaps (format: `docs/topic-spec.md` at the repo root). Read it before changing the topic, and update it in the same commit as the data. `make validate` checks it.

@@ -26,3 +26,5 @@ Learning layout: the five tab entries (GitOps principles, Argo CD, Flux, Helm, K
 tables, callouts, cards, checklists, icons and diagrams (see docs/data-model.md). When converting an entry, keep every fact: list the old
 items and check each one landed somewhere (names, flags, numbers, versions). Code examples are not copied: give the source page and a
 match string, run `make examples`, and check the result on the page. Do not combine or edit examples.
+
+Spec: `docs/spec.md` is this topic's plan, coverage and known gaps (format: `docs/topic-spec.md` at the repo root). Read it before changing the topic, and update it in the same commit as the data. `make validate` checks it.
