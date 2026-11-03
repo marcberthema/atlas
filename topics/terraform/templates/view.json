@@ -1,0 +1,70 @@
+{
+  "title": "Terraform",
+  "tabs": [
+    {
+      "id": "workflow",
+      "label": "Start"
+    },
+    {
+      "id": "blocks",
+      "label": "Blocks",
+      "group": "blocks",
+      "pick": "Block",
+      "sets": [
+        {
+          "label": "Everyday",
+          "ids": [
+            "terraform",
+            "provider",
+            "resource",
+            "data",
+            "variable",
+            "output",
+            "locals",
+            "module"
+          ]
+        },
+        {
+          "label": "Refactoring",
+          "ids": [
+            "import",
+            "moved",
+            "removed"
+          ]
+        },
+        {
+          "label": "Specialised",
+          "ids": [
+            "check",
+            "action",
+            "ephemeral"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "language",
+      "label": "Language",
+      "group": "language",
+      "pick": "Topic"
+    },
+    {
+      "id": "commands",
+      "label": "CLI"
+    },
+    {
+      "id": "ops",
+      "label": "State & ops",
+      "group": "ops",
+      "pick": "Topic"
+    },
+    {
+      "id": "others",
+      "label": "Ecosystem"
+    },
+    {
+      "id": "compare",
+      "label": "Compare"
+    }
+  ]
+}
