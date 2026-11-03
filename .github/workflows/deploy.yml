@@ -1,14 +1,10 @@
 name: Deploy (atlas.marcberthelette.com)
 
+# Publishes only when a release is published (gh release create <tag> --target main), or by hand.
+# The site is the committed dist/ at the release tag; the version in the About window is the tag in VERSION.
 on:
-  push:
-    branches: [main]
-    paths: ["dist/**"]
-  # commits pushed with GITHUB_TOKEN (the daily check) do not trigger push workflows
-  workflow_run:
-    workflows: ["Daily check (azure topic)"]
-    types: [completed]
-    branches: [main]
+  release:
+    types: [published]
   workflow_dispatch:
 
 permissions:
@@ -20,23 +16,10 @@ concurrency:
 
 jobs:
   deploy:
-    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
-        with:
-          ref: main
-          fetch-depth: 2
-      - name: Did the latest commit change dist/?
-        id: dist
-        run: |
-          if [ "${{ github.event_name }}" = "workflow_run" ] && git diff --quiet HEAD~1 HEAD -- dist; then
-            echo "changed=false" >> "$GITHUB_OUTPUT"
-          else
-            echo "changed=true" >> "$GITHUB_OUTPUT"
-          fi
+      - uses: actions/checkout@v6  # a release checks out its tag; a manual run checks out the branch it was started on
       - name: Deploy dist/ with wrangler
-        if: steps.dist.outputs.changed == 'true'
         run: npx --yes wrangler@4.150.0 deploy
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}

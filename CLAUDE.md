@@ -32,7 +32,7 @@ topics.json + shared/ -> the top banner on every page and the landing page, dist
   its style block; the topic build fills both. `shared/build_site.py` builds `dist/index.html`.
 - AI generates content into the JSON files. Python checks for updates and builds the pages. Neither the look nor the stack
   of a page may require changing the data.
-- `dist/` is generated and committed. Deploy with `make deploy` (wrangler, one Worker named `atlas` serving `dist/`); there is no build on Cloudflare. A push to `main` that changes `dist/` also deploys, through `.github/workflows/deploy.yml` (wrangler, no build), so merging a PR publishes it.
+- `dist/` is generated and committed. Deploy with `make deploy` (wrangler, one Worker named `atlas` serving `dist/`); there is no build on Cloudflare. The site is published only when a release is published, through `.github/workflows/deploy.yml` (wrangler, no build, the committed `dist/` at the release tag; it can also be run by hand). Merging a PR does not publish it.
 - `workstation/` is not a topic: same data model, checks and shared page, but it builds into `workstation/site/index.html`
   (outside `dist/`, so never deployed) with a banner that names only itself. It is not in `topics.json`. Read `workstation/CLAUDE.md`.
 - `vscode/` is the same kind of unpublished resource (`vscode/site/index.html`). Its entries are VS Code extensions, tracked against the
@@ -85,7 +85,7 @@ make azure-check # run any target of a topic: make <topic>-<target>
 1. Describe the change. Claude edits the topic's data (or template), runs `make build`, and checks the page in a browser.
 2. Commit after each coherent change, with a message saying what was added or corrected. Commit `dist/` with it.
 3. Branch and PR to `main` after the user confirms.
-4. Release (only when the user asks): write the new tag in `VERSION`, `make build`, commit with `dist/`, PR and squash merge (the push deploys), then `gh release create <tag> --target main`. The tag names the version the About window shows.
+4. Release (only when the user asks): write the new tag in `VERSION`, `make build`, commit with `dist/`, PR and squash merge, then `gh release create <tag> --target main`; publishing the release deploys. The tag names the version the About window shows.
 
 ## Feedback Style
 
