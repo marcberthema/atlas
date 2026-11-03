@@ -23,8 +23,12 @@ declares the metadata appears in the view without editing a diagram. Views live 
   Drafts are never shown, like everywhere else.
 - **Scope.** The loop is a map of where topics fit, not a claim about how anyone works.
 
-## Planned: the Azure estate and the application views
+## The lenses view (`lenses`)
 
-Same mechanism, with `areas` instead of `stages` and a diagram of areas (for the estate: identity, network, governance, platform, workloads;
-for an application: web, API, data, messaging, identity, observability). A topic would declare `placements` (view id, area id). Not built yet:
-the areas have to be agreed first, and they must come from public reference architectures.
+Where does a service go? One page, `/lenses/`: a base picture of an application (22 roles in five lanes), five lenses (application, network,
+infrastructure, security, monitoring) that highlight roles, a stack filter that changes the labels (generic, Azure, open source; AWS is shown as
+soon), an Organization view (tenant, management groups, subscriptions, resource groups and the services tied to each level) and an A-Z list.
+A search finds a role, a product or an alias (kafka leads to Message broker). It has a catalogue of its own, so it is not built from topic
+metadata like the DevOps loop: `views/lenses/data/lenses.json`, checked by `shared/lenses_check.py` (part of `make validate`), built by
+`shared/build_lenses.py` from `shared/lenses.html` into `dist/lenses/index.html`, with the data embedded in the page. `make lenses-check` also
+fetches every source link. The spec is `views/lenses/docs/spec.md`; the first visual agreement is `docs/mockups/lenses.html` (sample text).

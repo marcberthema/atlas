@@ -18,7 +18,8 @@
     {"id": "monitor", "label": "Monitor", "about": "Metrics, logs and alerts, and the feedback into planning."}
   ],
   "views": [
-    {"id": "devops-loop", "label": "DevOps loop", "description": "The eight DevOps stages as an infinity loop, and the topics that belong to each stage."}
+    {"id": "devops-loop", "label": "DevOps loop", "description": "The eight DevOps stages as an infinity loop, and the topics that belong to each stage."},
+    {"id": "lenses", "label": "Lenses", "description": "Where does a service go? One picture of an application, five lenses, a stack filter and the organization level."}
   ],
   "topics": [
     {"id": "github-actions", "family": "cicd", "label": "GitHub Actions", "stages": ["build", "test", "release", "deploy"], "description": "Every workflow key, triggers, expressions and contexts, reuse, runners, security, limits and the gh CLI."},

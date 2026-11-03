@@ -1,7 +1,7 @@
 PY ?= python3
 TOPICS := $(shell $(PY) shared/atlas.py ids)
 
-.PHONY: help validate build serve deploy clean
+.PHONY: help validate build serve deploy clean lenses-check
 
 help:  ## List the targets
 	@grep -E '^[a-z-]+:.*## ' $(MAKEFILE_LIST) | awk -F':.*## ' '{printf "  make %-14s %s\n", $$1, $$2}'
@@ -10,12 +10,14 @@ help:  ## List the targets
 validate:  ## Validate every topic, and check no verbatim source text is tracked
 	$(PY) shared/atlas.py check
 	$(PY) shared/spec.py
+	$(PY) shared/lenses_check.py
 	@! git ls-files | grep -E '/(snapshots|review)/' || { echo "snapshots or review files are tracked: they must stay local"; exit 1; }
 	@for t in $(TOPICS); do $(MAKE) --no-print-directory -C topics/$$t validate || exit 1; done
 
 build:  ## Build every topic and the landing page into dist/
 	@for t in $(TOPICS); do $(MAKE) --no-print-directory -C topics/$$t build || exit 1; done
 	$(PY) shared/build_views.py
+	$(PY) shared/build_lenses.py
 	$(PY) shared/build_site.py
 
 serve: build  ## Build and serve dist/ on http://localhost:8000
@@ -51,3 +53,6 @@ vscode-%:
 	$(MAKE) -C vscode $*
 github-actions-%:
 	$(MAKE) -C topics/github-actions $*
+# The lenses view (views/lenses/): make lenses-check also fetches every source url
+lenses-check:  ## Check the lenses data and that its source links still answer (network)
+	$(PY) shared/lenses_check.py links

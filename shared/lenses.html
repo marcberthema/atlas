@@ -1,0 +1,332 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>__TITLE__ - __NAME__</title>
+<style>
+:root{--bg:#fff;--fg:#111;--mut:#555;--acc:#1a3c5e;--accfg:#fff;--rule:#d5dde5;--card:#f6f8fa;--lane:#f1f4f7;--ok:#1a7f37}
+@media(prefers-color-scheme:dark){:root{--bg:#14181d;--fg:#e8ecef;--mut:#9aa6b2;--acc:#7fb2e5;--accfg:#14181d;--rule:#2b333b;--card:#1c2229;--lane:#181e24;--ok:#56d364}}
+*{box-sizing:border-box}
+body{font:16px/1.45 system-ui,sans-serif;background:var(--bg);color:var(--fg);margin:0}
+body>main{margin-top:0}
+button,input{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+main{max-width:1320px;margin:0 auto;padding:16px}
+h1{font-size:1.4rem;color:var(--acc);margin:0}
+.sub{color:var(--mut);margin:2px 0 12px;font-size:.95rem}
+.tools{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:flex-end;margin-bottom:8px}
+.grp{display:flex;flex-direction:column;gap:3px}
+.grp>.l{font-size:.75rem;text-transform:uppercase;letter-spacing:.06em;color:var(--mut)}
+.seg{display:inline-flex;border:1px solid var(--rule);border-radius:8px;overflow:hidden;background:var(--bg)}
+.seg button{border:0;background:none;padding:7px 14px;cursor:pointer;border-right:1px solid var(--rule);min-height:40px;display:inline-flex;align-items:center;gap:6px}
+.seg button:last-child{border-right:0}
+.seg button:hover:not([aria-selected=true]):not([aria-pressed=true]):not(:disabled){background:var(--card)}
+.seg button[aria-selected=true],.seg button[aria-pressed=true]{background:var(--acc);color:var(--accfg);font-weight:600}
+.seg button[aria-selected=true] .ic,.seg button[aria-pressed=true] .ic{stroke:var(--accfg)}
+.seg button:disabled{color:var(--mut);cursor:not-allowed;opacity:.6}
+.seg button:disabled[aria-selected=true]{background:var(--lane);font-weight:400}.seg button:disabled[aria-selected=true] .ic{stroke:var(--mut)}
+.seg button:focus-visible{outline-offset:-3px}
+.head{display:flex;flex-wrap:wrap;gap:8px 20px;align-items:flex-start;justify-content:space-between}
+.find{position:relative;min-width:300px;margin-top:2px}
+.find input{width:100%;border:1px solid var(--rule);border-radius:8px;padding:8px 12px;background:var(--bg);min-height:40px}
+.find ul{position:absolute;z-index:5;right:0;width:min(380px,90vw);top:100%;margin:4px 0 0;padding:4px;list-style:none;background:var(--bg);border:1px solid var(--rule);border-radius:8px;box-shadow:0 6px 20px rgba(0,0,0,.18)}
+.find li button{display:flex;flex-direction:column;width:100%;text-align:left;border:0;background:none;padding:8px 10px;border-radius:6px;cursor:pointer}
+.find li button:hover,.find li button:focus-visible{background:var(--card)}
+.find li small{color:var(--mut)}
+.blurb{margin:6px 0 10px;padding:8px 12px;border-left:4px solid var(--acc);background:var(--card);border-radius:0 8px 8px 0}
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:16px;align-items:start}
+@media(max-width:960px){.layout{grid-template-columns:1fr}}
+.map{border:1px solid var(--rule);border-radius:10px;overflow-x:auto;background:var(--bg)}
+svg.m{display:block;width:100%;min-width:780px;height:auto}
+.lane{fill:var(--lane)} .lanel{fill:var(--mut);font:600 12px system-ui,sans-serif;letter-spacing:.07em;text-transform:uppercase}
+.frame{fill:none;stroke:var(--acc);stroke-width:1.5;stroke-dasharray:7 5}
+.framel{fill:var(--acc);font:600 12px system-ui,sans-serif}
+.edge{fill:none;stroke:var(--rule);stroke-width:1.5;stroke-linejoin:round}
+.edge.on{stroke:var(--acc);stroke-width:2.2}
+.edge.dash{stroke-dasharray:6 5} .edge.dot{stroke-dasharray:2 6;stroke-linecap:round}
+.elab{fill:var(--fg);font:12.5px system-ui,sans-serif;paint-order:stroke;stroke:var(--lane);stroke-width:4px}
+.node{cursor:pointer}
+.node rect{fill:var(--bg);stroke:var(--rule);stroke-width:1.5;stroke-dasharray:4 3}
+.node text{fill:var(--mut);font:600 14px system-ui,sans-serif;text-anchor:middle}
+.node .cap{font:12px system-ui,sans-serif}
+.ic{fill:none;stroke:var(--mut);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+svg.ic path{vector-effect:none}
+.node.in rect{stroke:var(--acc);stroke-width:2;stroke-dasharray:none}
+.node.in text{fill:var(--fg)} .node.in .ic{stroke:var(--acc)}
+.node.out{opacity:.55}
+.node:hover rect{stroke:var(--acc);stroke-dasharray:none}
+.node.sel rect{fill:var(--acc);stroke:var(--acc);stroke-dasharray:none}
+.node.sel text{fill:var(--accfg)} .node.sel .ic{stroke:var(--accfg)}
+.node.out.sel{opacity:1}
+.node:focus-visible{outline:none}
+.node:focus-visible rect{stroke:var(--fg);stroke-width:3.5;stroke-dasharray:none}
+.badge{cursor:pointer}
+.badge circle{fill:var(--bg);stroke:var(--acc);stroke-width:2}
+.badge .ic{stroke:var(--acc)}
+.badge.sel circle{fill:var(--acc)} .badge.sel .ic{stroke:var(--accfg)}
+.badge:hover circle{stroke-width:3}
+.badge:focus-visible{outline:none}.badge:focus-visible circle{stroke:var(--fg);stroke-width:3.5}
+.legend{display:flex;flex-wrap:wrap;gap:6px 18px;padding:8px 12px;border-top:1px solid var(--rule);font-size:.85rem;color:var(--mut);align-items:center}
+.legend i{display:inline-block;width:26px;height:0;border-top:2.2px solid var(--acc);vertical-align:middle;margin-right:6px}
+.legend i.d{border-top-style:dashed} .legend i.g{border-top:2px dashed var(--mut);opacity:.6}
+.legend svg{vertical-align:middle;margin-right:4px;stroke:var(--acc)}
+.cross{padding:8px 12px;border-top:1px solid var(--rule);font-size:.88rem;color:var(--mut)}
+.panel{border:1px solid var(--rule);border-radius:10px;background:var(--card);padding:14px;position:sticky;top:calc(var(--atlash,0px) + 12px)}
+.panel h2{font-size:1.15rem;margin:0 0 2px;color:var(--acc);display:flex;gap:8px;align-items:center}
+.panel h2 svg{flex:none;stroke:var(--acc)}
+.panel .what{margin:0 0 10px}
+.panel h3{font-size:.75rem;text-transform:uppercase;letter-spacing:.06em;color:var(--mut);margin:12px 0 3px}
+.panel p{margin:0}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{border:1px solid var(--rule);background:var(--bg);border-radius:999px;padding:3px 12px;cursor:pointer;font-size:.88rem}
+.chip:hover{border-color:var(--acc)} .chip.cur{background:var(--acc);color:var(--accfg);border-color:var(--acc)}
+.prods{margin:0;padding:0;list-style:none;display:grid;gap:4px}
+.prods li{border:1px solid var(--rule);background:var(--bg);border-radius:6px;padding:4px 10px}
+.prods li.hit{border-color:var(--acc);box-shadow:0 0 0 2px var(--acc)}
+.hint{color:var(--mut);font-size:.9rem}
+.filed{background:var(--bg);border:1px solid var(--acc);border-radius:8px;padding:6px 10px;margin-bottom:10px;font-size:.9rem}
+.draft{font-size:.8rem;color:var(--mut);margin-top:12px !important;border-top:1px solid var(--rule);padding-top:8px}
+.modtag{display:inline-block;font-size:.75rem;border:1px solid var(--rule);border-radius:4px;padding:0 6px;color:var(--mut);margin-bottom:6px}
+.az{display:grid;gap:18px}
+.az section h2{font-size:1rem;color:var(--acc);margin:0 0 6px;border-bottom:1px solid var(--rule);padding-bottom:3px}
+.az ul{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:8px}
+.az li button{width:100%;text-align:left;border:1px solid var(--rule);background:var(--card);border-radius:8px;padding:8px 12px;cursor:pointer;display:block}
+.az li button:hover{border-color:var(--acc)}
+.az b{display:flex;gap:8px;align-items:center}.az b .ic{flex:none;stroke:var(--acc)} .az span{color:var(--mut);font-size:.88rem;display:block}
+.az .chips{margin-top:4px}.az .chip{cursor:default;padding:0 8px;font-size:.78rem}
+/* organization view */
+.org{border:1px solid var(--rule);border-radius:10px;background:var(--bg);padding:14px;display:grid;gap:12px}
+.os{border:2px solid var(--rule);border-radius:10px;padding:10px 12px;background:var(--lane)}
+.os .os{background:var(--bg)} .os .os .os{background:var(--lane)}
+.os.sel{border-color:var(--acc)}
+.oh{display:flex;gap:8px;align-items:center;margin:0 0 8px;font-size:.95rem}
+.oh button{all:unset;cursor:pointer;font-weight:700;color:var(--acc);display:flex;gap:6px;align-items:center;border-radius:6px;padding:2px 4px}
+.oh button .ic{stroke:var(--acc)}
+.oh button:hover{text-decoration:underline}
+.oh button:focus-visible{outline:3px solid var(--acc)}
+.oh small{color:var(--mut);font-weight:400}
+.oc{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 8px}
+.oc button{display:inline-flex;gap:6px;align-items:center;border:1px solid var(--acc);background:var(--card);border-radius:8px;padding:5px 10px;cursor:pointer}
+.oc button .ic{stroke:var(--acc)}
+.oc button:hover,.oc button.sel{background:var(--acc);color:var(--accfg)} .oc button:hover .ic,.oc button.sel .ic{stroke:var(--accfg)}
+.inh{display:flex;gap:8px;align-items:center;color:var(--mut);font-size:.85rem;margin:0 0 8px}
+.inh svg{flex:none;stroke:var(--mut);fill:none;stroke-width:2}
+.orow{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
+.rgbox{border:2px dashed var(--acc);border-radius:10px;padding:10px 12px;background:var(--card)}
+.rgbox p{margin:0}
+.go{margin-top:8px;display:inline-flex;gap:6px;align-items:center;border:1px solid var(--rule);border-radius:8px;background:var(--bg);padding:6px 10px;cursor:pointer}
+.go:hover{border-color:var(--acc)} .go .ic{stroke:var(--acc)}
+.side{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.side>div{border:1px solid var(--rule);border-radius:10px;padding:10px 12px;background:var(--card)}
+.side h3{margin:0 0 6px;font-size:.95rem;color:var(--acc)} .side h3 small{color:var(--mut);font-weight:400}
+.sr{position:absolute;left:-9999px}
+
+.prods small,.srcs small{display:block;color:var(--mut);font-size:.82rem}
+.prods a,.panel a:not(.chip){color:var(--acc);font-size:.82rem}
+.srcs{margin:0;padding-left:16px;font-size:.82rem;overflow-wrap:anywhere}
+a.chip{text-decoration:none;color:inherit}
+.modtag.un{border-color:var(--acc);color:var(--fg)}
+.foot{color:var(--mut);font-size:.85rem;margin:14px 0 0}
+/*__BANNER_CSS__*/
+</style></head><body>
+<!--__BANNER__-->
+<main>
+<div class="head"><div><h1>__TITLE__</h1><p class="sub" id="sub"></p></div>
+  <div class="find"><label class="sr" for="q">Where does a service go?</label><input id="q" type="search" placeholder="Where does it go? Try kafka, redis, bastion" autocomplete="off"><ul id="res" hidden></ul></div></div>
+<div class="tools">
+  <div class="grp"><span class="l" id="vl">View</span><div class="seg" id="view" role="group" aria-labelledby="vl"></div></div>
+  <div class="grp"><span class="l" id="ll">Lens</span><div class="seg" id="lens" role="tablist" aria-labelledby="ll"></div></div>
+  <div class="grp"><span class="l" id="sl">Stack</span><div class="seg" id="stack" role="group" aria-labelledby="sl"></div></div>
+</div>
+
+<div id="mapview">
+  <div class="blurb" id="blurb"></div>
+  <div class="layout">
+    <div class="map"><svg class="m" id="svg" viewBox="0 0 950 616" role="group" aria-label="Application diagram"></svg>
+      <div class="legend"><span><i></i>In this lens</span><span><i class="d"></i>Access or control</span><span><i class="g"></i>Other lenses (faded)</span><span id="lg-f"></span></div>
+      <div class="cross" id="cross"></div></div>
+    <aside class="panel" id="panel" aria-live="polite"></aside>
+  </div>
+</div>
+<div id="orgview" hidden>
+  <div class="blurb" id="oblurb"></div>
+  <div class="layout"><div id="org"></div><aside class="panel" id="opanel" aria-live="polite"></aside></div>
+</div>
+<div id="azview" class="az" hidden></div>
+<p class="foot">Roles and products were read against public sources on __CHECKED__; each one lists its sources. Where a box sits on the picture is a judgement, not a fact a source states. Spec: <code>views/lenses/docs/spec.md</code>.</p>
+</main>
+<!--__FOOTER__-->
+<script>
+/* line icons, 24x24 */
+const IC={
+users:'M12 12a4 4 0 100-8 4 4 0 000 8zM4 21c0-4.4 3.6-7 8-7s8 2.6 8 7',
+waf:'M12 21a9 9 0 100-18 9 9 0 000 18zM3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18',
+lb:'M3 12h6M9 12l6-6h6M9 12h12M9 12l6 6h6',
+web:'M3 5h18v14H3zM3 9h18M6 7h.01',
+app:'M8 7l-5 5 5 5M16 7l5 5-5 5M14 5l-4 14',
+db:'M4 6c0-1.7 3.6-3 8-3s8 1.3 8 3-3.6 3-8 3-8-1.3-8-3zM4 6v12c0 1.7 3.6 3 8 3s8-1.3 8-3V6M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3',
+dns:'M4 5h16v14H4zM8 10h8M8 14h5',
+identity:'M8 15a4 4 0 100-8 4 4 0 000 8zM11 12h10M18 12v4M21 12v3',
+secrets:'M6 11h12v10H6zM8 11V8a4 4 0 018 0v3M12 15v3',
+broker:'M2 9h5v6H2zM9.5 9h5v6h-5zM17 9h5v6h-5z',
+cache:'M13 2L4 14h7l-1 8 9-12h-7z',
+search:'M11 18a7 7 0 100-14 7 7 0 000 14zM21 21l-5-5',
+worker:'M12 15a3 3 0 100-6 3 3 0 000 6zM12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2',
+vpn:'M10 14a4 4 0 005.7 0l3-3a4 4 0 00-5.7-5.7l-1 1M14 10a4 4 0 00-5.7 0l-3 3a4 4 0 005.7 5.7l1-1',
+bastion:'M4 21V6h3v3h3V6h4v3h3V6h3v15zM10 21v-6h4v6',
+firewall:'M3 5h18v14H3zM3 10h18M3 15h18M9 5v5M15 10v5M9 15v4',
+filter:'M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z',
+collector:'M3 4h18l-7 8v7l-4 2v-9z',
+store:'M6 3h9l4 4v14H6zM9 12h7M9 16h7M9 8h4',
+dash:'M3 21h18M6 21V11M11 21V4M16 21v-8',
+tenant:'M12 2l9 5v10l-9 5-9-5V7zM12 12l9-5M12 12v10M12 12L3 7',
+mg:'M12 3v6M5 21v-6h14v6M12 9H5v6M12 9h7v6',
+sub:'M3 8h18v12H3zM7 8V4h10v4',
+rg:'M4 4h16v16H4zM8 9h8M8 13h8',
+cost:'M12 21a9 9 0 100-18 9 9 0 000 18zM14.5 9.5c-.5-1-1.5-1.5-2.5-1.5-1.5 0-2.5.8-2.5 2 0 3 5 1.5 5 4.5 0 1.2-1 2-2.5 2-1.1 0-2-.5-2.5-1.5M12 6v2M12 16v2',
+policy:'M6 3h12v18H6zM9 8l2 2 4-4M9 15h6',
+log:'M5 4h14v16H5zM8 9h8M8 13h8M8 17h4',
+bulb:'M9 18h6M10 21h4M12 3a6 6 0 00-4 10.5V16h8v-2.5A6 6 0 0012 3z',
+api:'M8 6l-5 6 5 6M16 6l5 6-5 6',
+graph:'M3 21V3M3 21h18M7 16l4-5 4 3 5-8',
+mon:'M3 12h4l3-8 4 16 3-8h4',
+devops:'M7 8a4 4 0 100 8c4 0 6-8 10-8a4 4 0 110 8c-4 0-6-8-10-8z',
+storage:'M4 6h16v5H4zM4 13h16v5H4zM7 8.5h.01M7 15.5h.01',
+siem:'M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6zM9 12l2 2 4-4',
+open:'M5 12h14M13 6l6 6-6 6'
+};
+const ico=(k,sz=18)=>`<svg class="ic" width="${sz}" height="${sz}" viewBox="0 0 24 24" aria-hidden="true"><path d="${IC[k]||IC.app}"/></svg>`;
+const icg=(k,x,y,sz=18)=>`<g class="ic" transform="translate(${x},${y}) scale(${sz/24})"><path d="${IC[k]||IC.app}"/></g>`;
+/* The data is embedded by shared/build_lenses.py from views/lenses/data/lenses.json */
+const DATA=__DATA__;
+const LENSES=DATA.lenses.map(l=>({id:l.id,name:l.label,blurb:l.about,cross:'Not drawn: '+l.not_drawn}));
+const FLAB=Object.fromEntries(DATA.lenses.map(l=>[l.id,l.frame]));
+const STACKS=DATA.stacks.map(s=>({id:s.id,name:s.label,off:s.status==='planned'?1:0}));
+const LANES=DATA.lanes.map(l=>l.label);
+const CAT={edge:'Edge and network',run:'Compute and identity',data:'Data and messaging',ops:'Operations'};
+const R=DATA.roles.map(r=>({id:r.id,n:r.name,full:r.full,cat:r.category,setting:r.setting,c:r.at?r.at.col:undefined,r:r.at?r.at.lane:undefined,l:r.lenses,what:r.what,where:r.where,why:r.why,az:r.products.az||[],oss:r.products.oss||[],al:r.aliases,topics:r.topics,src:r.sources,status:r.status,checked:r.checked,note:r.note}));
+const E=DATA.edges.map(e=>[e.from,e.to,e.label,e.style==='solid'?'':e.style,e.lenses.join(' '),e.badge]);
+const OI={tenant:'tenant',mg:'mg',sub:'sub',rg:'rg',entra:'identity',condacc:'filter',pim:'secrets',policy:'policy',rbac:'identity',cost:'cost',defender:'firewall',actlog:'log',advisor:'bulb',arm:'api',graph:'graph',monitor:'mon',devops:'devops'};
+const LV=Object.fromEntries(DATA.levels.map(l=>[l.id,l]));
+const O=[...DATA.levels.map(l=>({id:l.id,g:l.generic,a:l.azure,ic:OI[l.id],scope:'A level of the hierarchy',what:l.about,why:'',src:[l.source],checked:DATA.checked,level:1})),
+ ...DATA.org.map(o=>({id:o.id,g:o.generic,a:o.azure,ic:OI[o.id],scope:o.kind==='span'?'Spans every level':o.kind==='outside'?'Outside the subscriptions':o.levels.map(x=>LV[x].azure).join(', '),what:o.what,why:o.why,src:o.sources,status:o.status,checked:o.checked,note:o.note,inh:o.inherits,kind:o.kind,place:o.place}))];
+const W=120,H=64,X=c=>10+160*c,LY=i=>10+122*i,NY=r=>LY(r)+34;
+const FR={x:470,y:32,w:470,b:360};
+
+const st={lens:'app',stack:'gen',view:'map',sel:null,hit:null};
+const $=s=>document.querySelector(s),byId=id=>R.find(r=>r.id===id),byO=id=>O.find(o=>o.id===id);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const oname=o=>st.stack==='az'?o.a:o.g;
+const lensName=id=>LENSES.find(l=>l.id===id).name;
+
+function seg(el,items,cur,fn,mode,dis){el.innerHTML=items.map(i=>`<button type="button" ${mode==='tab'?`role="tab" aria-selected="${i.id===cur}"`:`aria-pressed="${i.id===cur}"`} data-id="${i.id}" ${i.off||dis?'disabled':''} ${i.off?'title="Planned"':''}>${i.ic?ico(i.ic,16):''}${esc(i.name)}${i.off?' (soon)':''}</button>`).join('');
+  el.onclick=e=>{const b=e.target.closest('button');if(b&&!b.disabled)fn(b.dataset.id);};}
+function caption(r){if(st.stack==='gen')return'';const p=st.stack==='az'?r.az:r.oss;if(!p.length)return'';const n=p.length>1?` +${p.length-1}`:'',m=18-n.length,t=p[0].name.length>m?p[0].name.slice(0,m-1)+'…':p[0].name;return t+n;}
+
+/* geometry: a box is at (column, lane); an edge is routed orthogonally; mid is where a filter badge sits */
+const nb=id=>{const r=byId(id),x=X(r.c),y=NY(r.r);return{cx:x+W/2,top:y,bot:y+H,mid:y+H/2,l:x,rt:x+W,r:r.r};};
+function route(a,b){
+  if(b==='@frame'){const A=nb(a),fx=FR.x+(a==='bastion'?40:120),bus=a==='bastion'?A.top-30:A.top-14;return{p:[[A.cx,A.top],[A.cx,bus],[fx,bus],[fx,FR.b]],mid:[fx,(bus+FR.b)/2]};}
+  if(a==='@frame'){const B=nb(b);return{p:[[B.cx,FR.b],[B.cx,B.top]]};}
+  const A=nb(a),B=nb(b);
+  if(A.r===B.r)return{p:[[A.rt,A.mid],[B.l,B.mid]],mid:[(A.rt+B.l)/2,A.mid]};
+  if(B.r-A.r>1){const gx=A.rt+20;return{p:[[A.rt,A.mid],[gx,A.mid],[gx,B.mid],[B.rt,B.mid]],mid:[gx,(A.mid+B.mid)/2]};} /* skips a lane: runs in the gap beside the boxes in between */
+  if(A.cx===B.cx)return A.r<B.r?{p:[[A.cx,A.bot],[B.cx,B.top]],mid:[A.cx,(A.bot+B.top)/2]}:{p:[[A.cx,A.top],[B.cx,B.bot]],mid:[A.cx,(A.top+B.bot)/2]};
+  const bus=B.top-22;return{p:[[A.cx,A.bot],[A.cx,bus],[B.cx,bus],[B.cx,B.top]],mid:[B.cx,bus]};}
+function rounded(p,rad=8){let d=`M${p[0]}`;for(let i=1;i<p.length-1;i++){const[a,b,c]=[p[i-1],p[i],p[i+1]],l1=Math.hypot(b[0]-a[0],b[1]-a[1]),l2=Math.hypot(c[0]-b[0],c[1]-b[1]),r=Math.min(rad,l1/2,l2/2),
+  p1=[b[0]-(b[0]-a[0])/l1*r,b[1]-(b[1]-a[1])/l1*r],p2=[b[0]+(c[0]-b[0])/l2*r,b[1]+(c[1]-b[1])/l2*r];d+=` L${p1} Q${b} ${p2}`;}return d+` L${p[p.length-1]}`;}
+function drawEdge(e){const[a,b,lab,sty,ls]=e,on=ls.split(' ').includes(st.lens);if(!on&&(a==='@frame'||b==='@frame'))return'';
+  const{p}=route(a,b);let o=`<path class="edge ${sty} ${on?'on':''}" d="${rounded(p)}" marker-end="url(#${on?'ah':'ag'})"/>`;
+  if(lab&&on){const L=p[p.length-1],P=p[p.length-2];let x,y,an='middle';
+    if(P[0]===L[0]){x=L[0]+8;y=(a==='@frame'?(P[1]+L[1])/2:P[1]+20);an='start';}else{x=L[0]+6;y=P[1]-5;an='start';}
+    if(a==='bastion'){x=(p[1][0]+p[2][0])/2-20;y=p[1][1]-6;}if(a==='firewall'){x=(p[1][0]+p[2][0])/2;y=p[1][1]+17;}
+    if(a==='app'&&b==='cache'){x=L[0]+8;y=P[1]+22;an='start';}
+    if(a==='app'&&b==='storage'){x=p[1][0]+6;y=p[3][1]-6;an='start';}
+    if(a==='store'&&b==='siem'){x=L[0]+8;y=(P[1]+L[1])/2+4;an='start';}
+    o+=`<text class="elab" x="${x}" y="${y}" text-anchor="${an}">${esc(lab)}</text>`;}
+  return o;}
+function drawBadge(id,x,y){const sel=st.sel===id;return `<g class="badge ${sel?'sel':''}" data-id="${id}" tabindex="0" role="button" aria-pressed="${sel}" aria-label="${esc(byId(id).full)}"><circle cx="${x}" cy="${y}" r="12"/>${icg(id,x-8,y-8,16)}</g>`;}
+function drawMap(){
+  const lens=LENSES.find(l=>l.id===st.lens),badged=E.filter(e=>e[5]&&byId(e[5]).l.includes(st.lens));
+  let o=`<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--acc)"/></marker><marker id="ag" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--rule)"/></marker></defs>`;
+  LANES.forEach((n,i)=>o+=`<rect class="lane" x="0" y="${LY(i)}" width="950" height="108" rx="8"/><text class="lanel" x="14" y="${LY(i)+20}">${esc(n)}</text>`);
+  const fl=FLAB[st.lens];if(fl)o+=`<rect class="frame" x="${FR.x}" y="${FR.y}" width="${FR.w}" height="${FR.b-FR.y}" rx="10"/><text class="framel" x="${FR.x+FR.w-8}" y="${FR.y+14}" text-anchor="end">${esc(fl)}</text>`;
+  E.forEach(e=>o+=drawEdge(e));
+  R.filter(r=>r.c!==undefined).forEach(r=>{const inl=r.l.includes(st.lens),x=X(r.c),y=NY(r.r),cap=caption(r),s=st.sel===r.id;
+    o+=`<g class="node ${inl?'in':'out'} ${s?'sel':''}" data-id="${r.id}" tabindex="0" role="button" aria-pressed="${s}" aria-label="${esc(r.full)}${inl?'':' (not in this lens)'}"><rect x="${x}" y="${y}" width="${W}" height="${H}" rx="9"/>${icg(r.id,x+W/2-10,y+7,20)}<text x="${x+W/2}" y="${y+42}">${esc(r.n)}</text>${cap?`<text class="cap" x="${x+W/2}" y="${y+57}">${esc(cap)}</text>`:''}</g>`;});
+  badged.forEach(e=>{const m=route(e[0],e[1]).mid;o+=drawBadge(e[5],m[0],m[1]);});
+  $('#svg').innerHTML=o;$('#blurb').textContent=lens.blurb;$('#cross').textContent=lens.cross;
+  $('#lg-f').innerHTML=badged.length?`${ico('filter',16)}Traffic filter rules on that hop`:'';}
+
+function chipsFor(r){return `<div class="chips">${LENSES.map(l=>r.l.includes(l.id)?`<button type="button" class="chip ${l.id===st.lens?'cur':''}" data-lens="${l.id}">${esc(l.name)}</button>`:'').join('')}</div>`;}
+function prodsHtml(list,hit){if(st.stack==='gen')return`<p class="hint">Generic view: no products. Switch the stack above to see what fills this role.</p>`;
+  if(st.stack==='aws')return'';if(!list.length)return`<p class="hint">Nothing listed for this stack.</p>`;
+  return`<ul class="prods">${list.map(x=>`<li class="${hit&&x.name.toLowerCase().includes(hit.toLowerCase())?'hit':''}"><b>${esc(x.name)}</b>${x.note?`<small>${esc(x.note)}</small>`:''}${x.source?`<a href="${esc(x.source)}" rel="noopener">source</a>`:'<small>No source read.</small>'}</li>`).join('')}</ul>`;}
+const tag=x=>x.status==='unconfirmed'?'<span class="modtag un">Unconfirmed</span>':'';
+const srcsHtml=x=>`<h3>Sources</h3>`+(x.src&&x.src.length?`<ul class="srcs">${x.src.map(u=>`<li><a href="${esc(u)}" rel="noopener">${esc(u.replace(/^https?:\/\/(learn\.microsoft\.com\/en-us\/)?/,''))}</a></li>`).join('')}</ul>`:'<p class="hint">None: a convention of the picture.</p>')+`<p class="draft">Read ${esc(x.checked)}. Where it sits on the picture is a judgement.</p>`;
+function drawPanel(){const p=$('#panel');
+  if(!st.sel){p.innerHTML=`<h2>${esc(lensName(st.lens))} lens</h2><p class="hint">Select a role on the picture to see what it is, where it usually sits and why.</p><h3>Roles in this lens</h3><div class="chips">${R.filter(r=>r.l.includes(st.lens)).map(r=>`<button type="button" class="chip" data-role="${r.id}">${esc(r.full)}</button>`).join('')}</div>`;return;}
+  const r=byId(st.sel),ns=[...new Set(E.filter(e=>e[0]===r.id||e[1]===r.id).map(e=>e[0]===r.id?e[1]:e[0]).filter(i=>i[0]!=='@'))],hit=st.hit,prods=st.stack==='az'?r.az:r.oss;
+  let h='';if(hit)h+=`<div class="filed"><b>${esc(hit)}</b> is filed under <b>${esc(r.full)}</b>.${r.note?' '+esc(r.note):''}</div>`;
+  h+=`<h2>${ico(r.id,22)}${esc(r.full)}</h2>${r.setting?'<span class="modtag">A setting on other roles, not a box</span> ':''}${tag(r)}<p class="what">${esc(r.what)}</p>`;
+  if(!r.l.includes(st.lens))h+=`<p class="hint">Not part of the ${esc(lensName(st.lens))} lens.</p>`;
+  h+=`<h3>Seen in</h3>${chipsFor(r)}<h3>Where it usually sits</h3><p>${esc(r.where)}</p><h3>Why</h3><p>${esc(r.why)}</p>`;
+  if(r.note&&!hit)h+=`<h3>Note</h3><p>${esc(r.note)}</p>`;
+  if(ns.length)h+=`<h3>Talks to</h3><div class="chips">${ns.map(i=>`<button type="button" class="chip" data-role="${i}">${esc(byId(i).full)}</button>`).join('')}</div>`;
+  h+=`<h3>Products</h3>${prodsHtml(prods,hit)}<h3>In Atlas</h3>${r.topics.length?`<div class="chips">${r.topics.map(t=>`<a class="chip" href="../${esc(t)}/index.html">${esc(t)}</a>`).join('')}</div>`:'<p class="hint">No page yet.</p>'}${srcsHtml(r)}`;p.innerHTML=h;}
+
+const LEVELSM={tenant:'one per organization: who people are',mg:'optional layers that group subscriptions',sub:'holds resource groups',rg:'one workload, one life cycle'};
+function drawOrg(){
+  $('#oblurb').textContent='Everything in the lenses lives in a resource group. This view shows what sits above it: the levels of the hierarchy, and the services tied to each level. Settings made at a level are inherited by everything below it.';
+  const ch=ids=>`<div class="oc">${ids.map(i=>{const o=byO(i);return`<button type="button" data-org="${i}" class="${st.sel===i?'sel':''}">${ico(o.ic,16)}${esc(oname(o))}</button>`;}).join('')}</div>`;
+  const at=l=>O.filter(o=>o.place===l).map(o=>o.id);
+  const hd=(id,sm)=>{const o=byO(id);return`<div class="oh"><button type="button" data-org="${id}">${ico(o.ic,20)}${esc(oname(o))}</button><small>${sm}</small></div>`;};
+  const inh=`<p class="inh"><svg width="16" height="16" viewBox="0 0 24 24"><path d="M12 4v16M6 14l6 6 6-6"/></svg>Set at this level, inherited below</p>`;
+  $('#org').innerHTML=`<div class="org">
+   <div class="os ${st.sel==='tenant'?'sel':''}">${hd('tenant',LEVELSM.tenant)}${ch(at('tenant'))}
+    <div class="os ${st.sel==='mg'?'sel':''}">${hd('mg',LEVELSM.mg)}${ch(at('mg'))}${inh}
+     <div class="os ${st.sel==='sub'?'sel':''}">${hd('sub',LEVELSM.sub)}${ch(at('sub'))}
+      <div class="orow">
+       <div class="rgbox">${hd('rg',LEVELSM.rg)}<p class="hint">Compute, network, data and monitoring resources.</p><button type="button" class="go" data-open="1">${ico('open',16)}Open the lenses: what runs in here</button></div>
+       <div class="rgbox">${hd('rg','another workload')}<p class="hint">Same shape, other resources.</p></div>
+      </div></div>
+     <div class="os" style="border-style:dashed;color:var(--mut)">Another subscription: same shape</div>
+    </div></div>
+   <div class="side">
+    <div><h3>Spans every level <small>not tied to one scope</small></h3>${ch(O.filter(o=>o.kind==='span').map(o=>o.id))}</div>
+    <div><h3>Outside the subscriptions <small>linked to the tenant</small></h3>${ch(O.filter(o=>o.kind==='outside').map(o=>o.id))}</div>
+   </div></div>`;
+  const p=$('#opanel');
+  if(!st.sel||!byO(st.sel)){p.innerHTML=`<h2>Organization level</h2><p class="hint">Select a level or a service to see where it lives and what it is for.</p><h3>Not in a resource group</h3><div class="chips">${O.filter(o=>!o.level).map(o=>`<button type="button" class="chip" data-org="${o.id}">${esc(oname(o))}</button>`).join('')}</div>`;return;}
+  const o=byO(st.sel);
+  p.innerHTML=`<h2>${ico(o.ic,22)}${esc(o.a)}</h2>${tag(o)}<p class="hint">Generic name: ${esc(o.g)}. The generic names are a mapping, not a standard.</p><p class="what" style="margin-top:6px">${esc(o.what)}</p><h3>Lives at</h3><p>${esc(o.scope)}</p>${o.inh?'<h3>Inheritance</h3><p>Assigned at a scope and inherited by everything below it.</p>':''}${o.why?`<h3>Why</h3><p>${esc(o.why)}</p>`:''}${o.note?`<h3>Note</h3><p>${esc(o.note)}</p>`:''}${srcsHtml(o)}`;}
+
+function drawAZ(){const q=$('#q').value.trim().toLowerCase();let o='';
+  const hay=r=>[r.full,r.what,...r.al,...r.az.map(x=>x.name),...r.oss.map(x=>x.name)].join(' ').toLowerCase();
+  Object.keys(CAT).forEach(c=>{const rs=R.filter(r=>r.cat===c&&(!q||hay(r).includes(q)));if(!rs.length)return;
+    o+=`<section><h2>${CAT[c]}</h2><ul>${rs.sort((a,b)=>a.full.localeCompare(b.full)).map(r=>`<li><button type="button" data-role="${r.id}"><b>${ico(r.id,20)}${esc(r.full)}</b><span>${esc(r.what.split('. ')[0].replace(/\.$/,''))}.</span><div class="chips">${r.setting?'<span class="chip">Setting</span>':''}${r.l.map(l=>`<span class="chip">${esc(lensName(l))}</span>`).join('')}</div></button></li>`).join('')}</ul></section>`;});
+  const os=O.filter(x=>!x.level&&(!q||(x.a+' '+x.g+' '+x.what).toLowerCase().includes(q)));
+  if(os.length)o+=`<section><h2>Organization level</h2><ul>${os.map(x=>`<li><button type="button" data-org="${x.id}"><b>${ico(x.ic,20)}${esc(oname(x))}</b><span>${esc(x.scope)}</span></button></li>`).join('')}</ul></section>`;
+  $('#azview').innerHTML=o||'<p class="hint">Nothing matches.</p>';}
+
+const VIEWS=[{id:'map',name:'Lenses',ic:'web'},{id:'org',name:'Organization',ic:'tenant'},{id:'az',name:'A–Z',ic:'dns'}];
+function show(){seg($('#view'),VIEWS,st.view,id=>{st.view=id;st.sel=null;show();});
+  seg($('#lens'),LENSES,st.lens,id=>{st.lens=id;show();},'tab',st.view!=='map');seg($('#stack'),STACKS,st.stack,id=>{st.stack=id;show();});
+  $('#mapview').hidden=st.view!=='map';$('#orgview').hidden=st.view!=='org';$('#azview').hidden=st.view!=='az';
+  $('#sub').textContent=st.view==='org'?'Above the resource group: the tenant, the subscriptions and the services tied to each level.':st.view==='az'?'Every role and organization-level service, by name.':'One base picture of an application. Pick a lens to see the roles that matter for it, then pick a role.';
+  if(st.view==='map'){drawMap();drawPanel();}else if(st.view==='org')drawOrg();else drawAZ();}
+function pick(id,hit){if(byO(id)){st.sel=id;st.hit=null;st.view='org';show();return;}
+  st.sel=id;st.hit=hit||null;const r=byId(id);if(!r.l.includes(st.lens)&&hit)st.lens=r.l[0];st.view='map';show();const n=document.querySelector(`#svg [data-id="${id}"]`);if(n)n.focus({preventScroll:true});}
+$('#svg').addEventListener('click',e=>{const n=e.target.closest('.node,.badge');if(n)pick(n.dataset.id);});
+$('#svg').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){const n=e.target.closest('.node,.badge');if(n){e.preventDefault();pick(n.dataset.id);}}});
+document.addEventListener('click',e=>{const c=e.target.closest('[data-role]');if(c)return pick(c.dataset.role);const g=e.target.closest('[data-org]');if(g)return pick(g.dataset.org);
+  const l=e.target.closest('[data-lens]');if(l){st.lens=l.dataset.lens;show();return;}if(e.target.closest('[data-open]')){st.view='map';st.sel=null;show();return;}if(!e.target.closest('.find'))$('#res').hidden=true;});
+function results(q){q=q.toLowerCase();const out=[],seen=new Set(),add=x=>{const k=x.t+'|'+x.id;if(!seen.has(k)){seen.add(k);out.push(x);}};
+  R.forEach(r=>{if((r.full+' '+r.n).toLowerCase().includes(q))add({t:r.full,s:'role',id:r.id});
+    r.al.forEach(a=>{if(a.toLowerCase().includes(q))add({t:a,s:`also known as · ${r.full}`,id:r.id,hit:a});});
+    [['Azure',r.az],['Open source',r.oss]].forEach(([k,a])=>a.forEach(p=>{if(p.name.toLowerCase().includes(q))add({t:p.name,s:`${k} · ${r.full}`,id:r.id,hit:p.name});}));});
+  O.forEach(o=>{if((o.a+' '+o.g).toLowerCase().includes(q))add({t:o.a,s:`Organization level · ${o.scope}`,id:o.id});});return out.slice(0,8);}
+$('#q').addEventListener('input',e=>{const q=e.target.value.trim(),ul=$('#res');if(st.view==='az')drawAZ();if(!q){ul.hidden=true;return;}const rs=results(q);
+  ul.innerHTML=rs.length?rs.map((x,i)=>`<li><button type="button" data-i="${i}">${esc(x.t)} <small>${esc(x.s)}</small></button></li>`).join(''):'<li class="hint" style="padding:8px 10px">No match</li>';ul.hidden=false;ul._r=rs;});
+$('#res').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const x=$('#res')._r[b.dataset.i];$('#res').hidden=true;$('#q').value='';pick(x.id,x.hit);});
+$('#q').addEventListener('keydown',e=>{if(e.key==='Escape')$('#res').hidden=true;if(e.key==='Enter'){const b=$('#res button');if(b){e.preventDefault();b.click();}}});
+show();
+</script></body></html>
