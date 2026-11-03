@@ -641,7 +641,7 @@
                 [
                   "`pull_request_target`",
                   "Activity on a pull request",
-                  "Same default types, but runs the workflow and code from the default branch (last commit on the default branch). See the gotcha below"
+                  "Same default types, but `GITHUB_SHA` is the last commit on the default branch and `GITHUB_REF` is the default branch. See the gotcha below"
                 ],
                 [
                   "`workflow_dispatch`",
@@ -1897,7 +1897,7 @@
                 ],
                 [
                   "`steps`",
-                  "Steps that already ran in this job: `steps.<id>.outputs.<name>`, `outcome`, `conclusion`"
+                  "Steps that already ran in this job, for example `steps.<id>.outputs.<name>`"
                 ],
                 [
                   "`runner`",
@@ -2619,7 +2619,7 @@
         {
           "title": "GitHub-hosted runners",
           "items": [
-            "A GitHub-hosted runner is a virtual machine that GitHub provides. Each workflow run gets a new machine, except the single-CPU `ubuntu-slim`, which is a container. The `-latest` labels are the newest stable images GitHub provides, which may not be the newest version of the operating system.",
+            "A GitHub-hosted runner is a machine that GitHub provides. Apart from the single-CPU runners, each one is a new virtual machine (the page says how the single-CPU ones are provided). The `-latest` labels are the newest stable images GitHub provides, which may not be the newest version of the operating system.",
             {
               "type": "table",
               "columns": [
@@ -2660,7 +2660,7 @@
         {
           "title": "Self-hosted runners",
           "items": [
-            "A self-hosted runner is a machine you run. It gets the labels `self-hosted`, its operating system and its architecture automatically; you can add more. `runs-on` with several labels selects a runner that has all of them.",
+            "A self-hosted runner is a machine you run. `runs-on` with several labels selects a runner that has all of them: the example on the workflow syntax page uses `self-hosted`, `linux`, `x64` and a custom `gpu` label. How labels are applied is on the self-hosted runner how-to pages.",
             "To run Docker container actions or service containers, the machine must be Linux with Docker installed. The runner application itself needs few resources.",
             "Supported systems include several Linux distributions (Ubuntu 20.04 and later, Debian 10 and later, RHEL 8 and later, and others) and Windows 10 and 11 and Windows Server: the reference has the full list and the processor architectures."
           ]
@@ -2668,7 +2668,7 @@
         {
           "title": "Autoscaling",
           "items": [
-            "Actions Runner Controller runs runners on Kubernetes. The GitHub Actions Runner Scale Set Client is a client for building your own autoscaler. Ephemeral runners take one job and are then removed, which suits autoscaling. Runner software updates and webhooks for autoscaling are described on the self-hosted reference."
+            "The self-hosted reference lists three ways to autoscale: Actions Runner Controller (a Kubernetes controller), the GitHub Actions Runner Scale Set Client, and ephemeral runners. It also covers runner software updates and webhooks for autoscaling."
           ]
         },
         {
@@ -2904,7 +2904,7 @@
         {
           "title": "What an environment does",
           "items": [
-            "A job names an environment with `jobs.<job_id>.environment`: a name, or a name and a `url`. The job then follows the environment's rules and can use its secrets and variables. A deployment is recorded.",
+            "A job names an environment with `jobs.<job_id>.environment`: a name, or a name and a `url`. The job then follows the environment's rules and can use its secrets and variables. The `url` is sent to the deployments API as `environment_url`. A job can also use an environment without creating a deployment: the workflow syntax page shows how.",
             {
               "type": "table",
               "columns": [
@@ -3096,7 +3096,7 @@
         {
           "title": "Provenance",
           "items": [
-            "Artifact attestations create provenance and integrity guarantees for what you build, so consumers can verify where and how it was built. They need the `attestations` and `id-token` permissions."
+            "Artifact attestations create provenance and integrity guarantees for what you build, so consumers can verify where and how it was built. Generating one needs `attestations: write` (see [Permissions](#permissions)); the attestations how-to covers the rest."
           ]
         }
       ],
@@ -3120,8 +3120,7 @@
       ],
       "notes": [
         "The docs pages show no version or date. They were read on 2026-11-03; a later change on GitHub's side is not detected by `make check`.",
-        "Artifact retention and size limits are on the artifacts pages and are not repeated here.",
-        "That attestations need both `attestations` and `id-token` write permission is inferred from the permissions list and the OIDC page: confirm on the attestations how-to (unconfirmed here)."
+        "Artifact retention and size limits are on the artifacts pages and are not repeated here."
       ]
     },
     {
@@ -3702,13 +3701,6 @@
             "`inputs`, `outputs` and `secrets` under `workflow_call`",
             "`inputs` and `outputs` in the metadata"
           ]
-        },
-        {
-          "label": "Passing secrets",
-          "cells": [
-            "`secrets:` or `secrets: inherit`",
-            "Not covered here"
-          ]
         }
       ]
     },
@@ -3736,10 +3728,10 @@
           ]
         },
         {
-          "label": "Misses",
+          "label": "On a miss",
           "cells": [
             "Not applicable",
-            "A job should still work on a miss"
+            "A job should still work without the cache"
           ]
         },
         {
@@ -3775,17 +3767,24 @@
           ]
         },
         {
+          "label": "Fresh machine per run",
+          "cells": [
+            "Yes (apart from the single-CPU runners)",
+            "Not stated here. Ephemeral runners are one of the autoscaling options"
+          ]
+        },
+        {
           "label": "Docker container actions",
           "cells": [
-            "Supported on Linux",
+            "Not covered here",
             "Linux with Docker installed"
           ]
         },
         {
-          "label": "Scaling",
+          "label": "Autoscaling",
           "cells": [
-            "Provided",
-            "You build it: Actions Runner Controller, the scale set client, ephemeral runners"
+            "Not covered here",
+            "Actions Runner Controller, the scale set client, ephemeral runners"
           ]
         }
       ]
