@@ -79,10 +79,17 @@ def check():
     families = [f.get("id") for f in load().get("families", [])]
     if not families or len(set(families)) != len(families) or not all(f.get("label") for f in load()["families"]):
         bad.append("families need unique ids and labels")
+    stages = [x.get("id") for x in load().get("stages", [])]
+    if len(set(stages)) != len(stages) or not all(x.get("label") for x in load().get("stages", [])):
+        bad.append("stages need unique ids and labels")
     for t in load()["topics"]:
         i = t.get("id", "")
         if not t.get("draft") and t.get("family") not in families:
             bad.append(f"published topic {i} needs a family from {families}")
+        if t.get("draft") and t.get("family") not in (None, *families):
+            bad.append(f"draft topic {i} names an unknown family: {t['family']}")
+        if any(x not in stages for x in t.get("stages", [])):
+            bad.append(f"topic {i} names an unknown stage: {t['stages']}")
         if not i or not t.get("label"):
             bad.append(f"topic needs an id and a label: {t}")
         if i in seen:
