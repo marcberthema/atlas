@@ -1,11 +1,11 @@
 {
   "name": "Atlas",
-  "tagline": "A personal knowledge base: collected references, generated from JSON into static pages.",
+  "tagline": "A personal knowledge base of references to look things up in: short facts, each linked to its official source.",
   "families": [
-    {"id": "iac", "label": "IaC"},
-    {"id": "cicd", "label": "CI/CD"},
-    {"id": "development", "label": "Development"},
-    {"id": "enterprise", "label": "Enterprise"}
+    {"id": "iac", "label": "IaC", "description": "Infrastructure defined in code: Terraform, its Azure provider and GitOps."},
+    {"id": "cicd", "label": "CI/CD", "description": "Pipelines that build, test and release software."},
+    {"id": "development", "label": "Development", "description": "Designing and securing applications: architecture patterns and certificates."},
+    {"id": "enterprise", "label": "Enterprise", "description": "Identity providers and how large organizations are structured."}
   ],
   "stages": [
     {"id": "plan", "label": "Plan", "about": "Decide what to build: requirements, backlog, design."},

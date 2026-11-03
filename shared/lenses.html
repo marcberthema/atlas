@@ -10,11 +10,11 @@ body>main{margin-top:0}
 button,input{font:inherit;color:inherit}
 :focus-visible{outline:3px solid var(--acc);outline-offset:2px}
 main{max-width:1320px;margin:0 auto;padding:16px}
-h1{font-size:1.4rem;color:var(--acc);margin:0}
+h1{font-size:clamp(1.5rem,3.5vw,1.9rem);line-height:1.15;letter-spacing:-.01em;text-wrap:balance;color:var(--acc);margin:0}
 .sub{color:var(--mut);margin:2px 0 12px;font-size:.95rem}
 .tools{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:flex-end;margin-bottom:8px}
 .grp{display:flex;flex-direction:column;gap:3px}
-.grp>.l{font-size:.75rem;text-transform:uppercase;letter-spacing:.06em;color:var(--mut)}
+.grp>.l{font-size:.8rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--mut)}
 .seg{display:inline-flex;border:1px solid var(--rule);border-radius:8px;overflow:hidden;background:var(--bg)}
 .seg button{border:0;background:none;padding:7px 14px;cursor:pointer;border-right:1px solid var(--rule);min-height:40px;display:inline-flex;align-items:center;gap:6px}
 .seg button:last-child{border-right:0}
@@ -25,13 +25,13 @@ h1{font-size:1.4rem;color:var(--acc);margin:0}
 .seg button:disabled[aria-selected=true]{background:var(--lane);font-weight:400}.seg button:disabled[aria-selected=true] .ic{stroke:var(--mut)}
 .seg button:focus-visible{outline-offset:-3px}
 .head{display:flex;flex-wrap:wrap;gap:8px 20px;align-items:flex-start;justify-content:space-between}
-.find{position:relative;min-width:300px;margin-top:2px}
+.find{position:relative;min-width:min(300px,100%);margin-top:2px}
 .find input{width:100%;border:1px solid var(--rule);border-radius:8px;padding:8px 12px;background:var(--bg);min-height:40px}
 .find ul{position:absolute;z-index:5;right:0;width:min(380px,90vw);top:100%;margin:4px 0 0;padding:4px;list-style:none;background:var(--bg);border:1px solid var(--rule);border-radius:8px;box-shadow:0 6px 20px rgba(0,0,0,.18)}
 .find li button{display:flex;flex-direction:column;width:100%;text-align:left;border:0;background:none;padding:8px 10px;border-radius:6px;cursor:pointer}
 .find li button:hover,.find li button:focus-visible{background:var(--card)}
 .find li small{color:var(--mut)}
-.blurb{margin:6px 0 10px;padding:8px 12px;border-left:4px solid var(--acc);background:var(--card);border-radius:0 8px 8px 0}
+.blurb{margin:6px 0 10px;padding:8px 12px;border:1px solid var(--acc);background:var(--card);border-radius:8px}
 .layout{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:16px;align-items:start}
 @media(max-width:960px){.layout{grid-template-columns:1fr}}
 .map{border:1px solid var(--rule);border-radius:10px;overflow-x:auto;background:var(--bg)}
@@ -51,7 +51,7 @@ svg.m{display:block;width:100%;min-width:780px;height:auto}
 svg.ic path{vector-effect:none}
 .node.in rect{stroke:var(--acc);stroke-width:2;stroke-dasharray:none}
 .node.in text{fill:var(--fg)} .node.in .ic{stroke:var(--acc)}
-.node.out{opacity:.55}
+.node.out{opacity:.7}
 .node:hover rect{stroke:var(--acc);stroke-dasharray:none}
 .node.sel rect{fill:var(--acc);stroke:var(--acc);stroke-dasharray:none}
 .node.sel text{fill:var(--accfg)} .node.sel .ic{stroke:var(--accfg)}
@@ -73,7 +73,7 @@ svg.ic path{vector-effect:none}
 .panel h2{font-size:1.15rem;margin:0 0 2px;color:var(--acc);display:flex;gap:8px;align-items:center}
 .panel h2 svg{flex:none;stroke:var(--acc)}
 .panel .what{margin:0 0 10px}
-.panel h3{font-size:.75rem;text-transform:uppercase;letter-spacing:.06em;color:var(--mut);margin:12px 0 3px}
+.panel h3{font-size:.8rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--mut);margin:12px 0 3px}
 .panel p{margin:0}
 .chips{display:flex;flex-wrap:wrap;gap:6px}
 .chip{border:1px solid var(--rule);background:var(--bg);border-radius:999px;padding:3px 12px;cursor:pointer;font-size:.88rem}
@@ -84,19 +84,19 @@ svg.ic path{vector-effect:none}
 .hint{color:var(--mut);font-size:.9rem}
 .filed{background:var(--bg);border:1px solid var(--acc);border-radius:8px;padding:6px 10px;margin-bottom:10px;font-size:.9rem}
 .draft{font-size:.8rem;color:var(--mut);margin-top:12px !important;border-top:1px solid var(--rule);padding-top:8px}
-.modtag{display:inline-block;font-size:.75rem;border:1px solid var(--rule);border-radius:4px;padding:0 6px;color:var(--mut);margin-bottom:6px}
+.modtag{display:inline-block;font-size:.8rem;border:1px solid var(--rule);border-radius:4px;padding:0 6px;color:var(--mut);margin-bottom:6px}
 .az{display:grid;gap:18px}
 .az section h2{font-size:1rem;color:var(--acc);margin:0 0 6px;border-bottom:1px solid var(--rule);padding-bottom:3px}
 .az ul{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:8px}
 .az li button{width:100%;text-align:left;border:1px solid var(--rule);background:var(--card);border-radius:8px;padding:8px 12px;cursor:pointer;display:block}
 .az li button:hover{border-color:var(--acc)}
 .az b{display:flex;gap:8px;align-items:center}.az b .ic{flex:none;stroke:var(--acc)} .az span{color:var(--mut);font-size:.88rem;display:block}
-.az .chips{margin-top:4px}.az .chip{cursor:default;padding:0 8px;font-size:.78rem}
+.az .chips{margin-top:4px}.az .chip{cursor:default;padding:0 8px;font-size:.8rem}
 /* organization view */
 .org{border:1px solid var(--rule);border-radius:10px;background:var(--bg);padding:14px;display:grid;gap:12px}
 .os{border:2px solid var(--rule);border-radius:10px;padding:10px 12px;background:var(--lane)}
 .os .os{background:var(--bg)} .os .os .os{background:var(--lane)}
-.os.sel{border-color:var(--acc)}
+.os.sel{border-color:var(--acc);box-shadow:0 0 0 2px var(--acc)}
 .oh{display:flex;gap:8px;align-items:center;margin:0 0 8px;font-size:.95rem}
 .oh button{all:unset;cursor:pointer;font-weight:700;color:var(--acc);display:flex;gap:6px;align-items:center;border-radius:6px;padding:2px 4px}
 .oh button .ic{stroke:var(--acc)}
@@ -129,11 +129,12 @@ a.chip{text-decoration:none;color:inherit}
 </style></head><body>
 <!--__BANNER__-->
 <main>
+<p id="live" class="sr" role="status"></p>
 <div class="head"><div><h1>__TITLE__</h1><p class="sub" id="sub"></p></div>
   <div class="find"><label class="sr" for="q">Where does a service go?</label><input id="q" type="search" placeholder="Where does it go? Try kafka, redis, bastion" autocomplete="off"><ul id="res" hidden></ul></div></div>
 <div class="tools">
   <div class="grp"><span class="l" id="vl">View</span><div class="seg" id="view" role="group" aria-labelledby="vl"></div></div>
-  <div class="grp"><span class="l" id="ll">Lens</span><div class="seg" id="lens" role="tablist" aria-labelledby="ll"></div></div>
+  <div class="grp"><span class="l" id="ll">Lens</span><div class="seg" id="lens" role="group" aria-labelledby="ll"></div></div>
   <div class="grp"><span class="l" id="sl">Stack</span><div class="seg" id="stack" role="group" aria-labelledby="sl"></div></div>
 </div>
 
@@ -143,12 +144,12 @@ a.chip{text-decoration:none;color:inherit}
     <div class="map"><svg class="m" id="svg" viewBox="0 0 950 616" role="group" aria-label="Application diagram"></svg>
       <div class="legend"><span><i></i>In this lens</span><span><i class="d"></i>Access or control</span><span><i class="g"></i>Other lenses (faded)</span><span id="lg-f"></span></div>
       <div class="cross" id="cross"></div></div>
-    <aside class="panel" id="panel" aria-live="polite"></aside>
+    <aside class="panel" id="panel"></aside>
   </div>
 </div>
 <div id="orgview" hidden>
   <div class="blurb" id="oblurb"></div>
-  <div class="layout"><div id="org"></div><aside class="panel" id="opanel" aria-live="polite"></aside></div>
+  <div class="layout"><div id="org"></div><aside class="panel" id="opanel"></aside></div>
 </div>
 <div id="azview" class="az" hidden></div>
 <p class="foot">Roles and products were read against public sources on __CHECKED__; each one lists its sources. Where a box sits on the picture is a judgement, not a fact a source states. Spec: <code>views/lenses/docs/spec.md</code>.</p>
@@ -217,8 +218,9 @@ const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',
 const oname=o=>st.stack==='az'?o.a:o.g;
 const lensName=id=>LENSES.find(l=>l.id===id).name;
 
-function seg(el,items,cur,fn,mode,dis){el.innerHTML=items.map(i=>`<button type="button" ${mode==='tab'?`role="tab" aria-selected="${i.id===cur}"`:`aria-pressed="${i.id===cur}"`} data-id="${i.id}" ${i.off||dis?'disabled':''} ${i.off?'title="Planned"':''}>${i.ic?ico(i.ic,16):''}${esc(i.name)}${i.off?' (soon)':''}</button>`).join('');
-  el.onclick=e=>{const b=e.target.closest('button');if(b&&!b.disabled)fn(b.dataset.id);};}
+function seg(el,items,cur,fn,mode,dis){const had=el.contains(document.activeElement)&&document.activeElement.dataset.id;el.innerHTML=items.map(i=>`<button type="button" ${mode==='tab'?`role="tab" aria-selected="${i.id===cur}"`:`aria-pressed="${i.id===cur}"`} data-id="${i.id}" ${i.off||dis?'disabled':''} ${i.off?'title="Planned"':''}>${i.ic?ico(i.ic,16):''}${esc(i.name)}${i.off?' (soon)':''}</button>`).join('');
+  el.onclick=e=>{const b=e.target.closest('button');if(b&&!b.disabled)fn(b.dataset.id);};
+  if(had){const b=el.querySelector(`[data-id="${had}"]:not(:disabled)`);if(b)b.focus({preventScroll:true});}}
 function caption(r){if(st.stack==='gen')return'';const p=st.stack==='az'?r.az:r.oss;if(!p.length)return'';const n=p.length>1?` +${p.length-1}`:'',m=18-n.length,t=p[0].name.length>m?p[0].name.slice(0,m-1)+'…':p[0].name;return t+n;}
 
 /* geometry: a box is at (column, lane); an edge is routed orthogonally; mid is where a filter badge sits */
@@ -305,19 +307,21 @@ function drawAZ(){const q=$('#q').value.trim().toLowerCase();let o='';
     o+=`<section><h2>${CAT[c]}</h2><ul>${rs.sort((a,b)=>a.full.localeCompare(b.full)).map(r=>`<li><button type="button" data-role="${r.id}"><b>${ico(r.id,20)}${esc(r.full)}</b><span>${esc(r.what.split('. ')[0].replace(/\.$/,''))}.</span><div class="chips">${r.setting?'<span class="chip">Setting</span>':''}${r.l.map(l=>`<span class="chip">${esc(lensName(l))}</span>`).join('')}</div></button></li>`).join('')}</ul></section>`;});
   const os=O.filter(x=>!x.level&&(!q||(x.a+' '+x.g+' '+x.what).toLowerCase().includes(q)));
   if(os.length)o+=`<section><h2>Organization level</h2><ul>${os.map(x=>`<li><button type="button" data-org="${x.id}"><b>${ico(x.ic,20)}${esc(oname(x))}</b><span>${esc(x.scope)}</span></button></li>`).join('')}</ul></section>`;
-  $('#azview').innerHTML=o||'<p class="hint">Nothing matches.</p>';}
+  $('#azview').innerHTML=o||`<p class="hint">No role or service matches \u201c${esc($('#q').value.trim())}\u201d. <button type="button" class="chip" id="clr">Clear the search</button></p>`;}
 
 const VIEWS=[{id:'map',name:'Lenses',ic:'web'},{id:'org',name:'Organization',ic:'tenant'},{id:'az',name:'A–Z',ic:'dns'}];
 function show(){seg($('#view'),VIEWS,st.view,id=>{st.view=id;st.sel=null;show();});
-  seg($('#lens'),LENSES,st.lens,id=>{st.lens=id;show();},'tab',st.view!=='map');seg($('#stack'),STACKS,st.stack,id=>{st.stack=id;show();});
+  seg($('#lens'),LENSES,st.lens,id=>{st.lens=id;show();},undefined,st.view!=='map');seg($('#stack'),STACKS,st.stack,id=>{st.stack=id;show();});
   $('#mapview').hidden=st.view!=='map';$('#orgview').hidden=st.view!=='org';$('#azview').hidden=st.view!=='az';
   $('#sub').textContent=st.view==='org'?'Above the resource group: the tenant, the subscriptions and the services tied to each level.':st.view==='az'?'Every role and organization-level service, by name.':'One base picture of an application. Pick a lens to see the roles that matter for it, then pick a role.';
   if(st.view==='map'){drawMap();drawPanel();}else if(st.view==='org')drawOrg();else drawAZ();}
-function pick(id,hit){if(byO(id)){st.sel=id;st.hit=null;st.view='org';show();return;}
-  st.sel=id;st.hit=hit||null;const r=byId(id);if(!r.l.includes(st.lens)&&hit)st.lens=r.l[0];st.view='map';show();const n=document.querySelector(`#svg [data-id="${id}"]`);if(n)n.focus({preventScroll:true});}
+function pick(id,hit){if(byO(id)){st.sel=id;st.hit=null;st.view='org';show();$('#live').textContent=byO(id).a+' selected';if(innerWidth<=960)$('#opanel').scrollIntoView({block:'nearest'});return;}
+  st.sel=id;st.hit=hit||null;const r=byId(id);if(!r.l.includes(st.lens)&&hit)st.lens=r.l[0];st.view='map';show();const n=document.querySelector(`#svg [data-id="${id}"]`);if(n)n.focus({preventScroll:true});
+  $('#live').textContent=r.full+' selected';
+  if(innerWidth<=960)$('#panel').scrollIntoView({block:'nearest',behavior:matchMedia('(prefers-reduced-motion:reduce)').matches?'auto':'smooth'});}
 $('#svg').addEventListener('click',e=>{const n=e.target.closest('.node,.badge');if(n)pick(n.dataset.id);});
 $('#svg').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){const n=e.target.closest('.node,.badge');if(n){e.preventDefault();pick(n.dataset.id);}}});
-document.addEventListener('click',e=>{const c=e.target.closest('[data-role]');if(c)return pick(c.dataset.role);const g=e.target.closest('[data-org]');if(g)return pick(g.dataset.org);
+document.addEventListener('click',e=>{if(e.target.id==='clr'){$('#q').value='';drawAZ();$('#q').focus();return;}const c=e.target.closest('[data-role]');if(c)return pick(c.dataset.role);const g=e.target.closest('[data-org]');if(g)return pick(g.dataset.org);
   const l=e.target.closest('[data-lens]');if(l){st.lens=l.dataset.lens;show();return;}if(e.target.closest('[data-open]')){st.view='map';st.sel=null;show();return;}if(!e.target.closest('.find'))$('#res').hidden=true;});
 function results(q){q=q.toLowerCase();const out=[],seen=new Set(),add=x=>{const k=x.t+'|'+x.id;if(!seen.has(k)){seen.add(k);out.push(x);}};
   R.forEach(r=>{if((r.full+' '+r.n).toLowerCase().includes(q))add({t:r.full,s:'role',id:r.id});
@@ -325,8 +329,16 @@ function results(q){q=q.toLowerCase();const out=[],seen=new Set(),add=x=>{const 
     [['Azure',r.az],['Open source',r.oss]].forEach(([k,a])=>a.forEach(p=>{if(p.name.toLowerCase().includes(q))add({t:p.name,s:`${k} · ${r.full}`,id:r.id,hit:p.name});}));});
   O.forEach(o=>{if((o.a+' '+o.g).toLowerCase().includes(q))add({t:o.a,s:`Organization level · ${o.scope}`,id:o.id});});return out.slice(0,8);}
 $('#q').addEventListener('input',e=>{const q=e.target.value.trim(),ul=$('#res');if(st.view==='az')drawAZ();if(!q){ul.hidden=true;return;}const rs=results(q);
-  ul.innerHTML=rs.length?rs.map((x,i)=>`<li><button type="button" data-i="${i}">${esc(x.t)} <small>${esc(x.s)}</small></button></li>`).join(''):'<li class="hint" style="padding:8px 10px">No match</li>';ul.hidden=false;ul._r=rs;});
-$('#res').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const x=$('#res')._r[b.dataset.i];$('#res').hidden=true;$('#q').value='';pick(x.id,x.hit);});
-$('#q').addEventListener('keydown',e=>{if(e.key==='Escape')$('#res').hidden=true;if(e.key==='Enter'){const b=$('#res button');if(b){e.preventDefault();b.click();}}});
+  ul.innerHTML=rs.length?rs.map((x,i)=>`<li><button type="button" data-i="${i}">${esc(x.t)} <small>${esc(x.s)}</small></button></li>`).join(''):`<li class="hint" style="padding:8px 10px">No match for \u201c${esc(q)}\u201d. Try a product or another name, or <button type="button" class="chip" id="goaz">browse A\u2013Z</button></li>`;ul.hidden=false;ul._r=rs;$('#live').textContent=rs.length?rs.length+' result'+(rs.length===1?'':'s'):'No results';});
+$('#res').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(b.id==='goaz'){$('#res').hidden=true;st.view='az';st.sel=null;show();return;}const x=$('#res')._r[b.dataset.i];$('#res').hidden=true;$('#q').value='';pick(x.id,x.hit);});
+$('#q').addEventListener('keydown',e=>{if(e.key==='Escape')$('#res').hidden=true;if(e.key==='ArrowDown'&&!$('#res').hidden){const b=$('#res button[data-i]');if(b){e.preventDefault();b.focus();}}if(e.key==='Enter'){const b=$('#res button');if(b){e.preventDefault();b.click();}}});
+$('#res').addEventListener('keydown',e=>{
+  const bs=[...$('#res').querySelectorAll('button')],i=bs.indexOf(document.activeElement);
+  if(i<0)return;
+  if(e.key==='ArrowDown'&&bs[i+1]){e.preventDefault();bs[i+1].focus();}
+  else if(e.key==='ArrowUp'){e.preventDefault();(bs[i-1]||$('#q')).focus();}
+  else if(e.key==='Escape'){$('#res').hidden=true;$('#q').focus();}
+});
+addEventListener('keydown',e=>{if(e.key==='/'&&!e.ctrlKey&&!e.metaKey&&!e.altKey&&!(e.target.closest&&e.target.closest('input,textarea,select,dialog,[contenteditable]'))){e.preventDefault();$('#q').focus();}});
 show();
 </script></body></html>

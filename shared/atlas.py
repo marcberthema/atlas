@@ -154,7 +154,7 @@ def by_family():
     topics = published()
     groups = [(f, [t for t in topics if t.get("family") == f["id"]]) for f in load()["families"]]
     groups = [(f, ts) for f, ts in groups if ts]
-    return groups + ([({"id": "views", "label": "Views"}, views())] if views() else [])
+    return groups + ([({"id": "views", "label": "Views", "description": "Pictures that cut across the topics; they are not topics themselves."}, views())] if views() else [])
 
 
 def banner(current, prefix):

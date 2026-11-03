@@ -56,3 +56,6 @@ github-actions-%:
 # The lenses view (views/lenses/): make lenses-check also fetches every source url
 lenses-check:  ## Check the lenses data and that its source links still answer (network)
 	$(PY) shared/lenses_check.py links
+# Same for the Claude Code setup: make claude-setup, claude-project PROJECT=<path>, ...
+claude-%:
+	$(MAKE) -C claude $*

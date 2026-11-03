@@ -1,0 +1,29 @@
+{
+  "about": "Default profile for setup.sh (global, your account) and project.sh (one project). Turn an item off with false, or copy this file and pass it with --profile. No secrets here: the repository is public.",
+  "global": {
+    "statusline": true,
+    "rules": true,
+    "plugins": [
+      { "id": "claude-code-setup", "on": true,  "source": "anthropics/claude-plugins-official", "plugin": "claude-code-setup@claude-plugins-official" },
+      { "id": "context7",         "on": true,  "source": "anthropics/claude-plugins-official", "plugin": "context7@claude-plugins-official" },
+      { "id": "ponytail",          "on": true,  "source": "DietrichGebert/ponytail",            "plugin": "ponytail@ponytail" },
+      { "id": "document-skills",   "on": true,  "source": "anthropics/skills",                  "plugin": "document-skills@anthropic-agent-skills" },
+      { "id": "example-skills",    "on": false, "source": "anthropics/skills",                  "plugin": "example-skills@anthropic-agent-skills" },
+      { "id": "superpowers",       "on": false, "source": "anthropics/claude-plugins-official", "plugin": "superpowers@claude-plugins-official" }
+    ],
+    "tools": [
+      { "id": "graphify",       "on": false, "check": "command -v graphify",       "install": "uv tool install graphifyy && graphify install" },
+      { "id": "playwright-cli", "on": false, "check": "command -v playwright-cli", "install": "npm install -g @playwright/cli@latest" }
+    ]
+  },
+  "project": {
+    "claude_md": true,
+    "plugins": [
+      { "id": "taste-skill", "on": true, "source": "Leonxlnx/taste-skill", "plugin": "taste-skill@taste-skill" },
+      { "id": "impeccable",  "on": true, "source": "pbakaus/impeccable",   "plugin": "impeccable@impeccable" }
+    ],
+    "commands": [
+      { "id": "playwright-skills", "on": false, "check": "test -d .claude/skills/playwright-cli", "run": "playwright-cli install --skills" }
+    ]
+  }
+}

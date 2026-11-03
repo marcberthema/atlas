@@ -13,3 +13,6 @@ topics/*/data/snapshots/
 
 # local setup profiles (may name private repositories)
 **/setup/*.local.json
+
+# impeccable design tool state
+.impeccable/
