@@ -21,7 +21,7 @@
     {"id": "devops-loop", "label": "DevOps loop", "description": "The eight DevOps stages as an infinity loop, and the topics that belong to each stage."}
   ],
   "topics": [
-    {"id": "github-actions", "family": "cicd", "label": "GitHub Actions", "stages": ["build", "test", "release", "deploy"], "draft": true, "description": "Workflows, runners, reusable workflows and the marketplace: how a repository builds, tests and deploys."},
+    {"id": "github-actions", "family": "cicd", "label": "GitHub Actions", "stages": ["build", "test", "release", "deploy"], "description": "Every workflow key, triggers, expressions and contexts, reuse, runners, security, limits and the gh CLI."},
     {"id": "gitlab-ci", "family": "cicd", "label": "GitLab CI/CD", "stages": ["build", "test", "release", "deploy"], "draft": true, "description": "Pipelines, runners, templates and environments in GitLab."},
     {"id": "jenkins", "family": "cicd", "label": "Jenkins", "stages": ["build", "test", "release", "deploy"], "draft": true, "description": "Pipelines as code, agents, plugins and operating a Jenkins controller."},
     {"id": "nexus", "family": "cicd", "label": "Nexus Repository", "stages": ["build", "release"], "draft": true, "description": "Artifact and package repositories: formats, proxying, cleanup and promotion."},

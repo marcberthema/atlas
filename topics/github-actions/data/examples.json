@@ -1,0 +1,102 @@
+{
+  "https://docs.github.com/en/actions/get-started/quickstart | name: GitHub Actions Demo": {
+    "body": "name: GitHub Actions Demo\nrun-name: ${{ github.actor }} is testing out GitHub Actions 🚀\non: [push]\njobs:\n  Explore-GitHub-Actions:\n    runs-on: ubuntu-latest\n    steps:\n      - run: echo \"🎉 The job was automatically triggered by a ${{ github.event_name }} event.\"\n      - run: echo \"🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!\"\n      - run: echo \"🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}.\"\n      - name: Check out repository code\n        uses: actions/checkout@v6\n      - run: echo \"💡 The ${{ github.repository }} repository has been cloned to the runner.\"\n      - run: echo \"🖥️ The workflow is now ready to test your code on the runner.\"\n      - name: List files in the repository\n        run: |\n          ls ${{ github.workspace }}\n      - run: echo \"🍏 This job's status is ${{ job.status }}.\"",
+    "fetched": "2026-11-02",
+    "checked": "2026-11-02"
+  },
+  "https://docs.github.com/en/actions/reference/security/oidc | id-token: write": {
+    "body": "permissions:\n  id-token: write",
+    "fetched": "2026-11-02",
+    "checked": "2026-11-02"
+  },
+  "https://docs.github.com/en/actions/reference/security/secure-use | TITLE: ${{ github.event.pull_request.title }}": {
+    "body": "      - name: Check PR title\n        env:\n          TITLE: ${{ github.event.pull_request.title }}\n        run: |\n          if [[ \"$TITLE\" =~ ^octocat ]]; then\n          echo \"PR title starts with 'octocat'\"\n          exit 0\n          else\n          echo \"PR title did not start with 'octocat'\"\n          exit 1\n          fi",
+    "fetched": "2026-11-02",
+    "checked": "2026-11-02"
+  },
+  "https://docs.github.com/en/actions/reference/workflows-and-actions/dependency-caching | restore-keys: |\n  npm-feature-${{ hashFiles('package-lock.json') }}": {
+    "body": "restore-keys: |\n  npm-feature-${{ hashFiles('package-lock.json') }}\n  npm-feature-\n  npm-",
+    "fetched": "2026-11-02",
+    "checked": "2026-11-02"
+  },
+  "https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows | workflows: [Run Tests]": {
+    "body": "on:\n  workflow_run:\n    workflows: [Run Tests]\n    types:\n      - completed",
+    "fetched": "2026-11-02",
+    "checked": "2026-11-02"
+  },
+  "https://docs.github.com/en/actions/reference/workflows-and-actions/expressions | format('Hello {0} {1} {2}', 'Mona', 'the', 'Octocat')": {
+    "body": "format('Hello {0} {1} {2}', 'Mona', 'the', 'Octocat')",
+    "fetched": "2026-11-02",
+    "checked": "2026-11-02"
+  },
+  "https://docs.github.com/en/actions/reference/workflows-and-actions/metadata-syntax | using: 'node24'": {
+    "body": "runs:\n  using: 'node24'\n  main: 'main.js'",
+    "fetched": "2026-11-02",
+    "checked": "2026-11-02"
+  },
+  "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-commands | echo \"$HOME/.local/bin\" >> \"$GITHUB_PATH\"": {
+    "body": "echo \"$HOME/.local/bin\" >> \"$GITHUB_PATH\"",
+    "fetched": "2026-11-02",
+    "checked": "2026-11-02"
+  },
+  "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax | - cron: '30 5 * * 1-5'": {
+    "body": "on:\n  schedule:\n    - cron: '30 5 * * 1-5'\n      timezone: \"America/New_York\"",
+    "fetched": "2026-11-02",
+    "checked": "2026-11-02"
+  },
+  "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax | - uses: actions/checkout@": {
+    "body": "cache-mode: read\n\njobs:\n  build:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v6\n      - uses: actions/cache@v4\n        with:\n          path: ~/.npm\n          key: npm-${{ hashFiles('**/package-lock.json') }}",
+    "fetched": "2026-11-02",
+    "checked": "2026-11-02"
+  },
+  "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax | container: node:18": {
+    "body": "jobs:\n  container-test-job:\n    runs-on: ubuntu-latest\n    container: node:18",
+    "fetched": "2026-11-02",
+    "checked": "2026-11-02"
+  },
+  "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax | continue-on-error: ${{ matrix.experimental }}": {
+    "body": "jobs:\n  test:\n    runs-on: ubuntu-latest\n    continue-on-error: ${{ matrix.experimental }}\n    strategy:\n      fail-fast: true\n      matrix:\n        version: [6, 7, 8]\n        experimental: [false]\n        include:\n          - version: 9\n            experimental: true",
+    "fetched": "2026-11-02",
+    "checked": "2026-11-02"
+  },
+  "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax | group: ${{ github.ref }}\n  cancel-in-progress: true": {
+    "body": "concurrency:\n  group: ${{ github.ref }}\n  cancel-in-progress: true",
+    "fetched": "2026-11-02",
+    "checked": "2026-11-02"
+  },
+  "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax | needs: [job1, job2]": {
+    "body": "jobs:\n  job1:\n  job2:\n    needs: job1\n  job3:\n    needs: [job1, job2]",
+    "fetched": "2026-11-02",
+    "checked": "2026-11-02"
+  },
+  "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax | node:\n    - version: 14": {
+    "body": "matrix:\n  os:\n    - ubuntu-latest\n    - macos-latest\n  node:\n    - version: 14\n    - version: 20\n      env: NODE_OPTIONS=--openssl-legacy-provider",
+    "fetched": "2026-11-02",
+    "checked": "2026-11-02"
+  },
+  "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax | on: [push, fork]": {
+    "body": "on: [push, fork]",
+    "fetched": "2026-11-02",
+    "checked": "2026-11-02"
+  },
+  "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax | permissions: read-all": {
+    "body": "permissions: read-all",
+    "fetched": "2026-11-02",
+    "checked": "2026-11-02"
+  },
+  "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax | runs-on: [self-hosted, linux, x64, gpu]": {
+    "body": "runs-on: [self-hosted, linux, x64, gpu]",
+    "fetched": "2026-11-02",
+    "checked": "2026-11-02"
+  },
+  "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax | secrets: inherit": {
+    "body": "on:\n  workflow_dispatch:\n\njobs:\n  pass-secrets-to-workflow:\n    uses: ./.github/workflows/called-workflow.yml\n    secrets: inherit",
+    "fetched": "2026-11-02",
+    "checked": "2026-11-02"
+  },
+  "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax | working-directory: ./scripts": {
+    "body": "defaults:\n  run:\n    shell: bash\n    working-directory: ./scripts",
+    "fetched": "2026-11-02",
+    "checked": "2026-11-02"
+  }
+}
