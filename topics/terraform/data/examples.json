@@ -229,6 +229,26 @@
     "fetched": "2026-11-02",
     "checked": "2026-11-02"
   },
+  "https://developer.hashicorp.com/terraform/language/expressions/dynamic-blocks | for_each = var.settings": {
+    "body": "resource \"aws_elastic_beanstalk_environment\" \"tfenvtest\" {\n  name                = \"tf-test-name\"\n  application         = aws_elastic_beanstalk_application.tftest.name\n  solution_stack_name = \"64bit Amazon Linux 2018.03 v2.11.4 running Go 1.12.6\"\n\n  dynamic \"setting\" {\n    for_each = var.settings\n    content {\n      namespace = setting.value[\"namespace\"]\n      name = setting.value[\"name\"]\n      value = setting.value[\"value\"]\n    }\n  }\n}",
+    "fetched": "2026-11-02",
+    "checked": "2026-11-02"
+  },
+  "https://developer.hashicorp.com/terraform/language/expressions/for | [for s in var.list : upper(s)]": {
+    "body": "[for s in var.list : upper(s)]",
+    "fetched": "2026-11-02",
+    "checked": "2026-11-02"
+  },
+  "https://developer.hashicorp.com/terraform/language/expressions/splat | var.list[*].id": {
+    "body": "var.list[*].id",
+    "fetched": "2026-11-02",
+    "checked": "2026-11-02"
+  },
+  "https://developer.hashicorp.com/terraform/language/expressions/type-constraints | c = optional(number, 127)": {
+    "body": "variable \"with_optional_attribute\" {\n  type = object({\n    a = string                # a required attribute\n    b = optional(string)      # an optional attribute\n    c = optional(number, 127) # an optional attribute with default value\n  })\n}",
+    "fetched": "2026-11-02",
+    "checked": "2026-11-02"
+  },
   "https://developer.hashicorp.com/terraform/language/expressions/version-constraints | version = \">= 1.2.0, < 2.0.0\"": {
     "body": "version = \">= 1.2.0, < 2.0.0\"",
     "fetched": "2026-11-02",

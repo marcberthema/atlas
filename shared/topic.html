@@ -31,7 +31,10 @@ button.nm{font:inherit;font-weight:600;color:var(--acc);background:none;border:0
 .q{color:var(--warn);font-weight:700;cursor:help}
 .empty{color:var(--mut);padding:16px 0}
 .pg{padding:4px 0 0}
-.pick{margin:14px 0}.pick select{font:inherit;margin-left:6px;padding:4px 8px}
+.pick{margin:12px 0;display:grid;gap:6px}.pr{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.pr>span{font-size:.74rem;text-transform:uppercase;letter-spacing:.05em;color:var(--mut);min-width:6.5rem}
+.pk{font:inherit;font-size:.9rem;color:var(--fg);background:var(--card);border:1px solid var(--rule);border-radius:999px;padding:2px 12px;cursor:pointer}
+.pk[aria-pressed=true]{color:var(--acc);border-color:var(--acc);font-weight:600}
 .gv{border-top:1px solid var(--rule);margin-top:18px;padding-top:12px}
 
 .cmp th:first-child,.cmp td:first-child{white-space:nowrap}
@@ -195,17 +198,26 @@ function render(){
   $('out').innerHTML=view==='others'?entries(f):view==='compare'?compare(f):gt?groupView(gt):'<div class="pg db">'+detail(byId[view])+'</div>';
 }
 
-// A group tab with pick shows a list to choose from and one entry at a time, instead of every entry in a row.
+// A group tab with pick shows a row of buttons and one entry at a time. The first entry is the overview. A tab's sets
+// (view.json: label and entry ids) put the buttons in labelled rows; entries in no set go in a last row.
 let picked={};
 function groupView(t){
   const g=D.groups.find(x=>x.id===t.group),list=D.entries.filter(e=>e.group===t.group);
   const one=t.pick?(list.find(e=>e.id===picked[t.id])||list[0]):null;
-  const bar=t.pick?'<p class="pick"><label>'+esc(t.pick)+' <select id="pick">'+list.map(e=>'<option value="'+esc(e.id)+'"'+(e===one?' selected':'')+'>'+esc(e.name)+'</option>').join('')+'</select></label></p>':'';
+  const chip=e=>'<button type="button" class="pk" data-pick="'+esc(e.id)+'" aria-pressed="'+(e===one)+'">'+esc(e.name)+'</button>';
+  const row=(label,es)=>es.length?'<div class="pr">'+(label?'<span>'+esc(label)+'</span>':'')+es.map(chip).join('')+'</div>':'';
+  let bar='';
+  if(t.pick){
+    const sets=t.sets||[],used=new Set(sets.length?[list[0].id]:[]);
+    bar='<nav class="pick" aria-label="'+esc(t.pick)+'">'+(sets.length?row('',[list[0]]):'')
+      +sets.map(x=>{const es=x.ids.map(i=>byId[i]).filter(Boolean);es.forEach(e=>used.add(e.id));return row(x.label,es);}).join('')
+      +row(sets.length?'More':'',list.filter(e=>!used.has(e.id)))+'</nav>';
+  }
   return '<p class="about">'+esc(g.about)+'</p>'+bar+(t.pick?[one]:list).map(e=>'<section class="pg db gv" id="e-'+esc(e.id)+'">'+detail(e)+'</section>').join('');
 }
-document.addEventListener('change',ev=>{
-  if(ev.target.id!=='pick')return;
-  picked[view]=ev.target.value;render();history.replaceState(null,'','#'+ev.target.value);
+document.addEventListener('click',ev=>{
+  const c=ev.target.closest('[data-pick]');if(!c)return;
+  picked[view]=c.dataset.pick;render();history.replaceState(null,'','#'+c.dataset.pick);window.scrollTo(0,0);
 });
 
 function tab(id,push){
@@ -300,7 +312,7 @@ function detail(e){return learning(e);}
 
 function open(id,push){
   const e=byId[id];if(!e)return;
-  if(GROUPTAB[e.group]){if($('dlg').open)$('dlg').close();picked[GROUPTAB[e.group]]=id;tab(GROUPTAB[e.group],false);const el=document.getElementById('e-'+id);if(el)el.scrollIntoView();if(push!==false)history.replaceState(null,'','#'+id);return;}
+  if(GROUPTAB[e.group]){if($('dlg').open)$('dlg').close();picked[GROUPTAB[e.group]]=id;tab(GROUPTAB[e.group],false);const el=document.getElementById('e-'+id);if(TABS.find(t=>t.id===GROUPTAB[e.group]).pick)window.scrollTo(0,0);else if(el)el.scrollIntoView();if(push!==false)history.replaceState(null,'','#'+id);return;}
   if(OWN.has(id)){if($('dlg').open)$('dlg').close();tab(id,push);return;}
   $('dt').textContent=e.name;$('db').innerHTML=detail(e);
   if(!$('dlg').open)$('dlg').showModal();

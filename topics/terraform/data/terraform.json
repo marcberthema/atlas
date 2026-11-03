@@ -1,18 +1,28 @@
 {
   "title": "Terraform",
-  "intro": "The Terraform CLI: the core workflow, the commands worth knowing, the configuration language, state, versions and how to debug.",
+  "intro": "A Terraform reference: the workflow, one page per block, lookup pages for the language, the CLI, state, and the tools around it.",
   "checked": "2026-11-02",
   "scope": "Terraform only (CLI and language), kept general: no cloud-specific resources. Terraform itself is under the Business Source License 1.1, free for most uses; the tools around it are open source, and OpenTofu is listed as the open source alternative.",
   "groups": [
     {
       "id": "core",
       "label": "Terraform",
-      "about": "The CLI, the language, state and dependencies."
+      "about": "The core workflow and the commands."
     },
     {
       "id": "blocks",
-      "label": "Language blocks",
-      "about": "One entry per block type of the language."
+      "label": "Blocks",
+      "about": "One page per block type of the language. Pick one, or start from the overview."
+    },
+    {
+      "id": "language",
+      "label": "Language",
+      "about": "Lookup pages for the configuration language: types, values, meta-arguments, references, expressions, functions and versions."
+    },
+    {
+      "id": "ops",
+      "label": "State and operations",
+      "about": "State and backends, checking and testing, debugging and recovering."
     },
     {
       "id": "tools",
@@ -218,7 +228,7 @@
           "icon": "file",
           "items": [
             "Put the configuration in `.tf` files in one directory. That directory is the root module and the place you run Terraform from. Keep it in version control from the start, even alone.",
-            "Run `terraform plan` often while writing. It also validates, so it catches syntax errors early. The configuration language is on the [Configuration](#configuration) tab."
+            "Run `terraform plan` often while writing. It also validates, so it catches syntax errors early. The language is on the [Blocks](#blocks-index) and [Language](#language-index) tabs."
           ],
           "step": 1
         },
@@ -477,7 +487,7 @@
       ],
       "related": [
         "commands",
-        "configuration",
+        "blocks-index",
         "state",
         "opentofu"
       ],
@@ -589,29 +599,118 @@
           "icon": "eye",
           "items": [
             "Run `terraform` with no arguments for the list in your version, and `terraform <command> -help` for one command. Most day-to-day work is `fmt`, `validate`, `plan` and `apply`; the rest is for looking at state and fixing it.",
+            "The cheat sheet. The sections below explain each group.",
             {
-              "type": "cards",
-              "cards": [
-                {
-                  "icon": "eye",
-                  "title": "Look",
-                  "text": "`show`, `output`, `state list`, `state show`, `console`, `graph`"
-                },
-                {
-                  "icon": "wrench",
-                  "title": "Fix",
-                  "text": "`apply -replace`, `-refresh-only`, `force-unlock`"
-                },
-                {
-                  "icon": "sync",
-                  "title": "Refactor",
-                  "text": "`moved`, `import` and `removed` blocks, or `state mv` and `state rm`"
-                },
-                {
-                  "icon": "check",
-                  "title": "Check",
-                  "text": "`fmt -check`, `validate`, `test`"
-                }
+              "type": "table",
+              "columns": [
+                "Stage",
+                "Command",
+                "Use it for",
+                "Flags you reach for"
+              ],
+              "rows": [
+                [
+                  "Setup",
+                  "`terraform init`",
+                  "Install providers and modules, set up the backend",
+                  "`-upgrade`, `-backend=false`, `-reconfigure`, `-migrate-state`"
+                ],
+                [
+                  "Setup",
+                  "`terraform fmt`",
+                  "Rewrite files in the canonical style",
+                  "`-check`, `-recursive`, `-diff`"
+                ],
+                [
+                  "Setup",
+                  "`terraform validate`",
+                  "Check syntax and consistency, with no remote calls",
+                  "after `init -backend=false`, needs no backend"
+                ],
+                [
+                  "Plan",
+                  "`terraform plan`",
+                  "Preview the changes",
+                  "`-out=FILE`, `-var-file=FILE`, `-destroy`, `-refresh-only`, `-replace=ADDR`, `-target=ADDR`, `-detailed-exitcode`"
+                ],
+                [
+                  "Apply",
+                  "`terraform apply [FILE]`",
+                  "Make the changes",
+                  "`-auto-approve` (ignored with a saved plan), `-replace=ADDR`, `-var-file=FILE`"
+                ],
+                [
+                  "Apply",
+                  "`terraform destroy`",
+                  "Destroy everything in state",
+                  "`plan -destroy` to preview"
+                ],
+                [
+                  "Look",
+                  "`terraform show [FILE]`",
+                  "Print the state, or a saved plan",
+                  "`-json`"
+                ],
+                [
+                  "Look",
+                  "`terraform output [NAME]`",
+                  "Read root module outputs",
+                  "`-json`, `-raw`"
+                ],
+                [
+                  "Look",
+                  "`terraform state list`, `state show ADDR`",
+                  "List the tracked objects, or show one",
+                  "`-json` on `show`"
+                ],
+                [
+                  "Look",
+                  "`terraform console`",
+                  "Try expressions and functions against state",
+                  ""
+                ],
+                [
+                  "Look",
+                  "`terraform graph`",
+                  "Dependency graph in DOT format",
+                  "`-draw-cycles`"
+                ],
+                [
+                  "Change state",
+                  "`terraform state mv`, `state rm`",
+                  "Move or forget an object in state, at once",
+                  "`-dry-run`"
+                ],
+                [
+                  "Change state",
+                  "`terraform import ADDR ID`",
+                  "Adopt an existing object, at once",
+                  ""
+                ],
+                [
+                  "Change state",
+                  "`terraform force-unlock LOCK_ID`",
+                  "Release a stuck lock",
+                  ""
+                ],
+                [
+                  "Change state",
+                  "`terraform workspace list`, `new`, `select`, `delete`",
+                  "Manage separate state instances",
+                  ""
+                ],
+                [
+                  "Test",
+                  "`terraform test`",
+                  "Run the test files",
+                  "`-filter=FILE`"
+                ],
+                [
+                  "Any command",
+                  "global options and variables",
+                  "Run elsewhere, script it, avoid prompts",
+                  "`-chdir=DIR` (before the subcommand), `-input=false`, `-no-color`, `-lock-timeout=DURATION`, `TF_VAR_name`"
+                ]
               ]
             }
           ]
@@ -1014,10 +1113,10 @@
       ]
     },
     {
-      "id": "configuration",
-      "name": "Configuration language",
-      "group": "core",
-      "summary": "The blocks, meta-arguments and variables you write in .tf files, and how a variable's value is chosen.",
+      "id": "blocks-index",
+      "name": "Overview",
+      "group": "blocks",
+      "summary": "Every block type of the language in one table, grouped by how often you reach for it.",
       "level": "deep",
       "status": "active",
       "started": {
@@ -1043,302 +1142,199 @@
       },
       "links": [
         {
-          "label": "Terraform documentation",
-          "url": "https://developer.hashicorp.com/terraform"
-        },
-        {
-          "label": "Terraform CLI commands",
-          "url": "https://developer.hashicorp.com/terraform/cli/commands"
-        },
-        {
-          "label": "Terraform repository",
-          "url": "https://github.com/hashicorp/terraform"
-        },
-        {
-          "label": "Terraform releases",
-          "url": "https://github.com/hashicorp/terraform/releases"
-        },
-        {
-          "label": "Configuration language",
+          "label": "Terraform configuration language",
           "url": "https://developer.hashicorp.com/terraform/language"
         }
       ],
       "sections": [
         {
-          "title": "In one minute",
-          "part": "overview",
-          "icon": "eye",
+          "title": "All blocks",
           "items": [
-            "Terraform code is plain text in `.tf` files (UTF-8), or the JSON variant in `.tf.json` files.",
-            {
-              "type": "cards",
-              "cards": [
-                {
-                  "icon": "box",
-                  "title": "resource",
-                  "text": "An object Terraform creates and manages"
-                },
-                {
-                  "icon": "search",
-                  "title": "data",
-                  "text": "Reads an existing object from the provider without creating anything"
-                },
-                {
-                  "icon": "key",
-                  "title": "variable",
-                  "text": "An input to a module"
-                },
-                {
-                  "icon": "up",
-                  "title": "output",
-                  "text": "A value a module exposes: to the parent, the CLI or other configurations"
-                },
-                {
-                  "icon": "layers",
-                  "title": "locals",
-                  "text": "Names for expressions you reuse inside one module"
-                },
-                {
-                  "icon": "grid",
-                  "title": "module",
-                  "text": "Calls a reusable set of configuration"
-                }
-              ]
-            },
-            "The `terraform` block holds the backend and `required_providers`. The `import`, `moved` and `removed` blocks change what state tracks (see [Useful commands](#commands))."
-          ]
-        },
-        {
-          "title": "Repeat a resource",
-          "part": "use",
-          "icon": "layers",
-          "items": [
-            "`count` takes a whole number. `count = var.creator ? 3 : 0` is the usual way to create something conditionally.",
-            "`for_each` takes a map or a set of strings and makes one instance per item, each with its own object. Everything it iterates over must be known before Terraform does any remote operation.",
-            {
-              "type": "code",
-              "title": "for_each over a map",
-              "lang": "text",
-              "match": "for_each = tomap({",
-              "source": {
-                "label": "for_each",
-                "url": "https://developer.hashicorp.com/terraform/language/meta-arguments/for_each"
-              }
-            },
-            "`count` and `for_each` are mutually exclusive."
-          ],
-          "step": 1
-        },
-        {
-          "title": "Dependencies",
-          "part": "use",
-          "icon": "sync",
-          "items": [
-            "Terraform builds the order from references: a resource that uses another's attribute waits for it. Use `depends_on` only for a hidden dependency that no reference shows. It takes a list of references to resources or modules in the same module."
-          ],
-          "step": 2
-        },
-        {
-          "title": "Lifecycle rules",
-          "part": "use",
-          "icon": "shield",
-          "items": [
+            "A `.tf` file is a list of blocks. Pick a block in the row above, or click a name here. The shape column shows the labels each block takes.",
             {
               "type": "table",
               "columns": [
-                "Rule",
-                "Effect"
+                "Tier",
+                "Block",
+                "Shape",
+                "Use it when"
               ],
               "rows": [
                 [
-                  "`create_before_destroy`",
-                  "When a change forces replacement, create the new object first. It propagates to the resources this one depends on. Not every object type can exist twice (unique names)"
+                  "Everyday",
+                  "[terraform](#terraform)",
+                  "`terraform {}`",
+                  "Pin the Terraform and provider versions, and choose where state is kept"
                 ],
                 [
-                  "`prevent_destroy`",
-                  "Reject any plan that would destroy the object, including `terraform destroy`. Use sparingly"
+                  "Everyday",
+                  "[provider](#provider)",
+                  "`provider \"NAME\" {}`",
+                  "Set a provider's credentials and region, or add a second configuration with an alias"
                 ],
                 [
-                  "`ignore_changes`",
-                  "Leave listed arguments alone when something else changes them after creation"
+                  "Everyday",
+                  "[resource](#resource)",
+                  "`resource \"TYPE\" \"LABEL\" {}`",
+                  "Create and manage one infrastructure object"
                 ],
                 [
-                  "`replace_triggered_by`",
-                  "Replace this resource when a referenced resource or attribute changes"
+                  "Everyday",
+                  "[data](#data)",
+                  "`data \"TYPE\" \"LABEL\" {}`",
+                  "Read an object that already exists, without managing it"
                 ],
                 [
-                  "`precondition` and `postcondition`",
-                  "Checks that fail the plan or apply with your message. Results are recorded in state, not the check contents"
+                  "Everyday",
+                  "[variable](#variable)",
+                  "`variable \"LABEL\" {}`",
+                  "Take an input from the CLI, a file or the calling module"
+                ],
+                [
+                  "Everyday",
+                  "[output](#output)",
+                  "`output \"LABEL\" {}`",
+                  "Return a value to the parent module, the CLI or other configurations"
+                ],
+                [
+                  "Everyday",
+                  "[locals](#locals)",
+                  "`locals {}`",
+                  "Name an expression you use more than once in a module"
+                ],
+                [
+                  "Everyday",
+                  "[module](#module)",
+                  "`module \"LABEL\" {}`",
+                  "Call a reusable set of configuration"
+                ],
+                [
+                  "Refactoring",
+                  "[import](#import)",
+                  "`import {}`",
+                  "Bring an existing object under management when you apply, reviewed in the plan"
+                ],
+                [
+                  "Refactoring",
+                  "[moved](#moved)",
+                  "`moved {}`",
+                  "Rename or move a resource or module without destroying the object"
+                ],
+                [
+                  "Refactoring",
+                  "[removed](#removed)",
+                  "`removed {}`",
+                  "Stop managing a resource, with or without destroying the real object"
+                ],
+                [
+                  "Specialised",
+                  "[check](#check)",
+                  "`check \"LABEL\" {}`",
+                  "Validate infrastructure after the run. A failed assertion is a warning"
+                ],
+                [
+                  "Specialised",
+                  "[action](#action)",
+                  "`action \"TYPE\" \"LABEL\" {}`",
+                  "Run a provider-defined action, from the CLI or when a resource changes"
+                ],
+                [
+                  "Specialised",
+                  "[ephemeral](#ephemeral)",
+                  "`ephemeral \"TYPE\" \"LABEL\" {}`",
+                  "Use a temporary value that is never written to state or plan files"
                 ]
               ]
             },
-            {
-              "type": "code",
-              "title": "ignore_changes",
-              "lang": "text",
-              "match": "ignore_changes = [tags]",
-              "source": {
-                "label": "lifecycle",
-                "url": "https://developer.hashicorp.com/terraform/language/meta-arguments/lifecycle"
-              }
-            },
-            {
-              "type": "code",
-              "title": "replace_triggered_by",
-              "lang": "text",
-              "match": "replace_triggered_by = [",
-              "source": {
-                "label": "lifecycle",
-                "url": "https://developer.hashicorp.com/terraform/language/meta-arguments/lifecycle"
-              }
-            },
-            {
-              "type": "callout",
-              "kind": "gotcha",
-              "text": "Apart from `create_before_destroy`, lifecycle rules are not stored in state. If you delete a resource block, Terraform destroys the object even if the block had `prevent_destroy`.",
-              "title": "Rules live in the configuration"
-            }
-          ],
-          "step": 3
-        },
-        {
-          "title": "Variables and outputs",
-          "part": "use",
-          "icon": "key",
-          "items": [
-            "A `variable` block declares an input. `sensitive = true` hides the value in CLI output, but it is still stored in state. `ephemeral = true` keeps it out of the state and plan files.",
-            "Quote carefully with `-var` (no spaces around the equals sign). The docs recommend `-var-file` and, on Windows, `cmd.exe`, because PowerShell cannot pass literal quotes to external programs.",
-            {
-              "type": "code",
-              "title": "Pass a variable on the command line",
-              "lang": "shell",
-              "match": "terraform plan -var='env=prod'",
-              "source": {
-                "label": "terraform plan",
-                "url": "https://developer.hashicorp.com/terraform/cli/commands/plan"
-              }
-            },
-            "An `output` block exposes a value. In a child module it gives data to the parent; in the root module it prints and can be read with `terraform output`, or by other configurations through `terraform_remote_state`."
-          ],
-          "step": 4
-        },
-        {
-          "title": "Style",
-          "part": "run",
-          "icon": "book",
-          "items": [
-            "From the HashiCorp style guide:",
-            {
-              "type": "checklist",
-              "items": [
-                "Run `terraform fmt` and `terraform validate` before committing",
-                "Use a linter such as TFLint to enforce your own rules",
-                "Use `#` for single and multi-line comments",
-                "Name resources with nouns and leave the resource type out of the name",
-                "Separate words in names with underscores"
-              ]
-            }
+            "Refactoring blocks change what state tracks. They live in the configuration, so the change is reviewed in the plan. The command-line equivalents are in the [CLI](#commands) tab."
           ]
         },
         {
-          "title": "Which variable value wins",
-          "part": "reference",
-          "icon": "scale",
+          "title": "Not top-level blocks",
           "items": [
-            "Highest first. Within the same file a variable cannot be set twice.",
-            {
-              "type": "table",
-              "columns": [
-                "Source",
-                "Notes"
-              ],
-              "rows": [
-                [
-                  "`-var` and `-var-file` on the command line",
-                  "In the order given. HCP Terraform variables sit at this level"
-                ],
-                [
-                  "`*.auto.tfvars`, `*.auto.tfvars.json`",
-                  "Lexical order"
-                ],
-                [
-                  "`terraform.tfvars.json`",
-                  "Loaded automatically"
-                ],
-                [
-                  "`terraform.tfvars`",
-                  "Loaded automatically"
-                ],
-                [
-                  "Environment variables",
-                  "`TF_VAR_name`, e.g. `TF_VAR_region=us-west-1`; lists and maps are written as expressions"
-                ],
-                [
-                  "`default` in the variable block",
-                  "Lowest"
-                ]
-              ]
-            }
+            "Some blocks only exist inside others: `backend`, `cloud` and `required_providers` inside `terraform`; `lifecycle`, `provisioner` and `connection` inside `resource`; `validation` inside `variable`; and `dynamic`, which generates nested blocks (see [Expressions](#expressions)).",
+            "Meta-arguments such as `count` and `for_each` are arguments, not blocks. See [Meta-arguments](#meta-arguments).",
+            "Terraform Stacks have `component` blocks and query configuration has `list` blocks. They are not covered here."
           ]
         }
       ],
       "related": [
-        "workflow",
-        "commands",
-        "dependencies"
+        "language-index",
+        "meta-arguments",
+        "commands"
       ],
       "sources": [
         {
-          "label": "Files and directories",
-          "url": "https://developer.hashicorp.com/terraform/language/files"
+          "label": "terraform block reference",
+          "url": "https://developer.hashicorp.com/terraform/language/block/terraform"
         },
         {
-          "label": "Variables",
-          "url": "https://developer.hashicorp.com/terraform/language/values/variables"
+          "label": "provider block reference",
+          "url": "https://developer.hashicorp.com/terraform/language/block/provider"
         },
         {
-          "label": "Locals",
-          "url": "https://developer.hashicorp.com/terraform/language/values/locals"
+          "label": "resource block reference",
+          "url": "https://developer.hashicorp.com/terraform/language/block/resource"
         },
         {
-          "label": "Outputs",
-          "url": "https://developer.hashicorp.com/terraform/language/values/outputs"
-        },
-        {
-          "label": "data block",
+          "label": "data block reference",
           "url": "https://developer.hashicorp.com/terraform/language/block/data"
         },
         {
-          "label": "count",
-          "url": "https://developer.hashicorp.com/terraform/language/meta-arguments/count"
+          "label": "variable block reference",
+          "url": "https://developer.hashicorp.com/terraform/language/block/variable"
         },
         {
-          "label": "for_each",
-          "url": "https://developer.hashicorp.com/terraform/language/meta-arguments/for_each"
+          "label": "output block reference",
+          "url": "https://developer.hashicorp.com/terraform/language/block/output"
+        },
+        {
+          "label": "locals block reference",
+          "url": "https://developer.hashicorp.com/terraform/language/block/locals"
+        },
+        {
+          "label": "module block reference",
+          "url": "https://developer.hashicorp.com/terraform/language/block/module"
+        },
+        {
+          "label": "import block reference",
+          "url": "https://developer.hashicorp.com/terraform/language/block/import"
+        },
+        {
+          "label": "moved block reference",
+          "url": "https://developer.hashicorp.com/terraform/language/block/moved"
+        },
+        {
+          "label": "removed block reference",
+          "url": "https://developer.hashicorp.com/terraform/language/block/removed"
+        },
+        {
+          "label": "check block reference",
+          "url": "https://developer.hashicorp.com/terraform/language/block/check"
+        },
+        {
+          "label": "action block reference",
+          "url": "https://developer.hashicorp.com/terraform/language/block/action"
+        },
+        {
+          "label": "ephemeral block reference",
+          "url": "https://developer.hashicorp.com/terraform/language/block/ephemeral"
+        },
+        {
+          "label": "Meta-arguments",
+          "url": "https://developer.hashicorp.com/terraform/language/meta-arguments"
         },
         {
           "label": "depends_on",
           "url": "https://developer.hashicorp.com/terraform/language/meta-arguments/depends_on"
         },
         {
-          "label": "lifecycle",
-          "url": "https://developer.hashicorp.com/terraform/language/meta-arguments/lifecycle"
-        },
-        {
-          "label": "Style guide",
-          "url": "https://developer.hashicorp.com/terraform/language/style"
-        },
-        {
-          "label": "Environment variables",
-          "url": "https://developer.hashicorp.com/terraform/cli/config/environment-variables"
-        },
-        {
-          "label": "terraform plan",
-          "url": "https://developer.hashicorp.com/terraform/cli/commands/plan"
+          "label": "count",
+          "url": "https://developer.hashicorp.com/terraform/language/meta-arguments/count"
         }
       ],
       "notes": [
-        "The `resource`, `module` and `provider` blocks are described here in one line each from the page overview; read their pages for the full argument lists."
+        "The grouping into everyday, refactoring and specialised is a judgement for this page, not from the docs. Whether these are all the top-level block types is unconfirmed: the list follows the block reference pages read."
       ]
     },
     {
@@ -1387,12 +1383,6 @@
           "items": [
             "The `terraform` block configures Terraform's own behavior: the allowed CLI version, the backend or HCP Terraform integration, and the required providers.",
             {
-              "type": "callout",
-              "kind": "gotcha",
-              "text": "Only constant values are allowed in this block. It cannot refer to resources or input variables, and it cannot use functions.",
-              "title": "Constants only"
-            },
-            {
               "type": "code",
               "title": "All the arguments",
               "lang": "text",
@@ -1401,6 +1391,12 @@
                 "label": "terraform block",
                 "url": "https://developer.hashicorp.com/terraform/language/block/terraform"
               }
+            },
+            {
+              "type": "callout",
+              "kind": "gotcha",
+              "text": "Only constant values are allowed in this block. It cannot refer to resources or input variables, and it cannot use functions.",
+              "title": "Constants only"
             }
           ]
         },
@@ -1536,7 +1532,6 @@
           "icon": "eye",
           "items": [
             "A provider is a plugin that lets Terraform talk to a cloud, a SaaS or another API. The `provider` block configures one.",
-            "Define provider blocks in the root module. Child modules receive their provider configurations from the parent, so defining provider blocks in child modules is strongly discouraged.",
             {
               "type": "code",
               "title": "The arguments",
@@ -1546,7 +1541,8 @@
                 "label": "provider block",
                 "url": "https://developer.hashicorp.com/terraform/language/block/provider"
               }
-            }
+            },
+            "Define provider blocks in the root module. Child modules receive their provider configurations from the parent, so defining provider blocks in child modules is strongly discouraged."
           ]
         },
         {
@@ -1741,7 +1737,7 @@
           "part": "use",
           "icon": "play",
           "items": [
-            "The meta-arguments are explained on the [Configuration](#configuration) tab.",
+            "The meta-arguments are explained on the [Meta-arguments](#meta-arguments) page of the Language tab.",
             {
               "type": "code",
               "title": "replace_triggered_by",
@@ -1766,7 +1762,7 @@
         }
       ],
       "related": [
-        "configuration",
+        "meta-arguments",
         "moved",
         "removed",
         "action"
@@ -1965,7 +1961,6 @@
           "icon": "eye",
           "items": [
             "The `variable` block parameterizes a module so users can customize it without changing the source. It works like a function argument.",
-            "In the root module, set values with CLI options, environment variables, variable files, or an HCP Terraform workspace. In a child module, the parent passes values as arguments in the `module` block.",
             {
               "type": "code",
               "title": "All the arguments",
@@ -1975,7 +1970,8 @@
                 "label": "variable block",
                 "url": "https://developer.hashicorp.com/terraform/language/block/variable"
               }
-            }
+            },
+            "In the root module, set values with CLI options, environment variables, variable files, or an HCP Terraform workspace. In a child module, the parent passes values as arguments in the `module` block."
           ]
         },
         {
@@ -2055,7 +2051,7 @@
                 "url": "https://developer.hashicorp.com/terraform/language/block/variable"
               }
             },
-            "The order in which sources override each other is on the [Configuration](#configuration) tab."
+            "The order in which sources override each other is on the [Setting variable values](#setting-values) page of the Language tab."
           ]
         },
         {
@@ -2069,7 +2065,8 @@
         }
       ],
       "related": [
-        "configuration",
+        "types",
+        "setting-values",
         "output",
         "locals"
       ],
@@ -2318,7 +2315,7 @@
       ],
       "related": [
         "variable",
-        "configuration"
+        "references"
       ],
       "sources": [
         {
@@ -3282,9 +3279,1696 @@
       ]
     },
     {
+      "id": "language-index",
+      "name": "Overview",
+      "group": "language",
+      "summary": "Where to look things up in the language: types, values, meta-arguments, references, expressions, functions, versions.",
+      "level": "deep",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "first tag v0.1.0 has no dated release; the repository was created 2014-03-13",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "Not a CNCF project."
+      },
+      "license": "BUSL-1.1",
+      "version": {
+        "name": "Terraform CLI",
+        "analysed": "v1.17.1",
+        "released": "2026-10-28",
+        "docs": "developer.hashicorp.com/terraform, v1.17.x (latest) docs, and the v1.17 CHANGELOG",
+        "checked": "2026-11-02"
+      },
+      "track": {
+        "github": "hashicorp/terraform",
+        "tag": "^v\\d+\\.\\d+\\.\\d+$"
+      },
+      "links": [
+        {
+          "label": "Terraform configuration language",
+          "url": "https://developer.hashicorp.com/terraform/language"
+        }
+      ],
+      "sections": [
+        {
+          "title": "Look something up",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Page",
+                "What is on it"
+              ],
+              "rows": [
+                [
+                  "[Types](#types)",
+                  "`string`, `number`, `bool`, `list`, `set`, `map`, `object`, `tuple`, `any`, `optional()`, and the conversion rules"
+                ],
+                [
+                  "[Setting variable values](#setting-values)",
+                  "`-var`, `-var-file`, `.tfvars` files, `TF_VAR_` variables, and which one wins"
+                ],
+                [
+                  "[Meta-arguments](#meta-arguments)",
+                  "`count`, `for_each`, `depends_on`, `lifecycle`, `provider`, `providers`"
+                ],
+                [
+                  "[References](#references)",
+                  "`var.`, `local.`, `module.`, `data.`, `path.`, `each.`, `count.`, `self` and how to read an instance"
+                ],
+                [
+                  "[Expressions](#expressions)",
+                  "Conditionals, `for`, splat, `dynamic` blocks, string templates, heredocs, operators"
+                ],
+                [
+                  "[Functions](#functions)",
+                  "The ones used most, and every built-in by category"
+                ],
+                [
+                  "[Providers, modules and versions](#dependencies)",
+                  "`required_providers`, version constraints, the lock file"
+                ],
+                [
+                  "[Blocks](#blocks-index)",
+                  "One page per block type, in its own tab"
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Files and structure",
+          "items": [
+            "Terraform code is plain text in `.tf` files (UTF-8), or the JSON variant in `.tf.json` files. A module is the `.tf` files of one directory. Nested directories are separate modules.",
+            "Terraform reads all the files of a module as one document, so splitting blocks across files is only for readers and has no effect on behaviour.",
+            "The root module is the working directory where you run Terraform. A configuration is the root module plus the tree of child modules it calls."
+          ]
+        },
+        {
+          "title": "Style",
+          "items": [
+            "From the HashiCorp style guide:",
+            {
+              "type": "checklist",
+              "items": [
+                "Run `terraform fmt` and `terraform validate` before committing",
+                "Use a linter such as TFLint to enforce your own rules",
+                "Use `#` for single and multi-line comments",
+                "Name resources with nouns and leave the resource type out of the name",
+                "Separate words in names with underscores"
+              ]
+            }
+          ]
+        }
+      ],
+      "related": [
+        "blocks-index",
+        "workflow"
+      ],
+      "sources": [
+        {
+          "label": "Files and directories",
+          "url": "https://developer.hashicorp.com/terraform/language/files"
+        },
+        {
+          "label": "Style guide",
+          "url": "https://developer.hashicorp.com/terraform/language/style"
+        },
+        {
+          "label": "Configuration language",
+          "url": "https://developer.hashicorp.com/terraform/language"
+        }
+      ]
+    },
+    {
+      "id": "types",
+      "name": "Types",
+      "group": "language",
+      "summary": "Every type you can put in a variable's type argument, what it holds, and how Terraform converts between them.",
+      "level": "deep",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "first tag v0.1.0 has no dated release; the repository was created 2014-03-13",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "Not a CNCF project."
+      },
+      "license": "BUSL-1.1",
+      "version": {
+        "name": "Terraform CLI",
+        "analysed": "v1.17.1",
+        "released": "2026-10-28",
+        "docs": "developer.hashicorp.com/terraform, v1.17.x (latest) docs, and the v1.17 CHANGELOG",
+        "checked": "2026-11-02"
+      },
+      "track": {
+        "github": "hashicorp/terraform",
+        "tag": "^v\\d+\\.\\d+\\.\\d+$"
+      },
+      "links": [
+        {
+          "label": "Type constraints",
+          "url": "https://developer.hashicorp.com/terraform/language/expressions/type-constraints"
+        }
+      ],
+      "sections": [
+        {
+          "title": "The types",
+          "items": [
+            "Type constraints are used in the `type` argument of a `variable` or `output` block, and in the `convert` function. If a variable has no `type`, it accepts any type.",
+            {
+              "type": "table",
+              "columns": [
+                "Constraint",
+                "Kind",
+                "What it holds"
+              ],
+              "rows": [
+                [
+                  "`string`",
+                  "primitive",
+                  "Unicode text"
+                ],
+                [
+                  "`number`",
+                  "primitive",
+                  "A whole or fractional number"
+                ],
+                [
+                  "`bool`",
+                  "primitive",
+                  "`true` or `false`"
+                ],
+                [
+                  "`list(TYPE)`",
+                  "collection",
+                  "An ordered sequence, indexed from 0. Every element has the same type"
+                ],
+                [
+                  "`set(TYPE)`",
+                  "collection",
+                  "Unique values with no order and no index"
+                ],
+                [
+                  "`map(TYPE)`",
+                  "collection",
+                  "Values identified by a string key. Every value has the same type"
+                ],
+                [
+                  "`object({ KEY = TYPE, ... })`",
+                  "structural",
+                  "Named attributes, each with its own type"
+                ],
+                [
+                  "`tuple([TYPE, ...])`",
+                  "structural",
+                  "Elements by position, each with its own type. The count must match exactly"
+                ],
+                [
+                  "`any`",
+                  "placeholder",
+                  "No constraint. In `list(any)` Terraform picks the one element type that fits"
+                ]
+              ]
+            },
+            {
+              "type": "code",
+              "title": "Optional attributes in an object type",
+              "lang": "text",
+              "match": "c = optional(number, 127)",
+              "source": {
+                "label": "Type constraints",
+                "url": "https://developer.hashicorp.com/terraform/language/expressions/type-constraints"
+              }
+            }
+          ]
+        },
+        {
+          "title": "Optional attributes",
+          "items": [
+            "In an `object` type, `optional(TYPE)` lets the caller leave an attribute out. Without a default the attribute is `null`.",
+            "`optional(TYPE, DEFAULT)` supplies a default. Terraform uses it both when the attribute is missing and when the caller sets it to `null`, so inside the module it is never `null`."
+          ]
+        },
+        {
+          "title": "Automatic conversion",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "From",
+                "To",
+                "Rule"
+              ],
+              "rows": [
+                [
+                  "`number`, `bool`",
+                  "`string`",
+                  "Converted when needed: `true` to `\"true\"`, `15` to `\"15\"`"
+                ],
+                [
+                  "`string`",
+                  "`number`, `bool`",
+                  "Only if the text is a valid number or `true`/`false`"
+                ],
+                [
+                  "`list`, `tuple`, `set`",
+                  "each other",
+                  "Usually interchangeable"
+                ],
+                [
+                  "`map`, `object`",
+                  "each other",
+                  "Usually interchangeable"
+                ],
+                [
+                  "`object` with extra keys",
+                  "`object` type",
+                  "Extra attributes are discarded"
+                ]
+              ]
+            },
+            "To convert on purpose, use `tostring`, `tonumber`, `tobool`, `tolist`, `toset` or `tomap`. See [Functions](#functions)."
+          ]
+        },
+        {
+          "title": "Gotchas",
+          "items": [
+            {
+              "type": "callout",
+              "kind": "gotcha",
+              "text": "`list` and `map` with no argument mean `list(any)` and `map(any)`. They exist for older configurations; write the full form in new code."
+            },
+            {
+              "type": "callout",
+              "kind": "gotcha",
+              "text": "A literal `[...]` is a tuple and `{...}` is an object. Terraform has no literal for a list, map or set, but conversion hides the difference almost always."
+            },
+            {
+              "type": "callout",
+              "kind": "gotcha",
+              "text": "`var.list == []` is never true, because `[]` is a `tuple([])`. Test `length(var.list) == 0` instead."
+            }
+          ]
+        }
+      ],
+      "related": [
+        "variable",
+        "setting-values",
+        "functions"
+      ],
+      "sources": [
+        {
+          "label": "Type constraints",
+          "url": "https://developer.hashicorp.com/terraform/language/expressions/type-constraints"
+        },
+        {
+          "label": "variable block reference",
+          "url": "https://developer.hashicorp.com/terraform/language/block/variable"
+        },
+        {
+          "label": "Arithmetic and logical operators",
+          "url": "https://developer.hashicorp.com/terraform/language/expressions/operators"
+        },
+        {
+          "label": "Built-in functions",
+          "url": "https://developer.hashicorp.com/terraform/language/functions"
+        }
+      ]
+    },
+    {
+      "id": "setting-values",
+      "name": "Setting variable values",
+      "group": "language",
+      "summary": "The ways to give a root module's variables a value, and the order in which they override each other.",
+      "level": "deep",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "first tag v0.1.0 has no dated release; the repository was created 2014-03-13",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "Not a CNCF project."
+      },
+      "license": "BUSL-1.1",
+      "version": {
+        "name": "Terraform CLI",
+        "analysed": "v1.17.1",
+        "released": "2026-10-28",
+        "docs": "developer.hashicorp.com/terraform, v1.17.x (latest) docs, and the v1.17 CHANGELOG",
+        "checked": "2026-11-02"
+      },
+      "track": {
+        "github": "hashicorp/terraform",
+        "tag": "^v\\d+\\.\\d+\\.\\d+$"
+      },
+      "links": [
+        {
+          "label": "Input variables",
+          "url": "https://developer.hashicorp.com/terraform/language/values/variables"
+        }
+      ],
+      "sections": [
+        {
+          "title": "Ways to set a value",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "How",
+                "Example",
+                "Notes"
+              ],
+              "rows": [
+                [
+                  "Command line",
+                  "`-var 'name=value'`",
+                  "No spaces around the equals sign. Quoting is awkward on some shells"
+                ],
+                [
+                  "Variable file",
+                  "`-var-file=prod.tfvars`",
+                  "Recommended over `-var`. Works for any value, including quotes"
+                ],
+                [
+                  "Automatic files",
+                  "`terraform.tfvars`, `*.auto.tfvars`",
+                  "Loaded without a flag. The `.json` forms work too"
+                ],
+                [
+                  "Environment",
+                  "`TF_VAR_name=value`",
+                  "Lists and maps are written as expressions"
+                ],
+                [
+                  "Default",
+                  "`default = ...` in the block",
+                  "Used when nothing else sets the variable"
+                ],
+                [
+                  "Child module",
+                  "an argument in the `module` block",
+                  "Child modules do not use the sources above; the parent passes values"
+                ]
+              ]
+            },
+            {
+              "type": "code",
+              "title": "Pass a variable on the command line",
+              "lang": "shell",
+              "match": "terraform plan -var='env=prod'",
+              "source": {
+                "label": "terraform plan",
+                "url": "https://developer.hashicorp.com/terraform/cli/commands/plan"
+              }
+            },
+            "On Windows, the docs recommend `-var-file` and `cmd.exe`, because PowerShell cannot pass literal quotes to external programs."
+          ]
+        },
+        {
+          "title": "Which value wins",
+          "items": [
+            "Highest first. Within the same file a variable cannot be set twice.",
+            {
+              "type": "table",
+              "columns": [
+                "Source",
+                "Notes"
+              ],
+              "rows": [
+                [
+                  "`-var` and `-var-file` on the command line",
+                  "In the order given. HCP Terraform variables sit at this level"
+                ],
+                [
+                  "`*.auto.tfvars`, `*.auto.tfvars.json`",
+                  "Lexical order"
+                ],
+                [
+                  "`terraform.tfvars.json`",
+                  "Loaded automatically"
+                ],
+                [
+                  "`terraform.tfvars`",
+                  "Loaded automatically"
+                ],
+                [
+                  "Environment variables",
+                  "`TF_VAR_name`, for example `TF_VAR_region=us-west-1`"
+                ],
+                [
+                  "`default` in the variable block",
+                  "Lowest"
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Hiding and checking values",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Setting",
+                "Effect"
+              ],
+              "rows": [
+                [
+                  "`sensitive = true`",
+                  "Hides the value in CLI output. It is still stored in state"
+                ],
+                [
+                  "`ephemeral = true`",
+                  "Keeps the value out of state and plan files"
+                ],
+                [
+                  "`nullable = false`",
+                  "Rejects `null` for the variable"
+                ],
+                [
+                  "`validation { ... }`",
+                  "A `condition` and an `error_message` the value must pass, on top of the type"
+                ],
+                [
+                  "`const = true`",
+                  "Lets the variable be used during `init`, for example in a module's `source` or `version` (Terraform 1.17)"
+                ]
+              ]
+            },
+            "Every argument is described on the [variable](#variable) block page."
+          ]
+        }
+      ],
+      "related": [
+        "variable",
+        "types",
+        "commands"
+      ],
+      "sources": [
+        {
+          "label": "Variables",
+          "url": "https://developer.hashicorp.com/terraform/language/values/variables"
+        },
+        {
+          "label": "variable block reference",
+          "url": "https://developer.hashicorp.com/terraform/language/block/variable"
+        },
+        {
+          "label": "Environment variables",
+          "url": "https://developer.hashicorp.com/terraform/cli/config/environment-variables"
+        },
+        {
+          "label": "terraform plan",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/plan"
+        }
+      ]
+    },
+    {
+      "id": "meta-arguments",
+      "name": "Meta-arguments",
+      "group": "language",
+      "summary": "The arguments every resource, and most module blocks, accept on top of the provider's own: count, for_each, depends_on, lifecycle, provider, providers.",
+      "level": "deep",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "first tag v0.1.0 has no dated release; the repository was created 2014-03-13",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "Not a CNCF project."
+      },
+      "license": "BUSL-1.1",
+      "version": {
+        "name": "Terraform CLI",
+        "analysed": "v1.17.1",
+        "released": "2026-10-28",
+        "docs": "developer.hashicorp.com/terraform, v1.17.x (latest) docs, and the v1.17 CHANGELOG",
+        "checked": "2026-11-02"
+      },
+      "track": {
+        "github": "hashicorp/terraform",
+        "tag": "^v\\d+\\.\\d+\\.\\d+$"
+      },
+      "links": [
+        {
+          "label": "Meta-arguments",
+          "url": "https://developer.hashicorp.com/terraform/language/meta-arguments"
+        }
+      ],
+      "sections": [
+        {
+          "title": "At a glance",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Argument",
+                "Works on",
+                "What it does",
+                "Watch for"
+              ],
+              "rows": [
+                [
+                  "`count`",
+                  "`resource`, `data`, `module`, `ephemeral`",
+                  "Creates that many instances from a whole number. `count.index` is the position, from 0",
+                  "The value must be known before apply. Not with `for_each`"
+                ],
+                [
+                  "`for_each`",
+                  "`resource`, `data`, `module`, `ephemeral`",
+                  "One instance per item of a map or set of strings. `each.key` and `each.value`",
+                  "Keys must be known before apply. No sensitive values. No `uuid`, `bcrypt` or `timestamp` in keys. Not with `count`"
+                ],
+                [
+                  "`depends_on`",
+                  "`resource`, `data`, `module`, `output`, `check`, `ephemeral`",
+                  "Orders work for a dependency no reference shows",
+                  "A list of references, not expressions. A last resort: it can make plans more cautious"
+                ],
+                [
+                  "`lifecycle`",
+                  "`resource` (support varies by block)",
+                  "Changes how Terraform replaces, destroys or checks the object",
+                  "See the rules below"
+                ],
+                [
+                  "`provider`",
+                  "`resource`",
+                  "Uses an alternate provider configuration: `PROVIDER.ALIAS`",
+                  "Without it, the default configuration is used"
+                ],
+                [
+                  "`providers`",
+                  "`module`",
+                  "Maps the child module's providers to the parent's configurations",
+                  "Child modules inherit the default configurations if you omit it"
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "title": "count or for_each",
+          "items": [
+            "Use `count` for nearly identical instances. Use `for_each` when some arguments must differ and cannot come from an integer index. A block cannot use both.",
+            "`count = var.enabled ? 1 : 0` is the usual way to make something optional. The resource is then a list, so refer to `TYPE.NAME[0]`, or use `one(TYPE.NAME[*].ATTRIBUTE)` to get the value or `null`.",
+            {
+              "type": "code",
+              "title": "for_each over a map",
+              "lang": "text",
+              "match": "for_each = tomap({",
+              "source": {
+                "label": "for_each",
+                "url": "https://developer.hashicorp.com/terraform/language/meta-arguments/for_each"
+              }
+            },
+            "To iterate a list with `for_each`, convert it with an expression that returns a set, such as `toset`."
+          ]
+        },
+        {
+          "title": "Reading instances",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Block uses",
+                "The reference is",
+                "Read one",
+                "Read all"
+              ],
+              "rows": [
+                [
+                  "nothing",
+                  "one object",
+                  "`TYPE.NAME.ATTR`",
+                  "-"
+                ],
+                [
+                  "`count`",
+                  "a list of objects",
+                  "`TYPE.NAME[0].ATTR`",
+                  "`TYPE.NAME[*].ATTR`"
+                ],
+                [
+                  "`for_each`",
+                  "a map of objects",
+                  "`TYPE.NAME[\"key\"].ATTR`",
+                  "`values(TYPE.NAME)[*].ATTR`, or a `for` expression"
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "title": "lifecycle rules",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Rule",
+                "Effect"
+              ],
+              "rows": [
+                [
+                  "`create_before_destroy`",
+                  "When a change forces replacement, create the new object first. It propagates to the resources this one depends on. Not every object type can exist twice (unique names)"
+                ],
+                [
+                  "`prevent_destroy`",
+                  "Reject any plan that would destroy the object, including `terraform destroy`. Use sparingly"
+                ],
+                [
+                  "`ignore_changes`",
+                  "Leave listed arguments alone when something else changes them after creation"
+                ],
+                [
+                  "`replace_triggered_by`",
+                  "Replace this resource when a referenced resource or attribute changes"
+                ],
+                [
+                  "`precondition` and `postcondition`",
+                  "Checks that fail the plan or apply with your message. Results are recorded in state, not the check contents"
+                ]
+              ]
+            },
+            {
+              "type": "code",
+              "title": "ignore_changes",
+              "lang": "text",
+              "match": "ignore_changes = [tags]",
+              "source": {
+                "label": "lifecycle",
+                "url": "https://developer.hashicorp.com/terraform/language/meta-arguments/lifecycle"
+              }
+            },
+            {
+              "type": "callout",
+              "kind": "gotcha",
+              "text": "Apart from `create_before_destroy`, lifecycle rules are not stored in state. If you delete a resource block, Terraform destroys the object even if the block had `prevent_destroy`.",
+              "title": "Rules live in the configuration"
+            }
+          ]
+        },
+        {
+          "title": "depends_on",
+          "items": [
+            "Terraform builds the order from references: a resource that uses another's attribute waits for it. Use `depends_on` only for a hidden dependency, for example software that needs an access policy to exist before it boots.",
+            "Prefer a reference. It lets Terraform skip changes when only an unrelated part of the other object changes."
+          ]
+        }
+      ],
+      "related": [
+        "resource",
+        "module",
+        "references"
+      ],
+      "sources": [
+        {
+          "label": "Meta-arguments",
+          "url": "https://developer.hashicorp.com/terraform/language/meta-arguments"
+        },
+        {
+          "label": "count",
+          "url": "https://developer.hashicorp.com/terraform/language/meta-arguments/count"
+        },
+        {
+          "label": "for_each",
+          "url": "https://developer.hashicorp.com/terraform/language/meta-arguments/for_each"
+        },
+        {
+          "label": "depends_on",
+          "url": "https://developer.hashicorp.com/terraform/language/meta-arguments/depends_on"
+        },
+        {
+          "label": "lifecycle",
+          "url": "https://developer.hashicorp.com/terraform/language/meta-arguments/lifecycle"
+        },
+        {
+          "label": "References to named values",
+          "url": "https://developer.hashicorp.com/terraform/language/expressions/references"
+        }
+      ],
+      "notes": [
+        "The \"Works on\" column follows the overview, count, for_each and depends_on pages. They also mention `action` blocks for count and for_each, and `list` blocks for count; those are not covered here."
+      ]
+    },
+    {
+      "id": "references",
+      "name": "References",
+      "group": "language",
+      "summary": "The names you can use in an expression, what each one gives you, and how to read the instances of a block with count or for_each.",
+      "level": "deep",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "first tag v0.1.0 has no dated release; the repository was created 2014-03-13",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "Not a CNCF project."
+      },
+      "license": "BUSL-1.1",
+      "version": {
+        "name": "Terraform CLI",
+        "analysed": "v1.17.1",
+        "released": "2026-10-28",
+        "docs": "developer.hashicorp.com/terraform, v1.17.x (latest) docs, and the v1.17 CHANGELOG",
+        "checked": "2026-11-02"
+      },
+      "track": {
+        "github": "hashicorp/terraform",
+        "tag": "^v\\d+\\.\\d+\\.\\d+$"
+      },
+      "links": [
+        {
+          "label": "References to named values",
+          "url": "https://developer.hashicorp.com/terraform/language/expressions/references"
+        }
+      ],
+      "sections": [
+        {
+          "title": "Named values",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Reference",
+                "What it is",
+                "Notes"
+              ],
+              "rows": [
+                [
+                  "`TYPE.NAME`",
+                  "A managed resource",
+                  "One object. A list with `count`, a map with `for_each`"
+                ],
+                [
+                  "`var.NAME`",
+                  "An input variable",
+                  "Converted to the variable's type. Only attributes declared in an object type exist"
+                ],
+                [
+                  "`local.NAME`",
+                  "A local value",
+                  "Singular `local`, although the block is `locals`. Locals can use each other, with no cycles"
+                ],
+                [
+                  "`module.NAME.OUTPUT`",
+                  "A child module's output",
+                  "`module.NAME` is an object of outputs. A map with `for_each`, a list with `count`"
+                ],
+                [
+                  "`data.TYPE.NAME`",
+                  "A data source",
+                  "Same shapes as a resource"
+                ],
+                [
+                  "`path.module`",
+                  "Folder of the module the expression is in",
+                  "Avoid it in write operations"
+                ],
+                [
+                  "`path.root`",
+                  "Folder of the root module",
+                  ""
+                ],
+                [
+                  "`path.cwd`",
+                  "The directory you ran Terraform from, before `-chdir`",
+                  "Prefer `path.root` or `path.module`"
+                ],
+                [
+                  "`terraform.workspace`",
+                  "Name of the selected workspace",
+                  "Use it in the root module only"
+                ],
+                [
+                  "`count.index`",
+                  "Index of this instance, from 0",
+                  "Only in a block with `count`"
+                ],
+                [
+                  "`each.key`, `each.value`",
+                  "Key and value of this instance",
+                  "Only in a block with `for_each`"
+                ],
+                [
+                  "`self`",
+                  "The current resource instance",
+                  "Only in `provisioner` and `connection` blocks"
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Reading attributes",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "You write",
+                "You get"
+              ],
+              "rows": [
+                [
+                  "`aws_instance.example.id`",
+                  "An attribute of a resource with no `count` or `for_each`"
+                ],
+                [
+                  "`aws_instance.example[0].id`",
+                  "The first instance (`count`)"
+                ],
+                [
+                  "`aws_instance.example[*].id`",
+                  "A list of every instance's `id` (`count`)"
+                ],
+                [
+                  "`aws_instance.example[\"a\"].id`",
+                  "The instance keyed `a` (`for_each`)"
+                ],
+                [
+                  "`values(aws_instance.example)[*].id`",
+                  "A list of every instance's `id` (`for_each`)"
+                ],
+                [
+                  "`aws_instance.example.ebs_block_device[*].id`",
+                  "A list from a repeated nested block"
+                ]
+              ]
+            },
+            "The examples use `aws_instance` only to show the shape; the same rules apply to every resource type."
+          ]
+        },
+        {
+          "title": "Gotchas",
+          "items": [
+            {
+              "type": "callout",
+              "kind": "gotcha",
+              "text": "These names are not real objects. You cannot write `aws_instance[\"x\"]` or loop over `aws_instance` itself. Use them exactly as written."
+            },
+            {
+              "type": "callout",
+              "kind": "gotcha",
+              "text": "Inside a `dynamic` block, the iterator is named after the block (or the `iterator` argument), not `each`. See [Expressions](#expressions)."
+            },
+            {
+              "type": "callout",
+              "kind": "tip",
+              "text": "In a shared module, do not read `terraform.workspace` to build names. Take a prefix as an input variable and let the caller decide."
+            }
+          ]
+        }
+      ],
+      "related": [
+        "meta-arguments",
+        "expressions",
+        "variable"
+      ],
+      "sources": [
+        {
+          "label": "References to named values",
+          "url": "https://developer.hashicorp.com/terraform/language/expressions/references"
+        },
+        {
+          "label": "count",
+          "url": "https://developer.hashicorp.com/terraform/language/meta-arguments/count"
+        },
+        {
+          "label": "for_each",
+          "url": "https://developer.hashicorp.com/terraform/language/meta-arguments/for_each"
+        }
+      ]
+    },
+    {
+      "id": "expressions",
+      "name": "Expressions",
+      "group": "language",
+      "summary": "Conditionals, for expressions, splat, dynamic blocks, string templates and operators, each in one line with its syntax.",
+      "level": "deep",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "first tag v0.1.0 has no dated release; the repository was created 2014-03-13",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "Not a CNCF project."
+      },
+      "license": "BUSL-1.1",
+      "version": {
+        "name": "Terraform CLI",
+        "analysed": "v1.17.1",
+        "released": "2026-10-28",
+        "docs": "developer.hashicorp.com/terraform, v1.17.x (latest) docs, and the v1.17 CHANGELOG",
+        "checked": "2026-11-02"
+      },
+      "track": {
+        "github": "hashicorp/terraform",
+        "tag": "^v\\d+\\.\\d+\\.\\d+$"
+      },
+      "links": [
+        {
+          "label": "Expressions",
+          "url": "https://developer.hashicorp.com/terraform/language/expressions"
+        }
+      ],
+      "sections": [
+        {
+          "title": "Forms at a glance",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Form",
+                "Syntax",
+                "Gives"
+              ],
+              "rows": [
+                [
+                  "Conditional",
+                  "`CONDITION ? TRUE_VAL : FALSE_VAL`",
+                  "One of two values. They should have the same type. Use `null` to leave an argument unset"
+                ],
+                [
+                  "for, to a tuple",
+                  "`[for s in var.list : upper(s)]`",
+                  "A tuple, one result per input element"
+                ],
+                [
+                  "for, to an object",
+                  "`{for s in var.list : s => upper(s)}`",
+                  "An object. Keys must be unique"
+                ],
+                [
+                  "for with a filter",
+                  "`[for s in var.list : upper(s) if s != \"\"]`",
+                  "Fewer elements than the input"
+                ],
+                [
+                  "for with index or key",
+                  "`[for k, v in var.map : ...]`",
+                  "`k` is the key, or the index for a list"
+                ],
+                [
+                  "Splat",
+                  "`var.list[*].id`",
+                  "The `id` of every element. Lists, sets and tuples only. Use `for` for maps"
+                ],
+                [
+                  "Interpolation",
+                  "`\"Hello, ${var.name}!\"`",
+                  "A string with the value inserted"
+                ],
+                [
+                  "Directives",
+                  "`%{if COND}...%{else}...%{endif}`, `%{for x in L}...%{endfor}`",
+                  "Conditional text and repetition inside a string"
+                ],
+                [
+                  "Heredoc",
+                  "`<<EOT ... EOT`, or `<<-EOT` to trim indentation",
+                  "A multi-line string"
+                ],
+                [
+                  "dynamic block",
+                  "`dynamic \"NAME\" { for_each = ...  content { ... } }`",
+                  "Zero or more nested blocks"
+                ]
+              ]
+            },
+            {
+              "type": "code",
+              "title": "A for expression",
+              "lang": "text",
+              "match": "[for s in var.list : upper(s)]",
+              "source": {
+                "label": "for Expressions",
+                "url": "https://developer.hashicorp.com/terraform/language/expressions/for"
+              }
+            },
+            {
+              "type": "code",
+              "title": "A splat expression",
+              "lang": "text",
+              "match": "var.list[*].id",
+              "source": {
+                "label": "Splat Expressions",
+                "url": "https://developer.hashicorp.com/terraform/language/expressions/splat"
+              }
+            }
+          ]
+        },
+        {
+          "title": "dynamic blocks",
+          "items": [
+            "A `dynamic` block builds repeatable nested blocks from a collection. It works inside `resource`, `data`, `provider` and `provisioner` blocks.",
+            {
+              "type": "table",
+              "columns": [
+                "Part",
+                "Meaning"
+              ],
+              "rows": [
+                [
+                  "label",
+                  "The kind of nested block to generate"
+                ],
+                [
+                  "`for_each`",
+                  "The collection to iterate"
+                ],
+                [
+                  "`iterator`",
+                  "Optional name for the current element. Defaults to the label"
+                ],
+                [
+                  "`labels`",
+                  "Optional list of labels for each generated block"
+                ],
+                [
+                  "`content`",
+                  "The body of each generated block"
+                ]
+              ]
+            },
+            "The iterator has `key` and `value`. For a set, `key` equals `value`, so do not use it.",
+            {
+              "type": "code",
+              "title": "A dynamic block",
+              "lang": "text",
+              "match": "for_each = var.settings",
+              "source": {
+                "label": "dynamic Blocks",
+                "url": "https://developer.hashicorp.com/terraform/language/expressions/dynamic-blocks"
+              }
+            },
+            {
+              "type": "callout",
+              "kind": "gotcha",
+              "text": "A `dynamic` block cannot generate meta-argument blocks such as `lifecycle` or `provisioner`, because Terraform needs those before it can evaluate expressions."
+            }
+          ]
+        },
+        {
+          "title": "Operators",
+          "items": [
+            "Highest priority first. Use parentheses to change it.",
+            {
+              "type": "table",
+              "columns": [
+                "Priority",
+                "Operators",
+                "Takes"
+              ],
+              "rows": [
+                [
+                  "1",
+                  "`!`, `-` (negate)",
+                  "bool, number"
+                ],
+                [
+                  "2",
+                  "`*`, `/`, `%`",
+                  "numbers"
+                ],
+                [
+                  "3",
+                  "`+`, `-`",
+                  "numbers"
+                ],
+                [
+                  "4",
+                  "`>`, `>=`, `<`, `<=`",
+                  "numbers, gives bool"
+                ],
+                [
+                  "5",
+                  "`==`, `!=`",
+                  "any two values of the same type"
+                ],
+                [
+                  "6",
+                  "`&&`",
+                  "bools"
+                ],
+                [
+                  "7",
+                  "`||`",
+                  "bools"
+                ]
+              ]
+            },
+            "`?` and `:` in a conditional are not operators. For exponents use the `pow` function."
+          ]
+        },
+        {
+          "title": "Gotchas",
+          "items": [
+            {
+              "type": "callout",
+              "kind": "gotcha",
+              "text": "Do not build JSON or YAML with a heredoc. Use `jsonencode` or `yamlencode`, so Terraform guarantees valid syntax."
+            },
+            {
+              "type": "callout",
+              "kind": "gotcha",
+              "text": "`[*]` on a single value (not a list) makes a one-element list, and `null` becomes an empty list. That is handy in `dynamic` `for_each`, but unclear elsewhere."
+            },
+            {
+              "type": "callout",
+              "kind": "gotcha",
+              "text": "Splat does not work on a resource that uses `for_each`, because that is a map. Use `values(...)[*]` or a `for` expression."
+            },
+            {
+              "type": "callout",
+              "kind": "tip",
+              "text": "`$${` and `%%{` write a literal `${` and `%{` in a string."
+            }
+          ]
+        }
+      ],
+      "related": [
+        "references",
+        "functions",
+        "types"
+      ],
+      "sources": [
+        {
+          "label": "Conditional expressions",
+          "url": "https://developer.hashicorp.com/terraform/language/expressions/conditionals"
+        },
+        {
+          "label": "for expressions",
+          "url": "https://developer.hashicorp.com/terraform/language/expressions/for"
+        },
+        {
+          "label": "Splat expressions",
+          "url": "https://developer.hashicorp.com/terraform/language/expressions/splat"
+        },
+        {
+          "label": "dynamic blocks",
+          "url": "https://developer.hashicorp.com/terraform/language/expressions/dynamic-blocks"
+        },
+        {
+          "label": "Strings and templates",
+          "url": "https://developer.hashicorp.com/terraform/language/expressions/strings"
+        },
+        {
+          "label": "Arithmetic and logical operators",
+          "url": "https://developer.hashicorp.com/terraform/language/expressions/operators"
+        }
+      ]
+    },
+    {
+      "id": "functions",
+      "name": "Functions",
+      "group": "language",
+      "summary": "How to call a built-in function, the ones used most, and the full list by category.",
+      "level": "deep",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "first tag v0.1.0 has no dated release; the repository was created 2014-03-13",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "Not a CNCF project."
+      },
+      "license": "BUSL-1.1",
+      "version": {
+        "name": "Terraform CLI",
+        "analysed": "v1.17.1",
+        "released": "2026-10-28",
+        "docs": "developer.hashicorp.com/terraform, v1.17.x (latest) docs, and the v1.17 CHANGELOG",
+        "checked": "2026-11-02"
+      },
+      "track": {
+        "github": "hashicorp/terraform",
+        "tag": "^v\\d+\\.\\d+\\.\\d+$"
+      },
+      "links": [
+        {
+          "label": "Built-in functions",
+          "url": "https://developer.hashicorp.com/terraform/language/functions"
+        }
+      ],
+      "sections": [
+        {
+          "title": "Using functions",
+          "items": [
+            "Call a function as `name(arg, ...)`. The language has no user-defined functions; providers can add their own, called as `provider::LOCAL_NAME::function(...)`.",
+            "Try any function in `terraform console`. Functions defined by external providers are documented by those providers in the Terraform Registry.",
+            {
+              "type": "callout",
+              "kind": "gotcha",
+              "text": "`timestamp`, `uuid` and `bcrypt` give a different result each time, so Terraform defers them. Do not use them in `for_each` keys."
+            }
+          ]
+        },
+        {
+          "title": "The ones used most",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Function",
+                "Does"
+              ],
+              "rows": [
+                [
+                  "`lookup(map, key, ...)`",
+                  "Gets one value from a map by its key"
+                ],
+                [
+                  "`merge(map, ...)`",
+                  "Combines maps or objects into one"
+                ],
+                [
+                  "`concat(list, ...)`",
+                  "Combines lists into one list"
+                ],
+                [
+                  "`flatten(list)`",
+                  "Replaces nested lists by their contents"
+                ],
+                [
+                  "`keys(map)`, `values(map)`",
+                  "The keys, or the values, of a map as a list"
+                ],
+                [
+                  "`length(x)`",
+                  "Length of a list, map or string"
+                ],
+                [
+                  "`contains(list, value)`",
+                  "Whether the list has an element equal to the value"
+                ],
+                [
+                  "`coalesce(a, b, ...)`",
+                  "The first argument that is not null or an empty string"
+                ],
+                [
+                  "`try(expr, ...)`",
+                  "The first expression that does not produce an error"
+                ],
+                [
+                  "`can(expr)`",
+                  "Whether the expression produces a result without error"
+                ],
+                [
+                  "`one(list)`",
+                  "The only element, `null` if empty, an error if more than one"
+                ],
+                [
+                  "`zipmap(keys, values)`",
+                  "Builds a map from a list of keys and a list of values"
+                ],
+                [
+                  "`distinct(list)`, `compact(list)`",
+                  "Remove duplicates, or null and empty strings"
+                ],
+                [
+                  "`element(list, ...)`, `slice(list, ...)`",
+                  "One element, or a run of consecutive elements"
+                ],
+                [
+                  "`setproduct(set, ...)`",
+                  "Every combination of elements from the given sets"
+                ],
+                [
+                  "`toset`, `tolist`, `tomap`, `tostring`, `tonumber`",
+                  "Convert to that type"
+                ],
+                [
+                  "`format`, `join`, `split`, `replace`, `lower`, `upper`",
+                  "Build, join, split, replace or change the case of strings"
+                ],
+                [
+                  "`jsonencode`, `jsondecode`, `yamlencode`, `yamldecode`",
+                  "Convert between a value and JSON or YAML text"
+                ],
+                [
+                  "`file(path)`, `fileset(dir, pattern)`",
+                  "Read a file, or list the files that match a pattern"
+                ],
+                [
+                  "`templatefile(path, vars)`",
+                  "Read a file and render it as a template with the given variables"
+                ],
+                [
+                  "`cidrsubnet(prefix, ...)`",
+                  "A subnet address inside a network prefix"
+                ],
+                [
+                  "`sensitive(x)`, `nonsensitive(x)`",
+                  "Mark a value sensitive, or remove the mark"
+                ],
+                [
+                  "`timestamp()`, `plantimestamp()`",
+                  "The current UTC time, or the time the plan was created"
+                ]
+              ]
+            },
+            "The descriptions are shortened from the function pages. Which are used most is a judgement for this page."
+          ]
+        },
+        {
+          "title": "Every built-in function",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Category",
+                "Functions"
+              ],
+              "rows": [
+                [
+                  "Numeric",
+                  "`ceil` `floor` `log` `max` `min` `parseint` `pow` `signum`"
+                ],
+                [
+                  "String",
+                  "`chomp` `endswith` `format` `formatlist` `indent` `join` `lower` `regex` `regexall` `replace` `split` `startswith` `strcontains` `strrev` `substr` `templatestring` `title` `trim` `trimprefix` `trimsuffix` `trimspace` `upper`"
+                ],
+                [
+                  "Collection",
+                  "`alltrue` `anytrue` `chunklist` `coalesce` `coalescelist` `compact` `concat` `contains` `distinct` `element` `flatten` `index` `keys` `length` `lookup` `matchkeys` `merge` `one` `range` `reverse` `setintersection` `setproduct` `setsubtract` `setunion` `slice` `sort` `sum` `transpose` `values` `zipmap`"
+                ],
+                [
+                  "Encoding",
+                  "`base64decode` `base64encode` `base64gzip` `csvdecode` `jsondecode` `jsonencode` `textdecodebase64` `textencodebase64` `urlencode` `yamldecode` `yamlencode`"
+                ],
+                [
+                  "Filesystem",
+                  "`abspath` `basename` `dirname` `file` `filebase64` `fileexists` `fileset` `pathexpand` `templatefile`"
+                ],
+                [
+                  "Date and time",
+                  "`formatdate` `plantimestamp` `timeadd` `timecmp` `timestamp`"
+                ],
+                [
+                  "Hash and crypto",
+                  "`base64sha256` `base64sha512` `bcrypt` `filebase64sha256` `filebase64sha512` `filemd5` `filesha1` `filesha256` `filesha512` `md5` `rsadecrypt` `sha1` `sha256` `sha512` `uuid` `uuidv5`"
+                ],
+                [
+                  "IP network",
+                  "`cidrhost` `cidrnetmask` `cidrsubnet` `cidrsubnets`"
+                ],
+                [
+                  "Type conversion",
+                  "`can` `ephemeralasnull` `issensitive` `nonsensitive` `sensitive` `tobool` `tolist` `tomap` `tonumber` `toset` `tostring` `try` `type`"
+                ]
+              ]
+            },
+            "Standard `.tf` files support all of them. Other file types, such as Terraform Stacks, support only a subset."
+          ]
+        }
+      ],
+      "related": [
+        "expressions",
+        "types",
+        "references"
+      ],
+      "sources": [
+        {
+          "label": "Built-in functions",
+          "url": "https://developer.hashicorp.com/terraform/language/functions"
+        },
+        {
+          "label": "for_each",
+          "url": "https://developer.hashicorp.com/terraform/language/meta-arguments/for_each"
+        },
+        {
+          "label": "Type conversion functions",
+          "url": "https://developer.hashicorp.com/terraform/language/functions/tostring"
+        }
+      ],
+      "notes": [
+        "The list is read from the functions index at the time of checking. Your Terraform version may have more or fewer functions."
+      ]
+    },
+    {
+      "id": "dependencies",
+      "name": "Providers, modules and versions",
+      "group": "language",
+      "summary": "How Terraform finds providers and modules, how versions are constrained, and what the lock file pins.",
+      "level": "deep",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "first tag v0.1.0 has no dated release; the repository was created 2014-03-13",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "Not a CNCF project."
+      },
+      "license": "BUSL-1.1",
+      "version": {
+        "name": "Terraform CLI",
+        "analysed": "v1.17.1",
+        "released": "2026-10-28",
+        "docs": "developer.hashicorp.com/terraform, v1.17.x (latest) docs, and the v1.17 CHANGELOG",
+        "checked": "2026-11-02"
+      },
+      "track": {
+        "github": "hashicorp/terraform",
+        "tag": "^v\\d+\\.\\d+\\.\\d+$"
+      },
+      "links": [
+        {
+          "label": "Terraform documentation",
+          "url": "https://developer.hashicorp.com/terraform"
+        },
+        {
+          "label": "Terraform CLI commands",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands"
+        },
+        {
+          "label": "Terraform repository",
+          "url": "https://github.com/hashicorp/terraform"
+        },
+        {
+          "label": "Terraform releases",
+          "url": "https://github.com/hashicorp/terraform/releases"
+        },
+        {
+          "label": "Providers",
+          "url": "https://developer.hashicorp.com/terraform/language/providers"
+        },
+        {
+          "label": "Modules",
+          "url": "https://developer.hashicorp.com/terraform/language/modules"
+        }
+      ],
+      "sections": [
+        {
+          "title": "In one minute",
+          "part": "overview",
+          "icon": "eye",
+          "items": [
+            "A configuration depends on two kinds of external code: providers (plugins that talk to a platform) and modules (reusable groups of configuration). Both are published separately from Terraform and from your configuration.",
+            "Version constraints in the configuration say which versions are allowed. The dependency lock file, `.terraform.lock.hcl`, remembers which one was picked, for providers only.",
+            {
+              "type": "callout",
+              "kind": "gotcha",
+              "text": "The lock file does not pin modules. Terraform picks the newest module version that satisfies the constraint each time, so use an exact version if you need the same module code.",
+              "title": "Modules are not locked"
+            }
+          ]
+        },
+        {
+          "title": "Require providers",
+          "part": "use",
+          "icon": "download",
+          "items": [
+            "Declare each provider's source, local name and version in `required_providers`, inside the `terraform` block. `terraform init` installs it and updates the lock file.",
+            {
+              "type": "code",
+              "title": "required_providers",
+              "lang": "text",
+              "match": "\"mycorp/mycloud\"",
+              "source": {
+                "label": "Provider requirements",
+                "url": "https://developer.hashicorp.com/terraform/language/providers/requirements"
+              }
+            },
+            "Providers on the public Terraform Registry or a third-party registry are found and installed by `init`. To install elsewhere, change the installation methods in the CLI configuration (for example `provider_installation` or `plugin_cache_dir`)."
+          ],
+          "step": 1
+        },
+        {
+          "title": "Constrain versions",
+          "part": "use",
+          "icon": "scale",
+          "items": [
+            {
+              "type": "code",
+              "title": "A range",
+              "lang": "text",
+              "match": "version = \">= 1.2.0, < 2.0.0\"",
+              "source": {
+                "label": "Version constraints",
+                "url": "https://developer.hashicorp.com/terraform/language/expressions/version-constraints"
+              }
+            },
+            {
+              "type": "table",
+              "columns": [
+                "Operator",
+                "Allows"
+              ],
+              "rows": [
+                [
+                  "`>`, `>=`, `<`, `<=`",
+                  "Newer or older than the stated version"
+                ],
+                [
+                  "`~> 1.0.4`",
+                  "1.0.5 and 1.0.10, not 1.1.0 (only the last part can rise)"
+                ],
+                [
+                  "`~> 1.1`",
+                  "1.2 and 1.10, not 2.0"
+                ],
+                [
+                  "`1.2.0-beta`",
+                  "A pre-release is only chosen by an exact version"
+                ]
+              ]
+            },
+            "Root modules should use `~>` to set both a lower and an upper bound. Shared modules usually only set a minimum, so they stay compatible with more callers."
+          ],
+          "step": 2
+        },
+        {
+          "title": "The lock file",
+          "part": "use",
+          "icon": "key",
+          "items": [
+            "`terraform init` creates and updates `.terraform.lock.hcl` in the directory you run from. Commit it, so everyone and the pipeline pick the same provider versions.",
+            "`terraform init -upgrade` ignores the lock and takes the newest allowed versions. `-lockfile=readonly` verifies checksums without writing.",
+            "`terraform providers lock` adds checksums for other platforms without installing the providers. Use it when you work from a mirror, or when the team runs on several operating systems.",
+            {
+              "type": "code",
+              "title": "Lock for several platforms",
+              "lang": "shell",
+              "match": "-platform=windows_amd64",
+              "source": {
+                "label": "terraform providers lock",
+                "url": "https://developer.hashicorp.com/terraform/cli/commands/providers/lock"
+              }
+            }
+          ],
+          "step": 3
+        },
+        {
+          "title": "Call a module",
+          "part": "use",
+          "icon": "grid",
+          "items": [
+            "A `module` block names a `source`, usually a `version`, and the inputs. `terraform init` clones the module source into a hidden directory under the working directory. A later `init` does not change installed modules unless you add `-upgrade`.",
+            "`terraform get` installs or upgrades remote modules on its own, and `terraform modules` lists those declared.",
+            {
+              "type": "callout",
+              "kind": "tip",
+              "text": "From 1.17, a variable used in a module's `source` or `version` must declare `const = true`."
+            }
+          ],
+          "step": 4
+        },
+        {
+          "title": "Facts to know",
+          "part": "reference",
+          "icon": "list",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Item",
+                "Fact"
+              ],
+              "rows": [
+                [
+                  "Lock file",
+                  "Provider selections only. Lives next to the root module's `.tf` files"
+                ],
+                [
+                  "Plan and apply",
+                  "Use the provider versions in the lock file"
+                ],
+                [
+                  "Upgrade",
+                  "Change the constraint, then `terraform init -upgrade`"
+                ],
+                [
+                  "Plugin cache",
+                  "Set `plugin_cache_dir` in the CLI configuration to avoid re-downloading"
+                ],
+                [
+                  "Local plugins",
+                  "`-plugin-dir=PATH` reads providers only from that directory, as a filesystem mirror"
+                ]
+              ]
+            }
+          ]
+        }
+      ],
+      "related": [
+        "workflow",
+        "module"
+      ],
+      "sources": [
+        {
+          "label": "Dependency lock file",
+          "url": "https://developer.hashicorp.com/terraform/language/files/dependency-lock"
+        },
+        {
+          "label": "Provider requirements",
+          "url": "https://developer.hashicorp.com/terraform/language/providers/requirements"
+        },
+        {
+          "label": "Version constraints",
+          "url": "https://developer.hashicorp.com/terraform/language/expressions/version-constraints"
+        },
+        {
+          "label": "terraform init",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/init"
+        },
+        {
+          "label": "terraform providers lock",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/providers/lock"
+        },
+        {
+          "label": "Module configuration",
+          "url": "https://developer.hashicorp.com/terraform/language/modules/configuration"
+        }
+      ],
+      "notes": [
+        "The Terraform Registry (where public providers and modules are published) is not covered here beyond what the init page says."
+      ]
+    },
+    {
       "id": "state",
       "name": "State, backends and workspaces",
-      "group": "core",
+      "group": "ops",
       "summary": "What the state file holds, where to keep it, how locking works, and how workspaces split it.",
       "level": "deep",
       "status": "active",
@@ -3581,250 +5265,9 @@
       ]
     },
     {
-      "id": "dependencies",
-      "name": "Providers, modules and versions",
-      "group": "core",
-      "summary": "How Terraform finds providers and modules, how versions are constrained, and what the lock file pins.",
-      "level": "deep",
-      "status": "active",
-      "started": {
-        "date": "unconfirmed",
-        "basis": "first tag v0.1.0 has no dated release; the repository was created 2014-03-13",
-        "confirmed": false
-      },
-      "cncf": {
-        "level": "none",
-        "text": "Not a CNCF project."
-      },
-      "license": "BUSL-1.1",
-      "version": {
-        "name": "Terraform CLI",
-        "analysed": "v1.17.1",
-        "released": "2026-10-28",
-        "docs": "developer.hashicorp.com/terraform, v1.17.x (latest) docs, and the v1.17 CHANGELOG",
-        "checked": "2026-11-02"
-      },
-      "track": {
-        "github": "hashicorp/terraform",
-        "tag": "^v\\d+\\.\\d+\\.\\d+$"
-      },
-      "links": [
-        {
-          "label": "Terraform documentation",
-          "url": "https://developer.hashicorp.com/terraform"
-        },
-        {
-          "label": "Terraform CLI commands",
-          "url": "https://developer.hashicorp.com/terraform/cli/commands"
-        },
-        {
-          "label": "Terraform repository",
-          "url": "https://github.com/hashicorp/terraform"
-        },
-        {
-          "label": "Terraform releases",
-          "url": "https://github.com/hashicorp/terraform/releases"
-        },
-        {
-          "label": "Providers",
-          "url": "https://developer.hashicorp.com/terraform/language/providers"
-        },
-        {
-          "label": "Modules",
-          "url": "https://developer.hashicorp.com/terraform/language/modules"
-        }
-      ],
-      "sections": [
-        {
-          "title": "In one minute",
-          "part": "overview",
-          "icon": "eye",
-          "items": [
-            "A configuration depends on two kinds of external code: providers (plugins that talk to a platform) and modules (reusable groups of configuration). Both are published separately from Terraform and from your configuration.",
-            "Version constraints in the configuration say which versions are allowed. The dependency lock file, `.terraform.lock.hcl`, remembers which one was picked, for providers only.",
-            {
-              "type": "callout",
-              "kind": "gotcha",
-              "text": "The lock file does not pin modules. Terraform picks the newest module version that satisfies the constraint each time, so use an exact version if you need the same module code.",
-              "title": "Modules are not locked"
-            }
-          ]
-        },
-        {
-          "title": "Require providers",
-          "part": "use",
-          "icon": "download",
-          "items": [
-            "Declare each provider's source, local name and version in `required_providers`, inside the `terraform` block. `terraform init` installs it and updates the lock file.",
-            {
-              "type": "code",
-              "title": "required_providers",
-              "lang": "text",
-              "match": "\"mycorp/mycloud\"",
-              "source": {
-                "label": "Provider requirements",
-                "url": "https://developer.hashicorp.com/terraform/language/providers/requirements"
-              }
-            },
-            "Providers on the public Terraform Registry or a third-party registry are found and installed by `init`. To install elsewhere, change the installation methods in the CLI configuration (for example `provider_installation` or `plugin_cache_dir`)."
-          ],
-          "step": 1
-        },
-        {
-          "title": "Constrain versions",
-          "part": "use",
-          "icon": "scale",
-          "items": [
-            {
-              "type": "code",
-              "title": "A range",
-              "lang": "text",
-              "match": "version = \">= 1.2.0, < 2.0.0\"",
-              "source": {
-                "label": "Version constraints",
-                "url": "https://developer.hashicorp.com/terraform/language/expressions/version-constraints"
-              }
-            },
-            {
-              "type": "table",
-              "columns": [
-                "Operator",
-                "Allows"
-              ],
-              "rows": [
-                [
-                  "`>`, `>=`, `<`, `<=`",
-                  "Newer or older than the stated version"
-                ],
-                [
-                  "`~> 1.0.4`",
-                  "1.0.5 and 1.0.10, not 1.1.0 (only the last part can rise)"
-                ],
-                [
-                  "`~> 1.1`",
-                  "1.2 and 1.10, not 2.0"
-                ],
-                [
-                  "`1.2.0-beta`",
-                  "A pre-release is only chosen by an exact version"
-                ]
-              ]
-            },
-            "Root modules should use `~>` to set both a lower and an upper bound. Shared modules usually only set a minimum, so they stay compatible with more callers."
-          ],
-          "step": 2
-        },
-        {
-          "title": "The lock file",
-          "part": "use",
-          "icon": "key",
-          "items": [
-            "`terraform init` creates and updates `.terraform.lock.hcl` in the directory you run from. Commit it, so everyone and the pipeline pick the same provider versions.",
-            "`terraform init -upgrade` ignores the lock and takes the newest allowed versions. `-lockfile=readonly` verifies checksums without writing.",
-            "`terraform providers lock` adds checksums for other platforms without installing the providers. Use it when you work from a mirror, or when the team runs on several operating systems.",
-            {
-              "type": "code",
-              "title": "Lock for several platforms",
-              "lang": "shell",
-              "match": "-platform=windows_amd64",
-              "source": {
-                "label": "terraform providers lock",
-                "url": "https://developer.hashicorp.com/terraform/cli/commands/providers/lock"
-              }
-            }
-          ],
-          "step": 3
-        },
-        {
-          "title": "Call a module",
-          "part": "use",
-          "icon": "grid",
-          "items": [
-            "A `module` block names a `source`, usually a `version`, and the inputs. `terraform init` clones the module source into a hidden directory under the working directory. A later `init` does not change installed modules unless you add `-upgrade`.",
-            "`terraform get` installs or upgrades remote modules on its own, and `terraform modules` lists those declared.",
-            {
-              "type": "callout",
-              "kind": "tip",
-              "text": "From 1.17, a variable used in a module's `source` or `version` must declare `const = true`."
-            }
-          ],
-          "step": 4
-        },
-        {
-          "title": "Facts to know",
-          "part": "reference",
-          "icon": "list",
-          "items": [
-            {
-              "type": "table",
-              "columns": [
-                "Item",
-                "Fact"
-              ],
-              "rows": [
-                [
-                  "Lock file",
-                  "Provider selections only. Lives next to the root module's `.tf` files"
-                ],
-                [
-                  "Plan and apply",
-                  "Use the provider versions in the lock file"
-                ],
-                [
-                  "Upgrade",
-                  "Change the constraint, then `terraform init -upgrade`"
-                ],
-                [
-                  "Plugin cache",
-                  "Set `plugin_cache_dir` in the CLI configuration to avoid re-downloading"
-                ],
-                [
-                  "Local plugins",
-                  "`-plugin-dir=PATH` reads providers only from that directory, as a filesystem mirror"
-                ]
-              ]
-            }
-          ]
-        }
-      ],
-      "related": [
-        "workflow",
-        "configuration"
-      ],
-      "sources": [
-        {
-          "label": "Dependency lock file",
-          "url": "https://developer.hashicorp.com/terraform/language/files/dependency-lock"
-        },
-        {
-          "label": "Provider requirements",
-          "url": "https://developer.hashicorp.com/terraform/language/providers/requirements"
-        },
-        {
-          "label": "Version constraints",
-          "url": "https://developer.hashicorp.com/terraform/language/expressions/version-constraints"
-        },
-        {
-          "label": "terraform init",
-          "url": "https://developer.hashicorp.com/terraform/cli/commands/init"
-        },
-        {
-          "label": "terraform providers lock",
-          "url": "https://developer.hashicorp.com/terraform/cli/commands/providers/lock"
-        },
-        {
-          "label": "Module configuration",
-          "url": "https://developer.hashicorp.com/terraform/language/modules/configuration"
-        }
-      ],
-      "notes": [
-        "The Terraform Registry (where public providers and modules are published) is not covered here beyond what the init page says."
-      ]
-    },
-    {
       "id": "testing",
       "name": "Check and test",
-      "group": "core",
+      "group": "ops",
       "summary": "From formatting and validation to terraform test, plus the linters and scanners people add.",
       "level": "deep",
       "status": "active",
@@ -4017,7 +5460,7 @@
     {
       "id": "troubleshooting",
       "name": "Debug and recover",
-      "group": "core",
+      "group": "ops",
       "summary": "Turn on logs, deal with a locked state, a failed apply, drift and a plan that wants to destroy the wrong thing.",
       "level": "deep",
       "status": "active",
@@ -4593,7 +6036,7 @@
       "license": "Apache-2.0",
       "version": {
         "name": "Checkov",
-        "analysed": "3.4.2",
+        "analysed": "3.4.3",
         "released": "2026-11-02",
         "docs": "the GitHub repository description and README",
         "checked": "2026-11-02"

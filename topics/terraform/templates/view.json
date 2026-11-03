@@ -3,41 +3,64 @@
   "tabs": [
     {
       "id": "workflow",
-      "label": "Core workflow"
-    },
-    {
-      "id": "commands",
-      "label": "Useful commands"
-    },
-    {
-      "id": "configuration",
-      "label": "Configuration"
+      "label": "Start"
     },
     {
       "id": "blocks",
       "label": "Blocks",
       "group": "blocks",
-      "pick": "Block type"
+      "pick": "Block",
+      "sets": [
+        {
+          "label": "Everyday",
+          "ids": [
+            "terraform",
+            "provider",
+            "resource",
+            "data",
+            "variable",
+            "output",
+            "locals",
+            "module"
+          ]
+        },
+        {
+          "label": "Refactoring",
+          "ids": [
+            "import",
+            "moved",
+            "removed"
+          ]
+        },
+        {
+          "label": "Specialised",
+          "ids": [
+            "check",
+            "action",
+            "ephemeral"
+          ]
+        }
+      ]
     },
     {
-      "id": "state",
-      "label": "State"
+      "id": "language",
+      "label": "Language",
+      "group": "language",
+      "pick": "Topic"
     },
     {
-      "id": "dependencies",
-      "label": "Providers and modules"
+      "id": "commands",
+      "label": "CLI"
     },
     {
-      "id": "testing",
-      "label": "Check and test"
-    },
-    {
-      "id": "troubleshooting",
-      "label": "Debug and recover"
+      "id": "ops",
+      "label": "State & ops",
+      "group": "ops",
+      "pick": "Topic"
     },
     {
       "id": "others",
-      "label": "Other tools"
+      "label": "Ecosystem"
     },
     {
       "id": "compare",
