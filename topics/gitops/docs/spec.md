@@ -75,6 +75,7 @@ source link) and `make gitops-examples`.
   knows the closest commercial options exist (`CLAUDE.md` of this topic).
 - Code examples are fetched, not copied (PR #15, the learning layout). Reason: the repo rule "centralise, don't copy".
 - `started` is `confirmed` only when an announcement or release gives the date. Reason: repository creation dates are not announcements.
+- DevOps loop stages: release, deploy, operate. A judgement made for the DevOps loop view (`docs/views.md`), not a statement from a source.
 
 ## Updating
 

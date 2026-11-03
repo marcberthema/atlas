@@ -8,28 +8,31 @@
     {"id": "enterprise", "label": "Enterprise"}
   ],
   "stages": [
-    {"id": "plan", "label": "Plan"},
-    {"id": "code", "label": "Code"},
-    {"id": "build", "label": "Build"},
-    {"id": "test", "label": "Test"},
-    {"id": "release", "label": "Release"},
-    {"id": "deploy", "label": "Deploy"},
-    {"id": "operate", "label": "Operate"},
-    {"id": "monitor", "label": "Monitor"}
+    {"id": "plan", "label": "Plan", "about": "Decide what to build: requirements, backlog, design."},
+    {"id": "code", "label": "Code", "about": "Write and review source code and infrastructure code."},
+    {"id": "build", "label": "Build", "about": "Compile, package and store the artifacts."},
+    {"id": "test", "label": "Test", "about": "Automated tests, scans and quality gates."},
+    {"id": "release", "label": "Release", "about": "Version, approve and promote artifacts."},
+    {"id": "deploy", "label": "Deploy", "about": "Roll changes out to environments."},
+    {"id": "operate", "label": "Operate", "about": "Run, scale, configure and secure what is deployed."},
+    {"id": "monitor", "label": "Monitor", "about": "Metrics, logs and alerts, and the feedback into planning."}
+  ],
+  "views": [
+    {"id": "devops-loop", "label": "DevOps loop", "description": "The eight DevOps stages as an infinity loop, and the topics that belong to each stage."}
   ],
   "topics": [
-    {"id": "github-actions", "family": "cicd", "label": "GitHub Actions", "draft": true, "description": "Workflows, runners, reusable workflows and the marketplace: how a repository builds, tests and deploys."},
-    {"id": "gitlab-ci", "family": "cicd", "label": "GitLab CI/CD", "draft": true, "description": "Pipelines, runners, templates and environments in GitLab."},
-    {"id": "jenkins", "family": "cicd", "label": "Jenkins", "draft": true, "description": "Pipelines as code, agents, plugins and operating a Jenkins controller."},
-    {"id": "nexus", "family": "cicd", "label": "Nexus Repository", "draft": true, "description": "Artifact and package repositories: formats, proxying, cleanup and promotion."},
-    {"id": "jfrog-xray", "family": "cicd", "label": "JFrog Xray", "draft": true, "description": "Scanning artifacts and builds for vulnerabilities and licence issues."},
-    {"id": "sonarqube", "family": "cicd", "label": "SonarQube", "draft": true, "description": "Static analysis of code: quality gates, rules and pipeline integration."},
-    {"id": "azure", "family": "iac", "label": "Azure with Terraform", "description": "What an Azure service provides, what it needs, what it costs and how to build it with Terraform."},
-    {"id": "terraform", "family": "iac", "label": "Terraform", "description": "The Terraform CLI on its own: the core workflow, useful commands, the configuration language, state, providers and modules, testing and debugging."},
-    {"id": "gitops", "family": "iac", "label": "GitOps", "description": "GitOps principles, Argo CD in depth, Flux and other operators, and Helm, Kustomize and their alternatives."},
-    {"id": "patterns", "family": "development", "label": "Architecture and design patterns", "description": "How software is split by structure and responsibility: layered, MVC, hexagonal, microservices, event-driven, resilience patterns and the classic design patterns."},
-    {"id": "certificates", "family": "development", "label": "Certificates", "description": "X.509 and TLS basics, ACME and Let's Encrypt, private CAs, cert-manager and Kubernetes, and OpenSSL commands to inspect and troubleshoot."},
-    {"id": "identity", "family": "enterprise", "label": "Identity providers", "description": "Single sign-on and the protocols behind it (OIDC, SAML, LDAP, Kerberos, SCIM), open source identity providers, and how Argo CD and Kubernetes use one."},
-    {"id": "topologies", "family": "enterprise", "label": "Enterprise topologies", "description": "How systems talk to each other: hub-and-spoke, mesh, tree, bus and ring, where each shows up in networks, services, messaging and data, and the products that implement them."}
+    {"id": "github-actions", "family": "cicd", "label": "GitHub Actions", "stages": ["build", "test", "release", "deploy"], "description": "Every workflow key, triggers, expressions and contexts, reuse, runners, security, limits and the gh CLI."},
+    {"id": "gitlab-ci", "family": "cicd", "label": "GitLab CI/CD", "stages": ["build", "test", "release", "deploy"], "draft": true, "description": "Pipelines, runners, templates and environments in GitLab."},
+    {"id": "jenkins", "family": "cicd", "label": "Jenkins", "stages": ["build", "test", "release", "deploy"], "draft": true, "description": "Pipelines as code, agents, plugins and operating a Jenkins controller."},
+    {"id": "nexus", "family": "cicd", "label": "Nexus Repository", "stages": ["build", "release"], "draft": true, "description": "Artifact and package repositories: formats, proxying, cleanup and promotion."},
+    {"id": "jfrog-xray", "family": "cicd", "label": "JFrog Xray", "stages": ["test", "release"], "draft": true, "description": "Scanning artifacts and builds for vulnerabilities and licence issues."},
+    {"id": "sonarqube", "family": "cicd", "label": "SonarQube", "stages": ["code", "test"], "draft": true, "description": "Static analysis of code: quality gates, rules and pipeline integration."},
+    {"id": "azure", "family": "iac", "label": "Azure with Terraform", "stages": ["deploy", "operate", "monitor"], "description": "What an Azure service provides, what it needs, what it costs and how to build it with Terraform."},
+    {"id": "terraform", "family": "iac", "label": "Terraform", "stages": ["code", "deploy"], "description": "The Terraform CLI on its own: the core workflow, useful commands, the configuration language, state, providers and modules, testing and debugging."},
+    {"id": "gitops", "family": "iac", "label": "GitOps", "stages": ["release", "deploy", "operate"], "description": "GitOps principles, Argo CD in depth, Flux and other operators, and Helm, Kustomize and their alternatives."},
+    {"id": "patterns", "family": "development", "label": "Architecture and design patterns", "stages": ["plan", "code"], "description": "How software is split by structure and responsibility: layered, MVC, hexagonal, microservices, event-driven, resilience patterns and the classic design patterns."},
+    {"id": "certificates", "family": "development", "label": "Certificates", "stages": ["deploy", "operate"], "description": "X.509 and TLS basics, ACME and Let's Encrypt, private CAs, cert-manager and Kubernetes, and OpenSSL commands to inspect and troubleshoot."},
+    {"id": "identity", "family": "enterprise", "label": "Identity providers", "stages": ["deploy", "operate"], "description": "Single sign-on and the protocols behind it (OIDC, SAML, LDAP, Kerberos, SCIM), open source identity providers, and how Argo CD and Kubernetes use one."},
+    {"id": "topologies", "family": "enterprise", "label": "Enterprise topologies", "stages": ["plan", "operate"], "description": "How systems talk to each other: hub-and-spoke, mesh, tree, bus and ring, where each shows up in networks, services, messaging and data, and the products that implement them."}
   ]
 }

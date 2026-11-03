@@ -1,0 +1,56 @@
+{
+  "title": "GitHub Actions",
+  "tabs": [
+    {
+      "id": "overview",
+      "label": "Start"
+    },
+    {
+      "id": "syntax",
+      "label": "Syntax",
+      "group": "syntax",
+      "pick": "Page",
+      "sets": [
+        {
+          "label": "By area",
+          "ids": [
+            "triggers",
+            "jobs",
+            "steps",
+            "matrix",
+            "permissions",
+            "concurrency"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "expressions",
+      "label": "Expressions",
+      "group": "expressions",
+      "pick": "Page"
+    },
+    {
+      "id": "reuse",
+      "label": "Reuse"
+    },
+    {
+      "id": "platform",
+      "label": "Platform",
+      "group": "platform",
+      "pick": "Page"
+    },
+    {
+      "id": "gh-cli",
+      "label": "CLI"
+    },
+    {
+      "id": "others",
+      "label": "Ecosystem"
+    },
+    {
+      "id": "compare",
+      "label": "Compare"
+    }
+  ]
+}

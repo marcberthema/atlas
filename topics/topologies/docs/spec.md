@@ -71,6 +71,7 @@ RabbitMQ and NATS docs, the Cassandra and Prometheus docs, and RFC 1034 for DNS.
 - The Standard topologies tab is a group tab (every entry of the group in full). Reason: the reference designs are meant to be read together.
 - The Kafka entry here is the messaging shape, not a Kafka reference: a Kafka topic would be a separate entry. The application view in the
   roadmap would place Kafka in a messaging area.
+- DevOps loop stages: plan, operate. A judgement made for the DevOps loop view (`docs/views.md`), not a statement from a source.
 
 ## Updating
 

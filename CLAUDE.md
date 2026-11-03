@@ -2,7 +2,7 @@
 
 A personal knowledge base: a collection of references to look things up in, not Q&A. Each topic is a set of facts kept in
 JSON, generated into static HTML. Published as a Cloudflare Worker with static assets at atlas.marcberthelette.com; only `dist/` is exposed.
-Built with AI assistance. Topics now: Azure with Terraform, Terraform, GitOps, Identity providers, Certificates, Enterprise topologies, Architecture and design patterns.
+Built with AI assistance. Topics now: Azure with Terraform, Terraform, GitOps, GitHub Actions, Identity providers, Certificates, Enterprise topologies, Architecture and design patterns.
 Kept in git but not published: Workstation setup (`workstation/`) and Visual Studio Code setup (`vscode/`).
 
 ---
@@ -36,7 +36,7 @@ topics.json + shared/ -> the top banner on every page and the landing page, dist
   (outside `dist/`, so never deployed) with a banner that names only itself. It is not in `topics.json`. Read `workstation/CLAUDE.md`.
 - `vscode/` is the same kind of unpublished resource (`vscode/site/index.html`). Its entries are VS Code extensions, tracked against the
   Marketplace by `make vscode-check`, and its `setup/profile.json` must agree with them (`make vscode-validate` checks). Read `vscode/CLAUDE.md`.
-- Adding a topic: create `topics/<id>/` (data, scripts/build.py, templates/index.html, Makefile, CLAUDE.md), add it to
+- Adding a topic: use the `add-topic` skill (or `python3 shared/new_topic.py <id> "<Label>" <family>`, which scaffolds a draft and a spec); `refresh-topic` updates one. Done by hand: create `topics/<id>/` (data, scripts/build.py, templates/index.html, Makefile, CLAUDE.md), add it to
   `topics.json` and to `TOPICS` and the pattern rules in the root `Makefile`.
 
 Do not add dependencies, a framework or external scripts or fonts without asking. Python 3 standard library only. Pages must

@@ -68,6 +68,7 @@ There is nothing to release-check: re-read a page when its date changes (`make p
 - No code in the cards. Reason: a pattern is an idea, and code would be a copy of someone else's page.
 - The version shown is the page date. Reason: the repo rule that a version is always visible, applied to a thing with no release.
 - The classic patterns are short `ref` cards in groups, not tabs. Reason unconfirmed.
+- DevOps loop stages: plan, code. A judgement made for the DevOps loop view (`docs/views.md`), not a statement from a source.
 
 ## Updating
 

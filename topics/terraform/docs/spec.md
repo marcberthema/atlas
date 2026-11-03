@@ -107,6 +107,7 @@ Re-check: `make terraform-check` compares the latest releases with `version.anal
 - Code examples are fetched from the official pages and shown unchanged, never pasted. HCL uses `lang: text` because the shared page only
   knows yaml, shell and text.
 - The version shown is the Terraform CLI's, v1.17.1, for every Terraform entry. Companion tools carry their own versions.
+- DevOps loop stages: code, deploy. A judgement made for the DevOps loop view (`docs/views.md`), not a statement from a source.
 
 ## Updating
 

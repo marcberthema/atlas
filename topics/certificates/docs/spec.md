@@ -66,6 +66,7 @@ with `make certificates-check` and `make certificates-examples`.
 - Cloud services are included as references although they are not open source, and are marked so. Reason: the owner asked for them (the scope
   text in the data records this).
 - Paid products are references only, as in the GitOps topic.
+- DevOps loop stages: deploy, operate. A judgement made for the DevOps loop view (`docs/views.md`), not a statement from a source.
 
 ## Updating
 

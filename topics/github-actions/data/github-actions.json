@@ -1,0 +1,3832 @@
+{
+  "title": "GitHub Actions",
+  "intro": "A GitHub Actions reference: every workflow key, triggers, expressions and contexts, reuse, runners, security, limits and the gh CLI.",
+  "checked": "2026-11-03",
+  "scope": "GitHub Actions as a service, read from the official reference pages on docs.github.com (which show no version or date), kept general. Tools around it are open source.",
+  "groups": [
+    {
+      "id": "start",
+      "label": "Start",
+      "about": "What the parts are and how they fit."
+    },
+    {
+      "id": "syntax",
+      "label": "Syntax",
+      "about": "The keys of a workflow file: one page per area, and one page with every key. Pick one, or start from the overview."
+    },
+    {
+      "id": "expressions",
+      "label": "Expressions",
+      "about": "The expression language, contexts, default variables and workflow commands."
+    },
+    {
+      "id": "reuse",
+      "label": "Reuse",
+      "about": "Sharing workflows and actions."
+    },
+    {
+      "id": "platform",
+      "label": "Platform",
+      "about": "Runners, security and secrets, environments, artifacts and cache, limits."
+    },
+    {
+      "id": "cli",
+      "label": "CLI",
+      "about": "Driving Actions from a terminal."
+    },
+    {
+      "id": "tools",
+      "label": "Companion tools",
+      "about": "Linting, running locally, and operating runners."
+    }
+  ],
+  "entries": [
+    {
+      "id": "overview",
+      "name": "Overview",
+      "group": "start",
+      "summary": "Workflow, event, job, step, action and runner: what each is, how they fit, and the smallest workflow.",
+      "level": "deep",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "Not stated on the pages read",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "A commercial service from GitHub, not a CNCF project."
+      },
+      "license": "Proprietary (GitHub service)",
+      "version": {
+        "name": "GitHub Actions (GitHub Docs)",
+        "analysed": "docs read 2026-11-03",
+        "released": "2026-11-03",
+        "docs": "docs.github.com/en/actions, the pages named in sources, read 2026-11-03; the pages show no version or date",
+        "checked": "2026-11-03"
+      },
+      "links": [
+        {
+          "label": "GitHub Actions documentation",
+          "url": "https://docs.github.com/en/actions/"
+        },
+        {
+          "label": "Workflow syntax reference",
+          "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax"
+        }
+      ],
+      "sections": [
+        {
+          "title": "In one minute",
+          "items": [
+            "GitHub Actions is a CI/CD platform that runs workflows when something happens in a repository, such as a push or a pull request. It also runs on a schedule, from the API, or by hand.",
+            {
+              "type": "cards",
+              "cards": [
+                {
+                  "icon": "file",
+                  "title": "Workflow",
+                  "text": "A YAML file in `.github/workflows` that runs one or more jobs"
+                },
+                {
+                  "icon": "bell",
+                  "title": "Event",
+                  "text": "An activity that triggers a run: a push, a pull request, an issue, a schedule, a manual dispatch"
+                },
+                {
+                  "icon": "layers",
+                  "title": "Job",
+                  "text": "A set of steps that run on the same runner. Jobs run in parallel unless one `needs` another"
+                },
+                {
+                  "icon": "play",
+                  "title": "Step",
+                  "text": "A shell command or an action, run in order inside a job"
+                },
+                {
+                  "icon": "box",
+                  "title": "Action",
+                  "text": "A reusable unit of code that a step runs with `uses`"
+                },
+                {
+                  "icon": "server",
+                  "title": "Runner",
+                  "text": "The machine that runs a job. Each runner runs one job at a time"
+                }
+              ]
+            },
+            {
+              "type": "diagram",
+              "alt": "An event triggers a workflow. The workflow has jobs. Each job runs on a runner and has steps. A step runs a command or an action.",
+              "caption": "How the parts fit. Jobs run in parallel unless a job needs another.",
+              "w": 720,
+              "h": 190,
+              "nodes": [
+                {
+                  "id": "ev",
+                  "x": 70,
+                  "y": 50,
+                  "w": 110,
+                  "h": 36,
+                  "label": "Event"
+                },
+                {
+                  "id": "wf",
+                  "x": 220,
+                  "y": 50,
+                  "w": 110,
+                  "h": 36,
+                  "label": "Workflow"
+                },
+                {
+                  "id": "job",
+                  "x": 370,
+                  "y": 50,
+                  "w": 110,
+                  "h": 36,
+                  "label": "Job"
+                },
+                {
+                  "id": "step",
+                  "x": 520,
+                  "y": 50,
+                  "w": 110,
+                  "h": 36,
+                  "label": "Step"
+                },
+                {
+                  "id": "act",
+                  "x": 660,
+                  "y": 50,
+                  "w": 100,
+                  "h": 36,
+                  "label": "Action"
+                },
+                {
+                  "id": "run",
+                  "x": 370,
+                  "y": 140,
+                  "w": 110,
+                  "h": 36,
+                  "label": "Runner",
+                  "kind": "store"
+                }
+              ],
+              "links": [
+                {
+                  "from": "ev",
+                  "to": "wf",
+                  "arrow": "to"
+                },
+                {
+                  "from": "wf",
+                  "to": "job",
+                  "arrow": "to"
+                },
+                {
+                  "from": "job",
+                  "to": "step",
+                  "arrow": "to"
+                },
+                {
+                  "from": "step",
+                  "to": "act",
+                  "arrow": "to",
+                  "dashed": true
+                },
+                {
+                  "from": "job",
+                  "to": "run",
+                  "label": "runs on",
+                  "arrow": "to",
+                  "dashed": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": "The smallest workflow",
+          "items": [
+            {
+              "type": "code",
+              "title": "A first workflow",
+              "lang": "yaml",
+              "match": "name: GitHub Actions Demo",
+              "source": {
+                "label": "Quickstart",
+                "url": "https://docs.github.com/en/actions/get-started/quickstart"
+              }
+            },
+            "Workflow files must have a `.yml` or `.yaml` extension and live in the `.github/workflows` directory of the repository.",
+            "A job runs inside its own virtual machine, or inside a container. Each workflow run uses a fresh, newly provisioned machine on GitHub-hosted runners."
+          ]
+        },
+        {
+          "title": "Where to look next",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "You want",
+                "Go to"
+              ],
+              "rows": [
+                [
+                  "Every key you can write",
+                  "[Syntax overview](#syntax-index)"
+                ],
+                [
+                  "When a workflow runs",
+                  "[Triggers](#triggers)"
+                ],
+                [
+                  "Conditions, `${{ }}` and contexts",
+                  "[Expressions](#expressions) and [Contexts](#contexts)"
+                ],
+                [
+                  "Reuse across repositories",
+                  "[Reuse](#reuse)"
+                ],
+                [
+                  "Where jobs run, secrets and limits",
+                  "[Runners](#runners), [Security](#security), [Limits](#limits)"
+                ],
+                [
+                  "Driving it from a terminal",
+                  "[The gh CLI](#gh-cli)"
+                ]
+              ]
+            }
+          ]
+        }
+      ],
+      "related": [
+        "syntax-index",
+        "triggers",
+        "runners"
+      ],
+      "sources": [
+        {
+          "label": "Understanding GitHub Actions",
+          "url": "https://docs.github.com/en/actions/get-started/understand-github-actions"
+        },
+        {
+          "label": "Quickstart",
+          "url": "https://docs.github.com/en/actions/get-started/quickstart"
+        },
+        {
+          "label": "Workflow syntax",
+          "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax"
+        }
+      ],
+      "notes": [
+        "The docs pages show no version or date. They were read on 2026-11-03; a later change on GitHub's side is not detected by `make check`."
+      ]
+    },
+    {
+      "id": "syntax-index",
+      "name": "Syntax overview",
+      "group": "syntax",
+      "summary": "Every key of a workflow file on one page: workflow, job and step level, with a line on what each does.",
+      "level": "deep",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "Not stated on the pages read",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "A commercial service from GitHub, not a CNCF project."
+      },
+      "license": "Proprietary (GitHub service)",
+      "version": {
+        "name": "GitHub Actions (GitHub Docs)",
+        "analysed": "docs read 2026-11-03",
+        "released": "2026-11-03",
+        "docs": "docs.github.com/en/actions, the pages named in sources, read 2026-11-03; the pages show no version or date",
+        "checked": "2026-11-03"
+      },
+      "links": [
+        {
+          "label": "GitHub Actions documentation",
+          "url": "https://docs.github.com/en/actions/"
+        },
+        {
+          "label": "Workflow syntax reference",
+          "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax"
+        }
+      ],
+      "sections": [
+        {
+          "title": "Workflow level",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Key",
+                "What it does"
+              ],
+              "rows": [
+                [
+                  "`name`",
+                  "Name of the workflow in the Actions tab. Defaults to the file path"
+                ],
+                [
+                  "`run-name`",
+                  "Name of each run. May use the `github` and `inputs` contexts"
+                ],
+                [
+                  "`on`",
+                  "The events that start the workflow, with filters: see [Triggers](#triggers)"
+                ],
+                [
+                  "`permissions`",
+                  "Access of the `GITHUB_TOKEN` for all jobs: see [Permissions](#permissions)"
+                ],
+                [
+                  "`env`",
+                  "Environment variables for every job and step"
+                ],
+                [
+                  "`defaults`",
+                  "Default `run.shell` and `run.working-directory` for run steps"
+                ],
+                [
+                  "`concurrency`",
+                  "At most one running workflow in a group: see [Concurrency](#concurrency)"
+                ],
+                [
+                  "`cache-mode`",
+                  "Cache access for every job: `read`, `write`, `write-only` or `none`"
+                ],
+                [
+                  "`jobs`",
+                  "The jobs, each under its own id. Required"
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Job level (`jobs.<job_id>`)",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Key",
+                "What it does"
+              ],
+              "rows": [
+                [
+                  "`name`",
+                  "A display name for the job"
+                ],
+                [
+                  "`permissions`",
+                  "`GITHUB_TOKEN` access for this job"
+                ],
+                [
+                  "`needs`",
+                  "Jobs that must succeed first. A failed or skipped job skips the jobs that need it"
+                ],
+                [
+                  "`if`",
+                  "Run the job only when the condition is true. Evaluated before the matrix is applied"
+                ],
+                [
+                  "`runs-on`",
+                  "The runner: a label, an array of labels, or a `group` or `labels` key"
+                ],
+                [
+                  "`snapshot`",
+                  "Generate a custom runner image from the job"
+                ],
+                [
+                  "`environment`",
+                  "The deployment environment: a name, or a name and a `url`"
+                ],
+                [
+                  "`concurrency`",
+                  "A concurrency group for this job"
+                ],
+                [
+                  "`cache-mode`",
+                  "Cache access for this job. Overrides the workflow's"
+                ],
+                [
+                  "`outputs`",
+                  "Values for jobs that depend on this one. 1 MB per job"
+                ],
+                [
+                  "`env`, `defaults`",
+                  "Variables and `run` defaults for this job"
+                ],
+                [
+                  "`steps`",
+                  "The steps, in order"
+                ],
+                [
+                  "`timeout-minutes`",
+                  "Cancel the job after this long. Default 360"
+                ],
+                [
+                  "`strategy`",
+                  "`matrix`, `fail-fast` and `max-parallel`: see [Matrix](#matrix)"
+                ],
+                [
+                  "`continue-on-error`",
+                  "Let the run pass when this job fails"
+                ],
+                [
+                  "`container`, `services`",
+                  "Run the job in a container; start service containers beside it"
+                ],
+                [
+                  "`uses`, `with`, `secrets`",
+                  "Call a reusable workflow instead of running steps: see [Reuse](#reuse)"
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Step level (`jobs.<job_id>.steps[*]`)",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Key",
+                "What it does"
+              ],
+              "rows": [
+                [
+                  "`id`",
+                  "A unique id, to reference the step in contexts such as `steps.<id>.outputs`"
+                ],
+                [
+                  "`if`",
+                  "Run the step only when the condition is true"
+                ],
+                [
+                  "`name`",
+                  "A display name. For a `run` step it defaults to the command"
+                ],
+                [
+                  "`uses`",
+                  "Run an action: a repository path and a ref, a path in this repository, or a Docker image"
+                ],
+                [
+                  "`run`",
+                  "Run a command with the shell. Up to 21,000 characters"
+                ],
+                [
+                  "`working-directory`, `shell`",
+                  "Where and with which shell a `run` step runs"
+                ],
+                [
+                  "`with`",
+                  "Inputs for the action. `with.args` and `with.entrypoint` are for Docker actions"
+                ],
+                [
+                  "`env`",
+                  "Environment variables for the step"
+                ],
+                [
+                  "`continue-on-error`",
+                  "Let the job pass when this step fails"
+                ],
+                [
+                  "`timeout-minutes`",
+                  "Kill the step after this long. At most 360"
+                ],
+                [
+                  "`background`",
+                  "Run the step asynchronously: see [Steps](#steps)"
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Gotchas",
+          "items": [
+            {
+              "type": "callout",
+              "kind": "gotcha",
+              "text": "In an `if`, you may leave out `${{ }}`. If the expression starts with `!`, you must keep it or quote it, because `!` is reserved in YAML."
+            },
+            {
+              "type": "callout",
+              "kind": "gotcha",
+              "text": "The characters `*`, `[` and `!` are special in YAML. A filter pattern that starts with one of them must be in quotes."
+            },
+            "A key's full text, with examples, is on the page named in each row. The reference lists every key with its sub-keys; this table has the ones above."
+          ]
+        }
+      ],
+      "related": [
+        "triggers",
+        "jobs",
+        "steps"
+      ],
+      "sources": [
+        {
+          "label": "Workflow syntax",
+          "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax"
+        }
+      ],
+      "notes": [
+        "The docs pages show no version or date. They were read on 2026-11-03; a later change on GitHub's side is not detected by `make check`."
+      ]
+    },
+    {
+      "id": "triggers",
+      "name": "Triggers (on)",
+      "group": "syntax",
+      "summary": "The `on` key: events, activity types, branch, tag and path filters, schedules, manual runs, and calling or chaining workflows.",
+      "level": "deep",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "Not stated on the pages read",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "A commercial service from GitHub, not a CNCF project."
+      },
+      "license": "Proprietary (GitHub service)",
+      "version": {
+        "name": "GitHub Actions (GitHub Docs)",
+        "analysed": "docs read 2026-11-03",
+        "released": "2026-11-03",
+        "docs": "docs.github.com/en/actions, the pages named in sources, read 2026-11-03; the pages show no version or date",
+        "checked": "2026-11-03"
+      },
+      "links": [
+        {
+          "label": "GitHub Actions documentation",
+          "url": "https://docs.github.com/en/actions/"
+        },
+        {
+          "label": "Workflow syntax reference",
+          "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax"
+        },
+        {
+          "label": "Events that trigger workflows",
+          "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows"
+        }
+      ],
+      "sections": [
+        {
+          "title": "Forms",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "You write",
+                "Meaning"
+              ],
+              "rows": [
+                [
+                  "`on: push`",
+                  "One event"
+                ],
+                [
+                  "`on: [push, fork]`",
+                  "Several events. Only one of them needs to happen"
+                ],
+                [
+                  "`on: { pull_request: { types: [opened] } }`",
+                  "An event with activity types or filters, written as a map"
+                ]
+              ]
+            },
+            {
+              "type": "code",
+              "title": "Two events",
+              "lang": "yaml",
+              "match": "on: [push, fork]",
+              "source": {
+                "label": "Workflow syntax",
+                "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax"
+              }
+            },
+            "`on.<event>.types` limits a workflow to some activity types of an event. `branches`, `branches-ignore`, `tags`, `tags-ignore`, `paths` and `paths-ignore` filter by ref and files."
+          ]
+        },
+        {
+          "title": "The events you use most",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Event",
+                "When it runs",
+                "Notes"
+              ],
+              "rows": [
+                [
+                  "`push`",
+                  "A commit or tag is pushed",
+                  "Filters: `branches`, `tags`, `paths`"
+                ],
+                [
+                  "`pull_request`",
+                  "Activity on a pull request",
+                  "Runs by default for `opened`, `synchronize` and `reopened`. `GITHUB_SHA` is the last merge commit, `GITHUB_REF` is `refs/pull/<n>/merge`"
+                ],
+                [
+                  "`pull_request_target`",
+                  "Activity on a pull request",
+                  "Same default types, but `GITHUB_SHA` is the last commit on the default branch and `GITHUB_REF` is the default branch. See the gotcha below"
+                ],
+                [
+                  "`workflow_dispatch`",
+                  "A manual run, from the UI, API or `gh`",
+                  "Optional `inputs`. Only receives events when the file is on the default branch"
+                ],
+                [
+                  "`workflow_call`",
+                  "Another workflow calls this one",
+                  "Defines `inputs`, `outputs` and `secrets`: see [Reuse](#reuse)"
+                ],
+                [
+                  "`workflow_run`",
+                  "Another workflow requested, started or completed",
+                  "Types: `completed`, `requested`, `in_progress`. Only runs if the file is on the default branch. No more than three levels of chaining"
+                ],
+                [
+                  "`schedule`",
+                  "A cron time",
+                  "POSIX cron, UTC by default, at most every 5 minutes. Runs on the default branch's latest commit"
+                ],
+                [
+                  "`repository_dispatch`",
+                  "A call to the REST API",
+                  "Custom `event_type`, filtered with `types`. Default branch only"
+                ],
+                [
+                  "`release`",
+                  "A release changes",
+                  "Types include `published`, `created`, `released`, `prereleased`. Not for `created`, `edited` or `deleted` on a draft release"
+                ]
+              ]
+            },
+            "Other events: `branch_protection_rule`, `check_run`, `check_suite`, `create`, `delete`, `deployment`, `deployment_status`, `discussion`, `discussion_comment`, `fork`, `gollum`, `image_version`, `issue_comment`, `issues`, `label`, `merge_group`, `milestone`, `page_build`, `public`, `pull_request_review`, `pull_request_review_comment`, `registry_package`, `status` and `watch`. Their activity types and payloads are on the events page.",
+            "There is no `pull_request_comment` event: use `issue_comment`."
+          ]
+        },
+        {
+          "title": "Schedules and manual runs",
+          "items": [
+            {
+              "type": "code",
+              "title": "A schedule with a time zone",
+              "lang": "yaml",
+              "match": "- cron: '30 5 * * 1-5'",
+              "source": {
+                "label": "Workflow syntax",
+                "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax"
+              }
+            },
+            "Without a `timezone` a schedule runs in UTC. With an IANA time zone, a schedule inside a skipped daylight saving hour moves to the next valid time.",
+            {
+              "type": "code",
+              "title": "Run after another workflow",
+              "lang": "yaml",
+              "match": "workflows: [Run Tests]",
+              "source": {
+                "label": "Events that trigger workflows",
+                "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows"
+              }
+            }
+          ]
+        },
+        {
+          "title": "Filters",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Pattern",
+                "Matches"
+              ],
+              "rows": [
+                [
+                  "`*`",
+                  "Zero or more characters, but not `/`"
+                ],
+                [
+                  "`**`",
+                  "Zero or more of any character"
+                ],
+                [
+                  "`?`",
+                  "Zero or one of the preceding character"
+                ],
+                [
+                  "`+`",
+                  "One or more of the preceding character"
+                ],
+                [
+                  "`[]`",
+                  "One character from a set or range (`a-z`, `A-Z`, `0-9`)"
+                ],
+                [
+                  "`!` at the start",
+                  "Negates the earlier patterns"
+                ]
+              ]
+            },
+            "A pattern that starts with `*`, `[` or `!` must be quoted, or the workflow fails to parse."
+          ]
+        },
+        {
+          "title": "Gotchas",
+          "items": [
+            {
+              "type": "callout",
+              "kind": "gotcha",
+              "text": "`pull_request_target` gives the `GITHUB_TOKEN` read and write access even when the pull request comes from a public fork. Do not check out and run untrusted pull request code in it.",
+              "title": "Untrusted code"
+            },
+            {
+              "type": "callout",
+              "kind": "gotcha",
+              "text": "`schedule`, `workflow_dispatch`, `workflow_run` and `repository_dispatch` only work when the workflow file is on the default branch."
+            },
+            {
+              "type": "callout",
+              "kind": "gotcha",
+              "text": "A scheduled run can be delayed under load, especially at the start of an hour. In a public repository, scheduled workflows are disabled after 60 days with no repository activity."
+            }
+          ]
+        }
+      ],
+      "related": [
+        "syntax-index",
+        "permissions",
+        "reuse"
+      ],
+      "sources": [
+        {
+          "label": "Events that trigger workflows",
+          "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows"
+        },
+        {
+          "label": "Workflow syntax",
+          "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax"
+        }
+      ],
+      "notes": [
+        "The docs pages show no version or date. They were read on 2026-11-03; a later change on GitHub's side is not detected by `make check`."
+      ]
+    },
+    {
+      "id": "jobs",
+      "name": "Jobs",
+      "group": "syntax",
+      "summary": "The keys of a job: where it runs, what it needs, its outputs, containers and services, and how a failed job affects the rest.",
+      "level": "deep",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "Not stated on the pages read",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "A commercial service from GitHub, not a CNCF project."
+      },
+      "license": "Proprietary (GitHub service)",
+      "version": {
+        "name": "GitHub Actions (GitHub Docs)",
+        "analysed": "docs read 2026-11-03",
+        "released": "2026-11-03",
+        "docs": "docs.github.com/en/actions, the pages named in sources, read 2026-11-03; the pages show no version or date",
+        "checked": "2026-11-03"
+      },
+      "links": [
+        {
+          "label": "GitHub Actions documentation",
+          "url": "https://docs.github.com/en/actions/"
+        },
+        {
+          "label": "Workflow syntax reference",
+          "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax"
+        }
+      ],
+      "sections": [
+        {
+          "title": "Keys",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Key",
+                "What it does"
+              ],
+              "rows": [
+                [
+                  "`name`",
+                  "A display name for the job"
+                ],
+                [
+                  "`permissions`",
+                  "`GITHUB_TOKEN` access for this job"
+                ],
+                [
+                  "`needs`",
+                  "Jobs that must succeed first. A failed or skipped job skips the jobs that need it"
+                ],
+                [
+                  "`if`",
+                  "Run the job only when the condition is true. Evaluated before the matrix is applied"
+                ],
+                [
+                  "`runs-on`",
+                  "The runner: a label, an array of labels, or a `group` or `labels` key"
+                ],
+                [
+                  "`snapshot`",
+                  "Generate a custom runner image from the job"
+                ],
+                [
+                  "`environment`",
+                  "The deployment environment: a name, or a name and a `url`"
+                ],
+                [
+                  "`concurrency`",
+                  "A concurrency group for this job"
+                ],
+                [
+                  "`cache-mode`",
+                  "Cache access for this job. Overrides the workflow's"
+                ],
+                [
+                  "`outputs`",
+                  "Values for jobs that depend on this one. 1 MB per job"
+                ],
+                [
+                  "`env`, `defaults`",
+                  "Variables and `run` defaults for this job"
+                ],
+                [
+                  "`steps`",
+                  "The steps, in order"
+                ],
+                [
+                  "`timeout-minutes`",
+                  "Cancel the job after this long. Default 360"
+                ],
+                [
+                  "`strategy`",
+                  "`matrix`, `fail-fast` and `max-parallel`: see [Matrix](#matrix)"
+                ],
+                [
+                  "`continue-on-error`",
+                  "Let the run pass when this job fails"
+                ],
+                [
+                  "`container`, `services`",
+                  "Run the job in a container; start service containers beside it"
+                ],
+                [
+                  "`uses`, `with`, `secrets`",
+                  "Call a reusable workflow instead of running steps: see [Reuse](#reuse)"
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Order and conditions",
+          "items": [
+            "Jobs have no dependencies by default and run in parallel. `needs` makes a job wait. If a job fails or is skipped, every job that needs it is skipped too, unless it has an `if` such as `always()` that lets it continue.",
+            {
+              "type": "code",
+              "title": "Needs",
+              "lang": "yaml",
+              "match": "needs: [job1, job2]",
+              "source": {
+                "label": "Workflow syntax",
+                "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax"
+              }
+            },
+            "`jobs.<job_id>.if` is evaluated before the matrix is applied, so it cannot read `matrix` values."
+          ]
+        },
+        {
+          "title": "runs-on",
+          "items": [
+            "`runs-on` can be a string, a variable, an array, or a mapping with `group` or `labels`. An array means the runner must have all of the labels.",
+            {
+              "type": "code",
+              "title": "A self-hosted runner with three labels",
+              "lang": "yaml",
+              "match": "runs-on: [self-hosted, linux, x64, gpu]",
+              "source": {
+                "label": "Workflow syntax",
+                "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax"
+              }
+            },
+            "The labels of the GitHub-hosted runners are on the [Runners](#runners) page."
+          ]
+        },
+        {
+          "title": "Outputs, containers and services",
+          "items": [
+            "`jobs.<job_id>.outputs` is a map. Downstream jobs read it through the `needs` context. Outputs are limited to 1 MB per job and 50 MB per run; an output that contains a secret is redacted and not sent.",
+            "`container` runs the job's steps in a container (`image`, `credentials`, `env`, `ports`, `volumes`, `options`). `services` starts service containers beside the job, each with `image`, `credentials`, `env`, `ports`, `volumes`, `options`, `command` and `entrypoint`.",
+            {
+              "type": "code",
+              "title": "A job in a container",
+              "lang": "yaml",
+              "match": "container: node:18",
+              "source": {
+                "label": "Workflow syntax",
+                "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax"
+              }
+            }
+          ]
+        },
+        {
+          "title": "Failure and time",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Key",
+                "Effect"
+              ],
+              "rows": [
+                [
+                  "`timeout-minutes`",
+                  "Cancel the job after this many minutes. Default 360. The runner's own limit applies if it is lower"
+                ],
+                [
+                  "`continue-on-error`",
+                  "Let the workflow run pass when this job fails. In a matrix it affects that one job"
+                ],
+                [
+                  "`strategy.fail-fast`",
+                  "In a matrix, cancel the other jobs when one fails. Default true"
+                ]
+              ]
+            },
+            "The `GITHUB_TOKEN` expires when the job finishes or after at most 24 hours."
+          ]
+        }
+      ],
+      "related": [
+        "steps",
+        "matrix",
+        "runners"
+      ],
+      "sources": [
+        {
+          "label": "Workflow syntax",
+          "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax"
+        },
+        {
+          "label": "Choose the runner for a job",
+          "url": "https://docs.github.com/en/actions/how-tos/write-workflows/choose-where-workflows-run/choose-the-runner-for-a-job"
+        }
+      ],
+      "notes": [
+        "The docs pages show no version or date. They were read on 2026-11-03; a later change on GitHub's side is not detected by `make check`."
+      ]
+    },
+    {
+      "id": "steps",
+      "name": "Steps",
+      "group": "syntax",
+      "summary": "The keys of a step: running a command or an action, shells, conditions, timeouts, and background steps.",
+      "level": "deep",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "Not stated on the pages read",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "A commercial service from GitHub, not a CNCF project."
+      },
+      "license": "Proprietary (GitHub service)",
+      "version": {
+        "name": "GitHub Actions (GitHub Docs)",
+        "analysed": "docs read 2026-11-03",
+        "released": "2026-11-03",
+        "docs": "docs.github.com/en/actions, the pages named in sources, read 2026-11-03; the pages show no version or date",
+        "checked": "2026-11-03"
+      },
+      "links": [
+        {
+          "label": "GitHub Actions documentation",
+          "url": "https://docs.github.com/en/actions/"
+        },
+        {
+          "label": "Workflow syntax reference",
+          "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax"
+        }
+      ],
+      "sections": [
+        {
+          "title": "Keys",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Key",
+                "What it does"
+              ],
+              "rows": [
+                [
+                  "`id`",
+                  "A unique id, to reference the step in contexts such as `steps.<id>.outputs`"
+                ],
+                [
+                  "`if`",
+                  "Run the step only when the condition is true"
+                ],
+                [
+                  "`name`",
+                  "A display name. For a `run` step it defaults to the command"
+                ],
+                [
+                  "`uses`",
+                  "Run an action: a repository path and a ref, a path in this repository, or a Docker image"
+                ],
+                [
+                  "`run`",
+                  "Run a command with the shell. Up to 21,000 characters"
+                ],
+                [
+                  "`working-directory`, `shell`",
+                  "Where and with which shell a `run` step runs"
+                ],
+                [
+                  "`with`",
+                  "Inputs for the action. `with.args` and `with.entrypoint` are for Docker actions"
+                ],
+                [
+                  "`env`",
+                  "Environment variables for the step"
+                ],
+                [
+                  "`continue-on-error`",
+                  "Let the job pass when this step fails"
+                ],
+                [
+                  "`timeout-minutes`",
+                  "Kill the step after this long. At most 360"
+                ],
+                [
+                  "`background`",
+                  "Run the step asynchronously: see [Steps](#steps)"
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "title": "uses",
+          "items": [
+            "`uses` runs an action from the same repository, a public repository, or a Docker image. Name the version: a Git ref, a commit SHA or a Docker tag. Without one, an update by the action's owner can break your workflow.",
+            {
+              "type": "callout",
+              "kind": "tip",
+              "text": "The commit SHA of a released version is the safest choice for stability and security."
+            },
+            {
+              "type": "code",
+              "title": "A job with checkout, cache and cache-mode",
+              "lang": "yaml",
+              "match": "- uses: actions/checkout@",
+              "source": {
+                "label": "Workflow syntax",
+                "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax"
+              }
+            }
+          ]
+        },
+        {
+          "title": "run",
+          "items": [
+            "A `run` step starts a new process and shell. Commands run in a non-login shell by default. Several lines run in the same shell. The `shell` key (or `defaults.run.shell`) chooses another one.",
+            {
+              "type": "code",
+              "title": "Default shell and directory",
+              "lang": "yaml",
+              "match": "working-directory: ./scripts",
+              "source": {
+                "label": "Workflow syntax",
+                "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax"
+              }
+            }
+          ]
+        },
+        {
+          "title": "Conditions and failure",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Key",
+                "Effect"
+              ],
+              "rows": [
+                [
+                  "`if`",
+                  "Skip the step unless the condition is true. With no status function, `success()` is applied"
+                ],
+                [
+                  "`continue-on-error: true`",
+                  "A failed step does not fail the job"
+                ],
+                [
+                  "`timeout-minutes`",
+                  "Kill the step after this long. A positive integer, at most 360"
+                ]
+              ]
+            },
+            "Status functions such as `always()` and `failure()` are on the [Expressions](#expressions) page."
+          ]
+        },
+        {
+          "title": "Background steps",
+          "items": [
+            "`background: true` starts a step asynchronously, so the job moves on without waiting. Use it for databases, servers or monitors that must run beside later steps. Give it an `id` so a later step can wait for it or cancel it.",
+            "At most 10 background steps run at once in one job; the rest queue until a slot is free. Works for `run` and `uses` steps."
+          ]
+        }
+      ],
+      "related": [
+        "jobs",
+        "expressions",
+        "commands"
+      ],
+      "sources": [
+        {
+          "label": "Workflow syntax",
+          "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax"
+        }
+      ],
+      "notes": [
+        "The docs pages show no version or date. They were read on 2026-11-03; a later change on GitHub's side is not detected by `make check`.",
+        "Background steps are described from the workflow syntax page only. How `wait`, `wait-all` and `cancel` are written is on that page and is not repeated here (unconfirmed here)."
+      ]
+    },
+    {
+      "id": "matrix",
+      "name": "Matrix",
+      "group": "syntax",
+      "summary": "Run one job many times with different values: `strategy.matrix`, `include`, `exclude`, `fail-fast` and `max-parallel`.",
+      "level": "deep",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "Not stated on the pages read",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "A commercial service from GitHub, not a CNCF project."
+      },
+      "license": "Proprietary (GitHub service)",
+      "version": {
+        "name": "GitHub Actions (GitHub Docs)",
+        "analysed": "docs read 2026-11-03",
+        "released": "2026-11-03",
+        "docs": "docs.github.com/en/actions, the pages named in sources, read 2026-11-03; the pages show no version or date",
+        "checked": "2026-11-03"
+      },
+      "links": [
+        {
+          "label": "GitHub Actions documentation",
+          "url": "https://docs.github.com/en/actions/"
+        },
+        {
+          "label": "Workflow syntax reference",
+          "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax"
+        }
+      ],
+      "sections": [
+        {
+          "title": "Keys",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Key",
+                "What it does"
+              ],
+              "rows": [
+                [
+                  "`strategy.matrix`",
+                  "Variables and their values. Each combination is one job. The variables become properties of the `matrix` context"
+                ],
+                [
+                  "`matrix.include`",
+                  "Add combinations, or add values to existing ones"
+                ],
+                [
+                  "`matrix.exclude`",
+                  "Remove combinations"
+                ],
+                [
+                  "`strategy.fail-fast`",
+                  "Cancel all in-progress and queued jobs when one fails. Default true. May be an expression"
+                ],
+                [
+                  "`strategy.max-parallel`",
+                  "Limit how many jobs run at once. By default GitHub runs as many as runners allow"
+                ],
+                [
+                  "`continue-on-error`",
+                  "Let a single matrix job fail without failing the run"
+                ]
+              ]
+            },
+            {
+              "type": "code",
+              "title": "A matrix",
+              "lang": "yaml",
+              "match": "node:\n    - version: 14",
+              "source": {
+                "label": "Workflow syntax",
+                "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax"
+              }
+            },
+            {
+              "type": "code",
+              "title": "Let one job fail",
+              "lang": "yaml",
+              "match": "continue-on-error: ${{ matrix.experimental }}",
+              "source": {
+                "label": "Workflow syntax",
+                "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax"
+              }
+            }
+          ]
+        },
+        {
+          "title": "Rules",
+          "items": [
+            "A matrix generates at most 256 jobs per workflow run, on GitHub-hosted and self-hosted runners alike.",
+            "`jobs.<job_id>.if` is evaluated before the matrix, so it cannot test `matrix` values.",
+            "`fail-fast` applies to the whole matrix; `continue-on-error` applies to one job."
+          ]
+        }
+      ],
+      "related": [
+        "jobs",
+        "contexts"
+      ],
+      "sources": [
+        {
+          "label": "Workflow syntax",
+          "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax"
+        },
+        {
+          "label": "Actions limits",
+          "url": "https://docs.github.com/en/actions/reference/limits"
+        }
+      ],
+      "notes": [
+        "The docs pages show no version or date. They were read on 2026-11-03; a later change on GitHub's side is not detected by `make check`."
+      ]
+    },
+    {
+      "id": "permissions",
+      "name": "Permissions",
+      "group": "syntax",
+      "summary": "The `permissions` key: every `GITHUB_TOKEN` scope, the shorthand forms, and how workflow and job levels combine.",
+      "level": "deep",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "Not stated on the pages read",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "A commercial service from GitHub, not a CNCF project."
+      },
+      "license": "Proprietary (GitHub service)",
+      "version": {
+        "name": "GitHub Actions (GitHub Docs)",
+        "analysed": "docs read 2026-11-03",
+        "released": "2026-11-03",
+        "docs": "docs.github.com/en/actions, the pages named in sources, read 2026-11-03; the pages show no version or date",
+        "checked": "2026-11-03"
+      },
+      "links": [
+        {
+          "label": "GitHub Actions documentation",
+          "url": "https://docs.github.com/en/actions/"
+        },
+        {
+          "label": "Workflow syntax reference",
+          "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax"
+        }
+      ],
+      "sections": [
+        {
+          "title": "Scopes",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Scope",
+                "Levels",
+                "Allows"
+              ],
+              "rows": [
+                [
+                  "`actions`",
+                  "read, write, none",
+                  "Work with Actions, for example cancel a run"
+                ],
+                [
+                  "`artifact-metadata`",
+                  "read, write, none",
+                  "Work with artifact metadata"
+                ],
+                [
+                  "`attestations`",
+                  "read, write, none",
+                  "Generate artifact attestations"
+                ],
+                [
+                  "`checks`",
+                  "read, write, none",
+                  "Check runs and check suites"
+                ],
+                [
+                  "`code-quality`",
+                  "read, write, none",
+                  "GitHub Code Quality, for example upload coverage"
+                ],
+                [
+                  "`contents`",
+                  "read, write, none",
+                  "Repository contents: read lists commits, write can create a release"
+                ],
+                [
+                  "`copilot-requests`",
+                  "write, none",
+                  "Make Copilot requests with the `GITHUB_TOKEN`, in an organization-owned repository when billing allows"
+                ],
+                [
+                  "`deployments`",
+                  "read, write, none",
+                  "Create deployments"
+                ],
+                [
+                  "`discussions`",
+                  "read, write, none",
+                  "GitHub Discussions"
+                ],
+                [
+                  "`id-token`",
+                  "write, none",
+                  "Fetch an OpenID Connect token. Needs `write`"
+                ],
+                [
+                  "`issues`",
+                  "read, write, none",
+                  "Issues, for example add a comment"
+                ],
+                [
+                  "`packages`",
+                  "read, write, none",
+                  "Upload and publish packages on GitHub Packages"
+                ],
+                [
+                  "`pages`",
+                  "read, write, none",
+                  "Request a GitHub Pages build"
+                ],
+                [
+                  "`pull-requests`",
+                  "read, write, none",
+                  "Pull requests, for example add a label"
+                ],
+                [
+                  "`security-events`",
+                  "read, write, none",
+                  "Code scanning alerts"
+                ],
+                [
+                  "`statuses`",
+                  "read, write, none",
+                  "Commit statuses"
+                ],
+                [
+                  "`vulnerability-alerts`",
+                  "read, none",
+                  "Read Dependabot alerts. `write` is not valid"
+                ]
+              ]
+            },
+            "`write` includes `read`. If you set any scope, every scope you do not set becomes `none`."
+          ]
+        },
+        {
+          "title": "Forms",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "You write",
+                "Meaning"
+              ],
+              "rows": [
+                [
+                  "`permissions: read-all`",
+                  "Read access to every scope"
+                ],
+                [
+                  "`permissions: write-all`",
+                  "Write access to every scope (`vulnerability-alerts` stays read)"
+                ],
+                [
+                  "`permissions: {}`",
+                  "No access to any scope"
+                ],
+                [
+                  "`contents: read` and others",
+                  "Only the scopes you list"
+                ]
+              ]
+            },
+            {
+              "type": "code",
+              "title": "Read everything",
+              "lang": "yaml",
+              "match": "permissions: read-all",
+              "source": {
+                "label": "Workflow syntax",
+                "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax"
+              }
+            }
+          ]
+        },
+        {
+          "title": "Rules",
+          "items": [
+            "`permissions` can be a top-level key, for all jobs, or inside a job. A job's setting applies to the actions and `run` commands in that job that use the `GITHUB_TOKEN`.",
+            "Organization owners can restrict write access of the `GITHUB_TOKEN` at the repository level.",
+            "For forked repositories you can add or remove read permissions, but you typically cannot grant write access.",
+            "A called reusable workflow can only reduce the permissions the caller passes, not raise them.",
+            {
+              "type": "callout",
+              "kind": "tip",
+              "text": "Set the default `GITHUB_TOKEN` permission to read-only for repository contents, and raise it per job only where needed."
+            }
+          ]
+        }
+      ],
+      "related": [
+        "security",
+        "reuse",
+        "triggers"
+      ],
+      "sources": [
+        {
+          "label": "Workflow syntax",
+          "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax"
+        },
+        {
+          "label": "Secure use reference",
+          "url": "https://docs.github.com/en/actions/reference/security/secure-use"
+        },
+        {
+          "label": "Reusing workflow configurations",
+          "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/reusing-workflow-configurations"
+        }
+      ],
+      "notes": [
+        "The docs pages show no version or date. They were read on 2026-11-03; a later change on GitHub's side is not detected by `make check`."
+      ]
+    },
+    {
+      "id": "concurrency",
+      "name": "Concurrency",
+      "group": "syntax",
+      "summary": "Allow only one run or job per group at a time, and choose what happens to the ones that wait.",
+      "level": "deep",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "Not stated on the pages read",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "A commercial service from GitHub, not a CNCF project."
+      },
+      "license": "Proprietary (GitHub service)",
+      "version": {
+        "name": "GitHub Actions (GitHub Docs)",
+        "analysed": "docs read 2026-11-03",
+        "released": "2026-11-03",
+        "docs": "docs.github.com/en/actions, the pages named in sources, read 2026-11-03; the pages show no version or date",
+        "checked": "2026-11-03"
+      },
+      "links": [
+        {
+          "label": "GitHub Actions documentation",
+          "url": "https://docs.github.com/en/actions/"
+        },
+        {
+          "label": "Workflow syntax reference",
+          "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax"
+        }
+      ],
+      "sections": [
+        {
+          "title": "How it works",
+          "items": [
+            "`concurrency` keeps at most one running job or workflow per group. A group can be any string or expression. At workflow level the expression can use only the `github`, `inputs` and `vars` contexts. The key also exists on a job.",
+            "By default a new run waits as pending, and replaces any older pending run in the same group (which is cancelled). Add `cancel-in-progress: true` to also cancel the run that is already running. `cancel-in-progress` can be an expression.",
+            {
+              "type": "code",
+              "title": "Cancel older runs of the same ref",
+              "lang": "yaml",
+              "match": "group: ${{ github.ref }}\n  cancel-in-progress: true",
+              "source": {
+                "label": "Workflow syntax",
+                "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax"
+              }
+            }
+          ]
+        },
+        {
+          "title": "Rules",
+          "items": [
+            "An optional `queue` setting lets more than one run wait in the same group: the page describes it (unconfirmed here).",
+            {
+              "type": "callout",
+              "kind": "gotcha",
+              "text": "With a reusable workflow, do not use the same group name in the caller and the called workflow together with `cancel-in-progress: true`: the running workflow would be cancelled."
+            }
+          ]
+        }
+      ],
+      "related": [
+        "syntax-index",
+        "reuse"
+      ],
+      "sources": [
+        {
+          "label": "Workflow syntax",
+          "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax"
+        },
+        {
+          "label": "Reusing workflow configurations",
+          "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/reusing-workflow-configurations"
+        }
+      ],
+      "notes": [
+        "The docs pages show no version or date. They were read on 2026-11-03; a later change on GitHub's side is not detected by `make check`."
+      ]
+    },
+    {
+      "id": "expressions",
+      "name": "Expressions",
+      "group": "expressions",
+      "summary": "The `${{ }}` language: literals, operators, comparison rules, functions, and status checks for `if`.",
+      "level": "deep",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "Not stated on the pages read",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "A commercial service from GitHub, not a CNCF project."
+      },
+      "license": "Proprietary (GitHub service)",
+      "version": {
+        "name": "GitHub Actions (GitHub Docs)",
+        "analysed": "docs read 2026-11-03",
+        "released": "2026-11-03",
+        "docs": "docs.github.com/en/actions, the pages named in sources, read 2026-11-03; the pages show no version or date",
+        "checked": "2026-11-03"
+      },
+      "links": [
+        {
+          "label": "GitHub Actions documentation",
+          "url": "https://docs.github.com/en/actions/"
+        },
+        {
+          "label": "Workflow syntax reference",
+          "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax"
+        },
+        {
+          "label": "Expressions reference",
+          "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/expressions"
+        }
+      ],
+      "sections": [
+        {
+          "title": "Basics",
+          "items": [
+            "Write an expression as `${{ <expression> }}`. In an `if` you may leave the braces out. Quote a string with single quotes; a literal single quote is written twice. Double quotes are an error.",
+            "In a condition, `false`, `0`, `-0`, `''` and `null` are false; everything else is true.",
+            {
+              "type": "table",
+              "columns": [
+                "Literal",
+                "Examples"
+              ],
+              "rows": [
+                [
+                  "boolean",
+                  "`true`, `false`"
+                ],
+                [
+                  "null",
+                  "`null`"
+                ],
+                [
+                  "number",
+                  "Any JSON number format: `711`, `-9.2`, `0xff`, `-2.99e-2`"
+                ],
+                [
+                  "string",
+                  "`'Mona the Octocat'`, `'It''s open source!'`"
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Operators",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Operator",
+                "Meaning"
+              ],
+              "rows": [
+                [
+                  "`( )`",
+                  "Grouping"
+                ],
+                [
+                  "`[ ]`, `.`",
+                  "Index and property access"
+                ],
+                [
+                  "`!`",
+                  "Not"
+                ],
+                [
+                  "`<`, `<=`, `>`, `>=`",
+                  "Comparison"
+                ],
+                [
+                  "`==`, `!=`",
+                  "Equal, not equal"
+                ],
+                [
+                  "`&&`, `||`",
+                  "And, or"
+                ]
+              ]
+            },
+            "Comparisons are loose. If the types differ, both sides are turned into numbers: null becomes 0, true 1, false 0, a string is parsed as a JSON number or becomes NaN (an empty string is 0), arrays and objects become NaN. A comparison with NaN is false. Strings are compared without regard to case. Objects and arrays are equal only if they are the same instance."
+          ]
+        },
+        {
+          "title": "Functions",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Function",
+                "Does"
+              ],
+              "rows": [
+                [
+                  "`contains(search, item)`",
+                  "True if the string contains the substring, or the array has the item. Not case sensitive"
+                ],
+                [
+                  "`startsWith(s, prefix)`, `endsWith(s, suffix)`",
+                  "String tests. Not case sensitive"
+                ],
+                [
+                  "`format(string, v0, v1, ...)`",
+                  "Replace `{0}`, `{1}` in the string. Escape braces by doubling them"
+                ],
+                [
+                  "`join(array, separator)`",
+                  "Join array values into a string. The default separator is `,`"
+                ],
+                [
+                  "`toJSON(value)`",
+                  "A pretty-printed JSON string. Useful to debug a context"
+                ],
+                [
+                  "`fromJSON(value)`",
+                  "Turn a JSON string into an object, array, number or boolean"
+                ],
+                [
+                  "`hashFiles(path, ...)`",
+                  "One SHA-256 for the files that match. Paths are inside `GITHUB_WORKSPACE`; `!` excludes"
+                ],
+                [
+                  "`case`",
+                  "A conditional function. Its syntax is on the expressions page (unconfirmed here)"
+                ]
+              ]
+            },
+            {
+              "type": "code",
+              "title": "format",
+              "lang": "text",
+              "match": "format('Hello {0} {1} {2}', 'Mona', 'the', 'Octocat')",
+              "source": {
+                "label": "Expressions",
+                "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/expressions"
+              }
+            },
+            "An object filter such as `github.event.issue.labels.*.name` reads one property from every item of an array.",
+            "Values are cast to strings for some functions: null becomes `''`, a boolean `'true'` or `'false'`; arrays and objects are not converted."
+          ]
+        },
+        {
+          "title": "Status checks for if",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Function",
+                "True when"
+              ],
+              "rows": [
+                [
+                  "`success()`",
+                  "All previous steps succeeded. It is the default when an `if` has no status function"
+                ],
+                [
+                  "`failure()`",
+                  "Any previous step of the job failed. In dependent jobs, any ancestor job failed"
+                ],
+                [
+                  "`cancelled()`",
+                  "The workflow was cancelled"
+                ],
+                [
+                  "`always()`",
+                  "Always, even when cancelled"
+                ]
+              ]
+            },
+            "Outside an `if`, read the job status with `job.status`.",
+            {
+              "type": "callout",
+              "kind": "gotcha",
+              "text": "Do not use `always()` for a step that can fail critically, such as getting the sources: the workflow may hang until it times out. Use `if: ${{ !cancelled() }}` to run a step whatever the result."
+            },
+            {
+              "type": "callout",
+              "kind": "gotcha",
+              "text": "`steps.<id>.outputs.<name>` is always a string. Compare numbers with `fromJSON(...)`."
+            }
+          ]
+        }
+      ],
+      "related": [
+        "contexts",
+        "steps",
+        "jobs"
+      ],
+      "sources": [
+        {
+          "label": "Evaluate expressions in workflows and actions",
+          "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/expressions"
+        },
+        {
+          "label": "Contexts reference",
+          "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/contexts"
+        }
+      ],
+      "notes": [
+        "The docs pages show no version or date. They were read on 2026-11-03; a later change on GitHub's side is not detected by `make check`."
+      ]
+    },
+    {
+      "id": "contexts",
+      "name": "Contexts",
+      "group": "expressions",
+      "summary": "The objects you can read in an expression: `github`, `env`, `vars`, `secrets`, `needs`, `matrix` and the others.",
+      "level": "deep",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "Not stated on the pages read",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "A commercial service from GitHub, not a CNCF project."
+      },
+      "license": "Proprietary (GitHub service)",
+      "version": {
+        "name": "GitHub Actions (GitHub Docs)",
+        "analysed": "docs read 2026-11-03",
+        "released": "2026-11-03",
+        "docs": "docs.github.com/en/actions, the pages named in sources, read 2026-11-03; the pages show no version or date",
+        "checked": "2026-11-03"
+      },
+      "links": [
+        {
+          "label": "GitHub Actions documentation",
+          "url": "https://docs.github.com/en/actions/"
+        },
+        {
+          "label": "Workflow syntax reference",
+          "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax"
+        },
+        {
+          "label": "Contexts reference",
+          "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/contexts"
+        }
+      ],
+      "sections": [
+        {
+          "title": "The contexts",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Context",
+                "Holds"
+              ],
+              "rows": [
+                [
+                  "`github`",
+                  "Information about the workflow run and the event"
+                ],
+                [
+                  "`env`",
+                  "Variables set in a workflow, job or step"
+                ],
+                [
+                  "`vars`",
+                  "Variables set at repository, organization or environment level"
+                ],
+                [
+                  "`job`",
+                  "The currently running job"
+                ],
+                [
+                  "`jobs`",
+                  "Reusable workflows only: outputs of the jobs of the reusable workflow"
+                ],
+                [
+                  "`steps`",
+                  "Steps that already ran in this job, for example `steps.<id>.outputs.<name>`"
+                ],
+                [
+                  "`runner`",
+                  "The runner running the job"
+                ],
+                [
+                  "`secrets`",
+                  "Names and values of the secrets available to the run"
+                ],
+                [
+                  "`strategy`",
+                  "The matrix execution strategy of the job"
+                ],
+                [
+                  "`matrix`",
+                  "The matrix properties that apply to this job"
+                ],
+                [
+                  "`needs`",
+                  "Outputs of every job this job depends on"
+                ],
+                [
+                  "`inputs`",
+                  "Inputs of a reusable or manually triggered workflow"
+                ]
+              ]
+            },
+            "Read a property as `github.sha` or `github['sha']`. Where a context is allowed depends on the key: the reference lists the contexts each key supports."
+          ]
+        },
+        {
+          "title": "The github context",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Property",
+                "Holds"
+              ],
+              "rows": [
+                [
+                  "`github.event_name`",
+                  "The event that triggered the run"
+                ],
+                [
+                  "`github.event`",
+                  "The webhook payload, for example `github.event.pull_request.title`"
+                ],
+                [
+                  "`github.ref`, `github.ref_name`, `github.ref_type`",
+                  "The full ref, the short name, and `branch` or `tag`"
+                ],
+                [
+                  "`github.sha`",
+                  "The commit SHA. Depends on the event"
+                ],
+                [
+                  "`github.head_ref`, `github.base_ref`",
+                  "Source and target branch. Only for `pull_request` and `pull_request_target`"
+                ],
+                [
+                  "`github.actor`, `github.triggering_actor`",
+                  "Who started the run"
+                ],
+                [
+                  "`github.repository`, `github.repository_owner`",
+                  "`owner/name` and the owner"
+                ],
+                [
+                  "`github.workflow`, `github.job`, `github.action`",
+                  "Names of the workflow, the job id and the current action"
+                ],
+                [
+                  "`github.run_id`, `github.run_number`, `github.run_attempt`",
+                  "Run identifiers. `run_id` does not change on a re-run; `run_attempt` counts attempts from 1"
+                ],
+                [
+                  "`github.workspace`, `github.event_path`",
+                  "Working directory on the runner, and the file with the event payload"
+                ],
+                [
+                  "`github.token`",
+                  "The `GITHUB_TOKEN`"
+                ],
+                [
+                  "`github.server_url`, `github.api_url`",
+                  "The GitHub server and API addresses"
+                ],
+                [
+                  "`github.ref_protected`",
+                  "True if branch protections or rulesets apply to the ref"
+                ]
+              ]
+            },
+            "The list is the properties the reference marks as common. The page has the full set."
+          ]
+        },
+        {
+          "title": "Gotchas",
+          "items": [
+            {
+              "type": "callout",
+              "kind": "gotcha",
+              "text": "`inputs` keeps boolean values as booleans; `github.event.inputs` has the same data with every value turned into a string."
+            },
+            {
+              "type": "callout",
+              "kind": "gotcha",
+              "text": "Do not put untrusted values such as `github.event.pull_request.title` straight into a `run` script. See [Security](#security)."
+            }
+          ]
+        }
+      ],
+      "related": [
+        "expressions",
+        "env-vars",
+        "security"
+      ],
+      "sources": [
+        {
+          "label": "Contexts reference",
+          "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/contexts"
+        },
+        {
+          "label": "Workflow syntax",
+          "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax"
+        },
+        {
+          "label": "Variables reference",
+          "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/variables"
+        }
+      ],
+      "notes": [
+        "The docs pages show no version or date. They were read on 2026-11-03; a later change on GitHub's side is not detected by `make check`.",
+        "Only the context names and the commonly used `github` properties are listed. The properties of the other contexts are on the contexts page and are not repeated here."
+      ]
+    },
+    {
+      "id": "env-vars",
+      "name": "Default variables",
+      "group": "expressions",
+      "summary": "The environment variables every run sets: `CI`, the `GITHUB_*` and `RUNNER_*` variables, and the files commands write to.",
+      "level": "deep",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "Not stated on the pages read",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "A commercial service from GitHub, not a CNCF project."
+      },
+      "license": "Proprietary (GitHub service)",
+      "version": {
+        "name": "GitHub Actions (GitHub Docs)",
+        "analysed": "docs read 2026-11-03",
+        "released": "2026-11-03",
+        "docs": "docs.github.com/en/actions, the pages named in sources, read 2026-11-03; the pages show no version or date",
+        "checked": "2026-11-03"
+      },
+      "links": [
+        {
+          "label": "GitHub Actions documentation",
+          "url": "https://docs.github.com/en/actions/"
+        },
+        {
+          "label": "Workflow syntax reference",
+          "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax"
+        },
+        {
+          "label": "Variables reference",
+          "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/variables"
+        }
+      ],
+      "sections": [
+        {
+          "title": "Variables",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Variable",
+                "Holds"
+              ],
+              "rows": [
+                [
+                  "`CI`",
+                  "Always `true`"
+                ],
+                [
+                  "`GITHUB_ACTIONS`",
+                  "Always `true` when Actions runs the workflow"
+                ],
+                [
+                  "`GITHUB_ACTION`",
+                  "The name of the running action, or the id of a step"
+                ],
+                [
+                  "`GITHUB_ACTOR`, `GITHUB_ACTOR_ID`",
+                  "Who started the run, and the account id"
+                ],
+                [
+                  "`GITHUB_API_URL`, `GITHUB_SERVER_URL`",
+                  "The API and server addresses"
+                ],
+                [
+                  "`GITHUB_EVENT_NAME`, `GITHUB_EVENT_PATH`",
+                  "The event name, and the path of the event payload file"
+                ],
+                [
+                  "`GITHUB_REF`, `GITHUB_REF_NAME`, `GITHUB_REF_TYPE`, `GITHUB_REF_PROTECTED`",
+                  "The ref, its short name, `branch` or `tag`, and whether it is protected"
+                ],
+                [
+                  "`GITHUB_HEAD_REF`, `GITHUB_BASE_REF`",
+                  "Source and target branch of a pull request. Only for `pull_request` and `pull_request_target`"
+                ],
+                [
+                  "`GITHUB_REPOSITORY`",
+                  "`owner/name`"
+                ],
+                [
+                  "`GITHUB_RUN_ID`, `GITHUB_RUN_NUMBER`, `GITHUB_RUN_ATTEMPT`",
+                  "Run id (stable on re-run), run number, attempt number from 1"
+                ],
+                [
+                  "`GITHUB_SHA`",
+                  "The commit SHA that triggered the run. Depends on the event"
+                ],
+                [
+                  "`GITHUB_WORKFLOW`, `GITHUB_JOB`",
+                  "The workflow name (or file path) and the job id"
+                ],
+                [
+                  "`GITHUB_WORKSPACE`",
+                  "The default working directory, and where checkout puts the repository"
+                ],
+                [
+                  "`GITHUB_ENV`, `GITHUB_OUTPUT`, `GITHUB_PATH`, `GITHUB_STEP_SUMMARY`, `GITHUB_ARTIFACTS`",
+                  "Paths of the files that workflow commands write to: see [Workflow commands](#commands)"
+                ],
+                [
+                  "`RUNNER_OS`",
+                  "`Linux`, `Windows` or `macOS`"
+                ],
+                [
+                  "`RUNNER_ARCH`",
+                  "`X86`, `X64`, `ARM` or `ARM64`"
+                ],
+                [
+                  "`RUNNER_NAME`, `RUNNER_ENVIRONMENT`",
+                  "The runner name, and `github-hosted` or `self-hosted`"
+                ],
+                [
+                  "`RUNNER_TEMP`",
+                  "A temporary directory, emptied at the start and end of each job"
+                ],
+                [
+                  "`RUNNER_TOOL_CACHE`",
+                  "The directory of preinstalled tools on GitHub-hosted runners"
+                ],
+                [
+                  "`RUNNER_DEBUG`",
+                  "Set to `1` only when debug logging is on"
+                ]
+              ]
+            },
+            "The variables are available to steps on the runner. Expressions in the workflow file read the same data from the `github` and `runner` contexts, which have no `GITHUB_` prefix."
+          ]
+        },
+        {
+          "title": "Gotchas",
+          "items": [
+            {
+              "type": "callout",
+              "kind": "gotcha",
+              "text": "The paths in `GITHUB_ENV`, `GITHUB_OUTPUT`, `GITHUB_PATH` and `GITHUB_STEP_SUMMARY` are unique to the current step and change for each step."
+            },
+            {
+              "type": "callout",
+              "kind": "tip",
+              "text": "`GITHUB_SHA` and `GITHUB_REF` depend on the event: for `pull_request` they point at the merge commit, not the branch tip. See [Triggers](#triggers)."
+            }
+          ]
+        }
+      ],
+      "related": [
+        "contexts",
+        "commands"
+      ],
+      "sources": [
+        {
+          "label": "Variables reference",
+          "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/variables"
+        }
+      ],
+      "notes": [
+        "The docs pages show no version or date. They were read on 2026-11-03; a later change on GitHub's side is not detected by `make check`.",
+        "The table lists the default variables read on the page. Variables you define yourself, and variables for the repository, organization or environment, are on the same page and the variables how-to."
+      ]
+    },
+    {
+      "id": "commands",
+      "name": "Workflow commands",
+      "group": "expressions",
+      "summary": "How a step talks to the runner: log messages, groups, masking, and the files that set outputs, variables and the path.",
+      "level": "deep",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "Not stated on the pages read",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "A commercial service from GitHub, not a CNCF project."
+      },
+      "license": "Proprietary (GitHub service)",
+      "version": {
+        "name": "GitHub Actions (GitHub Docs)",
+        "analysed": "docs read 2026-11-03",
+        "released": "2026-11-03",
+        "docs": "docs.github.com/en/actions, the pages named in sources, read 2026-11-03; the pages show no version or date",
+        "checked": "2026-11-03"
+      },
+      "links": [
+        {
+          "label": "GitHub Actions documentation",
+          "url": "https://docs.github.com/en/actions/"
+        },
+        {
+          "label": "Workflow syntax reference",
+          "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax"
+        },
+        {
+          "label": "Workflow commands",
+          "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-commands"
+        }
+      ],
+      "sections": [
+        {
+          "title": "Log commands",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Command",
+                "Does"
+              ],
+              "rows": [
+                [
+                  "`::debug::{message}`",
+                  "A debug message, shown when debug logging is on"
+                ],
+                [
+                  "`::notice file=..,line=..,title=..::{message}`",
+                  "A notice annotation, optionally tied to a file and line"
+                ],
+                [
+                  "`::warning file=..,line=..,title=..::{message}`",
+                  "A warning annotation"
+                ],
+                [
+                  "`::error file=..,line=..,title=..::{message}`",
+                  "An error annotation"
+                ],
+                [
+                  "`::group::{title}` and `::endgroup::`",
+                  "Fold the lines in between in the log"
+                ],
+                [
+                  "`::add-mask::{value}`",
+                  "Redact the value from the log from now on"
+                ],
+                [
+                  "`::stop-commands::{token}` and `::{token}::`",
+                  "Stop and restart command processing"
+                ]
+              ]
+            },
+            "Annotations accept `file`, `line`, `endLine`, `col`, `endColumn` and `title` parameters."
+          ]
+        },
+        {
+          "title": "Environment files",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "File",
+                "Write",
+                "Effect"
+              ],
+              "rows": [
+                [
+                  "`$GITHUB_OUTPUT`",
+                  "`echo \"{name}={value}\" >> \"$GITHUB_OUTPUT\"`",
+                  "Sets an output of the step, read as `steps.<id>.outputs.<name>`"
+                ],
+                [
+                  "`$GITHUB_ENV`",
+                  "`echo \"{NAME}={value}\" >> \"$GITHUB_ENV\"`",
+                  "Sets an environment variable for the later steps of the job"
+                ],
+                [
+                  "`$GITHUB_PATH`",
+                  "`echo \"{dir}\" >> \"$GITHUB_PATH\"`",
+                  "Prepends a directory to `PATH` for the later steps"
+                ],
+                [
+                  "`$GITHUB_STEP_SUMMARY`",
+                  "`echo \"{markdown}\" >> \"$GITHUB_STEP_SUMMARY\"`",
+                  "Adds Markdown to the job summary"
+                ],
+                [
+                  "`$GITHUB_ARTIFACTS`",
+                  "`echo \"path\" >> \"$GITHUB_ARTIFACTS\"`",
+                  "Declares files or OCI digest references as workflow artifacts, one per line"
+                ]
+              ]
+            },
+            {
+              "type": "code",
+              "title": "Add a directory to PATH",
+              "lang": "shell",
+              "match": "echo \"$HOME/.local/bin\" >> \"$GITHUB_PATH\"",
+              "source": {
+                "label": "Workflow commands",
+                "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-commands"
+              }
+            },
+            "Multiline values use a delimiter form: the page has the exact syntax."
+          ]
+        },
+        {
+          "title": "Gotchas",
+          "items": [
+            {
+              "type": "callout",
+              "kind": "gotcha",
+              "text": "Masking hides a value only from this point on, and only if the exact text matches. A transformed secret (Base64, URL-encoded) must be masked too."
+            }
+          ]
+        }
+      ],
+      "related": [
+        "env-vars",
+        "steps",
+        "security"
+      ],
+      "sources": [
+        {
+          "label": "Workflow commands for GitHub Actions",
+          "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-commands"
+        },
+        {
+          "label": "Secure use reference",
+          "url": "https://docs.github.com/en/actions/reference/security/secure-use"
+        }
+      ],
+      "notes": [
+        "The docs pages show no version or date. They were read on 2026-11-03; a later change on GitHub's side is not detected by `make check`."
+      ]
+    },
+    {
+      "id": "reuse",
+      "name": "Reuse",
+      "group": "reuse",
+      "summary": "Reusable workflows, composite actions and action metadata: how to share a pipeline, and the limits.",
+      "level": "deep",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "Not stated on the pages read",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "A commercial service from GitHub, not a CNCF project."
+      },
+      "license": "Proprietary (GitHub service)",
+      "version": {
+        "name": "GitHub Actions (GitHub Docs)",
+        "analysed": "docs read 2026-11-03",
+        "released": "2026-11-03",
+        "docs": "docs.github.com/en/actions, the pages named in sources, read 2026-11-03; the pages show no version or date",
+        "checked": "2026-11-03"
+      },
+      "links": [
+        {
+          "label": "GitHub Actions documentation",
+          "url": "https://docs.github.com/en/actions/"
+        },
+        {
+          "label": "Workflow syntax reference",
+          "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax"
+        },
+        {
+          "label": "Reusing workflow configurations",
+          "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/reusing-workflow-configurations"
+        }
+      ],
+      "sections": [
+        {
+          "title": "Reusable workflows",
+          "items": [
+            "A reusable workflow is a workflow with `on: workflow_call`. It declares `inputs` (each with a `type`), `outputs` and `secrets`. A caller runs it as a job with `uses`.",
+            {
+              "type": "table",
+              "columns": [
+                "`uses` form",
+                "For"
+              ],
+              "rows": [
+                [
+                  "`./.github/workflows/{file}`",
+                  "A workflow in the same repository"
+                ],
+                [
+                  "`{owner}/{repo}/.github/workflows/{file}@{ref}`",
+                  "A workflow in another repository. The ref is a SHA, a release tag or a branch"
+                ]
+              ]
+            },
+            {
+              "type": "code",
+              "title": "Pass all secrets",
+              "lang": "yaml",
+              "match": "secrets: inherit",
+              "source": {
+                "label": "Workflow syntax",
+                "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax"
+              }
+            },
+            "`secrets: inherit` passes every secret the caller can access, including across repositories of one organization or enterprise."
+          ]
+        },
+        {
+          "title": "What the calling job can set",
+          "items": [
+            "Only these keys are allowed on a job that calls a reusable workflow: `name`, `uses`, `with`, `secrets`, `strategy`, `needs`, `if`, `concurrency`, `permissions` and `cache-mode`.",
+            {
+              "type": "table",
+              "columns": [
+                "Rule",
+                "Detail"
+              ],
+              "rows": [
+                [
+                  "Nesting",
+                  "Up to ten levels of workflows"
+                ],
+                [
+                  "Count",
+                  "At most 50 unique reusable workflows from one workflow file, including nested ones"
+                ],
+                [
+                  "`env`",
+                  "Not shared either way. Pass values as inputs, or read outputs, or use `vars`"
+                ],
+                [
+                  "`GITHUB_ENV`",
+                  "Cannot pass values to the caller's steps: the call is a job, not a step"
+                ],
+                [
+                  "Permissions",
+                  "The called workflow can only downgrade the `GITHUB_TOKEN`"
+                ],
+                [
+                  "Runners",
+                  "GitHub-hosted runners are chosen from the caller's context and billed to the caller"
+                ],
+                [
+                  "Redirects",
+                  "None: if an action or workflow is renamed or moved, workflows that use the old name fail"
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Action metadata (action.yml)",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Key",
+                "Meaning"
+              ],
+              "rows": [
+                [
+                  "`name`, `author`, `description`",
+                  "Identity of the action"
+                ],
+                [
+                  "`inputs.<id>`",
+                  "`description`, `required`, `default`, `deprecationMessage`"
+                ],
+                [
+                  "`outputs.<id>`",
+                  "`description`. For a composite action also `value`"
+                ],
+                [
+                  "`runs.using`",
+                  "`composite`, a Node.js version such as `node24`, or `docker`"
+                ],
+                [
+                  "`runs.steps`",
+                  "The steps of a composite action"
+                ],
+                [
+                  "`runs.main`, `pre`, `post`, `pre-if`, `post-if`",
+                  "Entry files of a JavaScript action, and when pre and post run"
+                ],
+                [
+                  "`runs.image`, `env`, `entrypoint`, `args`, `pre-entrypoint`, `post-entrypoint`",
+                  "A Docker action"
+                ],
+                [
+                  "`branding.color`, `branding.icon`",
+                  "How the action looks in the Marketplace"
+                ]
+              ]
+            },
+            {
+              "type": "code",
+              "title": "A JavaScript action",
+              "lang": "yaml",
+              "match": "using: 'node24'",
+              "source": {
+                "label": "Metadata syntax",
+                "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/metadata-syntax"
+              }
+            },
+            "The metadata file can have another name than `action.yml`: the page says how."
+          ]
+        },
+        {
+          "title": "Composite actions",
+          "items": [
+            "A composite action groups steps (`runs.using: composite`, `runs.steps`) so a workflow can use them in one step with `uses`. It is defined in an `action.yml` file, not in `.github/workflows`."
+          ]
+        }
+      ],
+      "related": [
+        "triggers",
+        "jobs",
+        "permissions"
+      ],
+      "sources": [
+        {
+          "label": "Reusing workflow configurations",
+          "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/reusing-workflow-configurations"
+        },
+        {
+          "label": "Metadata syntax",
+          "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/metadata-syntax"
+        },
+        {
+          "label": "Workflow syntax",
+          "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax"
+        }
+      ],
+      "notes": [
+        "The docs pages show no version or date. They were read on 2026-11-03; a later change on GitHub's side is not detected by `make check`.",
+        "The Node.js version in an action's `runs.using` changes over time. The example on the metadata page used `node24` when it was read."
+      ],
+      "compare": [
+        {
+          "with": "steps",
+          "text": "A composite action is used from a step (`steps[*].uses`); a reusable workflow is used from a job (`jobs.<id>.uses`)."
+        }
+      ]
+    },
+    {
+      "id": "runners",
+      "name": "Runners",
+      "group": "platform",
+      "summary": "Where jobs run: the GitHub-hosted labels, self-hosted runners, larger runners and autoscaling.",
+      "level": "deep",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "Not stated on the pages read",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "A commercial service from GitHub, not a CNCF project."
+      },
+      "license": "Proprietary (GitHub service)",
+      "version": {
+        "name": "GitHub Actions (GitHub Docs)",
+        "analysed": "docs read 2026-11-03",
+        "released": "2026-11-03",
+        "docs": "docs.github.com/en/actions, the pages named in sources, read 2026-11-03; the pages show no version or date",
+        "checked": "2026-11-03"
+      },
+      "links": [
+        {
+          "label": "GitHub Actions documentation",
+          "url": "https://docs.github.com/en/actions/"
+        },
+        {
+          "label": "Workflow syntax reference",
+          "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax"
+        },
+        {
+          "label": "GitHub-hosted runners",
+          "url": "https://docs.github.com/en/actions/reference/runners/github-hosted-runners"
+        },
+        {
+          "label": "Self-hosted runners",
+          "url": "https://docs.github.com/en/actions/reference/runners/self-hosted-runners"
+        }
+      ],
+      "sections": [
+        {
+          "title": "GitHub-hosted runners",
+          "items": [
+            "A GitHub-hosted runner is a machine that GitHub provides. Apart from the single-CPU runners, each one is a new virtual machine (the page says how the single-CPU ones are provided). The `-latest` labels are the newest stable images GitHub provides, which may not be the newest version of the operating system.",
+            {
+              "type": "table",
+              "columns": [
+                "OS",
+                "Labels (public repositories)"
+              ],
+              "rows": [
+                [
+                  "Linux x64",
+                  "`ubuntu-slim` (1 CPU, 5 GB), `ubuntu-latest`, `ubuntu-24.04`, `ubuntu-22.04`, `ubuntu-26.04`"
+                ],
+                [
+                  "Linux arm64",
+                  "`ubuntu-24.04-arm`, `ubuntu-22.04-arm`, `ubuntu-26.04-arm`"
+                ],
+                [
+                  "Windows x64",
+                  "`windows-latest`, `windows-2025`, `windows-2025-vs2026`, `windows-2022`"
+                ],
+                [
+                  "Windows arm64",
+                  "`windows-11-arm`, `windows-11-vs2026-arm`"
+                ],
+                [
+                  "macOS",
+                  "`macos-latest`, `macos-14`, `macos-15`, `macos-26`, and Intel images `macos-15-intel`, `macos-26-intel`"
+                ]
+              ]
+            },
+            "The labels and sizes differ for private repositories: the runners reference has a table for each.",
+            {
+              "type": "callout",
+              "kind": "gotcha",
+              "text": "Beta and deprecated images are provided as is and are outside the service level agreement."
+            }
+          ]
+        },
+        {
+          "title": "Self-hosted runners",
+          "items": [
+            "A self-hosted runner is a machine you run. `runs-on` with several labels selects a runner that has all of them: the example on the workflow syntax page uses `self-hosted`, `linux`, `x64` and a custom `gpu` label. How labels are applied is on the self-hosted runner how-to pages.",
+            "To run Docker container actions or service containers, the machine must be Linux with Docker installed. The runner application itself needs few resources.",
+            "Supported systems include several Linux distributions (Ubuntu 20.04 and later, Debian 10 and later, RHEL 8 and later, and others) and Windows 10 and 11 and Windows Server: the reference has the full list and the processor architectures."
+          ]
+        },
+        {
+          "title": "Autoscaling",
+          "items": [
+            "The self-hosted reference lists three ways to autoscale: Actions Runner Controller (a Kubernetes controller), the GitHub Actions Runner Scale Set Client, and ephemeral runners. It also covers runner software updates and webhooks for autoscaling."
+          ]
+        },
+        {
+          "title": "Choosing",
+          "items": [
+            {
+              "type": "code",
+              "title": "Several labels",
+              "lang": "yaml",
+              "match": "runs-on: [self-hosted, linux, x64, gpu]",
+              "source": {
+                "label": "Workflow syntax",
+                "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax"
+              }
+            },
+            "The Compare tab has GitHub-hosted and self-hosted runners side by side."
+          ]
+        }
+      ],
+      "related": [
+        "jobs",
+        "actions-runner",
+        "actions-runner-controller"
+      ],
+      "sources": [
+        {
+          "label": "GitHub-hosted runners reference",
+          "url": "https://docs.github.com/en/actions/reference/runners/github-hosted-runners"
+        },
+        {
+          "label": "Self-hosted runners reference",
+          "url": "https://docs.github.com/en/actions/reference/runners/self-hosted-runners"
+        },
+        {
+          "label": "Choose the runner for a job",
+          "url": "https://docs.github.com/en/actions/how-tos/write-workflows/choose-where-workflows-run/choose-the-runner-for-a-job"
+        }
+      ],
+      "notes": [
+        "The docs pages show no version or date. They were read on 2026-11-03; a later change on GitHub's side is not detected by `make check`.",
+        "Specifications other than `ubuntu-slim`, the private repository labels, larger runners and billing are on the pages and not repeated here."
+      ]
+    },
+    {
+      "id": "security",
+      "name": "Security and secrets",
+      "group": "platform",
+      "summary": "The GITHUB_TOKEN, secrets, OIDC, script injection and third-party actions: the rules that matter most.",
+      "level": "deep",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "Not stated on the pages read",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "A commercial service from GitHub, not a CNCF project."
+      },
+      "license": "Proprietary (GitHub service)",
+      "version": {
+        "name": "GitHub Actions (GitHub Docs)",
+        "analysed": "docs read 2026-11-03",
+        "released": "2026-11-03",
+        "docs": "docs.github.com/en/actions, the pages named in sources, read 2026-11-03; the pages show no version or date",
+        "checked": "2026-11-03"
+      },
+      "links": [
+        {
+          "label": "GitHub Actions documentation",
+          "url": "https://docs.github.com/en/actions/"
+        },
+        {
+          "label": "Workflow syntax reference",
+          "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax"
+        },
+        {
+          "label": "Secure use reference",
+          "url": "https://docs.github.com/en/actions/reference/security/secure-use"
+        },
+        {
+          "label": "OIDC reference",
+          "url": "https://docs.github.com/en/actions/reference/security/oidc"
+        }
+      ],
+      "sections": [
+        {
+          "title": "Secrets",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Rule",
+                "Detail"
+              ],
+              "rows": [
+                [
+                  "Names",
+                  "Letters, digits and underscores. Not starting with `GITHUB_` or a number. Case-insensitive, stored in uppercase"
+                ],
+                [
+                  "Precedence",
+                  "Environment beats repository beats organization when names match"
+                ],
+                [
+                  "Limits",
+                  "1,000 organization secrets, 100 repository secrets, 100 environment secrets. 48 KB each"
+                ],
+                [
+                  "When read",
+                  "Organization and repository secrets when the run is queued; environment secrets when a job that uses the environment starts"
+                ]
+              ]
+            },
+            "Use one secret per value. Structured values such as a JSON blob defeat redaction, because redaction needs an exact match.",
+            "Redaction is done by the runner. If a secret reached a log unredacted, delete the log and rotate the secret."
+          ]
+        },
+        {
+          "title": "Script injection",
+          "items": [
+            "An expression such as `${{ github.event.pull_request.title }}` is replaced before the script runs, so a crafted value becomes part of the script. Pass untrusted input through an environment variable, or to an action as an input.",
+            {
+              "type": "code",
+              "title": "Use an intermediate environment variable",
+              "lang": "yaml",
+              "match": "TITLE: ${{ github.event.pull_request.title }}",
+              "source": {
+                "label": "Secure use reference",
+                "url": "https://docs.github.com/en/actions/reference/security/secure-use"
+              }
+            }
+          ]
+        },
+        {
+          "title": "OpenID Connect",
+          "items": [
+            "Instead of a stored cloud credential, a job can request a short-lived OIDC token and exchange it with the cloud provider. The job or workflow needs `id-token: write`. That permission only allows fetching the token; it grants no write access to anything else.",
+            {
+              "type": "code",
+              "title": "Allow the token",
+              "lang": "yaml",
+              "match": "id-token: write",
+              "source": {
+                "label": "OIDC reference",
+                "url": "https://docs.github.com/en/actions/reference/security/oidc"
+              }
+            },
+            "The token is requested with the `getIDToken()` method of the Actions toolkit, or with the `ACTIONS_ID_TOKEN_REQUEST_URL` and `ACTIONS_ID_TOKEN_REQUEST_TOKEN` variables. The cloud role trusts claims such as the subject, which can name an environment, a branch, a tag or a pull request."
+          ]
+        },
+        {
+          "title": "Practices",
+          "items": [
+            {
+              "type": "checklist",
+              "items": [
+                "Give the `GITHUB_TOKEN` the least access: default to read-only and raise it per job ([Permissions](#permissions))",
+                "Pin third-party actions to a full commit SHA, and keep them up to date (Dependabot version updates can do this)",
+                "Never put secrets in plain text in workflow files; mask other sensitive values with `::add-mask::`",
+                "Register any value derived from a secret as a secret too, including Base64 and URL-encoded forms",
+                "Require reviewers on environments that hold production secrets ([Environments](#environments))",
+                "Use CODEOWNERS on the workflow files, and code scanning and OpenSSF Scorecards for the workflows themselves",
+                "Do not check out untrusted pull request code in a privileged trigger such as `pull_request_target`",
+                "Review run logs after testing valid and invalid inputs: tools can print secrets in error messages"
+              ]
+            }
+          ]
+        }
+      ],
+      "related": [
+        "permissions",
+        "environments",
+        "triggers"
+      ],
+      "sources": [
+        {
+          "label": "Secure use reference",
+          "url": "https://docs.github.com/en/actions/reference/security/secure-use"
+        },
+        {
+          "label": "Secrets reference",
+          "url": "https://docs.github.com/en/actions/reference/security/secrets"
+        },
+        {
+          "label": "OIDC reference",
+          "url": "https://docs.github.com/en/actions/reference/security/oidc"
+        }
+      ],
+      "notes": [
+        "The docs pages show no version or date. They were read on 2026-11-03; a later change on GitHub's side is not detected by `make check`."
+      ]
+    },
+    {
+      "id": "environments",
+      "name": "Environments",
+      "group": "platform",
+      "summary": "Deployment environments: required reviewers, wait timers, branch rules, and environment secrets and variables.",
+      "level": "deep",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "Not stated on the pages read",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "A commercial service from GitHub, not a CNCF project."
+      },
+      "license": "Proprietary (GitHub service)",
+      "version": {
+        "name": "GitHub Actions (GitHub Docs)",
+        "analysed": "docs read 2026-11-03",
+        "released": "2026-11-03",
+        "docs": "docs.github.com/en/actions, the pages named in sources, read 2026-11-03; the pages show no version or date",
+        "checked": "2026-11-03"
+      },
+      "links": [
+        {
+          "label": "GitHub Actions documentation",
+          "url": "https://docs.github.com/en/actions/"
+        },
+        {
+          "label": "Workflow syntax reference",
+          "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax"
+        },
+        {
+          "label": "Deployments and environments",
+          "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/deployments-and-environments"
+        }
+      ],
+      "sections": [
+        {
+          "title": "What an environment does",
+          "items": [
+            "A job names an environment with `jobs.<job_id>.environment`: a name, or a name and a `url`. The job then follows the environment's rules and can use its secrets and variables. The `url` is sent to the deployments API as `environment_url`. A job can also use an environment without creating a deployment: the workflow syntax page shows how.",
+            {
+              "type": "table",
+              "columns": [
+                "Rule",
+                "Detail"
+              ],
+              "rows": [
+                [
+                  "Required reviewers",
+                  "Up to six users or teams. One approval is enough. You can prevent the person who started the deployment from approving it"
+                ],
+                [
+                  "Wait timer",
+                  "Delay the job by 1 to 43,200 minutes (30 days). The wait is not billed"
+                ],
+                [
+                  "Deployment branches and tags",
+                  "No restriction, protected branches only, or selected name patterns, matched against `GITHUB_REF`"
+                ],
+                [
+                  "Secrets and variables",
+                  "Environment secrets are read when a job that uses the environment starts. They beat repository secrets of the same name"
+                ]
+              ]
+            },
+            "A run can wait for environment approval for up to 30 days."
+          ]
+        },
+        {
+          "title": "Gotchas",
+          "items": [
+            {
+              "type": "callout",
+              "kind": "gotcha",
+              "text": "On GitHub Free, Pro and Team plans, required reviewers and wait timers are available only for public repositories."
+            },
+            {
+              "type": "callout",
+              "kind": "gotcha",
+              "text": "A tag with the same name as a protected branch, and forks with a matching branch name, cannot deploy to the environment."
+            }
+          ]
+        }
+      ],
+      "related": [
+        "security",
+        "jobs"
+      ],
+      "sources": [
+        {
+          "label": "Deployments and environments reference",
+          "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/deployments-and-environments"
+        },
+        {
+          "label": "Secrets reference",
+          "url": "https://docs.github.com/en/actions/reference/security/secrets"
+        },
+        {
+          "label": "Actions limits",
+          "url": "https://docs.github.com/en/actions/reference/limits"
+        }
+      ],
+      "notes": [
+        "The docs pages show no version or date. They were read on 2026-11-03; a later change on GitHub's side is not detected by `make check`.",
+        "Custom deployment protection rules exist (the how-to pages cover them) and are not described here."
+      ]
+    },
+    {
+      "id": "artifacts-cache",
+      "name": "Artifacts and cache",
+      "group": "platform",
+      "summary": "Keep files between jobs and runs: artifacts for outputs, cache for dependencies, and their limits.",
+      "level": "deep",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "Not stated on the pages read",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "A commercial service from GitHub, not a CNCF project."
+      },
+      "license": "Proprietary (GitHub service)",
+      "version": {
+        "name": "GitHub Actions (GitHub Docs)",
+        "analysed": "docs read 2026-11-03",
+        "released": "2026-11-03",
+        "docs": "docs.github.com/en/actions, the pages named in sources, read 2026-11-03; the pages show no version or date",
+        "checked": "2026-11-03"
+      },
+      "links": [
+        {
+          "label": "GitHub Actions documentation",
+          "url": "https://docs.github.com/en/actions/"
+        },
+        {
+          "label": "Workflow syntax reference",
+          "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax"
+        },
+        {
+          "label": "Dependency caching reference",
+          "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/dependency-caching"
+        }
+      ],
+      "sections": [
+        {
+          "title": "Which to use",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "",
+                "Artifacts",
+                "Dependency cache"
+              ],
+              "rows": [
+                [
+                  "For",
+                  "Files a job produces that you want after the run, or to pass to another job: binaries, logs, test results",
+                  "Files that rarely change between runs: downloaded dependencies, intermediate build output"
+                ],
+                [
+                  "Actions",
+                  "`actions/upload-artifact`, `actions/download-artifact`",
+                  "A cache action with a `key` and optional `restore-keys`"
+                ],
+                [
+                  "Rule",
+                  "Not interchangeable with cache",
+                  "A job should still work on a cache miss"
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Cache keys",
+          "items": [
+            "The cache action looks for an exact match of the `key` in the branch of the run, then partial matches of the key, then each `restore-keys` entry in order. A key can use contexts and functions, for example a hash of a lock file.",
+            {
+              "type": "code",
+              "title": "Restore keys, from the most to the least specific",
+              "lang": "text",
+              "match": "restore-keys: |\n  npm-feature-${{ hashFiles('package-lock.json') }}",
+              "source": {
+                "label": "Dependency caching reference",
+                "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/dependency-caching"
+              }
+            }
+          ]
+        },
+        {
+          "title": "Limits",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Limit",
+                "Value"
+              ],
+              "rows": [
+                [
+                  "Idle time",
+                  "A cache entry not accessed for over 7 days is removed"
+                ],
+                [
+                  "Repository size",
+                  "10 GB by default, raisable by owners and administrators. Use beyond it is billed"
+                ],
+                [
+                  "Over the limit",
+                  "The new cache is saved and older ones are evicted until the total is under the limit. Constant eviction is cache thrashing"
+                ],
+                [
+                  "Rate",
+                  "200 uploads and 1,500 downloads per minute per repository"
+                ]
+              ]
+            },
+            "`cache-mode` (`read`, `write`, `write-only`, `none`) limits cache access per workflow or job. If you omit it, a default based on the trigger applies.",
+            {
+              "type": "callout",
+              "kind": "gotcha",
+              "text": "Setting `cache-mode: write` or `write-only` on a low-trust trigger can bypass the read-only default and reintroduce cache poisoning."
+            }
+          ]
+        },
+        {
+          "title": "Provenance",
+          "items": [
+            "Artifact attestations create provenance and integrity guarantees for what you build, so consumers can verify where and how it was built. Generating one needs `attestations: write` (see [Permissions](#permissions)); the attestations how-to covers the rest."
+          ]
+        }
+      ],
+      "related": [
+        "permissions",
+        "limits"
+      ],
+      "sources": [
+        {
+          "label": "Workflow artifacts",
+          "url": "https://docs.github.com/en/actions/concepts/workflows-and-actions/workflow-artifacts"
+        },
+        {
+          "label": "Dependency caching reference",
+          "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/dependency-caching"
+        },
+        {
+          "label": "Workflow syntax",
+          "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax"
+        }
+      ],
+      "notes": [
+        "The docs pages show no version or date. They were read on 2026-11-03; a later change on GitHub's side is not detected by `make check`.",
+        "Artifact retention and size limits are on the artifacts pages and are not repeated here."
+      ]
+    },
+    {
+      "id": "limits",
+      "name": "Limits",
+      "group": "platform",
+      "summary": "The numbers that stop a workflow: run time, matrix size, re-runs, file size, rates and output sizes.",
+      "level": "deep",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "Not stated on the pages read",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "A commercial service from GitHub, not a CNCF project."
+      },
+      "license": "Proprietary (GitHub service)",
+      "version": {
+        "name": "GitHub Actions (GitHub Docs)",
+        "analysed": "docs read 2026-11-03",
+        "released": "2026-11-03",
+        "docs": "docs.github.com/en/actions, the pages named in sources, read 2026-11-03; the pages show no version or date",
+        "checked": "2026-11-03"
+      },
+      "links": [
+        {
+          "label": "GitHub Actions documentation",
+          "url": "https://docs.github.com/en/actions/"
+        },
+        {
+          "label": "Workflow syntax reference",
+          "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax"
+        },
+        {
+          "label": "Actions limits",
+          "url": "https://docs.github.com/en/actions/reference/limits"
+        }
+      ],
+      "sections": [
+        {
+          "title": "Limits",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Limit",
+                "Value",
+                "Notes"
+              ],
+              "rows": [
+                [
+                  "Workflow run time",
+                  "35 days",
+                  "Includes waiting and approval time. Longer runs are cancelled"
+                ],
+                [
+                  "Environment approval wait",
+                  "30 days",
+                  ""
+                ],
+                [
+                  "Job timeout",
+                  "360 minutes by default",
+                  "`timeout-minutes`; the runner's own limit applies if lower"
+                ],
+                [
+                  "Step timeout",
+                  "At most 360 minutes",
+                  "`timeout-minutes` on a step"
+                ],
+                [
+                  "Matrix",
+                  "256 jobs per run",
+                  "GitHub-hosted and self-hosted"
+                ],
+                [
+                  "Re-runs",
+                  "50 per run",
+                  "Full and partial re-runs count"
+                ],
+                [
+                  "Workflow file",
+                  "500 KB",
+                  "A larger file does not start runs"
+                ],
+                [
+                  "`run` script",
+                  "21,000 characters",
+                  "Per step"
+                ],
+                [
+                  "Job outputs",
+                  "1 MB per job, 50 MB per run",
+                  "Approximated in UTF-16"
+                ],
+                [
+                  "Reusable workflows",
+                  "10 levels, 50 unique per file",
+                  ""
+                ],
+                [
+                  "Check runs",
+                  "50,000 per check suite",
+                  "Includes the Checks API"
+                ],
+                [
+                  "Trigger rate",
+                  "1,500 events per 10 seconds per repository",
+                  ""
+                ],
+                [
+                  "Queued runs",
+                  "500 runs per 10 seconds",
+                  ""
+                ],
+                [
+                  "Secrets",
+                  "1,000 organization, 100 repository, 100 environment; 48 KB each",
+                  ""
+                ],
+                [
+                  "Cache",
+                  "10 GB per repository by default; 7 days unused",
+                  ""
+                ]
+              ]
+            },
+            "The page marks which limits GitHub Support can raise. It has more limits than these."
+          ]
+        }
+      ],
+      "related": [
+        "matrix",
+        "jobs",
+        "security"
+      ],
+      "sources": [
+        {
+          "label": "Actions limits",
+          "url": "https://docs.github.com/en/actions/reference/limits"
+        },
+        {
+          "label": "Workflow syntax",
+          "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax"
+        },
+        {
+          "label": "Secrets reference",
+          "url": "https://docs.github.com/en/actions/reference/security/secrets"
+        }
+      ],
+      "notes": [
+        "The docs pages show no version or date. They were read on 2026-11-03; a later change on GitHub's side is not detected by `make check`.",
+        "Only the limits read are listed. The page's column on whether Support can raise a limit is not repeated here."
+      ]
+    },
+    {
+      "id": "gh-cli",
+      "name": "The gh CLI",
+      "group": "cli",
+      "summary": "Run and watch workflows from a terminal with `gh workflow` and `gh run`.",
+      "level": "deep",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "Not stated on the pages read",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "A commercial service from GitHub, not a CNCF project."
+      },
+      "license": "Proprietary (GitHub service)",
+      "version": {
+        "name": "GitHub Actions (GitHub Docs)",
+        "analysed": "docs read 2026-11-03",
+        "released": "2026-11-03",
+        "docs": "docs.github.com/en/actions, the pages named in sources, read 2026-11-03; the pages show no version or date",
+        "checked": "2026-11-03"
+      },
+      "links": [
+        {
+          "label": "GitHub CLI manual",
+          "url": "https://cli.github.com/manual/"
+        },
+        {
+          "label": "Using the GitHub CLI in workflows",
+          "url": "https://docs.github.com/en/actions/how-tos/write-workflows/choose-what-workflows-do/use-github-cli"
+        }
+      ],
+      "sections": [
+        {
+          "title": "Workflows",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Command",
+                "Does"
+              ],
+              "rows": [
+                [
+                  "`gh workflow list`",
+                  "List workflows"
+                ],
+                [
+                  "`gh workflow view`",
+                  "View the summary of a workflow"
+                ],
+                [
+                  "`gh workflow run`",
+                  "Run a workflow by creating a `workflow_dispatch` event"
+                ],
+                [
+                  "`gh workflow enable`, `gh workflow disable`",
+                  "Turn a workflow on or off"
+                ]
+              ]
+            },
+            {
+              "type": "table",
+              "columns": [
+                "`gh workflow run` flag",
+                "Does"
+              ],
+              "rows": [
+                [
+                  "`-f, --raw-field key=value`",
+                  "Add a string input"
+                ],
+                [
+                  "`-F, --field key=value`",
+                  "Add an input, with `@` file syntax"
+                ],
+                [
+                  "`--json`",
+                  "Read the inputs as JSON from standard input"
+                ],
+                [
+                  "`-r, --ref`",
+                  "The branch or tag that has the version of the workflow file to run"
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Runs",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Command",
+                "Does"
+              ],
+              "rows": [
+                [
+                  "`gh run list`",
+                  "List recent runs. Filters: `-w` workflow, `-b` branch, `-e` event, `-s` status, `-u` user, `-c` commit, `-L` limit (default 20), `--json`"
+                ],
+                [
+                  "`gh run view`",
+                  "A summary of a run. `-v` shows steps, `--log` the full log, `--log-failed` only the failed steps, `-j` one job, `-w` opens the browser, `--exit-status` fails if the run failed"
+                ],
+                [
+                  "`gh run watch`",
+                  "Watch a run until it ends. `--compact`, `--exit-status`, `-i` interval in seconds (default 3)"
+                ],
+                [
+                  "`gh run rerun`",
+                  "Rerun a run. `--failed` reruns only failed jobs, `-j` one job, `-d` with debug logging"
+                ],
+                [
+                  "`gh run cancel`, `gh run delete`",
+                  "Cancel or delete a run"
+                ],
+                [
+                  "`gh run download`",
+                  "Download artifacts. `-n` by name, `-p` by glob pattern, `-D` into a directory"
+                ]
+              ]
+            },
+            "Every command takes `-R [HOST/]OWNER/REPO` to act on another repository."
+          ]
+        },
+        {
+          "title": "Gotchas",
+          "items": [
+            {
+              "type": "callout",
+              "kind": "tip",
+              "text": "`gh run watch --exit-status` and `gh run view --exit-status` return a failing exit code when the run fails, which suits scripts."
+            },
+            "A workflow must be on the default branch to show a Run workflow button; once it has run, it can be dispatched on any branch or tag through the API or `gh`."
+          ]
+        }
+      ],
+      "related": [
+        "triggers",
+        "actionlint"
+      ],
+      "sources": [
+        {
+          "label": "gh workflow",
+          "url": "https://cli.github.com/manual/gh_workflow"
+        },
+        {
+          "label": "gh run",
+          "url": "https://cli.github.com/manual/gh_run"
+        },
+        {
+          "label": "Manually running a workflow",
+          "url": "https://docs.github.com/en/actions/how-tos/manage-workflow-runs/manually-run-a-workflow"
+        }
+      ],
+      "notes": [
+        "The docs pages show no version or date. They were read on 2026-11-03; a later change on GitHub's side is not detected by `make check`.",
+        "The commands and flags come from `gh --help` (gh 2.103.3), cross-checked against the manual pages named in sources. Your version may differ."
+      ]
+    },
+    {
+      "id": "actionlint",
+      "name": "actionlint",
+      "group": "tools",
+      "summary": "Static checker for GitHub Actions workflow files.",
+      "level": "overview",
+      "status": "active",
+      "started": {
+        "date": "2021-05-25",
+        "basis": "repository created",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "Not a CNCF project."
+      },
+      "license": "MIT",
+      "version": {
+        "name": "actionlint",
+        "analysed": "v1.7.12",
+        "released": "2026-03-30",
+        "docs": "the GitHub repository description and README",
+        "checked": "2026-11-03"
+      },
+      "track": {
+        "github": "rhysd/actionlint",
+        "tag": "^v\\d+\\.\\d+\\.\\d+$"
+      },
+      "links": [
+        {
+          "label": "Repository",
+          "url": "https://github.com/rhysd/actionlint"
+        },
+        {
+          "label": "Releases",
+          "url": "https://github.com/rhysd/actionlint/releases"
+        }
+      ],
+      "sections": [
+        {
+          "title": "What it is",
+          "items": [
+            "Static checker for GitHub Actions workflow files.",
+            "Run it on `.github/workflows` before you push: it reads the files and reports problems."
+          ]
+        }
+      ],
+      "related": [
+        "overview"
+      ],
+      "sources": [
+        {
+          "label": "actionlint repository",
+          "url": "https://github.com/rhysd/actionlint"
+        }
+      ]
+    },
+    {
+      "id": "act",
+      "name": "act",
+      "group": "tools",
+      "summary": "Run your GitHub Actions locally.",
+      "level": "overview",
+      "status": "active",
+      "started": {
+        "date": "2019-01-02",
+        "basis": "repository created",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "Not a CNCF project."
+      },
+      "license": "MIT",
+      "version": {
+        "name": "act",
+        "analysed": "v0.2.95",
+        "released": "2026-11-03",
+        "docs": "the GitHub repository description and README",
+        "checked": "2026-11-03"
+      },
+      "track": {
+        "github": "nektos/act",
+        "tag": "^v\\d+\\.\\d+\\.\\d+$"
+      },
+      "links": [
+        {
+          "label": "Repository",
+          "url": "https://github.com/nektos/act"
+        },
+        {
+          "label": "Releases",
+          "url": "https://github.com/nektos/act/releases"
+        }
+      ],
+      "sections": [
+        {
+          "title": "What it is",
+          "items": [
+            "Run your GitHub Actions locally.",
+            "How closely it matches the real runners is not covered by the pages read for this entry (unconfirmed)."
+          ]
+        }
+      ],
+      "related": [
+        "overview"
+      ],
+      "sources": [
+        {
+          "label": "act repository",
+          "url": "https://github.com/nektos/act"
+        }
+      ]
+    },
+    {
+      "id": "actions-runner",
+      "name": "GitHub Actions runner",
+      "group": "tools",
+      "summary": "The runner application for GitHub Actions: the software a self-hosted runner machine runs.",
+      "level": "overview",
+      "status": "active",
+      "started": {
+        "date": "2019-04-30",
+        "basis": "repository created",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "Not a CNCF project."
+      },
+      "license": "MIT",
+      "version": {
+        "name": "GitHub Actions runner",
+        "analysed": "v2.338.2",
+        "released": "2026-10-26",
+        "docs": "the GitHub repository description and README",
+        "checked": "2026-11-03"
+      },
+      "track": {
+        "github": "actions/runner",
+        "tag": "^v\\d+\\.\\d+\\.\\d+$"
+      },
+      "links": [
+        {
+          "label": "Repository",
+          "url": "https://github.com/actions/runner"
+        },
+        {
+          "label": "Releases",
+          "url": "https://github.com/actions/runner/releases"
+        }
+      ],
+      "sections": [
+        {
+          "title": "What it is",
+          "items": [
+            "The runner application for GitHub Actions: the software a self-hosted runner machine runs.",
+            "It is the program that picks up jobs. See [Runners](#runners) for labels and requirements."
+          ]
+        }
+      ],
+      "related": [
+        "overview"
+      ],
+      "sources": [
+        {
+          "label": "GitHub Actions runner repository",
+          "url": "https://github.com/actions/runner"
+        }
+      ]
+    },
+    {
+      "id": "actions-runner-controller",
+      "name": "Actions Runner Controller",
+      "group": "tools",
+      "summary": "A Kubernetes controller for GitHub Actions self-hosted runners.",
+      "level": "overview",
+      "status": "active",
+      "started": {
+        "date": "2020-01-28",
+        "basis": "repository created",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "Not a CNCF project."
+      },
+      "license": "Apache-2.0",
+      "version": {
+        "name": "Actions Runner Controller",
+        "analysed": "gha-runner-scale-set-0.15.1",
+        "released": "2026-10-23",
+        "docs": "the GitHub repository description and README",
+        "checked": "2026-11-03"
+      },
+      "track": {
+        "github": "actions/actions-runner-controller",
+        "tag": "^gha-runner-scale-set-\\d+\\.\\d+\\.\\d+$"
+      },
+      "links": [
+        {
+          "label": "Repository",
+          "url": "https://github.com/actions/actions-runner-controller"
+        },
+        {
+          "label": "Releases",
+          "url": "https://github.com/actions/actions-runner-controller/releases"
+        }
+      ],
+      "sections": [
+        {
+          "title": "What it is",
+          "items": [
+            "A Kubernetes controller for GitHub Actions self-hosted runners.",
+            "The latest release tag is the runner scale set chart, so the version shown is that tag. See [Runners](#runners) for autoscaling."
+          ]
+        }
+      ],
+      "related": [
+        "overview"
+      ],
+      "sources": [
+        {
+          "label": "Actions Runner Controller repository",
+          "url": "https://github.com/actions/actions-runner-controller"
+        }
+      ]
+    }
+  ],
+  "comparisons": [
+    {
+      "id": "reuse-kinds",
+      "title": "Reusable workflow or composite action",
+      "about": "From the reusing workflow configurations and metadata pages.",
+      "columns": [
+        "Reusable workflow",
+        "Composite action"
+      ],
+      "rows": [
+        {
+          "label": "Used from",
+          "cells": [
+            "A job: `jobs.<id>.uses`",
+            "A step: `steps[*].uses`"
+          ]
+        },
+        {
+          "label": "Defined in",
+          "cells": [
+            "`.github/workflows`, with `on: workflow_call`",
+            "An `action.yml` with `runs.using: composite`"
+          ]
+        },
+        {
+          "label": "Input and output",
+          "cells": [
+            "`inputs`, `outputs` and `secrets` under `workflow_call`",
+            "`inputs` and `outputs` in the metadata"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "files-kinds",
+      "title": "Artifacts or cache",
+      "about": "From the workflow artifacts and dependency caching pages.",
+      "columns": [
+        "Artifacts",
+        "Dependency cache"
+      ],
+      "rows": [
+        {
+          "label": "Use for",
+          "cells": [
+            "Files a job produces, to keep or pass to another job",
+            "Files reused between runs that rarely change"
+          ]
+        },
+        {
+          "label": "Interchangeable",
+          "cells": [
+            "No",
+            "No"
+          ]
+        },
+        {
+          "label": "On a miss",
+          "cells": [
+            "Not applicable",
+            "A job should still work without the cache"
+          ]
+        },
+        {
+          "label": "Limits",
+          "cells": [
+            "See the artifacts pages",
+            "10 GB per repository by default, 7 days unused"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "runner-kinds",
+      "title": "GitHub-hosted or self-hosted runners",
+      "about": "From the runners references.",
+      "columns": [
+        "GitHub-hosted",
+        "Self-hosted"
+      ],
+      "rows": [
+        {
+          "label": "Who runs it",
+          "cells": [
+            "GitHub, a fresh machine for each run",
+            "You, on your own machine"
+          ]
+        },
+        {
+          "label": "Choose with",
+          "cells": [
+            "A label such as `ubuntu-latest`",
+            "`self-hosted` plus the labels you add"
+          ]
+        },
+        {
+          "label": "Fresh machine per run",
+          "cells": [
+            "Yes (apart from the single-CPU runners)",
+            "Not stated here. Ephemeral runners are one of the autoscaling options"
+          ]
+        },
+        {
+          "label": "Docker container actions",
+          "cells": [
+            "Not covered here",
+            "Linux with Docker installed"
+          ]
+        },
+        {
+          "label": "Autoscaling",
+          "cells": [
+            "Not covered here",
+            "Actions Runner Controller, the scale set client, ephemeral runners"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pr-events",
+      "title": "pull_request or pull_request_target",
+      "about": "From the events page and the permissions section of the workflow syntax page.",
+      "columns": [
+        "pull_request",
+        "pull_request_target"
+      ],
+      "rows": [
+        {
+          "label": "GITHUB_SHA",
+          "cells": [
+            "The last merge commit on the merge branch",
+            "The last commit on the default branch"
+          ]
+        },
+        {
+          "label": "GITHUB_REF",
+          "cells": [
+            "`refs/pull/<n>/merge`",
+            "The default branch"
+          ]
+        },
+        {
+          "label": "Default types",
+          "cells": [
+            "`opened`, `synchronize`, `reopened`",
+            "`opened`, `synchronize`, `reopened`"
+          ]
+        },
+        {
+          "label": "GITHUB_TOKEN from a fork",
+          "cells": [
+            "Typically no write access",
+            "Read and write, even from a public fork"
+          ]
+        }
+      ]
+    }
+  ]
+}
