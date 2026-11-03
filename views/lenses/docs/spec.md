@@ -1,6 +1,6 @@
 # Lenses and the organization level: spec
 
-Status: spec drafted, waiting for the owner's approval. No data and no page yet. The visual reference is the mockup `docs/mockups/lenses.html`
+Status: approved by the owner on 2026-11-03 (location accepted, security and storage roles added to the first batch). No data and no page yet. The visual reference is the mockup `docs/mockups/lenses.html`
 (sample text, not verified). Format: `docs/topic-spec.md`, adapted for a view that has its own catalogue.
 
 ## Purpose and audience
@@ -12,7 +12,7 @@ never moves. A second view shows what sits above the resource group: tenant, man
 
 ## Scope
 
-- In: roles (what a thing is for), where a role usually sits and what it talks to, products per stack (generic, Azure, open source), five lenses
+- In: roles (what a thing is for, including a security information and event management role and a storage role), where a role usually sits and what it talks to, products per stack (generic, Azure, open source), five lenses
   (application, network, infrastructure, security, monitoring), the organization level for Azure, an A-Z list and a search over roles and products.
 - Out: subnets, address ranges, sizing, cost, regions and high-availability layouts. Another stack (AWS, vSphere, Dynatrace, and so on) until the
   generic and Azure ones are checked: they are listed as planned. Step-by-step design for a specific product (that is a topic). Anything taken
@@ -70,7 +70,7 @@ whose page no longer resolves, and roles whose Azure service ids are missing fro
   "org":    [{"id","generic","azure","level","kind":"scope|span|outside","inherits":false,"what","why","sources","status","checked"}] }
 ```
 
-- Positions are in the data (a lane and a column). An automatic layout is not worth its cost for twenty boxes.
+- Positions are in the data (a lane and a column). An automatic layout is not worth its cost for twenty-two boxes.
 - The page embeds the data as JSON and draws it in the browser, so it works from `file://` and needs no fetch.
 - A role links to the topics that document it. A role with no topic is listed as "no page yet": that list is the backlog for the add-topic skill.
 - Validator (`make validate`): ids unique; every lens, lane, stack, topic and Azure service id exists; every box has a free cell; every edge
@@ -79,7 +79,7 @@ whose page no longer resolves, and roles whose Azure service ids are missing fro
 
 ## Coverage
 
-Twenty roles, seventeen organization-level items. All are `planned`: the mockup text is sample content and has to be read against the sources
+Twenty-two roles, seventeen organization-level items. All are `planned`: the mockup text is sample content and has to be read against the sources
 before it is data.
 
 | Item | Status | Notes |
@@ -104,6 +104,8 @@ before it is data.
 | `collector` | planned | telemetry collector or agent |
 | `store` | planned | telemetry store |
 | `dash` | planned | dashboards and alerts |
+| `siem` | planned | security events collected and analysed (SIEM); new, not in the mockup, to draw and place |
+| `storage` | planned | object and file storage for uploads, media and backups; new, not in the mockup, to draw and place. Disks belong to the server and are not drawn |
 | `tenant` | planned | the directory, top of the hierarchy |
 | `mg` | planned | management groups |
 | `sub` | planned | subscription |
@@ -135,7 +137,7 @@ before it is data.
 - The Generic names for the organization levels are a mapping, not a standard.
 - One base picture shows one common shape of application. Applications that do not look like it (event-driven, data pipelines, single page
   apps with no web tier) fit it only roughly.
-- There is no security information (SIEM) role yet, and no storage role (object, file, disk). Add them when a lens needs them.
+- `siem` and `storage` are not in the mockup: their place on the picture and their edges are new and need the owner's eye once drawn.
 
 ## Decisions
 
@@ -151,8 +153,8 @@ before it is data.
 - The data lives in `views/lenses/`, not in `topics/`. Reason: it is not a topic about one product, and the registry keeps two layers
   (family, topic); the view is a page of the Views family with its own catalogue. Reason unconfirmed beyond that.
 - Positions in the data, drawn in the browser from embedded JSON. Reason: no layout engine to maintain, and the page must work from `file://`.
-- Written by the assistant and approved by the owner on this date: not yet. The roles and the organization items came from the mockup that
-  the owner reviewed; the text did not.
+- Written by the assistant; spec approved by the owner on 2026-11-03. The roles and the organization items came from the mockup that the
+  owner reviewed; the text did not. Security (SIEM) and storage roles added at the owner's request.
 
 ## Updating
 
