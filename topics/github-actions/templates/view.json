@@ -1,0 +1,13 @@
+{
+  "title": "GitHub Actions",
+  "tabs": [
+    {
+      "id": "others",
+      "label": "Ecosystem"
+    },
+    {
+      "id": "compare",
+      "label": "Compare"
+    }
+  ]
+}

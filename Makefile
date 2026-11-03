@@ -49,3 +49,5 @@ workstation-%:
 # Same for the VS Code setup: make vscode-build, vscode-check, ...
 vscode-%:
 	$(MAKE) -C vscode $*
+github-actions-%:
+	$(MAKE) -C topics/github-actions $*

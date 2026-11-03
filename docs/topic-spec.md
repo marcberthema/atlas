@@ -4,7 +4,8 @@ Every topic keeps `docs/spec.md` next to its data. It is the plan the content is
 before the entries, get it approved, then generate the content. When the data changes, change the spec in the same commit.
 `make validate` runs `shared/spec.py`, which checks the structure below and that the coverage table agrees with the data.
 
-It applies to the published topics and to the unpublished `workstation/` and `vscode/`.
+It applies to the published topics and to the unpublished `workstation/` and `vscode/`. `shared/new_topic.py` creates a draft topic with an empty spec,
+and the `add-topic` and `refresh-topic` skills (`.claude/skills/`) follow this format.
 
 ## Sections
 
