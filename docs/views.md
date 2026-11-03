@@ -23,8 +23,10 @@ declares the metadata appears in the view without editing a diagram. Views live 
   Drafts are never shown, like everywhere else.
 - **Scope.** The loop is a map of where topics fit, not a claim about how anyone works.
 
-## Planned: the Azure estate and the application views
+## Planned: the lenses view
 
-Same mechanism, with `areas` instead of `stages` and a diagram of areas (for the estate: identity, network, governance, platform, workloads;
-for an application: web, API, data, messaging, identity, observability). A topic would declare `placements` (view id, area id). Not built yet:
-the areas have to be agreed first, and they must come from public reference architectures.
+Replaces the earlier idea of an Azure estate view and an application view with areas. One page, `/lenses/`: a base picture of an application,
+five lenses (application, network, infrastructure, security, monitoring) that highlight roles, a stack filter that changes the labels
+(generic, Azure, open source), and a second view for the organization level (tenant, subscriptions, resource groups). It has its own
+catalogue of roles and products, so it is not built from topic metadata like the DevOps loop. The spec is `views/lenses/docs/spec.md`; the
+visual reference is `docs/mockups/lenses.html` (sample text, not verified). Not built yet: the spec has to be approved first.

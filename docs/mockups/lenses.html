@@ -1,0 +1,361 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Lenses (mockup) - Atlas</title>
+<style>
+:root{--bg:#fff;--fg:#111;--mut:#555;--acc:#1a3c5e;--accfg:#fff;--rule:#d5dde5;--card:#f6f8fa;--lane:#f1f4f7;--ok:#1a7f37}
+@media(prefers-color-scheme:dark){:root{--bg:#14181d;--fg:#e8ecef;--mut:#9aa6b2;--acc:#7fb2e5;--accfg:#14181d;--rule:#2b333b;--card:#1c2229;--lane:#181e24;--ok:#56d364}}
+*{box-sizing:border-box}
+body{font:16px/1.45 system-ui,sans-serif;background:var(--bg);color:var(--fg);margin:0}
+button,input{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+.bar{display:flex;gap:16px;align-items:center;padding:8px 16px;border-bottom:1px solid var(--rule);background:var(--card);font-size:.9rem}
+.bar b{color:var(--acc)} .bar span{color:var(--mut)}
+.mock{background:#fff3cd;color:#5c4400;padding:6px 16px;font-size:.85rem;border-bottom:1px solid #e6d28a}
+main{max-width:1320px;margin:0 auto;padding:16px}
+h1{font-size:1.4rem;color:var(--acc);margin:0}
+.sub{color:var(--mut);margin:2px 0 12px;font-size:.95rem}
+.tools{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:flex-end;margin-bottom:8px}
+.grp{display:flex;flex-direction:column;gap:3px}
+.grp>.l{font-size:.75rem;text-transform:uppercase;letter-spacing:.06em;color:var(--mut)}
+.seg{display:inline-flex;border:1px solid var(--rule);border-radius:8px;overflow:hidden;background:var(--bg)}
+.seg button{border:0;background:none;padding:7px 14px;cursor:pointer;border-right:1px solid var(--rule);min-height:40px;display:inline-flex;align-items:center;gap:6px}
+.seg button:last-child{border-right:0}
+.seg button:hover:not([aria-selected=true]):not([aria-pressed=true]):not(:disabled){background:var(--card)}
+.seg button[aria-selected=true],.seg button[aria-pressed=true]{background:var(--acc);color:var(--accfg);font-weight:600}
+.seg button[aria-selected=true] .ic,.seg button[aria-pressed=true] .ic{stroke:var(--accfg)}
+.seg button:disabled{color:var(--mut);cursor:not-allowed;opacity:.6}
+.seg button:disabled[aria-selected=true]{background:var(--lane);font-weight:400}.seg button:disabled[aria-selected=true] .ic{stroke:var(--mut)}
+.seg button:focus-visible{outline-offset:-3px}
+.head{display:flex;flex-wrap:wrap;gap:8px 20px;align-items:flex-start;justify-content:space-between}
+.find{position:relative;min-width:300px;margin-top:2px}
+.find input{width:100%;border:1px solid var(--rule);border-radius:8px;padding:8px 12px;background:var(--bg);min-height:40px}
+.find ul{position:absolute;z-index:5;right:0;width:min(380px,90vw);top:100%;margin:4px 0 0;padding:4px;list-style:none;background:var(--bg);border:1px solid var(--rule);border-radius:8px;box-shadow:0 6px 20px rgba(0,0,0,.18)}
+.find li button{display:flex;flex-direction:column;width:100%;text-align:left;border:0;background:none;padding:8px 10px;border-radius:6px;cursor:pointer}
+.find li button:hover,.find li button:focus-visible{background:var(--card)}
+.find li small{color:var(--mut)}
+.blurb{margin:6px 0 10px;padding:8px 12px;border-left:4px solid var(--acc);background:var(--card);border-radius:0 8px 8px 0}
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:16px;align-items:start}
+@media(max-width:960px){.layout{grid-template-columns:1fr}}
+.map{border:1px solid var(--rule);border-radius:10px;overflow-x:auto;background:var(--bg)}
+svg.m{display:block;width:100%;min-width:780px;height:auto}
+.lane{fill:var(--lane)} .lanel{fill:var(--mut);font:600 12px system-ui,sans-serif;letter-spacing:.07em;text-transform:uppercase}
+.frame{fill:none;stroke:var(--acc);stroke-width:1.5;stroke-dasharray:7 5}
+.framel{fill:var(--acc);font:600 12px system-ui,sans-serif}
+.edge{fill:none;stroke:var(--rule);stroke-width:1.5;stroke-linejoin:round}
+.edge.on{stroke:var(--acc);stroke-width:2.2}
+.edge.dash{stroke-dasharray:6 5} .edge.dot{stroke-dasharray:2 6;stroke-linecap:round}
+.elab{fill:var(--fg);font:12.5px system-ui,sans-serif;paint-order:stroke;stroke:var(--lane);stroke-width:4px}
+.node{cursor:pointer}
+.node rect{fill:var(--bg);stroke:var(--rule);stroke-width:1.5;stroke-dasharray:4 3}
+.node text{fill:var(--mut);font:600 14px system-ui,sans-serif;text-anchor:middle}
+.node .cap{font:12px system-ui,sans-serif}
+.ic{fill:none;stroke:var(--mut);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+svg.ic path{vector-effect:none}
+.node.in rect{stroke:var(--acc);stroke-width:2;stroke-dasharray:none}
+.node.in text{fill:var(--fg)} .node.in .ic{stroke:var(--acc)}
+.node.out{opacity:.55}
+.node:hover rect{stroke:var(--acc);stroke-dasharray:none}
+.node.sel rect{fill:var(--acc);stroke:var(--acc);stroke-dasharray:none}
+.node.sel text{fill:var(--accfg)} .node.sel .ic{stroke:var(--accfg)}
+.node.out.sel{opacity:1}
+.node:focus-visible{outline:none}
+.node:focus-visible rect{stroke:var(--fg);stroke-width:3.5;stroke-dasharray:none}
+.badge{cursor:pointer}
+.badge circle{fill:var(--bg);stroke:var(--acc);stroke-width:2}
+.badge .ic{stroke:var(--acc)}
+.badge.sel circle{fill:var(--acc)} .badge.sel .ic{stroke:var(--accfg)}
+.badge:hover circle{stroke-width:3}
+.badge:focus-visible{outline:none}.badge:focus-visible circle{stroke:var(--fg);stroke-width:3.5}
+.legend{display:flex;flex-wrap:wrap;gap:6px 18px;padding:8px 12px;border-top:1px solid var(--rule);font-size:.85rem;color:var(--mut);align-items:center}
+.legend i{display:inline-block;width:26px;height:0;border-top:2.2px solid var(--acc);vertical-align:middle;margin-right:6px}
+.legend i.d{border-top-style:dashed} .legend i.g{border-top:2px dashed var(--mut);opacity:.6}
+.legend svg{vertical-align:middle;margin-right:4px;stroke:var(--acc)}
+.cross{padding:8px 12px;border-top:1px solid var(--rule);font-size:.88rem;color:var(--mut)}
+.panel{border:1px solid var(--rule);border-radius:10px;background:var(--card);padding:14px;position:sticky;top:12px}
+.panel h2{font-size:1.15rem;margin:0 0 2px;color:var(--acc);display:flex;gap:8px;align-items:center}
+.panel h2 svg{flex:none;stroke:var(--acc)}
+.panel .what{margin:0 0 10px}
+.panel h3{font-size:.75rem;text-transform:uppercase;letter-spacing:.06em;color:var(--mut);margin:12px 0 3px}
+.panel p{margin:0}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{border:1px solid var(--rule);background:var(--bg);border-radius:999px;padding:3px 12px;cursor:pointer;font-size:.88rem}
+.chip:hover{border-color:var(--acc)} .chip.cur{background:var(--acc);color:var(--accfg);border-color:var(--acc)}
+.prods{margin:0;padding:0;list-style:none;display:grid;gap:4px}
+.prods li{border:1px solid var(--rule);background:var(--bg);border-radius:6px;padding:4px 10px}
+.prods li.hit{border-color:var(--acc);box-shadow:0 0 0 2px var(--acc)}
+.hint{color:var(--mut);font-size:.9rem}
+.filed{background:var(--bg);border:1px solid var(--acc);border-radius:8px;padding:6px 10px;margin-bottom:10px;font-size:.9rem}
+.draft{font-size:.8rem;color:var(--mut);margin-top:12px !important;border-top:1px solid var(--rule);padding-top:8px}
+.modtag{display:inline-block;font-size:.75rem;border:1px solid var(--rule);border-radius:4px;padding:0 6px;color:var(--mut);margin-bottom:6px}
+.az{display:grid;gap:18px}
+.az section h2{font-size:1rem;color:var(--acc);margin:0 0 6px;border-bottom:1px solid var(--rule);padding-bottom:3px}
+.az ul{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:8px}
+.az li button{width:100%;text-align:left;border:1px solid var(--rule);background:var(--card);border-radius:8px;padding:8px 12px;cursor:pointer;display:block}
+.az li button:hover{border-color:var(--acc)}
+.az b{display:flex;gap:8px;align-items:center}.az b .ic{flex:none;stroke:var(--acc)} .az span{color:var(--mut);font-size:.88rem;display:block}
+.az .chips{margin-top:4px}.az .chip{cursor:default;padding:0 8px;font-size:.78rem}
+/* organization view */
+.org{border:1px solid var(--rule);border-radius:10px;background:var(--bg);padding:14px;display:grid;gap:12px}
+.os{border:2px solid var(--rule);border-radius:10px;padding:10px 12px;background:var(--lane)}
+.os .os{background:var(--bg)} .os .os .os{background:var(--lane)}
+.os.sel{border-color:var(--acc)}
+.oh{display:flex;gap:8px;align-items:center;margin:0 0 8px;font-size:.95rem}
+.oh button{all:unset;cursor:pointer;font-weight:700;color:var(--acc);display:flex;gap:6px;align-items:center;border-radius:6px;padding:2px 4px}
+.oh button .ic{stroke:var(--acc)}
+.oh button:hover{text-decoration:underline}
+.oh button:focus-visible{outline:3px solid var(--acc)}
+.oh small{color:var(--mut);font-weight:400}
+.oc{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 8px}
+.oc button{display:inline-flex;gap:6px;align-items:center;border:1px solid var(--acc);background:var(--card);border-radius:8px;padding:5px 10px;cursor:pointer}
+.oc button .ic{stroke:var(--acc)}
+.oc button:hover,.oc button.sel{background:var(--acc);color:var(--accfg)} .oc button:hover .ic,.oc button.sel .ic{stroke:var(--accfg)}
+.inh{display:flex;gap:8px;align-items:center;color:var(--mut);font-size:.85rem;margin:0 0 8px}
+.inh svg{flex:none;stroke:var(--mut);fill:none;stroke-width:2}
+.orow{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
+.rgbox{border:2px dashed var(--acc);border-radius:10px;padding:10px 12px;background:var(--card)}
+.rgbox p{margin:0}
+.go{margin-top:8px;display:inline-flex;gap:6px;align-items:center;border:1px solid var(--rule);border-radius:8px;background:var(--bg);padding:6px 10px;cursor:pointer}
+.go:hover{border-color:var(--acc)} .go .ic{stroke:var(--acc)}
+.side{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.side>div{border:1px solid var(--rule);border-radius:10px;padding:10px 12px;background:var(--card)}
+.side h3{margin:0 0 6px;font-size:.95rem;color:var(--acc)} .side h3 small{color:var(--mut);font-weight:400}
+.sr{position:absolute;left:-9999px}
+</style></head><body>
+<div class="bar"><b>Atlas</b><span>IaC</span><span>CI/CD</span><span>Development</span><span>Enterprise</span><span><b>Views</b></span></div>
+<div class="mock">Mockup. Layout and behaviour only: the sample text and product names are not verified and are not Atlas content.</div>
+<main>
+<div class="head"><div><h1>Where does it fit?</h1><p class="sub" id="sub"></p></div>
+  <div class="find"><label class="sr" for="q">Where does a service go?</label><input id="q" type="search" placeholder="Where does it go? Try kafka, redis, bastion" autocomplete="off"><ul id="res" hidden></ul></div></div>
+<div class="tools">
+  <div class="grp"><span class="l" id="vl">View</span><div class="seg" id="view" role="group" aria-labelledby="vl"></div></div>
+  <div class="grp"><span class="l" id="ll">Lens</span><div class="seg" id="lens" role="tablist" aria-labelledby="ll"></div></div>
+  <div class="grp"><span class="l" id="sl">Stack</span><div class="seg" id="stack" role="group" aria-labelledby="sl"></div></div>
+</div>
+
+<div id="mapview">
+  <div class="blurb" id="blurb"></div>
+  <div class="layout">
+    <div class="map"><svg class="m" id="svg" viewBox="0 0 950 616" role="group" aria-label="Application diagram"></svg>
+      <div class="legend"><span><i></i>In this lens</span><span><i class="d"></i>Access or control</span><span><i class="g"></i>Other lenses (faded)</span><span id="lg-f"></span></div>
+      <div class="cross" id="cross"></div></div>
+    <aside class="panel" id="panel" aria-live="polite"></aside>
+  </div>
+</div>
+<div id="orgview" hidden>
+  <div class="blurb" id="oblurb"></div>
+  <div class="layout"><div id="org"></div><aside class="panel" id="opanel" aria-live="polite"></aside></div>
+</div>
+<div id="azview" class="az" hidden></div>
+</main>
+
+<script>
+/* line icons, 24x24 */
+const IC={
+users:'M12 12a4 4 0 100-8 4 4 0 000 8zM4 21c0-4.4 3.6-7 8-7s8 2.6 8 7',
+waf:'M12 21a9 9 0 100-18 9 9 0 000 18zM3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18',
+lb:'M3 12h6M9 12l6-6h6M9 12h12M9 12l6 6h6',
+web:'M3 5h18v14H3zM3 9h18M6 7h.01',
+app:'M8 7l-5 5 5 5M16 7l5 5-5 5M14 5l-4 14',
+db:'M4 6c0-1.7 3.6-3 8-3s8 1.3 8 3-3.6 3-8 3-8-1.3-8-3zM4 6v12c0 1.7 3.6 3 8 3s8-1.3 8-3V6M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3',
+dns:'M4 5h16v14H4zM8 10h8M8 14h5',
+identity:'M8 15a4 4 0 100-8 4 4 0 000 8zM11 12h10M18 12v4M21 12v3',
+secrets:'M6 11h12v10H6zM8 11V8a4 4 0 018 0v3M12 15v3',
+broker:'M2 9h5v6H2zM9.5 9h5v6h-5zM17 9h5v6h-5z',
+cache:'M13 2L4 14h7l-1 8 9-12h-7z',
+search:'M11 18a7 7 0 100-14 7 7 0 000 14zM21 21l-5-5',
+worker:'M12 15a3 3 0 100-6 3 3 0 000 6zM12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2',
+vpn:'M10 14a4 4 0 005.7 0l3-3a4 4 0 00-5.7-5.7l-1 1M14 10a4 4 0 00-5.7 0l-3 3a4 4 0 005.7 5.7l1-1',
+bastion:'M4 21V6h3v3h3V6h4v3h3V6h3v15zM10 21v-6h4v6',
+firewall:'M3 5h18v14H3zM3 10h18M3 15h18M9 5v5M15 10v5M9 15v4',
+filter:'M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z',
+collector:'M3 4h18l-7 8v7l-4 2v-9z',
+store:'M6 3h9l4 4v14H6zM9 12h7M9 16h7M9 8h4',
+dash:'M3 21h18M6 21V11M11 21V4M16 21v-8',
+tenant:'M12 2l9 5v10l-9 5-9-5V7zM12 12l9-5M12 12v10M12 12L3 7',
+mg:'M12 3v6M5 21v-6h14v6M12 9H5v6M12 9h7v6',
+sub:'M3 8h18v12H3zM7 8V4h10v4',
+rg:'M4 4h16v16H4zM8 9h8M8 13h8',
+cost:'M12 21a9 9 0 100-18 9 9 0 000 18zM14.5 9.5c-.5-1-1.5-1.5-2.5-1.5-1.5 0-2.5.8-2.5 2 0 3 5 1.5 5 4.5 0 1.2-1 2-2.5 2-1.1 0-2-.5-2.5-1.5M12 6v2M12 16v2',
+policy:'M6 3h12v18H6zM9 8l2 2 4-4M9 15h6',
+log:'M5 4h14v16H5zM8 9h8M8 13h8M8 17h4',
+bulb:'M9 18h6M10 21h4M12 3a6 6 0 00-4 10.5V16h8v-2.5A6 6 0 0012 3z',
+api:'M8 6l-5 6 5 6M16 6l5 6-5 6',
+graph:'M3 21V3M3 21h18M7 16l4-5 4 3 5-8',
+mon:'M3 12h4l3-8 4 16 3-8h4',
+devops:'M7 8a4 4 0 100 8c4 0 6-8 10-8a4 4 0 110 8c-4 0-6-8-10-8z',
+open:'M5 12h14M13 6l6 6-6 6'
+};
+const ico=(k,sz=18)=>`<svg class="ic" width="${sz}" height="${sz}" viewBox="0 0 24 24" aria-hidden="true"><path d="${IC[k]||IC.app}"/></svg>`;
+const icg=(k,x,y,sz=18)=>`<g class="ic" transform="translate(${x},${y}) scale(${sz/24})"><path d="${IC[k]||IC.app}"/></g>`;
+
+const LENSES=[
+ {id:'app',name:'Application',blurb:'The tiers of an application and the services that help them: who talks to whom.',cross:'Not drawn: access policies, resource groups and tags. They define or restrict the roles above.'},
+ {id:'net',name:'Network',blurb:'How traffic reaches the application, and how administrators reach the servers. The shield is a set of filter rules on that hop.',cross:'Not drawn: route tables and DNS records. They are settings on the roles above.'},
+ {id:'infra',name:'Infrastructure',blurb:'What runs the code, and who it runs as.',cross:'Not drawn: role assignments, resource groups and tags. They are settings on the roles above.'},
+ {id:'sec',name:'Security',blurb:'Who can get in, what is checked on the way, and where secrets are kept.',cross:'Not drawn: role assignments and policies. They are settings on the roles above (see the Organization view).'},
+ {id:'mon',name:'Monitoring',blurb:'How the application and its servers send logs, metrics and traces, and where they end up.',cross:'Not drawn: diagnostic settings, alert rules and retention. They are settings on the roles above.'}];
+const STACKS=[{id:'gen',name:'Generic'},{id:'az',name:'Azure'},{id:'oss',name:'Open source'},{id:'aws',name:'AWS',off:1}];
+const CAT={edge:'Edge and network',run:'Compute and identity',data:'Data and messaging',ops:'Operations'};
+// c,r place a node on the base picture (no c: a setting shown as a badge, not a box)
+const R=[
+{id:'users',n:'Users',full:'Users and clients',cat:'edge',c:0,r:0,l:['net','sec'],what:'People and systems that call the application, over the internet or a private network.',where:'The start of every request path.',why:'Everything else exists to serve them.',az:[],oss:[]},
+{id:'waf',n:'Edge (CDN/WAF)',full:'Edge protection and cache',cat:'edge',c:1,r:0,l:['net','sec'],what:'Caches static content close to users and filters malicious web requests.',where:'In front of the load balancer, facing the internet.',why:'Absorbs load and blocks common attacks before they reach your servers.',az:['Azure Front Door','Application Gateway (WAF)'],oss:['ModSecurity','Varnish']},
+{id:'lb',n:'Load balancer',full:'Load balancer',cat:'edge',c:2,r:0,l:['net'],what:'Spreads requests over several servers and stops sending to one that is unhealthy. Layer 4 balances connections; layer 7 balances HTTP requests and can route by path or host.',where:'Between the edge and the web servers.',why:'You can add or replace servers without clients noticing.',az:['Azure Load Balancer (layer 4)','Application Gateway (layer 7)'],oss:['HAProxy','NGINX','Envoy']},
+{id:'web',n:'Web server',full:'Web server or reverse proxy',cat:'run',c:3,r:0,l:['app','infra','mon'],what:'Serves pages and static files, and passes dynamic requests to the application layer.',where:'First tier behind the load balancer.',why:'Keeps slow clients and static files away from the application code.',az:['App Service'],oss:['NGINX','Apache HTTP Server']},
+{id:'app',n:'App service',full:'Application service',cat:'run',c:4,r:0,l:['app','infra','mon'],what:'Runs the business logic. Talks to the data tier and to the side services.',where:'Second tier. Not reachable from the internet directly.',why:'The one place that decides what is allowed and what is stored.',az:['App Service','Container Apps','AKS','Virtual Machines'],oss:['Kubernetes']},
+{id:'db',n:'Database',full:'Relational database',cat:'data',c:5,r:0,l:['app','mon'],what:'Stores structured data with transactions and a schema.',where:'Data tier. Reachable only from the application tier.',why:'The system of record: other stores hold copies.',az:['Azure SQL','Azure Database for PostgreSQL'],oss:['PostgreSQL','MySQL']},
+{id:'dns',n:'DNS',full:'Name resolution (DNS)',cat:'edge',c:0,r:1,l:['net'],what:'Turns a name such as app.example.com into an address.',where:'Off the request path: clients ask it first, then connect.',why:'Moving traffic means changing a record, not the application.',az:['Azure DNS','Azure Private DNS'],oss:['BIND','CoreDNS']},
+{id:'secrets',n:'Secrets store',full:'Secrets store',cat:'run',c:1,r:1,l:['app','infra','sec'],what:'Keeps passwords, keys and certificates and hands them to the application at run time, with access control and an audit trail.',where:'Beside the application tier: the application asks for a secret, so it never lives in code or config.',why:'Secrets can be rotated and revoked in one place, and every access is logged.',az:['Azure Key Vault'],oss:['OpenBao']},
+{id:'identity',n:'Identity',full:'Identity provider',cat:'run',c:2,r:1,l:['app','infra','sec'],what:'Signs users and services in, and issues the tokens the application checks.',where:'Beside the application tier: the application calls out to it.',why:'Passwords and sign-in rules live in one place, not in every application.',az:['Microsoft Entra ID'],oss:['Keycloak']},
+{id:'broker',n:'Message broker',full:'Message broker',cat:'data',c:3,r:1,l:['app','mon'],what:'Holds messages between a sender and a receiver so they do not have to run at the same time.',where:'Beside the application tier. A sender puts messages in, a worker takes them out.',why:'Absorbs spikes, decouples services, and lets a failed job be retried.',az:['Service Bus','Event Hubs'],oss:['RabbitMQ','Apache Kafka','ActiveMQ'],note:{kafka:'Kafka is an event streaming platform (a log of events). It often fills this role, but it is not the same kind of broker as RabbitMQ.'}},
+{id:'cache',n:'Cache',full:'Cache',cat:'data',c:4,r:1,l:['app','mon'],what:'Keeps frequently read data in memory so the application does not ask the database every time.',where:'Close to the application, usually in the same network segment so reads are fast.',why:'Lower latency and fewer database queries. Traffic between zones can also cost money on some clouds: check your provider.',az:['Azure Managed Redis (unconfirmed)'],oss:['Redis','Memcached']},
+{id:'search',n:'Search',full:'Search index',cat:'data',c:5,r:1,l:['app','mon'],what:'Full-text search and filtering over a copy of the data. Not the system of record.',where:'Beside the application tier, fed from the database or the broker.',why:'Databases are poor at free-text search; this is built for it.',az:['Azure AI Search'],oss:['Elasticsearch','OpenSearch']},
+{id:'worker',n:'Worker',full:'Background worker',cat:'run',c:3,r:2,l:['app','infra','mon'],what:'Takes messages from the broker and does slow work outside the web request.',where:'Same tier as the application, behind the broker.',why:'The user is not kept waiting for slow jobs.',az:['Azure Functions','Container Apps jobs'],oss:['Celery']},
+{id:'vpn',n:'VPN / link',full:'Private connectivity',cat:'edge',c:0,r:3,l:['net','sec'],what:'An encrypted tunnel or dedicated link from an office or another network into the cloud network.',where:'At the edge of the private network.',why:'Reach private services without exposing them to the internet.',az:['VPN Gateway','ExpressRoute'],oss:['WireGuard','OpenVPN']},
+{id:'bastion',n:'Bastion',full:'Bastion (admin access)',cat:'edge',c:1,r:3,l:['net','infra','sec'],what:'A hardened entry point for administrators to reach servers that have no public address.',where:'On the edge of the private network, reached over the VPN or the internet.',why:'Servers stay private: one audited door instead of an open SSH or RDP port on each.',az:['Azure Bastion'],oss:['SSH jump host']},
+{id:'firewall',n:'Firewall',full:'Firewall (central service)',cat:'edge',c:2,r:3,l:['net','sec'],what:'A service that allows or blocks traffic between networks by rules, and some inspect the traffic too. It sits at a network boundary, not on every hop. Hop-by-hop filtering is done by filter rules (the shield).',where:'At the boundary between networks, or on the way out to the internet.',why:'One place to see and control what crosses a boundary.',az:['Azure Firewall'],oss:['pfSense','OPNsense']},
+{id:'filter',n:'Filter rules',full:'Traffic filter rules',cat:'edge',setting:1,l:['net','sec'],what:'Allow and deny rules attached to a subnet or a network interface. Not a separate box: a setting that applies at almost every hop.',where:'On the boundary of each network segment: between the load balancer and the servers, and between the bastion and the servers.',why:'Default deny: each tier accepts only the traffic it expects from the tier in front.',az:['Network security groups'],oss:['iptables / nftables']},
+{id:'collector',n:'Collector',full:'Telemetry collector or agent',cat:'ops',c:3,r:4,l:['mon'],what:'Runs next to the workload, gathers logs, metrics and traces, and forwards them.',where:'On each server or beside each container.',why:'The application does not need to know where telemetry ends up.',az:['Azure Monitor Agent'],oss:['OpenTelemetry Collector','Fluent Bit']},
+{id:'store',n:'Telemetry store',full:'Telemetry store',cat:'ops',c:4,r:4,l:['mon'],what:'Keeps logs and metrics so they can be queried and alerted on.',where:'Central, outside the application servers.',why:'Evidence survives the server that produced it.',az:['Log Analytics','Azure Monitor metrics'],oss:['Prometheus','Loki','Elasticsearch']},
+{id:'dash',n:'Dashboards',full:'Dashboards and alerts',cat:'ops',c:5,r:4,l:['mon'],what:'Shows telemetry and notifies people when a rule trips.',where:'At the end of the monitoring path.',why:'Turns stored data into something a person can act on.',az:['Azure Managed Grafana','Workbooks'],oss:['Grafana','Kibana']}
+];
+const LANES=['Request path','Supporting services','Background work','Network and access','Operations'];
+// from,to,label,style,lenses. '@frame' is the dashed box around the application servers.
+const E=[
+['users','waf','','','net sec'],['waf','lb','','','net'],['lb','web','','','net'],['web','app','','','app'],['app','db','','','app'],
+['users','dns','','dash','net'],['app','identity','sign-in','dash','app infra sec'],['app','secrets','secrets','dash','app infra sec'],['app','broker','messages','','app'],['app','cache','hot data','','app'],['app','search','queries','','app'],
+['broker','worker','','','app'],['vpn','bastion','','dash','net sec'],['bastion','@frame','admin sessions','dash','net infra sec'],['firewall','@frame','inspects','dash','net sec'],
+['@frame','collector','logs, metrics, traces','dot','mon'],['collector','store','','','mon'],['store','dash','','','mon']];
+const W=120,H=64,X=c=>10+160*c,LY=i=>10+122*i,NY=r=>LY(r)+34;
+const FR={x:470,y:32,w:470,b:360};
+const FLAB={app:'',net:'Application servers',infra:'',sec:'Application servers',mon:'Everything in here emits logs, metrics and traces'};
+
+/* organization level (Azure): scopes and the services tied to them */
+const O=[
+{id:'tenant',g:'Directory',a:'Tenant',ic:'tenant',scope:'Top of everything',what:'The organization\'s directory and the root of the hierarchy. Subscriptions trust one tenant for sign-in.',why:'One identity boundary for people, groups and applications.',az:['Microsoft Entra tenant']},
+{id:'mg',g:'Account groups',a:'Management groups',ic:'mg',scope:'Between the tenant and subscriptions',what:'Folders that group subscriptions so policy and access can be set once for many.',why:'Settings made here are inherited by every subscription below.',az:['Management groups']},
+{id:'sub',g:'Account',a:'Subscription',ic:'sub',scope:'Below management groups',what:'The unit of billing and quota, and a boundary for access and policy. Resource groups live inside it.',why:'Where costs are collected and limits apply.',az:['Subscriptions']},
+{id:'rg',g:'Resource group',a:'Resource group',ic:'rg',scope:'Inside a subscription',what:'A container for resources that share a life cycle. This is where everything in the lenses lives.',why:'Deploy, secure and delete a workload as one unit.',az:['Resource groups']},
+{id:'entra',g:'Identity provider',a:'Entra ID',ic:'identity',scope:'Tenant',what:'The directory of users, groups and applications that sign-in and access are checked against.',why:'The Identity role in the lenses is this, one level up.',az:['Microsoft Entra ID']},
+{id:'condacc',g:'Sign-in rules',a:'Conditional Access',ic:'filter',scope:'Tenant',what:'Rules that decide whether a sign-in is allowed: who, from which device or place, how risky.',why:'Stops a stolen password from being enough.',az:['Conditional Access']},
+{id:'pim',g:'Temporary admin access',a:'Privileged Identity Management',ic:'secrets',scope:'Tenant',what:'Makes admin roles temporary and approved, instead of permanent.',why:'Fewer standing administrators.',az:['Privileged Identity Management']},
+{id:'policy',g:'Policy',a:'Azure Policy',ic:'policy',scope:'Management group, subscription or resource group',what:'Rules about what may be deployed and how, checked against resources. Assigned at a scope and inherited below.',why:'Keeps every workload inside the same guard rails.',az:['Azure Policy'],inh:1},
+{id:'rbac',g:'Access assignments',a:'Role assignments (RBAC)',ic:'identity',scope:'Any scope',what:'Who may do what, assigned at a scope and inherited by everything below it.',why:'Give access once, at the right level.',az:['Azure role assignments'],inh:1},
+{id:'cost',g:'Cost tracking',a:'Cost Management',ic:'cost',scope:'Several scopes',what:'Costs and budgets, viewable at several levels of the hierarchy.',why:'Answers who spends what.',az:['Cost Management']},
+{id:'defender',g:'Security posture',a:'Defender for Cloud',ic:'firewall',scope:'Subscription',what:'Security posture and threat alerts across the resources of a subscription.',why:'One list of what to fix first.',az:['Defender for Cloud']},
+{id:'actlog',g:'Operations log',a:'Activity log',ic:'log',scope:'Subscription',what:'Records the management operations done on resources in the subscription: who created, changed or deleted what.',why:'The audit trail of the control plane.',az:['Azure Monitor activity log']},
+{id:'advisor',g:'Recommendations',a:'Advisor',ic:'bulb',scope:'Subscription',what:'Recommendations about cost, reliability, security and performance for the resources you have.',why:'A to-do list generated from your own estate.',az:['Azure Advisor']},
+{id:'arm',g:'Control-plane API',a:'Azure Resource Manager',ic:'api',scope:'Spans every level',what:'The API that the portal, the command line and every deployment tool call. Scopes, role assignments and policy are applied here.',why:'Why Terraform, Bicep and the portal all follow the same rules.',az:['Azure Resource Manager']},
+{id:'graph',g:'Inventory query',a:'Resource Graph',ic:'graph',scope:'Spans subscriptions',what:'Queries resources across many subscriptions at once.',why:'Find things without opening each subscription.',az:['Azure Resource Graph']},
+{id:'monitor',g:'Telemetry platform',a:'Azure Monitor',ic:'mon',scope:'Spans every level',what:'The platform for telemetry. The stores it uses, such as Log Analytics workspaces, are resources inside a resource group and can be shared by several workloads.',why:'Why Monitoring appears in the lenses and here.',az:['Azure Monitor']},
+{id:'devops',g:'Delivery tooling',a:'Azure DevOps',ic:'devops',scope:'Outside the subscriptions',what:'A separate service with its own organization, linked to the tenant for sign-in. It deploys into subscriptions but is not inside one.',why:'The pipelines that build into the resource groups.',az:['Azure DevOps']}
+];
+
+const st={lens:'app',stack:'gen',view:'map',sel:null,hit:null};
+const $=s=>document.querySelector(s),byId=id=>R.find(r=>r.id===id),byO=id=>O.find(o=>o.id===id);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const oname=o=>st.stack==='az'?o.a:o.g;
+
+function seg(el,items,cur,fn,mode,dis){el.innerHTML=items.map(i=>`<button type="button" ${mode==='tab'?`role="tab" aria-selected="${i.id===cur}"`:`aria-pressed="${i.id===cur}"`} data-id="${i.id}" ${i.off||dis?'disabled':''} ${i.off?'title="Planned"':''}>${i.ic?ico(i.ic,16):''}${esc(i.name)}${i.off?' (soon)':''}</button>`).join('');
+  el.onclick=e=>{const b=e.target.closest('button');if(b&&!b.disabled)fn(b.dataset.id);};}
+function caption(r){if(st.stack==='gen')return'';const p=st.stack==='az'?r.az:r.oss;if(!p.length)return'';const n=p.length>1?` +${p.length-1}`:'',m=18-n.length,t=p[0].length>m?p[0].slice(0,m-1)+'…':p[0];return t+n;}
+
+/* geometry */
+const nb=id=>{const r=byId(id),x=X(r.c),y=NY(r.r);return{cx:x+W/2,top:y,bot:y+H,mid:y+H/2,l:x,rt:x+W,r:r.r};};
+function route(a,b){
+  if(b==='@frame'){const A=nb(a),fx=FR.x+(a==='bastion'?40:120),bus=a==='bastion'?A.top-30:A.top-14;return{p:[[A.cx,A.top],[A.cx,bus],[fx,bus],[fx,FR.b]],badge:a==='bastion'?[fx,(bus+FR.b)/2]:null};}
+  if(a==='@frame'){const B=nb(b);return{p:[[B.cx,FR.b],[B.cx,B.top]]};}
+  const A=nb(a),B=nb(b);
+  if(A.r===B.r)return{p:[[A.rt,A.mid],[B.l,B.mid]],badge:a==='lb'&&b==='web'?[FR.x,A.mid]:null};
+  if(A.cx===B.cx)return{p:[[A.cx,A.bot],[B.cx,B.top]]};
+  const bus=B.top-22;return{p:[[A.cx,A.bot],[A.cx,bus],[B.cx,bus],[B.cx,B.top]]};}
+function rounded(p,rad=8){let d=`M${p[0]}`;for(let i=1;i<p.length-1;i++){const[a,b,c]=[p[i-1],p[i],p[i+1]],l1=Math.hypot(b[0]-a[0],b[1]-a[1]),l2=Math.hypot(c[0]-b[0],c[1]-b[1]),r=Math.min(rad,l1/2,l2/2),
+  p1=[b[0]-(b[0]-a[0])/l1*r,b[1]-(b[1]-a[1])/l1*r],p2=[b[0]+(c[0]-b[0])/l2*r,b[1]+(c[1]-b[1])/l2*r];d+=` L${p1} Q${b} ${p2}`;}return d+` L${p[p.length-1]}`;}
+function drawEdge(e){const[a,b,lab,sty,ls]=e,on=ls.split(' ').includes(st.lens);if(!on&&(a==='@frame'||b==='@frame'))return'';
+  const{p}=route(a,b);let o=`<path class="edge ${sty} ${on?'on':''}" d="${rounded(p)}" marker-end="url(#${on?'ah':'ag'})"/>`;
+  if(lab&&on){const L=p[p.length-1],P=p[p.length-2];let x,y,an='middle';
+    if(P[0]===L[0]){x=L[0]+8;y=(a==='@frame'?(P[1]+L[1])/2:P[1]+20);an='start';}else{x=L[0]+6;y=P[1]-5;an='start';}
+    if(a==='bastion'){x=(p[1][0]+p[2][0])/2-20;y=p[1][1]-6;}if(a==='firewall'){x=(p[1][0]+p[2][0])/2;y=p[1][1]+17;}
+    if(a==='app'&&b==='cache'){x=L[0]+8;y=P[1]+22;an='start';}
+    o+=`<text class="elab" x="${x}" y="${y}" text-anchor="${an}">${esc(lab)}</text>`;}
+  return o;}
+function drawBadge(x,y){const sel=st.sel==='filter';return `<g class="badge ${sel?'sel':''}" data-id="filter" tabindex="0" role="button" aria-pressed="${sel}" aria-label="Traffic filter rules"><circle cx="${x}" cy="${y}" r="12"/>${icg('filter',x-8,y-8,16)}</g>`;}
+function drawMap(){
+  const lens=LENSES.find(l=>l.id===st.lens),showB=st.lens==='net'||st.lens==='sec';
+  let o=`<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--acc)"/></marker><marker id="ag" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--rule)"/></marker></defs>`;
+  LANES.forEach((n,i)=>o+=`<rect class="lane" x="0" y="${LY(i)}" width="950" height="108" rx="8"/><text class="lanel" x="14" y="${LY(i)+20}">${n}</text>`);
+  const fl=FLAB[st.lens];if(fl)o+=`<rect class="frame" x="${FR.x}" y="${FR.y}" width="${FR.w}" height="${FR.b-FR.y}" rx="10"/><text class="framel" x="${FR.x+FR.w-8}" y="${FR.y+14}" text-anchor="end">${fl}</text>`;
+  E.forEach(e=>o+=drawEdge(e));
+  R.filter(r=>r.c!==undefined).forEach(r=>{const inl=r.l.includes(st.lens),x=X(r.c),y=NY(r.r),cap=caption(r),s=st.sel===r.id;
+    o+=`<g class="node ${inl?'in':'out'} ${s?'sel':''}" data-id="${r.id}" tabindex="0" role="button" aria-pressed="${s}" aria-label="${esc(r.full)}${inl?'':' (not in this lens)'}"><rect x="${x}" y="${y}" width="${W}" height="${H}" rx="9"/>${icg(r.id,x+W/2-10,y+7,20)}<text x="${x+W/2}" y="${y+42}">${esc(r.n)}</text>${cap?`<text class="cap" x="${x+W/2}" y="${y+57}">${esc(cap)}</text>`:''}</g>`;});
+  if(showB){const bx=route('lb','web').badge,by=route('bastion','@frame').badge;o+=drawBadge(bx[0],bx[1])+drawBadge(by[0],by[1]);}
+  $('#svg').innerHTML=o;$('#blurb').textContent=lens.blurb;$('#cross').textContent=lens.cross;
+  $('#lg-f').innerHTML=showB?`${ico('filter',16)}Traffic filter rules on that hop`:'';}
+
+function chipsFor(r){return `<div class="chips">${LENSES.map(l=>r.l.includes(l.id)?`<button type="button" class="chip ${l.id===st.lens?'cur':''}" data-lens="${l.id}">${l.name}</button>`:'').join('')}</div>`;}
+function prodsHtml(list,hit){if(st.stack==='gen')return`<p class="hint">Generic view: no products. Switch the stack above to see what fills this role.</p>`;
+  if(st.stack==='aws')return'';if(!list.length)return`<p class="hint">Nothing listed for this stack.</p>`;
+  return`<ul class="prods">${list.map(x=>`<li class="${hit&&x.toLowerCase().includes(hit.toLowerCase())?'hit':''}">${esc(x)}</li>`).join('')}</ul>`;}
+function drawPanel(){const p=$('#panel');
+  if(!st.sel){p.innerHTML=`<h2>${LENSES.find(l=>l.id===st.lens).name} lens</h2><p class="hint">Select a role on the picture to see what it is, where it usually sits and why.</p><h3>Roles in this lens</h3><div class="chips">${R.filter(r=>r.l.includes(st.lens)).map(r=>`<button type="button" class="chip" data-role="${r.id}">${esc(r.full)}</button>`).join('')}</div>`;return;}
+  const r=byId(st.sel),ns=[...new Set(E.filter(e=>e[0]===r.id||e[1]===r.id).map(e=>e[0]===r.id?e[1]:e[0]).filter(i=>i[0]!=='@'))],hit=st.hit,prods=st.stack==='az'?r.az:r.oss;
+  const kn=hit&&r.note&&r.note[hit.toLowerCase().split(' ').pop()];
+  let h='';if(hit)h+=`<div class="filed"><b>${esc(hit)}</b> is filed under <b>${esc(r.full)}</b>.${kn?' '+esc(kn):''}</div>`;
+  h+=`<h2>${ico(r.id,22)}${esc(r.full)}</h2>${r.setting?'<span class="modtag">A setting on other roles, not a box</span>':''}<p class="what">${esc(r.what)}</p>`;
+  if(!r.l.includes(st.lens))h+=`<p class="hint">Not part of the ${LENSES.find(l=>l.id===st.lens).name} lens.</p>`;
+  h+=`<h3>Seen in</h3>${chipsFor(r)}<h3>Where it usually sits</h3><p>${esc(r.where)}</p><h3>Why</h3><p>${esc(r.why)}</p>`;
+  if(ns.length)h+=`<h3>Talks to</h3><div class="chips">${ns.map(i=>`<button type="button" class="chip" data-role="${i}">${esc(byId(i).full)}</button>`).join('')}</div>`;
+  h+=`<h3>Products</h3>${prodsHtml(prods,hit)}<p class="draft">Sample text. A real entry would carry its sources and a status.</p>`;p.innerHTML=h;}
+
+function drawOrg(){
+  $('#oblurb').textContent='Everything in the lenses lives in a resource group. This view shows what sits above it: the levels of the hierarchy, and the services tied to each level. Settings made at a level are inherited by everything below it.';
+  const ch=ids=>`<div class="oc">${ids.map(i=>{const o=byO(i);return`<button type="button" data-org="${i}" class="${st.sel===i?'sel':''}">${ico(o.ic,16)}${esc(oname(o))}</button>`;}).join('')}</div>`;
+  const hd=(id,sm)=>{const o=byO(id);return`<div class="oh"><button type="button" data-org="${id}">${ico(o.ic,20)}${esc(oname(o))}</button><small>${sm}</small></div>`;};
+  const inh=`<p class="inh"><svg width="16" height="16" viewBox="0 0 24 24"><path d="M12 4v16M6 14l6 6 6-6"/></svg>Set at this level, inherited below</p>`;
+  $('#org').innerHTML=`<div class="org">
+   <div class="os ${st.sel==='tenant'?'sel':''}">${hd('tenant','one per organization: who people are')}${ch(['entra','condacc','pim'])}
+    <div class="os ${st.sel==='mg'?'sel':''}">${hd('mg','optional layers that group subscriptions')}${ch(['policy','rbac'])}${inh}
+     <div class="os ${st.sel==='sub'?'sel':''}">${hd('sub','billing and limits')}${ch(['cost','defender','actlog','advisor'])}
+      <div class="orow">
+       <div class="rgbox">${hd('rg','one workload, one life cycle')}<p class="hint">Compute, network, data and monitoring resources.</p><button type="button" class="go" data-open="1">${ico('open',16)}Open the lenses: what runs in here</button></div>
+       <div class="rgbox">${hd('rg','another workload')}<p class="hint">Same shape, other resources.</p></div>
+      </div></div>
+     <div class="os" style="border-style:dashed;color:var(--mut)">Another subscription: same shape</div>
+    </div></div>
+   <div class="side">
+    <div><h3>Spans every level <small>not tied to one scope</small></h3>${ch(['arm','graph','monitor'])}</div>
+    <div><h3>Outside the subscriptions <small>linked to the tenant</small></h3>${ch(['devops'])}</div>
+   </div></div>`;
+  const p=$('#opanel');
+  if(!st.sel||!byO(st.sel)){p.innerHTML=`<h2>Organization level</h2><p class="hint">Select a level or a service to see where it lives and what it is for.</p><h3>Not in a resource group</h3><div class="chips">${['entra','policy','rbac','cost','arm','devops'].map(i=>`<button type="button" class="chip" data-org="${i}">${esc(oname(byO(i)))}</button>`).join('')}</div>`;return;}
+  const o=byO(st.sel);
+  p.innerHTML=`<h2>${ico(o.ic,22)}${esc(o.a)}</h2><p class="hint">Generic name: ${esc(o.g)}</p><p class="what" style="margin-top:6px">${esc(o.what)}</p><h3>Lives at</h3><p>${esc(o.scope)}</p>${o.inh?'<h3>Inheritance</h3><p>Assigned at a scope and inherited by everything below it.</p>':''}<h3>Why</h3><p>${esc(o.why)}</p><h3>Products</h3>${st.stack==='az'?`<ul class="prods">${o.az.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`:'<p class="hint">This view is Azure-shaped. Switch the stack to Azure to see names.</p>'}<p class="draft">Sample text. Placement by scope is to be verified against Learn.</p>`;}
+
+function drawAZ(){const q=$('#q').value.trim().toLowerCase();let o='';
+  Object.keys(CAT).forEach(c=>{const rs=R.filter(r=>r.cat===c&&(!q||(r.full+' '+r.what+' '+r.az.join(' ')+' '+r.oss.join(' ')).toLowerCase().includes(q)));if(!rs.length)return;
+    o+=`<section><h2>${CAT[c]}</h2><ul>${rs.sort((a,b)=>a.full.localeCompare(b.full)).map(r=>`<li><button type="button" data-role="${r.id}"><b>${ico(r.id,20)}${esc(r.full)}</b><span>${esc(r.what.split('. ')[0].replace(/\.$/,''))}.</span><div class="chips">${r.setting?'<span class="chip">Setting</span>':''}${r.l.map(l=>`<span class="chip">${LENSES.find(x=>x.id===l).name}</span>`).join('')}</div></button></li>`).join('')}</ul></section>`;});
+  const os=O.filter(x=>!q||(x.a+' '+x.g+' '+x.what).toLowerCase().includes(q));
+  if(os.length)o+=`<section><h2>Organization level</h2><ul>${os.map(x=>`<li><button type="button" data-org="${x.id}"><b>${ico(x.ic,20)}${esc(oname(x))}</b><span>${esc(x.scope)}</span></button></li>`).join('')}</ul></section>`;
+  $('#azview').innerHTML=o||'<p class="hint">Nothing matches.</p>';}
+
+const VIEWS=[{id:'map',name:'Lenses',ic:'web'},{id:'org',name:'Organization',ic:'tenant'},{id:'az',name:'A–Z',ic:'dns'}];
+function show(){seg($('#view'),VIEWS,st.view,id=>{st.view=id;st.sel=null;show();});
+  seg($('#lens'),LENSES,st.lens,id=>{st.lens=id;show();},'tab',st.view!=='map');seg($('#stack'),STACKS,st.stack,id=>{st.stack=id;show();});
+  $('#mapview').hidden=st.view!=='map';$('#orgview').hidden=st.view!=='org';$('#azview').hidden=st.view!=='az';
+  $('#sub').textContent=st.view==='org'?'Above the resource group: the tenant, the subscriptions and the services tied to each level.':st.view==='az'?'Every role and organization-level service, by name.':'One base picture of an application. Pick a lens to see the roles that matter for it, then pick a role.';
+  if(st.view==='map'){drawMap();drawPanel();}else if(st.view==='org')drawOrg();else drawAZ();}
+function pick(id,hit){if(byO(id)){st.sel=id;st.hit=null;st.view='org';show();return;}
+  st.sel=id;st.hit=hit||null;const r=byId(id);if(!r.l.includes(st.lens)&&hit)st.lens=r.l[0];st.view='map';show();const n=document.querySelector(`#svg [data-id="${id}"]`);if(n)n.focus({preventScroll:true});}
+$('#svg').addEventListener('click',e=>{const n=e.target.closest('.node,.badge');if(n)pick(n.dataset.id);});
+$('#svg').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){const n=e.target.closest('.node,.badge');if(n){e.preventDefault();pick(n.dataset.id);}}});
+document.addEventListener('click',e=>{const c=e.target.closest('[data-role]');if(c)return pick(c.dataset.role);const g=e.target.closest('[data-org]');if(g)return pick(g.dataset.org);
+  const l=e.target.closest('[data-lens]');if(l){st.lens=l.dataset.lens;show();return;}if(e.target.closest('[data-open]')){st.view='map';st.sel=null;show();return;}if(!e.target.closest('.find'))$('#res').hidden=true;});
+function results(q){q=q.toLowerCase();const out=[];R.forEach(r=>{if(r.full.toLowerCase().includes(q))out.push({t:r.full,s:'role',id:r.id});
+  [['Azure',r.az],['Open source',r.oss]].forEach(([k,a])=>a.forEach(p=>{if(p.toLowerCase().includes(q))out.push({t:p,s:`${k} · ${r.full}`,id:r.id,hit:p.replace(/ \(.*\)/,'')});}));});
+  O.forEach(o=>{if((o.a+' '+o.g).toLowerCase().includes(q))out.push({t:o.a,s:`Organization level · ${o.scope}`,id:o.id});});return out.slice(0,8);}
+$('#q').addEventListener('input',e=>{const q=e.target.value.trim(),ul=$('#res');if(st.view==='az')drawAZ();if(!q){ul.hidden=true;return;}const rs=results(q);
+  ul.innerHTML=rs.length?rs.map((x,i)=>`<li><button type="button" data-i="${i}">${esc(x.t)} <small>${esc(x.s)}</small></button></li>`).join(''):'<li class="hint" style="padding:8px 10px">No match</li>';ul.hidden=false;ul._r=rs;});
+$('#res').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const x=$('#res')._r[b.dataset.i];$('#res').hidden=true;$('#q').value='';pick(x.id,x.hit);});
+$('#q').addEventListener('keydown',e=>{if(e.key==='Escape')$('#res').hidden=true;if(e.key==='Enter'){const b=$('#res button');if(b){e.preventDefault();b.click();}}});
+show();
+</script></body></html>
