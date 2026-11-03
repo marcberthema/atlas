@@ -49,10 +49,10 @@ release are both recorded), and the Microsoft Learn WSL pages. Re-check with `ma
 
 ## Known gaps
 
-- The Windows setup script was tested from WSL with `--list`, `--dry-run` and local repositories. A real Scoop install on Windows has not been run.
+- The Windows setup script was tested from WSL with `--list`, `--dry-run` and local repositories, and the owner has run it on Windows and reported it works. No run log or date is kept.
 - The `winget` line and the installer choices in the README are unverified: confirm against git-scm.com before relying on them.
 - The guide (`data/workstation.json`) does not describe the Windows script.
-- The Claude Code status line on Windows is untested.
+- The Claude Code status line on Windows was not checked separately from the script run.
 
 ## Decisions
 
