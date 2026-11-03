@@ -61,7 +61,6 @@ source link) and `make gitops-examples`.
 
 ## Known gaps
 
-- `argo-cd` has 11 duplicate notes (the same three notes are repeated several times). Clean them up; nothing is lost by removing the copies.
 - The API, CLI and UI comparison for Argo CD is a recorded to-do (above).
 - Start dates: 30 of 33 entries are `started` unconfirmed, because repository creation dates are not announcements.
 - Unconfirmed in the data: Flux core's web UI, whether the Flux Helm controller uses the Helm SDK, the exact Flux v1 retirement date, whether
