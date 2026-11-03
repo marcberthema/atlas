@@ -88,8 +88,10 @@ def repo_url():
 
 
 def ref():
-    """The git ref shown in the About window. `make deploy` sets ATLAS_REF, so a plain build says "dev" and committed pages do not change on every commit."""
-    return os.environ.get("ATLAS_REF", "").strip() or "dev"
+    """The version shown in the About window: ATLAS_REF if set (`make deploy`), else the release tag in the VERSION file, else "dev".
+    The file changes only when a release is cut, so committed pages do not change on every commit."""
+    v = SITE / "VERSION"
+    return os.environ.get("ATLAS_REF", "").strip() or (v.read_text(encoding="utf-8").strip() if v.exists() else "") or "dev"
 
 
 def load():

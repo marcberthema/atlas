@@ -21,7 +21,7 @@ serve: build  ## Build and serve dist/ on http://localhost:8000
 	$(PY) -m http.server 8000 --directory dist
 
 deploy: validate  ## Validate, build (stamping the git ref shown in the About window) and deploy dist/ to atlas.marcberthelette.com with wrangler
-	ATLAS_REF=$$(git describe --always --dirty) $(MAKE) build
+	ATLAS_REF=$$(git describe --tags --always --dirty) $(MAKE) build
 	wrangler deploy
 
 clean:  ## Remove generated output
