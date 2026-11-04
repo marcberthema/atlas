@@ -1,0 +1,25 @@
+{
+  "title": "WorkOS",
+  "tabs": [
+    {
+      "id": "platform",
+      "label": "Start"
+    },
+    {
+      "id": "api",
+      "label": "API"
+    },
+    {
+      "id": "products",
+      "label": "Products",
+      "group": "products",
+      "pick": "Product"
+    },
+    {
+      "id": "tooling",
+      "label": "Tooling",
+      "group": "tooling",
+      "pick": "Tool"
+    }
+  ]
+}
