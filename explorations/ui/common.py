@@ -98,8 +98,12 @@ function lens(id){{btns.forEach(b=>b.setAttribute('aria-pressed',b.dataset.l===i
   roles.forEach(r=>{{const on=id==='all'||r.dataset.lenses.split(' ').includes(id);r.classList.toggle('dim',!on);if(on)n++}});
   document.getElementById('about').textContent=A[id];draw(id);live.textContent=btns.find(b=>b.dataset.l===id).textContent+' lens: '+n+' roles';}}
 btns.forEach(b=>b.addEventListener('click',()=>lens(b.dataset.l)));
-roles.forEach(r=>r.addEventListener('click',()=>{{const d=R[r.dataset.id];roles.forEach(x=>x.setAttribute('aria-pressed',x===r));
+const DEF=panel.innerHTML;
+function clearSel(){{roles.forEach(x=>x.setAttribute('aria-pressed',false));panel.innerHTML=DEF;draw()}}
+roles.forEach(r=>r.addEventListener('click',()=>{{if(r.getAttribute('aria-pressed')==='true'){{clearSel();return}}const d=R[r.dataset.id];roles.forEach(x=>x.setAttribute('aria-pressed',x===r));
   panel.innerHTML='<h2>'+d.full+'</h2><p>'+d.what+'</p><p><b>Where</b> '+d.where+'</p><p><b>Why</b> '+d.why+'</p>';}}));
+document.addEventListener('click',e=>{{if(!e.target.closest('.role,.panel,.lensbtn'))clearSel()}});
+addEventListener('keydown',e=>{{if(e.key==='Escape'&&document.querySelector('.role[aria-pressed=true]'))clearSel()}});
 const lanesEl=document.getElementById('lanes'),svg=document.getElementById('wires');let cur='all',hov=null;
 function rp(p,r){{let d='M'+p[0][0]+' '+p[0][1];for(let i=1;i<p.length-1;i++){{const [x0,y0]=p[i-1],[x1,y1]=p[i],[x2,y2]=p[i+1],l1=Math.hypot(x1-x0,y1-y0),l2=Math.hypot(x2-x1,y2-y1),k=Math.min(r,l1/2,l2/2);
   d+='L'+(x1-(x1-x0)/l1*k)+' '+(y1-(y1-y0)/l1*k)+'Q'+x1+' '+y1+' '+(x1+(x2-x1)/l2*k)+' '+(y1+(y2-y1)/l2*k)}}
