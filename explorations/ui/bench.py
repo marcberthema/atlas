@@ -90,6 +90,7 @@ tbody th{font:700 1.05rem var(--c);text-transform:uppercase;letter-spacing:.05em
 .role.dim{opacity:.35;clip-path:polygon(0 0,calc(100% - 14px) 0,100% 14px,100% 100%,0 100%)}
 .role[aria-pressed=true]{outline:3px solid var(--win);outline-offset:2px}
 .panel{margin-top:1.4rem;background:var(--win);color:var(--ink);padding:1.2rem 1.4rem;max-width:62ch}.panel h2{font:700 2rem var(--c);text-transform:uppercase;margin:0 0 .3rem}.panel p{margin:.4rem 0}
+.wires{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible;color:#F5F5F0}.wl{font:700 .95rem "Barlow Condensed",sans-serif;text-transform:uppercase;letter-spacing:.05em;fill:#F5F5F0;paint-order:stroke;stroke:#0B0B0B;stroke-width:4px;stroke-linejoin:round}
 @media(max-width:760px){.reel{grid-template-columns:1fr}.rule{position:static}.strip .head{grid-template-columns:1fr}.cells{grid-template-columns:repeat(2,1fr)}.gap{display:none}.find{flex-wrap:wrap;padding:.6rem 1rem}}
 """
 CSS = CSS.replace("HOLE", HOLE).replace("GRAIN", GRAIN)

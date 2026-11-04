@@ -90,19 +90,31 @@ def lenses_markup():
         lanes += f'<div class="lane" role="group" aria-label="{esc(ln["label"])}"><h2>{esc(ln["label"])}</h2><div class="cells">{cells}</div></div>'
     roles = {r["id"]: {k: r.get(k, "") for k in ("name", "full", "what", "where", "why")} for r in L["roles"]}
     about = {l["id"]: l["about"] for l in L["lenses"]}
+    edges = [e for e in L["edges"] if not e["to"].startswith("@") and not e["from"].startswith("@")]
     js = f"""<script>
-const R={json.dumps(roles)},A={json.dumps(about)};
+const R={json.dumps(roles)},A={json.dumps(about)},E={json.dumps(edges)};
 const btns=[...document.querySelectorAll('.lensbtn')],roles=[...document.querySelectorAll('.role')],panel=document.getElementById('panel'),live=document.getElementById('live');
 function lens(id){{btns.forEach(b=>b.setAttribute('aria-pressed',b.dataset.l===id));let n=0;
   roles.forEach(r=>{{const on=r.dataset.lenses.split(' ').includes(id);r.classList.toggle('dim',!on);if(on)n++}});
-  document.getElementById('about').textContent=A[id];live.textContent=btns.find(b=>b.dataset.l===id).textContent+' lens: '+n+' roles';}}
+  document.getElementById('about').textContent=A[id];draw(id);live.textContent=btns.find(b=>b.dataset.l===id).textContent+' lens: '+n+' roles';}}
 btns.forEach(b=>b.addEventListener('click',()=>lens(b.dataset.l)));
 roles.forEach(r=>r.addEventListener('click',()=>{{const d=R[r.dataset.id];roles.forEach(x=>x.setAttribute('aria-pressed',x===r));
   panel.innerHTML='<h2>'+d.full+'</h2><p>'+d.what+'</p><p><b>Where</b> '+d.where+'</p><p><b>Why</b> '+d.why+'</p>';}}));
+const lanesEl=document.getElementById('lanes'),svg=document.getElementById('wires');let cur='app';
+function draw(id){{cur=id||cur;const o=lanesEl.getBoundingClientRect(),NS='http://www.w3.org/2000/svg';
+  const box=i=>{{const b=document.querySelector('.role[data-id="'+i+'"]');if(!b)return null;const r=b.getBoundingClientRect();return {{l:r.left-o.left,r:r.right-o.left,t:r.top-o.top,b:r.bottom-o.top,cx:(r.left+r.right)/2-o.left,cy:(r.top+r.bottom)/2-o.top}}}};
+  let h='<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="currentColor"/></marker></defs>';
+  E.filter(e=>e.lenses.includes(cur)).forEach(e=>{{const a=box(e.from),b=box(e.to);if(!a||!b)return;let d,mx,my;
+    if(Math.abs(a.cy-b.cy)<4){{const x1=a.cx<b.cx?a.r:a.l,x2=a.cx<b.cx?b.l:b.r;d='M'+x1+' '+a.cy+'L'+x2+' '+b.cy;mx=(x1+x2)/2;my=a.cy-6}}
+    else{{const dn=b.cy>a.cy,y1=dn?a.b:a.t,y2=dn?b.t:b.b,m=(y1+y2)/2;d=Math.abs(a.cx-b.cx)<4?'M'+a.cx+' '+y1+'L'+b.cx+' '+y2:'M'+a.cx+' '+y1+'L'+a.cx+' '+m+'L'+b.cx+' '+m+'L'+b.cx+' '+y2;mx=(a.cx+b.cx)/2;my=m-4}}
+    h+='<path d="'+d+'" fill="none" stroke="currentColor" stroke-width="2" marker-end="url(#ah)"'+(e.style==='dash'?' stroke-dasharray="7 5"':e.style==='dot'?' stroke-dasharray="2 5" stroke-linecap="round"':'')+'/>';
+    if(e.label)h+='<text x="'+mx+'" y="'+my+'" text-anchor="middle" class="wl">'+e.label+'</text>';}});
+  svg.setAttribute('viewBox','0 0 '+o.width+' '+o.height);svg.innerHTML=h;}}
+addEventListener('resize',()=>draw());if(document.fonts)document.fonts.ready.then(()=>draw());
 lens('app');
 </script>"""
     return (f'<div class="lensbar" role="group" aria-label="Lens">{lenses}</div><p id="about" class="about"></p>'
-            f'<div class="lanes">{lanes}</div><aside id="panel" class="panel" aria-live="polite"><h2>Pick a role</h2>'
+            f'<div class="lanes" id="lanes" style="position:relative">{lanes}<svg class="wires" id="wires" aria-hidden="true"></svg></div><aside id="panel" class="panel" aria-live="polite"><h2>Pick a role</h2>'
             f'<p>Select a role in the picture to read what it is, where it sits and why it exists.</p></aside>'
             f'<p id="live" class="sr" role="status"></p>', js)
 

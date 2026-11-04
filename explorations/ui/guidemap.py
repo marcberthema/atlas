@@ -74,6 +74,7 @@ thead th{background:transparent;font-size:1.05rem}tbody th{width:7rem}
 .c-edge{background:var(--yel)}.c-run{background:var(--blue)}.c-data{background:var(--land)}.c-ops{background:var(--lil)}
 .role.dim{opacity:.3}.role[aria-pressed=true]{outline:3px solid var(--ink);outline-offset:2px}
 .panel{margin-top:1.4rem;background:var(--cor);border-radius:48px;padding:1.4rem 2.2rem;max-width:640px}.panel h2{font-size:1.8rem}.panel p{margin:.4rem 0}
+.wires{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible;color:#1D2A22}.wl{font:600 .85rem "Familjen Grotesk",sans-serif;fill:#1D2A22;paint-order:stroke;stroke:#fff;stroke-width:4px;stroke-linejoin:round}
 @media(max-width:760px){.map{grid-template-columns:1fr;margin:2rem 0 0}.lobe{min-height:0;margin:-.6rem 0;border-radius:36% 64% 52% 48% / 22% 26% 74% 78%;padding:2.6rem 1.8rem}
 .coast{border-radius:0 0 40px 40px}.views,.cmp{padding:1.6rem 1.4rem}.entry,.cmp,.views{border-radius:34px}.cells{grid-template-columns:repeat(2,1fr)}.gap{display:none}.lane{border-radius:30px}}
 """
