@@ -1,0 +1,1417 @@
+{
+  "title": "WorkOS",
+  "intro": "What WorkOS offers and its API surface: sign-in, SSO, directory sync, roles, audit logs, and the SDKs.",
+  "checked": "2026-11-04",
+  "scope": "A summary of what is available and the API, not a replacement for the docs. Prices and plans are left out. WorkOS is a commercial service; the SDKs are open source.",
+  "groups": [
+    {
+      "id": "platform",
+      "label": "Start",
+      "about": "What WorkOS is and how its API works."
+    },
+    {
+      "id": "products",
+      "label": "Products",
+      "about": "Each feature with its API surface."
+    },
+    {
+      "id": "tooling",
+      "label": "Tooling and SDKs",
+      "about": "Client libraries and the CLI."
+    }
+  ],
+  "entries": [
+    {
+      "id": "platform",
+      "name": "What WorkOS is",
+      "group": "platform",
+      "level": "overview",
+      "summary": "A hosted API and dashboard that adds enterprise features to a SaaS app: sign-in, SSO, directory sync, roles, audit logs.",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "Not stated on the page read",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "Commercial service, not a CNCF project."
+      },
+      "license": "n/a",
+      "version": {
+        "name": "WorkOS documentation",
+        "analysed": "docs read on 2026-11-04",
+        "released": "2026-11-04",
+        "docs": "workos.com/docs pages in sources; they show no date, so the check date is used",
+        "checked": "2026-11-04"
+      },
+      "related": [
+        "api",
+        "authkit",
+        "sso"
+      ],
+      "notes": [
+        "The docs pages show no date and no version; the check date is used. Plans, prices and limits per plan are not recorded."
+      ],
+      "links": [
+        {
+          "label": "Documentation",
+          "url": "https://workos.com/docs/"
+        },
+        {
+          "label": "Glossary",
+          "url": "https://workos.com/docs/glossary"
+        },
+        {
+          "label": "Dashboard",
+          "url": "https://dashboard.workos.com/"
+        }
+      ],
+      "sections": [
+        {
+          "title": "What you get",
+          "items": [
+            "One REST API at https://api.workos.com, a Dashboard for people who do not code, and SDKs. Each feature below is a product you switch on.",
+            "Sign-in: [AuthKit](#authkit) (hosted login, sessions, MFA). Enterprise customers: [SSO](#sso), [Directory Sync](#directory-sync) and the [Admin Portal](#admin-portal) where their IT team sets it up.",
+            "Access: [roles and groups](#rbac), [fine-grained authorization](#fga), [feature flags](#feature-flags). Records: [audit logs](#audit-logs), [events and webhooks](#events). Data: [Vault](#vault), [Pipes](#pipes).",
+            "Protocols behind SSO and directory sync (SAML, OIDC, SCIM) are in [Identity providers](../identity/index.html)."
+          ]
+        },
+        {
+          "title": "Main objects",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Object",
+                "What it is"
+              ],
+              "rows": [
+                [
+                  "Environment",
+                  "A staging or production workspace with its own API keys and settings."
+                ],
+                [
+                  "Organization",
+                  "A customer of your app. SSO connections, directories and roles hang off it."
+                ],
+                [
+                  "User",
+                  "A person who signs in through AuthKit. Organization memberships link users to organizations."
+                ],
+                [
+                  "Connection",
+                  "One SSO link between an organization and its identity provider."
+                ],
+                [
+                  "Directory",
+                  "One synced user directory of an organization, with directory users and groups."
+                ]
+              ]
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "WorkOS docs index (llms.txt)",
+          "url": "https://workos.com/docs/llms.txt"
+        },
+        {
+          "label": "API reference: getting started",
+          "url": "https://workos.com/docs/reference.md"
+        },
+        {
+          "label": "Glossary",
+          "url": "https://workos.com/docs/glossary.md"
+        }
+      ]
+    },
+    {
+      "id": "api",
+      "name": "API conventions",
+      "group": "platform",
+      "level": "overview",
+      "summary": "REST and JSON at api.workos.com, a bearer API key, cursor pagination and per-key rate limits.",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "Not stated on the page read",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "Commercial service, not a CNCF project."
+      },
+      "license": "n/a",
+      "version": {
+        "name": "WorkOS documentation",
+        "analysed": "docs read on 2026-11-04",
+        "released": "2026-11-04",
+        "docs": "workos.com/docs pages in sources; they show no date, so the check date is used",
+        "checked": "2026-11-04"
+      },
+      "related": [
+        "platform",
+        "sdks"
+      ],
+      "notes": [
+        "The docs pages show no date and no version; the check date is used. Plans, prices and limits per plan are not recorded."
+      ],
+      "links": [
+        {
+          "label": "API authentication",
+          "url": "https://workos.com/docs/reference/api-authentication"
+        },
+        {
+          "label": "Pagination",
+          "url": "https://workos.com/docs/reference/pagination"
+        },
+        {
+          "label": "Rate limits",
+          "url": "https://workos.com/docs/reference/rate-limits"
+        },
+        {
+          "label": "Errors",
+          "url": "https://workos.com/docs/reference/errors"
+        },
+        {
+          "label": "Testing",
+          "url": "https://workos.com/docs/reference/testing"
+        }
+      ],
+      "sections": [
+        {
+          "title": "Basics",
+          "items": [
+            "Base URL https://api.workos.com. Requests and responses are JSON. Standard HTTP verbs and status codes.",
+            "Authenticate with the environment's secret API key as a bearer token: Authorization: Bearer sk_... A missing or wrong key returns 401.",
+            "Lists are paginated; see the pagination page for the cursor parameters. Errors have their own reference page.",
+            "A testing page explains how to try SSO and directory sync without a real identity provider."
+          ]
+        },
+        {
+          "title": "Rate limits (the general rule and the exceptions on the page)",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Scope",
+                "Limit"
+              ],
+              "rows": [
+                [
+                  "All requests",
+                  "6,000 per 60 seconds per API key"
+                ],
+                [
+                  "GET /sso/authorize",
+                  "1,000 per 60 seconds per connection"
+                ],
+                [
+                  "/directory_users",
+                  "4 per second per directory"
+                ],
+                [
+                  "SCIM provisioning /scim/v2.0/*",
+                  "6,000 per 60 seconds per directory token"
+                ],
+                [
+                  "DELETE /organizations/*",
+                  "50 per 60 seconds per API key"
+                ]
+              ]
+            },
+            "AuthKit APIs are limited per environment; the page lists them. Over the limit you get 429."
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "API authentication",
+          "url": "https://workos.com/docs/reference/api-authentication.md"
+        },
+        {
+          "label": "Rate limits",
+          "url": "https://workos.com/docs/reference/rate-limits.md"
+        },
+        {
+          "label": "API reference: getting started",
+          "url": "https://workos.com/docs/reference.md"
+        }
+      ]
+    },
+    {
+      "id": "authkit",
+      "name": "AuthKit",
+      "group": "products",
+      "level": "overview",
+      "summary": "Hosted sign-in and user management: users, sessions, invitations, MFA, API keys.",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "Not stated on the page read",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "Commercial service, not a CNCF project."
+      },
+      "license": "n/a",
+      "version": {
+        "name": "WorkOS documentation",
+        "analysed": "docs read on 2026-11-04",
+        "released": "2026-11-04",
+        "docs": "workos.com/docs pages in sources; they show no date, so the check date is used",
+        "checked": "2026-11-04"
+      },
+      "related": [
+        "mfa",
+        "rbac",
+        "sso"
+      ],
+      "notes": [
+        "The docs pages show no date and no version; the check date is used. Plans, prices and limits per plan are not recorded."
+      ],
+      "links": [
+        {
+          "label": "AuthKit guide",
+          "url": "https://workos.com/docs/authkit"
+        },
+        {
+          "label": "AuthKit API reference",
+          "url": "https://workos.com/docs/reference/authkit"
+        }
+      ],
+      "sections": [
+        {
+          "title": "What it does",
+          "items": [
+            "A login UI and APIs for users and organization memberships. You redirect to AuthKit, then exchange the returned code for a user and session tokens.",
+            "Beyond the login page the API covers email verification, password reset, magic auth, invitations, JWT templates, CORS origins, redirect URIs and API keys for users and organizations."
+          ]
+        },
+        {
+          "title": "API surface",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Object",
+                "Operations"
+              ],
+              "rows": [
+                [
+                  "Users and sessions",
+                  "user, session, session tokens, logout, authentication, identity"
+                ],
+                [
+                  "Memberships",
+                  "organization, organization-membership, invitation"
+                ],
+                [
+                  "Sign-in methods",
+                  "magic-auth, password-reset, email-verification, mfa"
+                ],
+                [
+                  "Settings",
+                  "redirect-uri, create/list CORS origin, JWT template"
+                ],
+                [
+                  "API keys",
+                  "create for user or organization, list, validate, expire, delete"
+                ]
+              ]
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "Get started with AuthKit",
+          "url": "https://workos.com/docs/authkit.md"
+        },
+        {
+          "label": "AuthKit API reference",
+          "url": "https://workos.com/docs/reference/authkit.md"
+        }
+      ]
+    },
+    {
+      "id": "sso",
+      "name": "Single Sign-On",
+      "group": "products",
+      "level": "overview",
+      "summary": "One integration for SAML and OIDC identity providers, per organization connection.",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "Not stated on the page read",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "Commercial service, not a CNCF project."
+      },
+      "license": "n/a",
+      "version": {
+        "name": "WorkOS documentation",
+        "analysed": "docs read on 2026-11-04",
+        "released": "2026-11-04",
+        "docs": "workos.com/docs pages in sources; they show no date, so the check date is used",
+        "checked": "2026-11-04"
+      },
+      "related": [
+        "admin-portal",
+        "directory-sync"
+      ],
+      "notes": [
+        "The SAML signing and encryption certificate operations are read from the reference index only (unconfirmed detail)."
+      ],
+      "links": [
+        {
+          "label": "SSO guide",
+          "url": "https://workos.com/docs/sso"
+        },
+        {
+          "label": "SSO API reference",
+          "url": "https://workos.com/docs/reference/sso"
+        }
+      ],
+      "sections": [
+        {
+          "title": "What it does",
+          "items": [
+            "Your app sends the user to the connection's identity provider and gets a profile back. WorkOS handles the protocol differences.",
+            "The Admin Portal lets the customer's IT contact set the connection up. Domain verification proves which domains an organization owns."
+          ]
+        },
+        {
+          "title": "API surface",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Object",
+                "Operations"
+              ],
+              "rows": [
+                [
+                  "Connection",
+                  "create, get, list, patch, delete"
+                ],
+                [
+                  "Login flow",
+                  "get-authorization-url, profile and token, get user profile, logout"
+                ],
+                [
+                  "Keys",
+                  "JSON web key set; SAML IdP signing and SP encryption certificates (create, list, delete)"
+                ],
+                [
+                  "Domain verification",
+                  "create, get, verify, delete"
+                ]
+              ]
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "Single Sign-On guide",
+          "url": "https://workos.com/docs/sso.md"
+        },
+        {
+          "label": "SSO API reference",
+          "url": "https://workos.com/docs/reference/sso.md"
+        },
+        {
+          "label": "Domain verification",
+          "url": "https://workos.com/docs/reference/domain-verification.md"
+        }
+      ]
+    },
+    {
+      "id": "directory-sync",
+      "name": "Directory Sync",
+      "group": "products",
+      "level": "overview",
+      "summary": "Read a customer's users and groups from their directory and react to changes.",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "Not stated on the page read",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "Commercial service, not a CNCF project."
+      },
+      "license": "n/a",
+      "version": {
+        "name": "WorkOS documentation",
+        "analysed": "docs read on 2026-11-04",
+        "released": "2026-11-04",
+        "docs": "workos.com/docs pages in sources; they show no date, so the check date is used",
+        "checked": "2026-11-04"
+      },
+      "related": [
+        "events",
+        "admin-portal"
+      ],
+      "notes": [
+        "The docs pages show no date and no version; the check date is used. Plans, prices and limits per plan are not recorded."
+      ],
+      "links": [
+        {
+          "label": "Directory Sync guide",
+          "url": "https://workos.com/docs/directory-sync"
+        },
+        {
+          "label": "Directory Sync API reference",
+          "url": "https://workos.com/docs/reference/directory-sync"
+        }
+      ],
+      "sections": [
+        {
+          "title": "What it does",
+          "items": [
+            "One integration for many directory providers. WorkOS keeps directory users and groups current and sends events when they change.",
+            "The provider side uses SCIM; see [Identity providers](../identity/index.html). The events are listed under [events](#events)."
+          ]
+        },
+        {
+          "title": "API surface",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Object",
+                "Operations"
+              ],
+              "rows": [
+                [
+                  "Directory",
+                  "get, list, delete, sync"
+                ],
+                [
+                  "Directory user",
+                  "get, list, list by group"
+                ],
+                [
+                  "Directory group",
+                  "get, list"
+                ]
+              ]
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "Directory Sync guide",
+          "url": "https://workos.com/docs/directory-sync.md"
+        },
+        {
+          "label": "Directory Sync API reference",
+          "url": "https://workos.com/docs/reference/directory-sync.md"
+        }
+      ]
+    },
+    {
+      "id": "admin-portal",
+      "name": "Admin Portal",
+      "group": "products",
+      "level": "overview",
+      "summary": "A hosted page where a customer's IT contact configures SSO and directory sync.",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "Not stated on the page read",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "Commercial service, not a CNCF project."
+      },
+      "license": "n/a",
+      "version": {
+        "name": "WorkOS documentation",
+        "analysed": "docs read on 2026-11-04",
+        "released": "2026-11-04",
+        "docs": "workos.com/docs pages in sources; they show no date, so the check date is used",
+        "checked": "2026-11-04"
+      },
+      "related": [
+        "sso",
+        "directory-sync"
+      ],
+      "notes": [
+        "The docs pages show no date and no version; the check date is used. Plans, prices and limits per plan are not recorded."
+      ],
+      "links": [
+        {
+          "label": "Admin Portal guide",
+          "url": "https://workos.com/docs/admin-portal"
+        },
+        {
+          "label": "Admin Portal API reference",
+          "url": "https://workos.com/docs/reference/admin-portal"
+        }
+      ],
+      "sections": [
+        {
+          "title": "What it does",
+          "items": [
+            "You generate a portal link for an organization and send it. The portal covers Connections and Directories.",
+            "Related API: organization IT contacts (create, invite, list, revoke, delete) and provider icons."
+          ]
+        },
+        {
+          "title": "API surface",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Object",
+                "Operations"
+              ],
+              "rows": [
+                [
+                  "Portal link",
+                  "generate a link for an organization"
+                ],
+                [
+                  "IT contact",
+                  "create, invite, list, revoke, delete"
+                ]
+              ]
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "Admin Portal guide",
+          "url": "https://workos.com/docs/admin-portal.md"
+        },
+        {
+          "label": "Admin Portal API reference",
+          "url": "https://workos.com/docs/reference/admin-portal.md"
+        }
+      ]
+    },
+    {
+      "id": "rbac",
+      "name": "Roles, permissions and groups",
+      "group": "products",
+      "level": "overview",
+      "summary": "Environment and organization roles made of permissions, assigned to users and groups.",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "Not stated on the page read",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "Commercial service, not a CNCF project."
+      },
+      "license": "n/a",
+      "version": {
+        "name": "WorkOS documentation",
+        "analysed": "docs read on 2026-11-04",
+        "released": "2026-11-04",
+        "docs": "workos.com/docs pages in sources; they show no date, so the check date is used",
+        "checked": "2026-11-04"
+      },
+      "related": [
+        "fga",
+        "authkit"
+      ],
+      "notes": [
+        "The docs pages show no date and no version; the check date is used. Plans, prices and limits per plan are not recorded."
+      ],
+      "links": [
+        {
+          "label": "RBAC guide",
+          "url": "https://workos.com/docs/rbac"
+        },
+        {
+          "label": "Roles API reference",
+          "url": "https://workos.com/docs/reference/roles"
+        },
+        {
+          "label": "Groups API reference",
+          "url": "https://workos.com/docs/reference/groups"
+        }
+      ],
+      "sections": [
+        {
+          "title": "What it does",
+          "items": [
+            "Environment roles apply to every organization. Custom roles belong to one organization. A role holds permission slugs.",
+            "Groups collect users so a role can be assigned to the group."
+          ]
+        },
+        {
+          "title": "API surface",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Object",
+                "Operations"
+              ],
+              "rows": [
+                [
+                  "Roles",
+                  "create, get, list, update, set permissions, add permission"
+                ],
+                [
+                  "Custom roles",
+                  "create, get, list, update, delete, add, remove or set permissions"
+                ],
+                [
+                  "Permissions",
+                  "create, get, list, update, delete"
+                ],
+                [
+                  "Groups",
+                  "create, get, list, update, delete, add, remove or update members, role assignment"
+                ]
+              ]
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "RBAC guide",
+          "url": "https://workos.com/docs/rbac.md"
+        },
+        {
+          "label": "Roles API reference",
+          "url": "https://workos.com/docs/reference/roles.md"
+        },
+        {
+          "label": "Groups API reference",
+          "url": "https://workos.com/docs/reference/groups.md"
+        }
+      ]
+    },
+    {
+      "id": "fga",
+      "name": "Fine-Grained Authorization",
+      "group": "products",
+      "level": "overview",
+      "summary": "Roles on individual resources in a hierarchy, with access checks.",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "Not stated on the page read",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "Commercial service, not a CNCF project."
+      },
+      "license": "n/a",
+      "version": {
+        "name": "WorkOS documentation",
+        "analysed": "docs read on 2026-11-04",
+        "released": "2026-11-04",
+        "docs": "workos.com/docs pages in sources; they show no date, so the check date is used",
+        "checked": "2026-11-04"
+      },
+      "related": [
+        "rbac"
+      ],
+      "notes": [
+        "The docs pages show no date and no version; the check date is used. Plans, prices and limits per plan are not recorded."
+      ],
+      "links": [
+        {
+          "label": "FGA guide",
+          "url": "https://workos.com/docs/fga"
+        },
+        {
+          "label": "FGA API reference",
+          "url": "https://workos.com/docs/reference/fga"
+        }
+      ],
+      "sections": [
+        {
+          "title": "What it does",
+          "items": [
+            "Resources are things in your app (workspaces, projects). A role assignment gives a membership a role on a resource and its descendants.",
+            "Access checks answer whether a user has a permission on a resource, and list resources, memberships or effective permissions."
+          ]
+        },
+        {
+          "title": "API surface",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Object",
+                "Operations"
+              ],
+              "rows": [
+                [
+                  "Resource",
+                  "create, get, list, update, delete (also by external id)"
+                ],
+                [
+                  "Role assignment",
+                  "create, list, list for resource, delete"
+                ],
+                [
+                  "Access check",
+                  "check, list resources, list memberships, list effective permissions"
+                ]
+              ]
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "FGA guide",
+          "url": "https://workos.com/docs/fga.md"
+        },
+        {
+          "label": "FGA API reference",
+          "url": "https://workos.com/docs/reference/fga.md"
+        }
+      ]
+    },
+    {
+      "id": "feature-flags",
+      "name": "Feature Flags",
+      "group": "products",
+      "level": "overview",
+      "summary": "Turn features on for chosen organizations or for everyone in an environment.",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "Not stated on the page read",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "Commercial service, not a CNCF project."
+      },
+      "license": "n/a",
+      "version": {
+        "name": "WorkOS documentation",
+        "analysed": "docs read on 2026-11-04",
+        "released": "2026-11-04",
+        "docs": "workos.com/docs pages in sources; they show no date, so the check date is used",
+        "checked": "2026-11-04"
+      },
+      "related": [],
+      "notes": [
+        "The list of flag operations was not read in full (unconfirmed)."
+      ],
+      "links": [
+        {
+          "label": "Feature Flags guide",
+          "url": "https://workos.com/docs/feature-flags"
+        },
+        {
+          "label": "Feature Flags API reference",
+          "url": "https://workos.com/docs/reference/feature-flags"
+        }
+      ],
+      "sections": [
+        {
+          "title": "What it does",
+          "items": [
+            "A flag has a slug, a default value and targeting rules. It can be enabled per organization or for all organizations."
+          ]
+        },
+        {
+          "title": "API surface",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Object",
+                "Operations"
+              ],
+              "rows": [
+                [
+                  "Flag",
+                  "create, get, list and update through the flag pages; the exact list was not read"
+                ],
+                [
+                  "Targeting",
+                  "targeting rules per organization"
+                ]
+              ]
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "Feature Flags guide",
+          "url": "https://workos.com/docs/feature-flags.md"
+        },
+        {
+          "label": "Feature Flags API reference",
+          "url": "https://workos.com/docs/reference/feature-flags.md"
+        }
+      ]
+    },
+    {
+      "id": "audit-logs",
+      "name": "Audit Logs",
+      "group": "products",
+      "level": "overview",
+      "summary": "Record notable user actions in your app and let customers export them.",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "Not stated on the page read",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "Commercial service, not a CNCF project."
+      },
+      "license": "n/a",
+      "version": {
+        "name": "WorkOS documentation",
+        "analysed": "docs read on 2026-11-04",
+        "released": "2026-11-04",
+        "docs": "workos.com/docs pages in sources; they show no date, so the check date is used",
+        "checked": "2026-11-04"
+      },
+      "related": [],
+      "notes": [
+        "The docs pages show no date and no version; the check date is used. Plans, prices and limits per plan are not recorded."
+      ],
+      "links": [
+        {
+          "label": "Audit Logs guide",
+          "url": "https://workos.com/docs/audit-logs"
+        },
+        {
+          "label": "Audit Logs API reference",
+          "url": "https://workos.com/docs/reference/audit-logs"
+        }
+      ],
+      "sections": [
+        {
+          "title": "What it does",
+          "items": [
+            "Each event says what action was taken, by whom and on what. You define schemas for your actions, then send events.",
+            "Customers can export logs; you can set how long events are kept."
+          ]
+        },
+        {
+          "title": "API surface",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Object",
+                "Operations"
+              ],
+              "rows": [
+                [
+                  "Event",
+                  "create"
+                ],
+                [
+                  "Schema",
+                  "create, list, list actions"
+                ],
+                [
+                  "Export",
+                  "create, get"
+                ],
+                [
+                  "Retention",
+                  "get, set"
+                ]
+              ]
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "Audit Logs guide",
+          "url": "https://workos.com/docs/audit-logs.md"
+        },
+        {
+          "label": "Audit Logs API reference",
+          "url": "https://workos.com/docs/reference/audit-logs.md"
+        }
+      ]
+    },
+    {
+      "id": "events",
+      "name": "Events and webhooks",
+      "group": "products",
+      "level": "overview",
+      "summary": "Learn what changed in WorkOS: poll the events list or receive webhooks.",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "Not stated on the page read",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "Commercial service, not a CNCF project."
+      },
+      "license": "n/a",
+      "version": {
+        "name": "WorkOS documentation",
+        "analysed": "docs read on 2026-11-04",
+        "released": "2026-11-04",
+        "docs": "workos.com/docs pages in sources; they show no date, so the check date is used",
+        "checked": "2026-11-04"
+      },
+      "related": [
+        "directory-sync"
+      ],
+      "notes": [
+        "The docs pages show no date and no version; the check date is used. Plans, prices and limits per plan are not recorded."
+      ],
+      "links": [
+        {
+          "label": "Events guide",
+          "url": "https://workos.com/docs/events"
+        },
+        {
+          "label": "Webhooks API reference",
+          "url": "https://workos.com/docs/reference/webhooks"
+        },
+        {
+          "label": "Events API reference",
+          "url": "https://workos.com/docs/reference/events"
+        }
+      ],
+      "sections": [
+        {
+          "title": "What it does",
+          "items": [
+            "The events API lists activity (for example directory sync changes). Webhook endpoints push the same kind of events to your server."
+          ]
+        },
+        {
+          "title": "API surface",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Object",
+                "Operations"
+              ],
+              "rows": [
+                [
+                  "Events",
+                  "list"
+                ],
+                [
+                  "Webhook endpoint",
+                  "create, list, update, delete"
+                ]
+              ]
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "Events guide",
+          "url": "https://workos.com/docs/events.md"
+        },
+        {
+          "label": "Webhooks API reference",
+          "url": "https://workos.com/docs/reference/webhooks.md"
+        },
+        {
+          "label": "Events API reference",
+          "url": "https://workos.com/docs/reference/events.md"
+        }
+      ]
+    },
+    {
+      "id": "mfa",
+      "name": "Multi-Factor Authentication",
+      "group": "products",
+      "level": "overview",
+      "summary": "A standalone API for TOTP and SMS factors.",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "Not stated on the page read",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "Commercial service, not a CNCF project."
+      },
+      "license": "n/a",
+      "version": {
+        "name": "WorkOS documentation",
+        "analysed": "docs read on 2026-11-04",
+        "released": "2026-11-04",
+        "docs": "workos.com/docs pages in sources; they show no date, so the check date is used",
+        "checked": "2026-11-04"
+      },
+      "related": [
+        "authkit"
+      ],
+      "notes": [
+        "The MFA operation names were not read in full (unconfirmed). Whether AuthKit MFA and this API overlap was not checked."
+      ],
+      "links": [
+        {
+          "label": "MFA guide",
+          "url": "https://workos.com/docs/mfa"
+        },
+        {
+          "label": "MFA API reference",
+          "url": "https://workos.com/docs/reference/mfa"
+        }
+      ],
+      "sections": [
+        {
+          "title": "What it does",
+          "items": [
+            "Add factors to an existing sign-in. SMS works only for US phone numbers, according to the reference page. AuthKit has its own MFA settings; this API is for use outside it."
+          ]
+        },
+        {
+          "title": "API surface",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Object",
+                "Operations"
+              ],
+              "rows": [
+                [
+                  "Factor",
+                  "enroll"
+                ],
+                [
+                  "Challenge",
+                  "create, verify (the page lists the operations; not read in full)"
+                ]
+              ]
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "MFA guide",
+          "url": "https://workos.com/docs/mfa.md"
+        },
+        {
+          "label": "MFA API reference",
+          "url": "https://workos.com/docs/reference/mfa.md"
+        }
+      ]
+    },
+    {
+      "id": "vault",
+      "name": "Vault",
+      "group": "products",
+      "level": "overview",
+      "summary": "Encrypted storage for sensitive values such as API keys and PII.",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "Not stated on the page read",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "Commercial service, not a CNCF project."
+      },
+      "license": "n/a",
+      "version": {
+        "name": "WorkOS documentation",
+        "analysed": "docs read on 2026-11-04",
+        "released": "2026-11-04",
+        "docs": "workos.com/docs pages in sources; they show no date, so the check date is used",
+        "checked": "2026-11-04"
+      },
+      "related": [],
+      "notes": [
+        "Operation names were not read (unconfirmed). Reference only."
+      ],
+      "links": [
+        {
+          "label": "Vault guide",
+          "url": "https://workos.com/docs/vault"
+        },
+        {
+          "label": "Vault API reference",
+          "url": "https://workos.com/docs/reference/vault"
+        }
+      ],
+      "sections": [
+        {
+          "title": "What it does",
+          "items": [
+            "Data is encrypted with keys WorkOS provisions. The API has objects and keys."
+          ]
+        },
+        {
+          "title": "API surface",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Object",
+                "Operations"
+              ],
+              "rows": [
+                [
+                  "Object",
+                  "store and read encrypted objects"
+                ],
+                [
+                  "Key",
+                  "data key operations"
+                ]
+              ]
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "Vault guide",
+          "url": "https://workos.com/docs/vault.md"
+        },
+        {
+          "label": "Vault API reference",
+          "url": "https://workos.com/docs/reference/vault.md"
+        }
+      ]
+    },
+    {
+      "id": "pipes",
+      "name": "Pipes",
+      "group": "products",
+      "level": "overview",
+      "summary": "Let your customers connect their third-party accounts to your app.",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "Not stated on the page read",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "Commercial service, not a CNCF project."
+      },
+      "license": "n/a",
+      "version": {
+        "name": "WorkOS documentation",
+        "analysed": "docs read on 2026-11-04",
+        "released": "2026-11-04",
+        "docs": "workos.com/docs pages in sources; they show no date, so the check date is used",
+        "checked": "2026-11-04"
+      },
+      "related": [],
+      "notes": [
+        "Operation names were not read (unconfirmed). Reference only."
+      ],
+      "links": [
+        {
+          "label": "Pipes guide",
+          "url": "https://workos.com/docs/pipes"
+        },
+        {
+          "label": "Pipes API reference",
+          "url": "https://workos.com/docs/reference/pipes"
+        }
+      ],
+      "sections": [
+        {
+          "title": "What it does",
+          "items": [
+            "Pipes manages the connection and the tokens for data integrations, so your app can call the third-party API for a user."
+          ]
+        },
+        {
+          "title": "API surface",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Object",
+                "Operations"
+              ],
+              "rows": [
+                [
+                  "Provider and data integration",
+                  "list the providers you enable"
+                ],
+                [
+                  "Connected account",
+                  "a user's connection"
+                ],
+                [
+                  "Access token",
+                  "get a token for a connected account"
+                ]
+              ]
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "Pipes guide",
+          "url": "https://workos.com/docs/pipes.md"
+        },
+        {
+          "label": "Pipes API reference",
+          "url": "https://workos.com/docs/reference/pipes.md"
+        }
+      ]
+    },
+    {
+      "id": "sdks",
+      "name": "SDKs",
+      "group": "tooling",
+      "level": "ref",
+      "summary": "Official client libraries; the Node SDK is tracked here.",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "Not stated on the page read",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "Not a CNCF project."
+      },
+      "license": "MIT",
+      "version": {
+        "name": "workos-node",
+        "analysed": "v12.1.0",
+        "released": "2026-10-30",
+        "docs": "GitHub releases",
+        "checked": "2026-11-04"
+      },
+      "related": [],
+      "notes": [
+        "Only workos-node is tracked. workos-python v10.6.0, workos-go v10.6.0 and authkit-nextjs v4.6.2 were seen on GitHub, all MIT; the full SDK list is unconfirmed."
+      ],
+      "links": [
+        {
+          "label": "workos-node",
+          "url": "https://github.com/workos/workos-node"
+        },
+        {
+          "label": "Client libraries",
+          "url": "https://workos.com/docs/reference/client-libraries"
+        },
+        {
+          "label": "Releases",
+          "url": "https://github.com/workos/workos-node/releases"
+        }
+      ],
+      "sections": [
+        {
+          "title": "What it is",
+          "items": [
+            "WorkOS publishes SDKs on GitHub, among them Node (workos-node), Python (workos-python), Go (workos-go) and a Next.js AuthKit library (authkit-nextjs). The client libraries page lists the rest.",
+            "Each SDK wraps the same REST API; see [API conventions](#api)."
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "Client libraries",
+          "url": "https://workos.com/docs/reference/client-libraries.md"
+        },
+        {
+          "label": "workos-node",
+          "url": "https://github.com/workos/workos-node"
+        }
+      ],
+      "track": {
+        "github": "workos/workos-node"
+      }
+    },
+    {
+      "id": "cli",
+      "name": "WorkOS CLI",
+      "group": "tooling",
+      "level": "ref",
+      "summary": "The official CLI to integrate and manage WorkOS from the terminal.",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "Not stated on the page read",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "Not a CNCF project."
+      },
+      "license": "unconfirmed",
+      "version": {
+        "name": "workos/cli",
+        "analysed": "v0.24.0",
+        "released": "2026-10-26",
+        "docs": "GitHub releases",
+        "checked": "2026-11-04"
+      },
+      "related": [],
+      "notes": [
+        "GitHub reports no SPDX licence for this repository, so the licence is unconfirmed."
+      ],
+      "links": [
+        {
+          "label": "Repository",
+          "url": "https://github.com/workos/cli"
+        },
+        {
+          "label": "MCP server",
+          "url": "https://workos.com/docs/mcp"
+        }
+      ],
+      "sections": [
+        {
+          "title": "What it is",
+          "items": [
+            "Published on npm and on GitHub. The docs index describes it as the official CLI for integrating and managing WorkOS.",
+            "The MCP server lets an AI agent manage a WorkOS workspace; see the MCP page."
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "WorkOS docs index (llms.txt)",
+          "url": "https://workos.com/docs/llms.txt"
+        },
+        {
+          "label": "workos/cli",
+          "url": "https://github.com/workos/cli"
+        }
+      ],
+      "track": {
+        "github": "workos/cli"
+      }
+    }
+  ],
+  "comparisons": []
+}

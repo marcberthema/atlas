@@ -59,3 +59,7 @@ lenses-check:  ## Check the lenses data and that its source links still answer (
 # Same for the Claude Code setup: make claude-setup, claude-project PROJECT=<path>, ...
 claude-%:
 	$(MAKE) -C claude $*
+cloudflare-%:
+	$(MAKE) -C topics/cloudflare $*
+workos-%:
+	$(MAKE) -C topics/workos $*

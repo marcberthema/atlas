@@ -1,0 +1,1469 @@
+{
+  "title": "Cloudflare",
+  "intro": "What Cloudflare offers and its API: DNS and CDN, Workers and storage, security, Zero Trust, and the tools to manage them.",
+  "checked": "2026-11-04",
+  "scope": "A summary of what is available, not a replacement for the docs, which cover well over a hundred products. Plans and prices are left out. Cloudflare is a commercial service with a free tier; Wrangler, cloudflared and the provider are open source.",
+  "groups": [
+    {
+      "id": "platform",
+      "label": "Start",
+      "about": "How the pieces fit and how the API works."
+    },
+    {
+      "id": "compute",
+      "label": "Compute",
+      "about": "Workers."
+    },
+    {
+      "id": "data",
+      "label": "Data",
+      "about": "Storage, databases and messaging that attach to Workers."
+    },
+    {
+      "id": "edge",
+      "label": "Edge",
+      "about": "DNS, cache and TLS in front of your site."
+    },
+    {
+      "id": "security",
+      "label": "Security",
+      "about": "Web application protection."
+    },
+    {
+      "id": "zerotrust",
+      "label": "Zero Trust",
+      "about": "Private access and tunnels."
+    },
+    {
+      "id": "tooling",
+      "label": "Tooling",
+      "about": "CLI, Terraform and the tunnel daemon."
+    }
+  ],
+  "entries": [
+    {
+      "id": "platform",
+      "name": "What Cloudflare offers",
+      "group": "platform",
+      "level": "overview",
+      "summary": "A network that sits in front of your site (DNS, cache, TLS, WAF), runs your code (Workers) and connects private apps (Tunnel, Cloudflare One).",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "Not stated on the page read",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "Commercial service with a free tier, not a CNCF project."
+      },
+      "license": "n/a",
+      "version": {
+        "name": "Cloudflare documentation",
+        "analysed": "docs page updated Oct 8, 2026",
+        "released": "2026-10-08",
+        "docs": "pages in sources, read on the check date; each page shows its own last-updated date, listed in notes",
+        "checked": "2026-11-04"
+      },
+      "related": [
+        "api",
+        "workers"
+      ],
+      "notes": [
+        "The date is the Workers page; the index itself shows none.",
+        "Last updated on the page: Oct 8, 2026."
+      ],
+      "links": [
+        {
+          "label": "Documentation",
+          "url": "https://developers.cloudflare.com/"
+        },
+        {
+          "label": "Product index (llms.txt)",
+          "url": "https://developers.cloudflare.com/llms.txt"
+        },
+        {
+          "label": "Fundamentals",
+          "url": "https://developers.cloudflare.com/fundamentals/"
+        }
+      ],
+      "sections": [
+        {
+          "title": "What it does",
+          "items": [
+            "In front: a domain's DNS points at Cloudflare, which proxies traffic: [DNS](#dns), [Cache](#cache), [SSL/TLS](#ssl-tls), [WAF](#waf).",
+            "Behind: [Workers](#workers) run code at the edge. Storage and messaging products attach to a Worker as bindings: [KV](#kv), [R2](#r2), [D1](#d1), [Durable Objects](#durable-objects), [Queues](#queues), [Hyperdrive](#hyperdrive), [Workflows](#workflows).",
+            "Private access: [Tunnel](#tunnel) connects an origin without a public IP, and [Cloudflare One](#cloudflare-one) controls who reaches internal and SaaS apps.",
+            "Manage it with [Wrangler](#wrangler), the [API](#api), the [Terraform provider](#terraform) or the dashboard.",
+            "Not covered, one line each: Pages, Images, Stream, Realtime, AI products (Workers AI, AI Gateway, Vectorize, Agents), Magic Transit and BYOIP, 1.1.1.1 and Radar. The full list is the docs index."
+          ]
+        },
+        {
+          "title": "Main objects",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Object",
+                "What it is"
+              ],
+              "rows": [
+                [
+                  "Account",
+                  "Holds Workers, storage, tokens and Zero Trust settings."
+                ],
+                [
+                  "Zone",
+                  "One domain on Cloudflare: DNS records, cache, TLS, WAF and rules."
+                ],
+                [
+                  "Worker",
+                  "Code that runs on Cloudflare. Bindings give it access to other products."
+                ],
+                [
+                  "API token",
+                  "A scoped credential for the API, Wrangler and Terraform."
+                ]
+              ]
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "Cloudflare docs index (llms.txt)",
+          "url": "https://developers.cloudflare.com/llms.txt"
+        }
+      ]
+    },
+    {
+      "id": "api",
+      "name": "API conventions",
+      "group": "platform",
+      "level": "overview",
+      "summary": "A REST API with scoped API tokens and a shared rate limit; Cloudflare also publishes SDKs.",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "Not stated on the page read",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "Commercial service with a free tier, not a CNCF project."
+      },
+      "license": "n/a",
+      "version": {
+        "name": "Cloudflare documentation",
+        "analysed": "docs page updated Aug 25, 2026",
+        "released": "2026-08-25",
+        "docs": "pages in sources, read on the check date; each page shows its own last-updated date, listed in notes",
+        "checked": "2026-11-04"
+      },
+      "related": [
+        "wrangler",
+        "terraform"
+      ],
+      "notes": [
+        "The API base URL and endpoint paths were not read for this entry (unconfirmed); see the API reference.",
+        "Last updated on the page: Aug 25, 2026."
+      ],
+      "links": [
+        {
+          "label": "API get started",
+          "url": "https://developers.cloudflare.com/fundamentals/api/get-started/"
+        },
+        {
+          "label": "Rate limits",
+          "url": "https://developers.cloudflare.com/fundamentals/api/reference/limits/"
+        },
+        {
+          "label": "SDKs",
+          "url": "https://developers.cloudflare.com/fundamentals/api/reference/sdks/"
+        }
+      ],
+      "sections": [
+        {
+          "title": "What it does",
+          "items": [
+            "Authenticate with an API token (preferred). The legacy Global API key works but has limitations, and Origin CA keys are separate.",
+            "The global limit is 1,200 requests per five minutes per user, whatever the way in. Over it, every call for five minutes gets 429.",
+            "Responses carry Ratelimit, Ratelimit-Policy and, when limited, retry-after headers. Cloudflare's SDKs back off automatically."
+          ]
+        },
+        {
+          "title": "Where to look",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Limit",
+                "Value"
+              ],
+              "rows": [
+                [
+                  "Per user or account token",
+                  "1,200 per 5 minutes"
+                ],
+                [
+                  "Per IP",
+                  "200 per second"
+                ],
+                [
+                  "GraphQL",
+                  "by query cost, at most 320 per 5 minutes"
+                ],
+                [
+                  "Tokens",
+                  "50 user tokens per user, 500 account tokens per account"
+                ]
+              ]
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "API get started",
+          "url": "https://developers.cloudflare.com/fundamentals/api/get-started/index.md"
+        },
+        {
+          "label": "Rate limits",
+          "url": "https://developers.cloudflare.com/fundamentals/api/reference/limits/index.md"
+        }
+      ]
+    },
+    {
+      "id": "workers",
+      "name": "Workers",
+      "group": "compute",
+      "level": "overview",
+      "summary": "Serverless code that runs on Cloudflare's network, with bindings to storage and other products.",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "Not stated on the page read",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "Commercial service with a free tier, not a CNCF project."
+      },
+      "license": "n/a",
+      "version": {
+        "name": "Cloudflare documentation",
+        "analysed": "docs page updated Oct 8, 2026",
+        "released": "2026-10-08",
+        "docs": "pages in sources, read on the check date; each page shows its own last-updated date, listed in notes",
+        "checked": "2026-11-04"
+      },
+      "related": [
+        "wrangler",
+        "kv",
+        "d1"
+      ],
+      "notes": [
+        "The limits table is from the limits page, last updated Oct 29, 2026. Pages was not read.",
+        "Last updated on the page: Oct 8, 2026."
+      ],
+      "links": [
+        {
+          "label": "Workers docs",
+          "url": "https://developers.cloudflare.com/workers/"
+        },
+        {
+          "label": "Limits",
+          "url": "https://developers.cloudflare.com/workers/platform/limits/"
+        }
+      ],
+      "sections": [
+        {
+          "title": "What it does",
+          "items": [
+            "Deploy JavaScript, TypeScript or other supported languages and route requests to them. Static assets can be served with the Worker.",
+            "Limits depend on the plan. Free: 100,000 requests a day, 10 ms CPU time, 50 subrequests per request. Paid: no request limit, 5 minutes CPU time, 10,000 subrequests. Memory is 128 MB on both."
+          ]
+        },
+        {
+          "title": "Where to look",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Topic",
+                "Pages"
+              ],
+              "rows": [
+                [
+                  "Start",
+                  "Dashboard, CLI, templates, examples"
+                ],
+                [
+                  "Limits",
+                  "workers/platform/limits"
+                ],
+                [
+                  "Tooling",
+                  "[Wrangler](#wrangler)"
+                ]
+              ]
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "Workers docs",
+          "url": "https://developers.cloudflare.com/workers/index.md"
+        }
+      ]
+    },
+    {
+      "id": "kv",
+      "name": "Workers KV",
+      "group": "data",
+      "level": "overview",
+      "summary": "Global key-value store with low-latency reads, for config and cached data.",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "Not stated on the page read",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "Commercial service with a free tier, not a CNCF project."
+      },
+      "license": "n/a",
+      "version": {
+        "name": "Cloudflare documentation",
+        "analysed": "docs page updated Oct 12, 2026",
+        "released": "2026-10-12",
+        "docs": "pages in sources, read on the check date; each page shows its own last-updated date, listed in notes",
+        "checked": "2026-11-04"
+      },
+      "related": [
+        "workers",
+        "d1",
+        "r2"
+      ],
+      "notes": [
+        "Last updated on the page: Oct 12, 2026."
+      ],
+      "links": [
+        {
+          "label": "Workers KV docs",
+          "url": "https://developers.cloudflare.com/kv/"
+        }
+      ],
+      "sections": [
+        {
+          "title": "What it does",
+          "items": [
+            "A namespace holds keys and values. A Worker reads and writes through a binding; the REST API and Wrangler can too."
+          ]
+        },
+        {
+          "title": "Where to look",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Topic",
+                "Pages"
+              ],
+              "rows": [
+                [
+                  "Concepts",
+                  "How KV works, bindings, namespaces"
+                ],
+                [
+                  "Operations",
+                  "read, write, list, delete key-value pairs"
+                ]
+              ]
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "Workers KV docs",
+          "url": "https://developers.cloudflare.com/kv/index.md"
+        }
+      ]
+    },
+    {
+      "id": "r2",
+      "name": "R2",
+      "group": "data",
+      "level": "overview",
+      "summary": "S3-compatible object storage with no egress fees.",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "Not stated on the page read",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "Commercial service with a free tier, not a CNCF project."
+      },
+      "license": "n/a",
+      "version": {
+        "name": "Cloudflare documentation",
+        "analysed": "docs page updated Oct 1, 2026",
+        "released": "2026-10-01",
+        "docs": "pages in sources, read on the check date; each page shows its own last-updated date, listed in notes",
+        "checked": "2026-11-04"
+      },
+      "related": [
+        "workers",
+        "kv"
+      ],
+      "notes": [
+        "The no-egress-fees claim is the page description.",
+        "Last updated on the page: Oct 1, 2026."
+      ],
+      "links": [
+        {
+          "label": "R2 docs",
+          "url": "https://developers.cloudflare.com/r2/"
+        }
+      ],
+      "sections": [
+        {
+          "title": "What it does",
+          "items": [
+            "Buckets hold objects. Access is through the S3 API, a Worker binding or the CLI. Tools help move data in: Sippy and Super Slurper."
+          ]
+        },
+        {
+          "title": "Where to look",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Topic",
+                "Pages"
+              ],
+              "rows": [
+                [
+                  "Access",
+                  "S3, Workers API, CLI"
+                ],
+                [
+                  "Buckets",
+                  "bucket locks, CORS, create"
+                ],
+                [
+                  "Migration",
+                  "Sippy, Super Slurper"
+                ]
+              ]
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "R2 docs",
+          "url": "https://developers.cloudflare.com/r2/index.md"
+        }
+      ]
+    },
+    {
+      "id": "d1",
+      "name": "D1",
+      "group": "data",
+      "level": "overview",
+      "summary": "Serverless SQL databases queried from Workers.",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "Not stated on the page read",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "Commercial service with a free tier, not a CNCF project."
+      },
+      "license": "n/a",
+      "version": {
+        "name": "Cloudflare documentation",
+        "analysed": "docs page updated Oct 30, 2026",
+        "released": "2026-10-30",
+        "docs": "pages in sources, read on the check date; each page shows its own last-updated date, listed in notes",
+        "checked": "2026-11-04"
+      },
+      "related": [
+        "workers",
+        "hyperdrive",
+        "kv"
+      ],
+      "notes": [
+        "Last updated on the page: Oct 30, 2026."
+      ],
+      "links": [
+        {
+          "label": "D1 docs",
+          "url": "https://developers.cloudflare.com/d1/"
+        }
+      ],
+      "sections": [
+        {
+          "title": "What it does",
+          "items": [
+            "Query with prepared statements through the Workers binding. Docs cover import and export, read replication, indexes and local development."
+          ]
+        },
+        {
+          "title": "Where to look",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Topic",
+                "Pages"
+              ],
+              "rows": [
+                [
+                  "Workers binding API",
+                  "D1 Database, prepared statement methods, return objects"
+                ],
+                [
+                  "Operations",
+                  "import and export, read replication, retry queries, indexes"
+                ]
+              ]
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "D1 docs",
+          "url": "https://developers.cloudflare.com/d1/index.md"
+        }
+      ]
+    },
+    {
+      "id": "durable-objects",
+      "name": "Durable Objects",
+      "group": "data",
+      "level": "overview",
+      "summary": "A Worker with its own storage and a single instance per ID, for state and real-time coordination.",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "Not stated on the page read",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "Commercial service with a free tier, not a CNCF project."
+      },
+      "license": "n/a",
+      "version": {
+        "name": "Cloudflare documentation",
+        "analysed": "docs page updated Jul 15, 2026",
+        "released": "2026-07-15",
+        "docs": "pages in sources, read on the check date; each page shows its own last-updated date, listed in notes",
+        "checked": "2026-11-04"
+      },
+      "related": [
+        "workers",
+        "queues"
+      ],
+      "notes": [
+        "Last updated on the page: Jul 15, 2026."
+      ],
+      "links": [
+        {
+          "label": "Durable Objects docs",
+          "url": "https://developers.cloudflare.com/durable-objects/"
+        }
+      ],
+      "sections": [
+        {
+          "title": "What it does",
+          "items": [
+            "Each object has an ID, storage and methods you invoke. WebSockets and alarms are supported."
+          ]
+        },
+        {
+          "title": "Where to look",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Topic",
+                "Pages"
+              ],
+              "rows": [
+                [
+                  "Concepts",
+                  "what they are, lifecycle, rules"
+                ],
+                [
+                  "API",
+                  "base class, ID, storage, container API"
+                ]
+              ]
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "Durable Objects docs",
+          "url": "https://developers.cloudflare.com/durable-objects/index.md"
+        }
+      ]
+    },
+    {
+      "id": "queues",
+      "name": "Queues",
+      "group": "data",
+      "level": "overview",
+      "summary": "Messages between Workers with batching, retries and delays.",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "Not stated on the page read",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "Commercial service with a free tier, not a CNCF project."
+      },
+      "license": "n/a",
+      "version": {
+        "name": "Cloudflare documentation",
+        "analysed": "docs page updated Apr 21, 2026",
+        "released": "2026-04-21",
+        "docs": "pages in sources, read on the check date; each page shows its own last-updated date, listed in notes",
+        "checked": "2026-11-04"
+      },
+      "related": [
+        "workers",
+        "workflows"
+      ],
+      "notes": [
+        "Last updated on the page: Apr 21, 2026."
+      ],
+      "links": [
+        {
+          "label": "Queues docs",
+          "url": "https://developers.cloudflare.com/queues/"
+        }
+      ],
+      "sections": [
+        {
+          "title": "What it does",
+          "items": [
+            "A producer sends messages and a consumer Worker (or a pull consumer) receives them. Dead letter queues catch failures."
+          ]
+        },
+        {
+          "title": "Where to look",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Topic",
+                "Pages"
+              ],
+              "rows": [
+                [
+                  "Configure",
+                  "batching, retries, delays, concurrency, dead letter queues"
+                ],
+                [
+                  "Consumers",
+                  "Workers consumers, pull consumers"
+                ]
+              ]
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "Queues docs",
+          "url": "https://developers.cloudflare.com/queues/index.md"
+        }
+      ]
+    },
+    {
+      "id": "hyperdrive",
+      "name": "Hyperdrive",
+      "group": "data",
+      "level": "overview",
+      "summary": "Connection pooling and query caching for your existing databases, used from Workers.",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "Not stated on the page read",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "Commercial service with a free tier, not a CNCF project."
+      },
+      "license": "n/a",
+      "version": {
+        "name": "Cloudflare documentation",
+        "analysed": "docs page updated Oct 21, 2026",
+        "released": "2026-10-21",
+        "docs": "pages in sources, read on the check date; each page shows its own last-updated date, listed in notes",
+        "checked": "2026-11-04"
+      },
+      "related": [
+        "workers",
+        "d1",
+        "tunnel"
+      ],
+      "notes": [
+        "Last updated on the page: Oct 21, 2026."
+      ],
+      "links": [
+        {
+          "label": "Hyperdrive docs",
+          "url": "https://developers.cloudflare.com/hyperdrive/"
+        }
+      ],
+      "sections": [
+        {
+          "title": "What it does",
+          "items": [
+            "Supports Postgres and MySQL. A private database can be reached through Tunnel or Workers VPC."
+          ]
+        },
+        {
+          "title": "Where to look",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Topic",
+                "Pages"
+              ],
+              "rows": [
+                [
+                  "Concepts",
+                  "connection pooling, query caching, lifecycle"
+                ]
+              ]
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "Hyperdrive docs",
+          "url": "https://developers.cloudflare.com/hyperdrive/index.md"
+        }
+      ]
+    },
+    {
+      "id": "workflows",
+      "name": "Workflows",
+      "group": "data",
+      "level": "overview",
+      "summary": "Durable multi-step programs on Workers that retry and keep state.",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "Not stated on the page read",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "Commercial service with a free tier, not a CNCF project."
+      },
+      "license": "n/a",
+      "version": {
+        "name": "Cloudflare documentation",
+        "analysed": "docs page updated Sep 18, 2026",
+        "released": "2026-09-18",
+        "docs": "pages in sources, read on the check date; each page shows its own last-updated date, listed in notes",
+        "checked": "2026-11-04"
+      },
+      "related": [
+        "workers",
+        "queues"
+      ],
+      "notes": [
+        "Last updated on the page: Sep 18, 2026."
+      ],
+      "links": [
+        {
+          "label": "Workflows docs",
+          "url": "https://developers.cloudflare.com/workflows/"
+        }
+      ],
+      "sections": [
+        {
+          "title": "What it does",
+          "items": [
+            "Define steps, sleep and retry. Trigger instances from a Worker; subscribe to instance events."
+          ]
+        },
+        {
+          "title": "Where to look",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Topic",
+                "Pages"
+              ],
+              "rows": [
+                [
+                  "Concepts",
+                  "events and parameters, rules, step context, sleeping and retrying"
+                ]
+              ]
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "Workflows docs",
+          "url": "https://developers.cloudflare.com/workflows/index.md"
+        }
+      ]
+    },
+    {
+      "id": "dns",
+      "name": "DNS",
+      "group": "edge",
+      "level": "overview",
+      "summary": "Authoritative DNS for your zones, with DNSSEC.",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "Not stated on the page read",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "Commercial service with a free tier, not a CNCF project."
+      },
+      "license": "n/a",
+      "version": {
+        "name": "Cloudflare documentation",
+        "analysed": "docs page updated Aug 14, 2026",
+        "released": "2026-08-14",
+        "docs": "pages in sources, read on the check date; each page shows its own last-updated date, listed in notes",
+        "checked": "2026-11-04"
+      },
+      "related": [
+        "cache",
+        "ssl-tls"
+      ],
+      "notes": [
+        "Last updated on the page: Aug 14, 2026."
+      ],
+      "links": [
+        {
+          "label": "DNS docs",
+          "url": "https://developers.cloudflare.com/dns/"
+        }
+      ],
+      "sections": [
+        {
+          "title": "What it does",
+          "items": [
+            "Setups: full (Cloudflare is the nameserver), partial (CNAME), and secondary. The docs have guides to convert between them."
+          ]
+        },
+        {
+          "title": "Where to look",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Topic",
+                "Pages"
+              ],
+              "rows": [
+                [
+                  "Setups",
+                  "full, partial, secondary and conversions"
+                ],
+                [
+                  "Records",
+                  "manage records and nameservers"
+                ]
+              ]
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "DNS docs",
+          "url": "https://developers.cloudflare.com/dns/index.md"
+        }
+      ]
+    },
+    {
+      "id": "cache",
+      "name": "Cache and CDN",
+      "group": "edge",
+      "level": "overview",
+      "summary": "Caches content from your origin at Cloudflare's edge.",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "Not stated on the page read",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "Commercial service with a free tier, not a CNCF project."
+      },
+      "license": "n/a",
+      "version": {
+        "name": "Cloudflare documentation",
+        "analysed": "docs page updated Apr 16, 2026",
+        "released": "2026-04-16",
+        "docs": "pages in sources, read on the check date; each page shows its own last-updated date, listed in notes",
+        "checked": "2026-11-04"
+      },
+      "related": [
+        "dns",
+        "ssl-tls"
+      ],
+      "notes": [
+        "Purge API limits are on the cache purge page (not read).",
+        "Last updated on the page: Apr 16, 2026."
+      ],
+      "links": [
+        {
+          "label": "Cache and CDN docs",
+          "url": "https://developers.cloudflare.com/cache/"
+        }
+      ],
+      "sections": [
+        {
+          "title": "What it does",
+          "items": [
+            "Default behaviour follows the origin's cache headers; rules customise it. Cache keys, TTL, revalidation and purge are documented."
+          ]
+        },
+        {
+          "title": "Where to look",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Topic",
+                "Pages"
+              ],
+              "rows": [
+                [
+                  "Behaviour",
+                  "default cache behaviour, Origin Cache Control, CDN-Cache-Control"
+                ],
+                [
+                  "Control",
+                  "customise cache, cache keys, invalidate cached content"
+                ]
+              ]
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "Cache and CDN docs",
+          "url": "https://developers.cloudflare.com/cache/index.md"
+        }
+      ]
+    },
+    {
+      "id": "ssl-tls",
+      "name": "SSL/TLS",
+      "group": "edge",
+      "level": "overview",
+      "summary": "Certificates and modes for encryption between visitor, Cloudflare and origin.",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "Not stated on the page read",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "Commercial service with a free tier, not a CNCF project."
+      },
+      "license": "n/a",
+      "version": {
+        "name": "Cloudflare documentation",
+        "analysed": "docs page updated Aug 14, 2026",
+        "released": "2026-08-14",
+        "docs": "pages in sources, read on the check date; each page shows its own last-updated date, listed in notes",
+        "checked": "2026-11-04"
+      },
+      "related": [
+        "dns",
+        "waf"
+      ],
+      "notes": [
+        "For certificates in general see [Certificates](../certificates/index.html).",
+        "Last updated on the page: Aug 14, 2026."
+      ],
+      "links": [
+        {
+          "label": "SSL/TLS docs",
+          "url": "https://developers.cloudflare.com/ssl/"
+        }
+      ],
+      "sections": [
+        {
+          "title": "What it does",
+          "items": [
+            "Edge certificates face visitors; origin certificates secure the link to your server. Always Use HTTPS, HTTPS rewrites and cipher suites are settings."
+          ]
+        },
+        {
+          "title": "Where to look",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Topic",
+                "Pages"
+              ],
+              "rows": [
+                [
+                  "Edge",
+                  "edge certificates, Always Use HTTPS, cipher suites, CSRs"
+                ],
+                [
+                  "Concepts",
+                  "encryption modes (page not read)"
+                ]
+              ]
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "SSL/TLS docs",
+          "url": "https://developers.cloudflare.com/ssl/index.md"
+        }
+      ]
+    },
+    {
+      "id": "waf",
+      "name": "WAF",
+      "group": "security",
+      "level": "overview",
+      "summary": "Managed and custom rules that block attacks on web applications.",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "Not stated on the page read",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "Commercial service with a free tier, not a CNCF project."
+      },
+      "license": "n/a",
+      "version": {
+        "name": "Cloudflare documentation",
+        "analysed": "docs page updated Aug 19, 2026",
+        "released": "2026-08-19",
+        "docs": "pages in sources, read on the check date; each page shows its own last-updated date, listed in notes",
+        "checked": "2026-11-04"
+      },
+      "related": [
+        "ssl-tls",
+        "cache"
+      ],
+      "notes": [
+        "Last updated on the page: Aug 19, 2026."
+      ],
+      "links": [
+        {
+          "label": "WAF docs",
+          "url": "https://developers.cloudflare.com/waf/"
+        }
+      ],
+      "sections": [
+        {
+          "title": "What it does",
+          "items": [
+            "Managed rules protect against known vulnerabilities; custom rules match requests with expressions. Newer sections cover AI Security for Apps."
+          ]
+        },
+        {
+          "title": "Where to look",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Topic",
+                "Pages"
+              ],
+              "rows": [
+                [
+                  "Start",
+                  "get started, concepts, traffic detections"
+                ],
+                [
+                  "AI Security for Apps",
+                  "prompt injection, PII and unsafe topic detection"
+                ]
+              ]
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "WAF docs",
+          "url": "https://developers.cloudflare.com/waf/index.md"
+        }
+      ]
+    },
+    {
+      "id": "tunnel",
+      "name": "Tunnel",
+      "group": "zerotrust",
+      "level": "overview",
+      "summary": "Outbound-only connections from your origin to Cloudflare, so no public IP is needed.",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "Not stated on the page read",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "Commercial service with a free tier, not a CNCF project."
+      },
+      "license": "n/a",
+      "version": {
+        "name": "Cloudflare documentation",
+        "analysed": "docs page updated Sep 11, 2026",
+        "released": "2026-09-11",
+        "docs": "pages in sources, read on the check date; each page shows its own last-updated date, listed in notes",
+        "checked": "2026-11-04"
+      },
+      "related": [
+        "cloudflared",
+        "cloudflare-one"
+      ],
+      "notes": [
+        "Last updated on the page: Sep 11, 2026."
+      ],
+      "links": [
+        {
+          "label": "Tunnel docs",
+          "url": "https://developers.cloudflare.com/tunnel/"
+        }
+      ],
+      "sections": [
+        {
+          "title": "What it does",
+          "items": [
+            "Run the cloudflared daemon next to your service. Tunnels can be managed locally with a configuration file or remotely. Quick Tunnels give a temporary URL."
+          ]
+        },
+        {
+          "title": "Where to look",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Topic",
+                "Pages"
+              ],
+              "rows": [
+                [
+                  "Setup",
+                  "get started, Quick Tunnels, routing, configuration file"
+                ],
+                [
+                  "Daemon",
+                  "[cloudflared](#cloudflared)"
+                ]
+              ]
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "Tunnel docs",
+          "url": "https://developers.cloudflare.com/tunnel/index.md"
+        }
+      ]
+    },
+    {
+      "id": "cloudflare-one",
+      "name": "Cloudflare One",
+      "group": "zerotrust",
+      "level": "overview",
+      "summary": "Zero Trust access to private apps, the internet and SaaS through one dashboard.",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "Not stated on the page read",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "Commercial service with a free tier, not a CNCF project."
+      },
+      "license": "n/a",
+      "version": {
+        "name": "Cloudflare documentation",
+        "analysed": "docs page updated Oct 12, 2026",
+        "released": "2026-10-12",
+        "docs": "pages in sources, read on the check date; each page shows its own last-updated date, listed in notes",
+        "checked": "2026-11-04"
+      },
+      "related": [
+        "tunnel"
+      ],
+      "notes": [
+        "The product pages for Access, Gateway and WARP were not read separately (unconfirmed).",
+        "Last updated on the page: Oct 12, 2026."
+      ],
+      "links": [
+        {
+          "label": "Cloudflare One docs",
+          "url": "https://developers.cloudflare.com/cloudflare-one/"
+        }
+      ],
+      "sections": [
+        {
+          "title": "What it does",
+          "items": [
+            "Replace a VPN, secure private web apps, SSH and remote desktop in the browser, and filter internet traffic."
+          ]
+        },
+        {
+          "title": "Where to look",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Topic",
+                "Pages"
+              ],
+              "rows": [
+                [
+                  "Guides",
+                  "replace your VPN, secure private apps, secure internet traffic and SaaS"
+                ]
+              ]
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "Cloudflare One docs",
+          "url": "https://developers.cloudflare.com/cloudflare-one/index.md"
+        }
+      ]
+    },
+    {
+      "id": "wrangler",
+      "name": "Wrangler",
+      "group": "tooling",
+      "level": "ref",
+      "summary": "The CLI for building, testing and deploying Workers and their bindings.",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "Not stated on the page read",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "Not a CNCF project."
+      },
+      "license": "Apache-2.0",
+      "version": {
+        "name": "Wrangler",
+        "analysed": "wrangler@4.157.0",
+        "released": "2026-11-03",
+        "docs": "GitHub release; docs page updated Sep 15, 2026",
+        "checked": "2026-11-04"
+      },
+      "related": [],
+      "notes": [
+        "Version and licence as GitHub reports them. Command list not read (unconfirmed)."
+      ],
+      "links": [
+        {
+          "label": "Wrangler docs",
+          "url": "https://developers.cloudflare.com/workers/wrangler/"
+        },
+        {
+          "label": "Repository",
+          "url": "https://github.com/cloudflare/workers-sdk"
+        },
+        {
+          "label": "Releases",
+          "url": "https://github.com/cloudflare/workers-sdk/releases"
+        }
+      ],
+      "sections": [
+        {
+          "title": "What it is",
+          "items": [
+            "Part of the workers-sdk repository, which also holds create-cloudflare. It is how you deploy a Worker and manage KV, R2, D1 and Queues from a terminal."
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "Wrangler docs",
+          "url": "https://developers.cloudflare.com/workers/wrangler/index.md"
+        },
+        {
+          "label": "workers-sdk",
+          "url": "https://github.com/cloudflare/workers-sdk"
+        }
+      ],
+      "track": {
+        "github": "cloudflare/workers-sdk",
+        "tag": "^wrangler@"
+      }
+    },
+    {
+      "id": "terraform",
+      "name": "Terraform provider",
+      "group": "tooling",
+      "level": "ref",
+      "summary": "Manage zones, DNS, rules and Workers as code.",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "Not stated on the page read",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "Not a CNCF project."
+      },
+      "license": "Apache-2.0",
+      "version": {
+        "name": "Cloudflare provider",
+        "analysed": "v5.28.1",
+        "released": "2026-10-20",
+        "docs": "GitHub release; docs page updated Apr 21, 2026",
+        "checked": "2026-11-04"
+      },
+      "related": [],
+      "notes": [
+        "The repository also publishes v3 and v4 releases; only the v5 line is tracked. Whether the docs tutorial targets v5 was not checked (unconfirmed)."
+      ],
+      "links": [
+        {
+          "label": "Terraform docs",
+          "url": "https://developers.cloudflare.com/terraform/"
+        },
+        {
+          "label": "Repository",
+          "url": "https://github.com/cloudflare/terraform-provider-cloudflare"
+        }
+      ],
+      "sections": [
+        {
+          "title": "What it is",
+          "items": [
+            "The docs have a tutorial series and guides for rulesets, Bulk Redirects, Cache Rules and Origin Rules. For Terraform itself see [Terraform](../terraform/index.html)."
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "Terraform docs",
+          "url": "https://developers.cloudflare.com/terraform/index.md"
+        },
+        {
+          "label": "Provider repository",
+          "url": "https://github.com/cloudflare/terraform-provider-cloudflare"
+        }
+      ],
+      "track": {
+        "github": "cloudflare/terraform-provider-cloudflare",
+        "tag": "^v5\\."
+      }
+    },
+    {
+      "id": "cloudflared",
+      "name": "cloudflared",
+      "group": "tooling",
+      "level": "ref",
+      "summary": "The daemon that creates Tunnel connections from your origin to Cloudflare.",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "Not stated on the page read",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "Not a CNCF project."
+      },
+      "license": "Apache-2.0",
+      "version": {
+        "name": "cloudflared",
+        "analysed": "2026.10.7",
+        "released": "2026-10-30",
+        "docs": "GitHub release; docs page updated Sep 11, 2026",
+        "checked": "2026-11-04"
+      },
+      "related": [],
+      "notes": [
+        "Version and licence as GitHub reports them."
+      ],
+      "links": [
+        {
+          "label": "Tunnel docs",
+          "url": "https://developers.cloudflare.com/tunnel/"
+        },
+        {
+          "label": "Repository",
+          "url": "https://github.com/cloudflare/cloudflared"
+        }
+      ],
+      "sections": [
+        {
+          "title": "What it is",
+          "items": [
+            "Open source. Installed on Linux, macOS or Windows next to the service you expose. See [Tunnel](#tunnel)."
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "Tunnel docs",
+          "url": "https://developers.cloudflare.com/tunnel/index.md"
+        },
+        {
+          "label": "cloudflared",
+          "url": "https://github.com/cloudflare/cloudflared"
+        }
+      ],
+      "track": {
+        "github": "cloudflare/cloudflared"
+      }
+    }
+  ],
+  "comparisons": []
+}
