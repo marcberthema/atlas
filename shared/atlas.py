@@ -20,6 +20,19 @@ CSS_MARK = "/*__BANNER_CSS__*/"
 FOOTER_MARK = "<!--__FOOTER__-->"
 PUBLIC = "https://atlas.marcberthelette.com/"  # only for pages outside dist/, which cannot link to it relatively
 
+# Pages built in both looks (docs/themes.md), by path under their look's root. A page not listed has no twin yet, so it shows no look switch.
+TWINS = {"index.html"}
+TRANSIT = "transit"
+
+
+def twin(path, look="classic"):
+    """Relative link from a page to its twin in the other look, or None while the page has no twin."""
+    if path not in TWINS:
+        return None
+    up = "../" * path.count("/")
+    return f"{up}{TRANSIT}/{path}" if look == "classic" else f"{up}../{path}"
+
+
 CSS = """
 .atlas{display:flex;gap:6px;align-items:center;flex-wrap:wrap;border-bottom:1px solid var(--rule);padding:0 0 8px;margin:0 0 12px}
 .atlas a{color:var(--fg);text-decoration:none;padding:4px 12px;border-radius:8px;border:1px solid transparent}
@@ -65,6 +78,7 @@ CSS = """
 .atlas .skip:focus{left:8px;top:8px;z-index:10;background:var(--bg);border-color:var(--acc)}
 .atlas [hidden]{display:none!important}
 .atlas .home{font-weight:700;color:var(--acc);margin-right:6px}
+.atlas .lk{font-size:.85rem;font-weight:600;color:var(--acc);text-decoration:none;white-space:nowrap}
 .atlas a[aria-current=page]{background:var(--acc);color:var(--bg);font-weight:600}
 """
 
@@ -157,31 +171,52 @@ def by_family():
     return groups + ([({"id": "views", "label": "Views", "description": "Pictures that cut across the topics; they are not topics themselves."}, views())] if views() else [])
 
 
-def banner(current, prefix):
+def banner(current, prefix, twin_href=None, look="classic"):
     """Two rows: the families (and the home icon), then the topics of the selected family.
     `current` is a topic id or None for the landing page; `prefix` is "../" from a topic page, "" from the landing.
     On a topic page its family starts selected; on the landing nothing is, and a family filters the cards (sections with data-fam)."""
     reg = load()
     groups = by_family()
+    transit = look == TRANSIT
+    if transit:  # Interchanges (the views) sit first, next to the name
+        groups = sorted(groups, key=lambda g: g[0]["id"] != "views")
     cur_fam = next((t["family"] for _, ts in groups for t in ts if t["id"] == current), "")
     buttons = "".join(
-        '<button type="button" data-fam="{id}" aria-pressed="false">{label}</button>'.format(id=f["id"], label=html.escape(f["label"]))
+        '<button type="button" data-fam="{id}" aria-pressed="false">{label}</button>'.format(id=f["id"], label=html.escape(label(f, transit)))
         for f, _ in groups)
     panels = "".join(
         '<div data-fam="{id}" aria-label="{label}">{links}</div>'.format(
-            id=f["id"], label=html.escape(f["label"]),
+            id=f["id"], label=html.escape(label(f, transit)),
             links="".join(
-                '<a href="{p}{id}/index.html"{cur}>{label}</a>'.format(
-                    p=prefix, id=t["id"], label=html.escape(t["label"]), cur=' aria-current="page"' if t["id"] == current else "")
+                '<a href="{h}"{cur}>{label}</a>'.format(
+                    h=link(prefix, t["id"], transit), label=html.escape(t["label"]), cur=' aria-current="page"' if t["id"] == current else "")
                 for t in ts))
         for f, ts in groups)
-    return ('<nav class="atlas two" aria-label="Atlas" data-current="{cur}"><a class="skip" href="#">Skip to content</a>'
-            '<div class="fams"><div class="fb" role="group" aria-label="Families">{b}</div>'
-            '<div class="rt"><button type="button" class="tg th">{icons}</button>'
-            '<button type="button" class="tg ab" aria-label="About Atlas" title="About Atlas">{help}</button>'
-            '<a class="home" href="{p}index.html" aria-label="{name} home" title="{name} home">&#8962; {name}</a></div></div>'
-            '<div class="tops">{panels}</div>{about}<script>{js}</script></nav>').format(
-        cur=cur_fam, b=buttons, p=prefix, name=html.escape(reg["name"]), panels=panels, js=JS, icons=ICONS, help=HELP, about=about())
+    lk = ('<a class="tg lk" href="{h}" data-look="{o}" title="Switch to the {o} look">{n} look</a>'.format(
+        h=twin_href, o="classic" if transit else TRANSIT, n="Classic" if transit else "Transit") if twin_href else "")
+    brand = '<a class="home" href="{p}index.html" aria-label="{name} home" title="{name} home">{mark}</a>'.format(
+        p=prefix, name=html.escape(reg["name"]), mark=html.escape(reg["name"].upper()) if transit else "&#8962; " + html.escape(reg["name"]))
+    if transit:
+        top = ('<div class="fams">{brand}<div class="fb" role="group" aria-label="Families">{b}</div>'
+               '<div class="rt">{lk}<button type="button" class="tg th">{icons}</button>'
+               '<button type="button" class="tg ab" aria-label="About Atlas" title="About Atlas">{help}</button></div></div>')
+    else:
+        top = ('<div class="fams"><div class="fb" role="group" aria-label="Families">{b}</div>'
+               '<div class="rt">{lk}<button type="button" class="tg th">{icons}</button>'
+               '<button type="button" class="tg ab" aria-label="About Atlas" title="About Atlas">{help}</button>{brand}</div></div>')
+    return ('<nav class="atlas two" aria-label="Atlas" data-current="{cur}" data-look="{look}"><a class="skip" href="#">Skip to content</a>'
+            + top + '<div class="tops">{panels}</div>{about}<script>{js}</script></nav>').format(
+        cur=cur_fam, b=buttons, lk=lk, brand=brand, look=look, panels=panels, js=JS, icons=ICONS, help=HELP, about=about())
+
+
+def label(family, transit):
+    return "Interchanges" if transit and family["id"] == "views" else family["label"]
+
+
+def link(prefix, topic_id, transit):
+    """A banner link to a topic page. A transit page links to the transit twin, or to the classic page while the topic has none."""
+    path = f"{topic_id}/index.html"
+    return f"{prefix}{path}" if not transit or path in TWINS else f"{prefix}../{path}"
 
 
 HELP = '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3M12 17h.01"/></svg>'
@@ -222,6 +257,9 @@ n.querySelector('.ab').addEventListener('click',function(){dx.hidden=!root.datas
 cb.addEventListener('change',function(){root.dataset.details=cb.checked?'show':'hide';try{localStorage.setItem('atlas-details',cb.checked?'1':'0')}catch(e){}});
 dl.querySelector('.cl').addEventListener('click',function(){dl.close()});
 dl.addEventListener('click',function(e){if(e.target===dl)dl.close()});
+var lk=n.querySelector('.lk');
+if(lk){try{var w=localStorage.getItem('atlas-look');if(w&&w!==n.dataset.look){location.replace(lk.getAttribute('href')+location.hash);return}}catch(e){}
+lk.addEventListener('click',function(){try{localStorage.setItem('atlas-look',lk.dataset.look)}catch(e){}lk.href=lk.getAttribute('href').split('#')[0]+location.hash})}
 paint();addEventListener('resize',h);show(keep)})();"""
 
 

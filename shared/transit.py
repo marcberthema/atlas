@@ -1,0 +1,126 @@
+"""The transit look (docs/themes.md): a second skin for every page, built from the same data into dist/transit/.
+
+Families are coloured lines, topics are stations, the views are interchanges. The font (Red Hat Display, SIL Open Font License)
+ships inside dist/transit/fonts/ so pages work from file:// and load nothing from outside.
+"""
+import html
+import json
+import shutil
+
+import atlas
+
+DIR = atlas.SITE / "shared" / "transit"
+OUT = atlas.DIST / "transit"
+LATIN = "U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD"
+LATIN_EXT = "U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C4,U+2113,U+2C60-2C7F,U+A720-A7FF"
+
+# Colours: Development blue, IaC red, CI/CD green, Enterprise orange, Test violet; the same ones the Lenses use.
+VARS = """
+@font-face{font-family:'Red Hat Display';font-style:normal;font-weight:500 900;font-display:swap;src:url(__FONTS__RedHatDisplay-latin-ext.woff2) format('woff2');unicode-range:__EXT__}
+@font-face{font-family:'Red Hat Display';font-style:normal;font-weight:500 900;font-display:swap;src:url(__FONTS__RedHatDisplay-latin.woff2) format('woff2');unicode-range:__LATIN__}
+:root{color-scheme:light;--ink:#14181F;--ground:#FFFFFF;--soft:#F2F4F7;--mut:#4A5260;--rule:#D5DAE1;--iac:#0057B8;--iacf:#fff;--cic:#D6001C;--cicf:#fff;--dev:#00843D;--devf:#fff;--ent:#F28C00;--entf:#14181F;--tst:#7B3FC4;--tstf:#fff;--wire:#5C6675;--acc:#0057B8;--g:'Red Hat Display','Helvetica Neue',Arial,sans-serif}
+@media(prefers-color-scheme:dark){:root{color-scheme:dark;--ink:#EEF1F5;--ground:#0F131A;--soft:#1A202B;--mut:#A9B3C1;--rule:#2C3543;--iac:#4C9AFF;--iacf:#0F131A;--cic:#FF6B7A;--cicf:#0F131A;--dev:#3DC878;--devf:#0F131A;--ent:#F5A524;--entf:#0F131A;--tst:#B792FF;--tstf:#0F131A;--wire:#8793A5;--acc:#4C9AFF}}
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--ground);color:var(--ink);font:500 1.0625rem/1.6 var(--g)}
+::selection{background:var(--acc);color:var(--ground)}
+:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
+a{color:inherit;text-decoration:none}
+[hidden]{display:none!important}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+[data-fam=iac]{--fc:var(--cic);--fcf:var(--cicf)}[data-fam=cicd]{--fc:var(--dev);--fcf:var(--devf)}
+[data-fam=development]{--fc:var(--iac);--fcf:var(--iacf)}[data-fam=enterprise]{--fc:var(--ent);--fcf:var(--entf)}[data-fam=views]{--fc:var(--ink);--fcf:var(--ground)}
+"""
+
+# The banner keeps the classic markup and script (shared/atlas.py); this is its skin.
+BANNER_CSS = """
+.atlas.two{display:block;position:sticky;top:0;z-index:5;background:var(--ground);border-bottom:1px solid var(--rule);margin:0 0 1.4rem;padding:.7rem max(1rem,calc(50vw - 560px)) .6rem}
+.atlas .fams{display:flex;align-items:center;flex-wrap:wrap;gap:.5rem 1rem}
+.atlas .home{background:var(--ink);color:var(--ground);font-weight:900;letter-spacing:.03em;padding:.25rem 1rem;border-radius:6px}
+.atlas .fb{display:flex;flex:1;flex-wrap:wrap;gap:.4rem;overflow:visible}
+.atlas button[data-fam]{font:900 .95rem var(--g);padding:.2rem 1rem;border-radius:999px;border:3px solid var(--fc);background:var(--ground);color:var(--ink);cursor:pointer}
+.atlas button[data-fam]:hover{background:var(--soft)}
+.atlas button[data-fam][aria-pressed=true]{background:var(--fc);color:var(--fcf)}
+.atlas .rt{display:flex;align-items:center;gap:.4rem}
+.atlas .tg{display:inline-flex;align-items:center;justify-content:center;min-height:2rem;font:900 .9rem var(--g);padding:.1rem .8rem;border-radius:999px;border:3px solid var(--ink);background:var(--ground);color:var(--ink);cursor:pointer;white-space:nowrap}
+.atlas .tg:hover{background:var(--ink);color:var(--ground)}
+.atlas .tg svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.atlas .tops{display:flex;flex-wrap:wrap;gap:.3rem 1rem;margin-top:.6rem}
+.atlas.none .tops{display:none}
+.atlas .tops>div{display:flex;flex-wrap:wrap;gap:.2rem 1.1rem}
+.atlas .tops a{display:inline-flex;align-items:center;gap:.45rem;font-weight:700;padding:.1rem .3rem;border-radius:8px;white-space:nowrap}
+.atlas .tops a::before{content:"";width:16px;height:16px;border-radius:50%;border:4px solid var(--fc);background:var(--ground)}
+.atlas .tops a:hover::before,.atlas .tops a[aria-current=page]::before{background:var(--fc)}
+.atlas .tops a[aria-current=page]{text-decoration:underline;text-underline-offset:4px}
+.atlas .skip{position:absolute;left:-9999px}.atlas .skip:focus{left:8px;top:8px;z-index:10;background:var(--ground);padding:.3rem .8rem}
+dialog.ai{max-width:min(560px,92vw);border:3px solid var(--ink);border-radius:14px;background:var(--ground);color:var(--ink);padding:1.4rem 1.6rem;font:500 1rem/1.55 var(--g)}
+dialog.ai::backdrop{background:rgba(10,12,16,.6)}
+dialog.ai h2{margin:0 3.5rem .6rem 0;font:900 1.7rem var(--g);letter-spacing:-.02em}dialog.ai p{margin:.6rem 0}
+dialog.ai .cl{position:absolute;top:1rem;right:1rem;font:900 .9rem var(--g);padding:.1rem .9rem;border-radius:999px;border:3px solid var(--ink);background:var(--ground);color:var(--ink);cursor:pointer}
+dialog.ai .dx{display:flex;gap:.7rem;align-items:flex-start;margin:1rem 0;font-weight:700;cursor:pointer}dialog.ai .dx input{width:1.3rem;height:1.3rem;margin-top:.2rem;accent-color:var(--acc)}
+dialog.ai .dx small{display:block;font-weight:500;color:var(--mut)}
+dialog.ai .vr{font-size:.9rem;color:var(--mut);word-break:break-all}dialog.ai a{text-decoration:underline}
+.atlas-foot{max-width:1120px;margin:3rem auto 0;padding:1.4rem clamp(1rem,3vw,2rem) 3rem;border-top:1px solid var(--rule);color:var(--mut);font-size:.9rem}
+.atlas-foot p{margin:.4rem 0;max-width:80ch}
+@media(max-width:560px){.atlas .fb{flex-basis:100%;order:3}}
+"""
+
+LINE = {"iac": "iac", "cicd": "cicd", "development": "development", "enterprise": "enterprise", "views": "views"}
+
+
+def vars_css(fonts):
+    """The shared variables and base rules; `fonts` is the relative path to dist/transit/fonts/ from the page."""
+    return VARS.replace("__FONTS__", fonts).replace("__EXT__", LATIN_EXT).replace("__LATIN__", LATIN)
+
+
+def fill(page, path, current, fonts):
+    """Fill the markers of a transit page: the variables, the banner, its css and the footer. `path` is the page's path under dist/transit/."""
+    page = atlas.themed(page.replace("/*__TRANSIT_VARS__*/", vars_css(fonts)))
+    prefix = "../" * path.count("/")
+    assert all(page.count(m) == 1 for m in (atlas.BANNER_MARK, atlas.CSS_MARK, atlas.FOOTER_MARK)), "template needs one banner, one banner css and one footer marker"
+    return (page.replace(atlas.BANNER_MARK, atlas.banner(current, prefix, atlas.twin(path, atlas.TRANSIT), atlas.TRANSIT))
+                .replace(atlas.CSS_MARK, BANNER_CSS).replace(atlas.FOOTER_MARK, atlas.FOOTER))
+
+
+def copy_fonts():
+    dest = OUT / "fonts"
+    dest.mkdir(parents=True, exist_ok=True)
+    for f in (DIR / "fonts").iterdir():
+        shutil.copy(f, dest / f.name)
+
+
+def write(path, page):
+    out = OUT / path
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(page, encoding="utf-8")
+    print(f"built {out.relative_to(atlas.SITE)}")
+
+
+def landing(found):
+    """dist/transit/index.html. `found` is {topic id: [(entry id, name, summary)]}, as shared/build_site.py reads them."""
+    reg = atlas.load()
+    topics = atlas.published()
+    page = (DIR / "landing.html").read_text(encoding="utf-8")
+    page = page.replace("/*__LANDING_JS__*/", (atlas.SITE / "shared" / "landing.js").read_text(encoding="utf-8").rstrip("\n"))
+    index = [[t["id"], t["label"], *e] for t in topics for e in found[t["id"]]]
+    groups = sorted(atlas.by_family(), key=lambda g: g[0]["id"] != "views")
+
+    def href(tid):
+        return f"{tid}/index.html" if f"{tid}/index.html" in atlas.TWINS else f"../{tid}/index.html"
+
+    lines = "".join(
+        '<section class="line" data-fam="{id}"><h2 class="lname">{fam}</h2>{fdesc}<ol class="route">{stns}</ol></section>'.format(
+            id=f["id"], fam=html.escape(atlas.label(f, True)),
+            fdesc='<p class="fdesc">' + html.escape(f["description"]) + "</p>" if f.get("description") else "",
+            stns="".join(
+                '<li class="stn"><a href="{h}"><i class="dot"></i><b>{label}</b><small>{n}</small><span class="d">{desc}</span></a></li>'.format(
+                    h=href(t["id"]), label=html.escape(t["label"]), desc=html.escape(t["description"]),
+                    n="view" if f["id"] == "views" else f"{len(found[t['id']])} entries")
+                for t in ts))
+        for f, ts in groups)
+    twins = json.dumps(sorted(p.split("/")[0] for p in atlas.TWINS if p != "index.html"))
+    page = (page.replace("__NAME__", html.escape(reg["name"])).replace("__TAGLINE__", html.escape(reg["tagline"]))
+                .replace("<!--__TOPICS__-->", lines)
+                .replace("/*__INDEX__*/", json.dumps(index, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/"))
+                .replace("/*__TWINS__*/[]", twins))
+    write("index.html", fill(page, "index.html", None, "fonts/"))
