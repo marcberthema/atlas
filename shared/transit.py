@@ -5,6 +5,7 @@ ships inside dist/transit/fonts/ so pages work from file:// and load nothing fro
 """
 import html
 import json
+import re
 import shutil
 
 import atlas
@@ -18,8 +19,8 @@ LATIN_EXT = "U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,
 VARS = """
 @font-face{font-family:'Red Hat Display';font-style:normal;font-weight:500 900;font-display:swap;src:url(__FONTS__RedHatDisplay-latin-ext.woff2) format('woff2');unicode-range:__EXT__}
 @font-face{font-family:'Red Hat Display';font-style:normal;font-weight:500 900;font-display:swap;src:url(__FONTS__RedHatDisplay-latin.woff2) format('woff2');unicode-range:__LATIN__}
-:root{color-scheme:light;--ink:#14181F;--ground:#FFFFFF;--soft:#F2F4F7;--mut:#4A5260;--rule:#D5DAE1;--iac:#0057B8;--iacf:#fff;--cic:#D6001C;--cicf:#fff;--dev:#00843D;--devf:#fff;--ent:#F28C00;--entf:#14181F;--tst:#7B3FC4;--tstf:#fff;--wire:#5C6675;--acc:#0057B8;--g:'Red Hat Display','Helvetica Neue',Arial,sans-serif}
-@media(prefers-color-scheme:dark){:root{color-scheme:dark;--ink:#EEF1F5;--ground:#0F131A;--soft:#1A202B;--mut:#A9B3C1;--rule:#2C3543;--iac:#4C9AFF;--iacf:#0F131A;--cic:#FF6B7A;--cicf:#0F131A;--dev:#3DC878;--devf:#0F131A;--ent:#F5A524;--entf:#0F131A;--tst:#B792FF;--tstf:#0F131A;--wire:#8793A5;--acc:#4C9AFF}}
+:root{color-scheme:light;--ink:#14181F;--ground:#FFFFFF;--soft:#F2F4F7;--mut:#4A5260;--rule:#D5DAE1;--iac:#0057B8;--iacf:#fff;--cic:#D6001C;--cicf:#fff;--dev:#00843D;--devf:#fff;--ent:#F28C00;--entf:#14181F;--tst:#7B3FC4;--tstf:#fff;--wire:#5C6675;--warn:#8A6700;--bad:#C62828;--acc:#0057B8;--g:'Red Hat Display','Helvetica Neue',Arial,sans-serif}
+@media(prefers-color-scheme:dark){:root{color-scheme:dark;--ink:#EEF1F5;--ground:#0F131A;--soft:#1A202B;--mut:#A9B3C1;--rule:#2C3543;--iac:#4C9AFF;--iacf:#0F131A;--cic:#FF6B7A;--cicf:#0F131A;--dev:#3DC878;--devf:#0F131A;--ent:#F5A524;--entf:#0F131A;--tst:#B792FF;--tstf:#0F131A;--wire:#8793A5;--warn:#D4A72C;--bad:#EF5350;--acc:#4C9AFF}}
 *{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
 body{margin:0;background:var(--ground);color:var(--ink);font:500 1.0625rem/1.6 var(--g)}
 ::selection{background:var(--acc);color:var(--ground)}
@@ -106,7 +107,7 @@ def landing(found):
     groups = sorted(atlas.by_family(), key=lambda g: g[0]["id"] != "views")
 
     def href(tid):
-        return f"{tid}/index.html" if f"{tid}/index.html" in atlas.TWINS else f"../{tid}/index.html"
+        return f"{tid}/index.html" if f"{tid}/index.html" in atlas.twins() else f"../{tid}/index.html"
 
     lines = "".join(
         '<section class="line" data-fam="{id}"><h2 class="lname">{fam}</h2>{fdesc}<ol class="route">{stns}</ol></section>'.format(
@@ -118,9 +119,69 @@ def landing(found):
                     n="view" if f["id"] == "views" else f"{len(found[t['id']])} entries")
                 for t in ts))
         for f, ts in groups)
-    twins = json.dumps(sorted(p.split("/")[0] for p in atlas.TWINS if p != "index.html"))
+    twins = json.dumps(sorted(p.split("/")[0] for p in atlas.twins() if p != "index.html"))
     page = (page.replace("__NAME__", html.escape(reg["name"])).replace("__TAGLINE__", html.escape(reg["tagline"]))
                 .replace("<!--__TOPICS__-->", lines)
                 .replace("/*__INDEX__*/", json.dumps(index, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/"))
                 .replace("/*__TWINS__*/[]", twins))
     write("index.html", fill(page, "index.html", None, "fonts/"))
+
+
+# The topic pages keep the shared template, markup and script (shared/topic.html). The look is a layer: the classic variables are mapped
+# to the transit ones, and the rules below change shape, weight and the family colour. A new kind of content is drawn once and shows in both looks.
+TOPIC_MAP = """body{--bg:var(--ground);--fg:var(--ink);--card:var(--soft);--ok:var(--dev);--acc:var(--ink);--fam:var(--fc);--famf:var(--fcf)}"""
+TOPIC_CSS = """
+body{font:500 1.0625rem/1.6 var(--g);max-width:none;margin:0;padding:0}
+.tpage{max-width:1120px;margin:0 auto;padding:0 clamp(1rem,3vw,2rem) 1rem}
+h1{font:900 clamp(2.6rem,9vw,4.6rem)/.98 var(--g);letter-spacing:-.04em;color:var(--fg);margin:.4rem 0 .6rem}
+h2{font:900 1.5rem var(--g);letter-spacing:-.02em;color:var(--fg);border-bottom:3px solid var(--fam);margin:2rem 0 .3rem;padding-bottom:.2rem}
+.sub{font-size:1.15rem;color:var(--mut);max-width:64ch}
+.note{border:3px solid var(--fam);background:var(--card);border-radius:12px;padding:.6rem 1rem;font-size:.95rem}
+.bar{background:var(--bg);padding:.6rem 0;border-bottom:1px solid var(--rule)}
+input[type=search]{font:700 1.1rem var(--g);border:3px solid var(--fg);border-radius:999px;padding:.55rem 1.2rem;background:var(--card);color:var(--fg)}
+.tabs{gap:.4rem;margin-bottom:.6rem}
+.tab{font:900 .95rem var(--g);border:3px solid var(--fg);border-radius:999px;padding:.2rem 1rem;color:var(--fg)}
+.tab:hover{background:var(--card)}
+.tab[aria-selected=true]{background:var(--fam);border-color:var(--fam);color:var(--famf)}
+th{font:900 .8rem var(--g);letter-spacing:.06em;text-transform:uppercase;color:var(--fg);border-bottom:3px solid var(--fg)}
+button.nm{color:var(--fg);font-weight:900;text-underline-offset:3px}
+.badge,.chip,.uc{border-width:2px;font-weight:700}
+.badge{color:var(--fg);border-color:var(--fg)}
+.badge.ok{color:var(--ok);border-color:var(--ok)}.badge.warn{color:var(--warn);border-color:var(--warn)}.badge.bad{color:var(--bad);border-color:var(--bad)}
+.pk{border-width:3px;border-color:var(--fg);font-weight:900}.pk[aria-pressed=true]{background:var(--fam);border-color:var(--fam);color:var(--famf)}
+.jump{gap:.2rem .8rem}
+.jump a{border-radius:8px;padding:.2rem .4rem;font-weight:700;color:var(--fg)}
+.jump a::before{content:"";width:14px;height:14px;border-radius:50%;border:4px solid var(--fam);background:var(--bg);flex:none}
+.jump a:hover,.jump a.on{background:transparent;text-decoration:underline;text-underline-offset:4px}
+.jump a.on::before,.jump a:hover::before{background:var(--fam)}
+.ph{color:var(--fg);font-weight:900;border-bottom:4px solid var(--fam)}
+.ph .ic{color:var(--fam)}
+.step{background:var(--fam);color:var(--famf)}
+.sec>h4 .ic{color:var(--fam)}
+.card,.ver,.nt,.co,details.sec,figure.code,.dg svg{border-width:2px;border-color:var(--fg);border-radius:12px}
+.card .ic,.db h4,.db a{color:var(--fg)}
+.co.gotcha{border-color:var(--warn)}.co.default{border-color:var(--fam)}.co.prod{border-color:var(--ok)}.co.tip{border-color:var(--mut)}
+.co.default .ic{color:var(--fam)}
+.pills a{border-width:2px;border-color:var(--fg);border-radius:999px;font-weight:700}.pills a:hover{background:var(--fg);color:var(--bg)}
+.ch{background:var(--card)}.cp{border-width:2px;border-color:var(--fg);border-radius:999px;font-weight:700}
+dialog{border:3px solid var(--fg);border-radius:14px}
+.dh button{border-width:2px;border-color:var(--fg);border-radius:999px;font-weight:900}
+.dg rect.n,.dg line{stroke:var(--fg)}.dg marker path{fill:var(--fg)}
+.dg rect.hub{fill:var(--fam)}
+.q{color:var(--warn)}
+"""
+
+
+def topic(page, topic_id, family):
+    """The transit twin of a topic page, from the shared template once its data is filled in."""
+    old = re.search(r":root\{--bg:.*?\n@media\(prefers-color-scheme:dark\)\{:root\{.*?\}\}\n", page, re.S)
+    assert old, "shared/topic.html: the variable blocks changed"
+    page = page.replace(old.group(0), "/*__TRANSIT_VARS__*/\n" + TOPIC_MAP + "\n")
+    for marker, new in (("<body>", f'<body data-fam="{family}">'), (atlas.BANNER_MARK, atlas.BANNER_MARK + '<div class="tpage">'),
+                        ('<script id="data" type="application/json">', '</div><script id="data" type="application/json">'),
+                        ("</style></head>", TOPIC_CSS + "</style></head>")):
+        assert page.count(marker) == 1, f"shared/topic.html needs exactly one {marker}"
+        page = page.replace(marker, new)
+    ids = {p.split("/")[0] for p in atlas.twins()}  # a link to a topic without a twin goes to its classic page
+    page = re.sub(r"\]\(\.\./([a-z0-9-]+)/", lambda m: m[0] if m[1] in ids else f"](../../{m[1]}/", page)
+    return fill(page, f"{topic_id}/index.html", topic_id, "../fonts/")

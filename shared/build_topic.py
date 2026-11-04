@@ -9,6 +9,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import atlas  # noqa: E402
+import transit  # noqa: E402
 
 JOIN = {"yaml": "\n---\n", "shell": "\n", "text": "\n"}
 
@@ -48,10 +49,13 @@ def build(topic, root=None, out=None):
     assert page.count(marker) == 1, "template needs exactly one data marker"
     # "</" would end the script element early
     page = page.replace(marker, json.dumps(data, ensure_ascii=False).replace("</", "<\\/"))
+    twin = None if standalone else transit.topic(page, topic, next(t["family"] for t in atlas.published() if t["id"] == topic))
     page = atlas.apply_standalone(page, view["title"]) if standalone else atlas.apply(page, topic)
     out = Path(out) if out else atlas.DIST / topic
     out.mkdir(parents=True, exist_ok=True)
     (out / "index.html").write_text(page, encoding="utf-8")
+    if twin:
+        transit.write(f"{topic}/index.html", twin)
     print(f"built {(out / 'index.html').relative_to(atlas.SITE)} ({len(data['entries'])} entries)")
 
 

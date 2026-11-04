@@ -21,13 +21,17 @@ FOOTER_MARK = "<!--__FOOTER__-->"
 PUBLIC = "https://atlas.marcberthelette.com/"  # only for pages outside dist/, which cannot link to it relatively
 
 # Pages built in both looks (docs/themes.md), by path under their look's root. A page not listed has no twin yet, so it shows no look switch.
-TWINS = {"index.html"}
 TRANSIT = "transit"
+
+
+def twins():
+    """The landing page and every topic built from the shared template (a topic with its own templates/index.html has no twin yet)."""
+    return {"index.html"} | {f"{t['id']}/index.html" for t in published() if not (SITE / "topics" / t["id"] / "templates" / "index.html").exists()}
 
 
 def twin(path, look="classic"):
     """Relative link from a page to its twin in the other look, or None while the page has no twin."""
-    if path not in TWINS:
+    if path not in twins():
         return None
     up = "../" * path.count("/")
     return f"{up}{TRANSIT}/{path}" if look == "classic" else f"{up}../{path}"
@@ -216,7 +220,7 @@ def label(family, transit):
 def link(prefix, topic_id, transit):
     """A banner link to a topic page. A transit page links to the transit twin, or to the classic page while the topic has none."""
     path = f"{topic_id}/index.html"
-    return f"{prefix}{path}" if not transit or path in TWINS else f"{prefix}../{path}"
+    return f"{prefix}{path}" if not transit or path in twins() else f"{prefix}../{path}"
 
 
 HELP = '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3M12 17h.01"/></svg>'
@@ -275,7 +279,7 @@ def themed(page):
 def apply(page, current):
     """Fill the banner markers of a topic page."""
     assert all(page.count(m) == 1 for m in (BANNER_MARK, CSS_MARK, FOOTER_MARK)), "template needs one banner, one banner css and one footer marker"
-    return themed(page).replace(BANNER_MARK, banner(current, "../")).replace(CSS_MARK, CSS).replace(FOOTER_MARK, FOOTER)
+    return themed(page).replace(BANNER_MARK, banner(current, "../", twin(f"{current}/index.html"))).replace(CSS_MARK, CSS).replace(FOOTER_MARK, FOOTER)
 
 
 def apply_standalone(page, label):
