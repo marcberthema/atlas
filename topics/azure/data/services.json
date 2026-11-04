@@ -5306,22 +5306,22 @@
       },
       "freshness": {
         "status": "current",
-        "changed_at": "2026-10-26",
+        "changed_at": "2026-11-04",
         "sources": {
           "https://learn.microsoft.com/azure/devops/user-guide/what-is-azure-devops": {
-            "changed_at": "2026-10-24",
+            "changed_at": "2026-11-04",
             "http_status": 200,
             "ms_date": "2026-02-17T00:00:00Z",
-            "updated_at": "2026-05-08T17:05:00Z",
+            "updated_at": "2026-11-03T19:17:00Z",
             "latest_hash": "sha256:dff62e9a5f81cb5630bd1533b31ae194aedfc1aade8e8d5ad9453580f4abb2fb",
             "reviewed_hash": "sha256:dff62e9a5f81cb5630bd1533b31ae194aedfc1aade8e8d5ad9453580f4abb2fb"
           },
           "https://learn.microsoft.com/azure/devops/pipelines/licensing/concurrent-jobs": {
             "http_status": 200,
             "ms_date": "2026-06-19T00:00:00Z",
-            "updated_at": "2026-06-22T19:59:00Z",
+            "updated_at": "2026-11-03T19:17:00Z",
             "latest_hash": "sha256:fd3702535375a00337a3d8d1b060335cd0dfa71eda0e2b2c34f3bf86dc9a04b6",
-            "changed_at": "2026-10-26",
+            "changed_at": "2026-11-04",
             "reviewed_hash": "sha256:fd3702535375a00337a3d8d1b060335cd0dfa71eda0e2b2c34f3bf86dc9a04b6"
           }
         }
