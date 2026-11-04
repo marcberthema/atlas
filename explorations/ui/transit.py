@@ -290,7 +290,7 @@ def loop():
             mine = [t for t in T["topics"] if not t.get("draft") and sg["id"] in t.get("stages", [])]
             pills = "".join(f'<li><a href="{"azure" if t["id"] == "azure" else "topic"}.html">{esc(t["label"])}</a></li>' for t in mine) or '<li class="none">No Atlas topic covers this stage yet.</li>'
             items += f'<article class="stop stage" id="stage-{sg["id"]}" style="--c:{shade(i)};--cf:var(--{key(i)}f)"><h3><small>{i + 1}</small>{esc(sg["label"])}</h3><p>{esc(sg["about"])}</p><ul class="pills">{pills}</ul></article>'
-        groups += f'<section class="grp2" style="--c:{base[lobe]};--cf:{"var(--iacf)" if lobe == 0 else "var(--cicf)"}"><h2 class="lname">{name}</h2><div class="stops">{items}</div></section>'
+        groups += f'<section class="grp2"><h2 class="lname" style="--c:var(--ink);--cf:var(--ground)">{name}</h2><div class="stops">{items}</div></section>'
     body = (f'<div class="wrap">{brand("loop")}<nav class="crumb" aria-label="Breadcrumb"><a href="index.html">Atlas</a><span>›</span><span>Interchanges</span><span>›</span><span>DevOps loop</span></nav>'
             f'<h1>DevOps loop</h1><p class="tag">The eight stages, and where each topic fits. A topic can belong to several stages.</p>{svg}<main>{groups}'
             '<p class="hint">Which stages a topic belongs to is a judgement recorded in the topic\'s spec, not something a source states.</p></main></div>')
