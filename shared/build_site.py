@@ -1,8 +1,10 @@
 """Build the Atlas landing page, dist/index.html, from topics.json and shared/landing.html."""
 import html
 import json
+import sys
 
 import atlas
+import transit
 
 
 def entries(topic):
@@ -30,14 +32,18 @@ def main():
                     n="view" if f["id"] == "views" else f"{len(found[t['id']])} entries")
                 for t in ts))
         for f, ts in atlas.by_family())
+    page = page.replace("/*__LANDING_JS__*/", (atlas.SITE / "shared" / "landing.js").read_text(encoding="utf-8").rstrip("\n"))
     page = (atlas.themed(page).replace("__NAME__", html.escape(reg["name"])).replace("__TAGLINE__", html.escape(reg["tagline"]))
                 .replace("<!--__TOPICS__-->", cards)
                 .replace("/*__INDEX__*/", json.dumps(index, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/"))
-                .replace(atlas.BANNER_MARK, atlas.banner(None, "")).replace(atlas.CSS_MARK, atlas.CSS).replace(atlas.FOOTER_MARK, atlas.FOOTER))
+                .replace(atlas.BANNER_MARK, atlas.banner(None, "", atlas.twin("index.html"))).replace(atlas.CSS_MARK, atlas.CSS).replace(atlas.FOOTER_MARK, atlas.FOOTER))
     atlas.DIST.mkdir(exist_ok=True)
     (atlas.DIST / "index.html").write_text(page, encoding="utf-8")
+    transit.copy_fonts()
+    transit.landing(found)
     print(f"built dist/index.html ({len(topics)} topics, {len(index)} entries searchable)")
 
 
 if __name__ == "__main__":
     main()
+    sys.exit(transit.check())

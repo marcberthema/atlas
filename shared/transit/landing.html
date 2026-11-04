@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>__NAME__</title>
+<style>
+/*__TRANSIT_VARS__*/
+main{max-width:1120px;margin:0 auto;padding:0 clamp(1rem,3vw,2rem) 2rem}
+h1{font:900 clamp(3.2rem,11vw,6rem)/.95 var(--g);letter-spacing:-.04em;margin:1rem 0 .8rem;text-wrap:balance}
+.tag{font-size:1.25rem;max-width:44ch;color:var(--mut);margin:0 0 1.6rem;text-wrap:pretty}
+.plan{display:flex;align-items:center;gap:1rem;max-width:680px;background:var(--soft);border:3px solid var(--ink);border-radius:999px;padding:.3rem 1.4rem}
+.plan svg{flex:none}.plan svg circle{fill:var(--ground);stroke:var(--ink)}
+.plan input{flex:1;min-width:0;font:700 1.3rem var(--g);border:0;background:transparent;color:var(--ink);padding:.8rem 0}
+.plan input:focus-visible{outline:0}.plan:focus-within{outline:3px solid var(--acc);outline-offset:3px}
+.hint{font-size:.95rem;color:var(--mut);margin:.6rem 0 0}
+.line{margin:3rem 0 0}
+.lname{display:inline-block;margin:0;padding:.2rem 1.1rem;border-radius:999px;background:var(--fc);color:var(--fcf);font:900 1.2rem var(--g);letter-spacing:.02em}
+.fdesc{margin:.5rem 0 1.4rem;color:var(--mut);max-width:60ch}
+.route{list-style:none;margin:0;padding:0;display:flex;position:relative}
+.route::before{content:"";position:absolute;left:13px;right:0;top:7px;height:12px;background:var(--fc);border-radius:0 6px 6px 0}
+.stn{display:block;flex:1;min-width:0;padding-right:1.2rem;position:relative}
+.stn a{display:block;border-radius:8px}
+.dot{display:block;width:26px;height:26px;border-radius:50%;background:var(--ground);border:6px solid var(--fc);margin-bottom:.8rem;transition:transform .2s}
+.stn:hover .dot,.stn a:focus-visible .dot{transform:scale(1.25);background:var(--fc)}
+.stn b{display:block;font:900 1.4rem/1.15 var(--g);letter-spacing:-.02em;overflow-wrap:anywhere}
+.stn small{display:block;color:var(--mut);font-weight:700;font-variant-numeric:tabular-nums}
+.stn .d{display:block;color:var(--mut);font-size:.98rem;line-height:1.4;margin-top:.3rem;max-width:30ch}
+#res{display:grid;gap:3px;margin:1.6rem 0;background:var(--rule);padding:3px;border-radius:8px}
+#res .count,#res .hint{margin:0;padding:.7rem 1.1rem;background:var(--soft)}
+.hit{display:grid;grid-template-columns:1fr auto;gap:0 1rem;padding:.7rem 1.1rem;background:#1D2430;color:#fff}.hit:hover,.hit:focus-visible{background:#2B3547}
+.hit b{grid-column:1;grid-row:1;font:900 1.35rem var(--g)}.hit small{grid-column:2;grid-row:1;font-weight:700;color:#FFD23F;align-self:center}.hit span{grid-column:1/-1;color:#C8CFDA}
+#res .hint a{text-decoration:underline}
+@media(max-width:760px){.route{flex-direction:column;gap:1.2rem}.route::before{left:7px;right:auto;top:13px;bottom:13px;width:12px;height:auto;border-radius:6px}
+.stn a{display:grid;grid-template-columns:26px 1fr;gap:0 1rem}.dot{grid-row:1/4;margin:0}}
+/*__BANNER_CSS__*/
+</style></head><body>
+<!--__BANNER__-->
+<main>
+<h1>__NAME__</h1>
+<p class="tag">__TAGLINE__</p>
+<label class="plan"><span class="sr">Search all entries</span><svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true"><circle cx="11" cy="11" r="8" stroke-width="4"/></svg><input type="search" id="q" placeholder="Search all entries by name or keyword" autocomplete="off"></label>
+<p class="hint">Press / to search, Esc to clear, ↓ to move into the results, Enter to open the first one.</p>
+<p id="st" class="sr" role="status"></p>
+<div id="res" role="region" aria-label="Search results" hidden></div>
+<div id="fams"><!--__TOPICS__--></div>
+</main>
+<!--__FOOTER__-->
+<script id="idx" type="application/json">/*__INDEX__*/</script>
+<script>window.ATLAS_TWINS=/*__TWINS__*/[];window.ATLAS_HREF=id=>(ATLAS_TWINS.includes(id)?'':'../')+id+'/index.html'</script>
+<script>
+/*__LANDING_JS__*/
+</script>
+</body></html>

@@ -1,0 +1,93 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>GitOps · Atlas cutting bench</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;600&display=swap"><style>*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}body{margin:0}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+[hidden]{display:none!important}a{color:inherit}img,svg{max-width:100%}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+
+:root{--blk:#0B0B0B;--org:#FF6A13;--win:#F5F5F0;--ink:#111;--mut:#4A4A44;--c:'Barlow Condensed','Arial Narrow',sans-serif;--r:'Barlow',system-ui,sans-serif}
+body{background:var(--blk);color:var(--win);font:400 1.0625rem/1.6 var(--r)}
+::selection{background:var(--org);color:#000}
+:focus-visible{outline:3px solid var(--win);outline-offset:3px}
+.field :focus-visible,.win :focus-visible{outline-color:#000}
+a{text-decoration:none}
+.perf{height:22px;background:var(--blk) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='22'%3E%3Crect x='7' y='5' width='18' height='12' rx='3' fill='%23F5F5F0'/%3E%3C/svg%3E") repeat-x 0 0/32px 22px}
+.field{background:var(--org) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .22 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");color:#000;padding:1.4rem clamp(1rem,4vw,3rem) 2rem}
+.in{max-width:1180px;margin:0 auto}
+.wm{font:700 clamp(4rem,15vw,6rem)/.9 var(--c);text-transform:uppercase;letter-spacing:-.01em;margin:.4rem 0 1rem}
+.win{background:var(--win);color:var(--ink);padding:1rem 1.2rem}
+.tag{display:inline-block;max-width:44ch;margin:0 0 1.2rem;font-size:1.15rem;text-wrap:pretty}
+.find{display:flex;align-items:center;gap:1rem;max-width:720px;background:var(--win);color:var(--ink);padding:.2rem 1.2rem}
+.find label{font:700 1rem var(--c);text-transform:uppercase;letter-spacing:.08em;white-space:nowrap}
+#q{flex:1;min-width:0;font:600 1.4rem var(--c);background:transparent;border:0;color:var(--ink);padding:.9rem 0;letter-spacing:.02em}
+#q:focus-visible{outline:0}.find:focus-within{outline:3px solid #000;outline-offset:3px}
+.keys{font:600 1rem var(--c);text-transform:uppercase;letter-spacing:.06em;margin:.8rem 0 0}
+.main{max-width:1180px;margin:0 auto;padding:2rem clamp(1rem,4vw,3rem) 4rem}
+.strip{margin:0 0 2.2rem;background:#161616}
+.strip .head{display:grid;grid-template-columns:auto 1fr;gap:1rem 1.4rem;align-items:center;padding:.9rem 1.2rem}
+.strip h2{font:700 2.4rem/1 var(--c);text-transform:uppercase;color:var(--org);margin:0}
+.strip .head p{margin:0;color:#D6D6CE;max-width:60ch}
+.frames{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px;padding:.5rem 12px}
+.frame{position:relative;display:flex;flex-direction:column;gap:.5rem;background:var(--win);color:var(--ink);padding:1rem 1.2rem 0;min-height:11rem;transition:transform .25s cubic-bezier(.2,.8,.2,1)}
+.frame:hover{transform:translateY(-4px)}
+.frame h3{font:700 2rem/1 var(--c);text-transform:uppercase;margin:0}
+.frame p{margin:0;font-size:1rem;color:var(--mut);flex:1}
+.cell{display:flex;justify-content:space-between;align-items:baseline;background:var(--blk);color:var(--org);margin:0 -1.2rem;padding:.35rem 1.2rem;font:600 1.05rem var(--c);text-transform:uppercase;letter-spacing:.06em;font-variant-numeric:tabular-nums}
+.cell b{font-weight:700;font-size:1.5rem;color:var(--win)}
+.flag{position:absolute;top:-6px;right:16px;width:24px;height:44px;background:var(--org);clip-path:polygon(0 0,100% 0,100% 100%,50% 78%,0 100%)}
+.bin{margin-top:1rem}
+.bin h2{font:700 1.6rem var(--c);text-transform:uppercase;color:var(--org);margin:0 0 .2rem}.bin>p{margin:0 0 1rem;color:#D6D6CE}
+.pins{display:flex;flex-wrap:wrap;gap:2rem}
+.pin{position:relative;width:min(100%,320px);transform-origin:50% -18px;animation:sway 6s ease-in-out infinite}
+.pin::before{content:"";position:absolute;left:50%;top:-22px;width:12px;height:12px;margin-left:-6px;border-radius:50%;background:var(--win)}
+.pin:nth-child(2){animation-delay:-3s}
+@keyframes sway{50%{transform:rotate(1.6deg)}}
+.hits{display:grid;gap:8px;margin-bottom:2rem}
+.hit{display:block;background:var(--win);color:var(--ink);padding:.8rem 1.2rem}.hit:hover,.hit:focus-visible{background:var(--org)}
+.hit b{display:block;font:700 1.5rem var(--c);text-transform:uppercase}.hit small{font:600 .95rem var(--c);text-transform:uppercase;letter-spacing:.08em;color:var(--mut)}
+.none{background:var(--win);color:var(--ink);padding:1rem 1.2rem;margin:0}.none button{font:700 1rem var(--c);text-transform:uppercase;background:var(--blk);color:var(--org);border:0;padding:.3rem .8rem;cursor:pointer}
+/* topic */
+.crumb{display:flex;gap:6px;flex-wrap:wrap;font:700 1rem var(--c);text-transform:uppercase;letter-spacing:.08em}
+.crumb a,.crumb span{background:#000;color:var(--org);padding:.15rem .7rem}.crumb a:hover{background:var(--win);color:#000}
+.reel{max-width:1180px;margin:0 auto;padding:1.5rem clamp(1rem,4vw,3rem) 4rem;display:grid;grid-template-columns:220px minmax(0,1fr);gap:1.5rem}
+.rule{position:sticky;top:1rem;align-self:start}
+.rule h2{font:700 1.1rem var(--c);text-transform:uppercase;letter-spacing:.1em;color:var(--org);margin:0 0 .4rem}
+.rule ul{list-style:none;margin:0 0 1.4rem;padding:0;display:grid;gap:6px}
+.rule a{display:block;background:#1d1d1d;color:var(--win);font:600 1.15rem var(--c);text-transform:uppercase;letter-spacing:.04em;padding:.4rem .8rem}.rule a:hover{background:var(--org);color:#000}
+.film{border-left:0;display:grid;gap:18px}
+.take{background:#161616;padding:12px}
+.take header{display:flex;flex-wrap:wrap;align-items:baseline;gap:.4rem 1rem;padding:.3rem .4rem .7rem}
+.take h2{font:700 2.6rem/1 var(--c);text-transform:uppercase;color:var(--org);margin:0}
+.take .grp{font:600 1rem var(--c);text-transform:uppercase;letter-spacing:.08em;color:#BDBDB4}
+.marks{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:6px;margin:0 0 6px}
+.marks div{background:var(--blk);padding:.4rem .8rem;border:1px solid #333}
+.marks dt{font:600 .9rem var(--c);text-transform:uppercase;letter-spacing:.1em;color:#BDBDB4}
+.marks dd{margin:0;font:700 1.5rem var(--c);color:var(--org);font-variant-numeric:tabular-nums}
+.take .win{padding:1.2rem 1.4rem}
+.sum{font-size:1.2rem;font-weight:600;line-height:1.45;margin:0 0 .8rem;max-width:60ch;text-wrap:pretty}
+.take ul{margin:0 0 1rem;padding-left:1.2rem;max-width:64ch}.take li{margin:.35rem 0}
+code{font:.9em ui-monospace,Menlo,monospace;background:#E4E4DA;padding:.05em .3em}
+.gotcha{background:#000;color:var(--win);padding:.8rem 1rem;margin:1rem 0;max-width:64ch}.gotcha b{font:700 1rem var(--c);text-transform:uppercase;letter-spacing:.1em;background:var(--org);color:#000;padding:.05rem .6rem;margin-right:.6rem}
+.gotcha code{background:#222;color:var(--win)}
+.srcs{display:flex;flex-wrap:wrap;gap:6px}.srcs a{background:#000;color:var(--org);font:700 1.05rem var(--c);text-transform:uppercase;letter-spacing:.05em;padding:.25rem .8rem}.srcs a:hover{background:var(--org);color:#000}
+table{border-collapse:collapse;width:100%;font-size:1rem;color:var(--ink)}
+th,td{text-align:left;vertical-align:top;padding:.7rem .8rem;border-bottom:1px solid #C9C9BE}
+thead th{background:#000;color:var(--org);font:700 1.1rem var(--c);text-transform:uppercase;letter-spacing:.08em;border:0}
+tbody th{font:700 1.05rem var(--c);text-transform:uppercase;letter-spacing:.05em;width:7rem}
+.take h3{font:700 1.8rem var(--c);text-transform:uppercase;color:var(--org);margin:0 0 .6rem}
+/* lenses */
+.lensbar{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 .6rem}
+.lensbtn{font:700 1.15rem var(--c);text-transform:uppercase;letter-spacing:.06em;padding:.4rem 1.1rem;border:0;background:#1d1d1d;color:var(--win);cursor:pointer}
+.lensbtn[aria-pressed=true]{background:var(--org);color:#000}
+.about{background:var(--win);color:var(--ink);padding:.8rem 1.2rem;max-width:62ch;min-height:3.4em;margin:0 0 1rem}
+.lanes{display:grid;gap:14px}
+.lane{background:#161616;padding:6px 0}
+.lane h2{margin:0;padding:.4rem 1rem;font:700 1.2rem var(--c);text-transform:uppercase;letter-spacing:.1em;color:var(--org)}
+.cells{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px;padding:0 8px 8px}
+.role{font:700 1.15rem/1.1 var(--c);text-transform:uppercase;letter-spacing:.03em;border:0;padding:.8rem .6rem;min-height:3.6rem;color:#000;cursor:pointer;transition:opacity .25s}
+.role:hover{transform:translateY(-2px)}
+.c-edge{background:var(--org)}.c-run{background:var(--win)}.c-data{background:#CFCFC6}.c-ops{background:#9C9C93}
+.role.dim{opacity:.35;clip-path:polygon(0 0,calc(100% - 14px) 0,100% 14px,100% 100%,0 100%)}
+.role[aria-pressed=true]{outline:3px solid var(--win);outline-offset:2px}
+.panel{margin-top:1.4rem;background:var(--win);color:var(--ink);padding:1.2rem 1.4rem;max-width:62ch}.panel h2{font:700 2rem var(--c);text-transform:uppercase;margin:0 0 .3rem}.panel p{margin:.4rem 0}
+.wires{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible;color:#F5F5F0}.w{opacity:.8;transition:opacity .2s}.w.on{opacity:1;stroke-width:2.4}.w.off{opacity:.15}.wl{font:700 .95rem "Barlow Condensed",sans-serif;text-transform:uppercase;letter-spacing:.05em;fill:#F5F5F0;paint-order:stroke;stroke:#0B0B0B;stroke-width:4px;stroke-linejoin:round}
+@media(max-width:760px){.reel{grid-template-columns:1fr}.rule{position:static}.strip .head{grid-template-columns:1fr}.cells{grid-template-columns:repeat(2,1fr)}.gap{display:none}.find{flex-wrap:wrap;padding:.6rem 1rem}}
+</style></head><body><div class="perf"></div><header class="field"><div class="in"><nav class="crumb" aria-label="Breadcrumb"><a href="index.html">Atlas</a><a href="index.html">IaC</a><span>GitOps</span></nav><h1 class="wm">GitOps</h1><p class="win tag">GitOps principles, Argo CD, Flux and the other operators, and the tools that produce the manifests (Helm, Kustomize and alternatives). Open source and free tools only.</p></div></header><div class="perf"></div><div class="reel"><nav class="rule" aria-label="On this page"><h2>On the rail</h2><ul><li><a href="#opengitops">Principles</a></li><li><a href="#argo-cd">Argo CD</a></li><li><a href="#flux">Flux</a></li></ul><h2>Set aside</h2><ul><li><a href="#cmp">Argo CD vs Flux</a></li></ul></nav><main class="film"><article class="take" id="opengitops"><header><h2>OpenGitOps principles</h2><span class="grp">Principles</span></header><dl class="marks"><div><dt>Analysed</dt><dd>v1.0.0</dd></div><div><dt>Released</dt><dd>2021-10-08</dd></div><div><dt>Checked</dt><dd>2026-10-26</dd></div><div><dt>Status</dt><dd>active</dd></div><div><dt>Licence</dt><dd>unconfirmed</dd></div></dl><div class="win"><p class="sum">Four principles that define GitOps: declarative, versioned and immutable, pulled automatically, continuously reconciled.</p><ul><li>GitOps is a way to run a system where the desired state lives in version control, and software agents keep the real system equal to it.</li><li>OpenGitOps (v1.0.0) states it as four principles. Everything else on this page, Argo CD, Flux, Helm and Kustomize, is a tool to apply them.</li></ul><p class="gotcha"><b>Gotcha</b>In a push pipeline, CI applies changes to the cluster. In a pull model, an agent fetches the desired state and applies it itself. Argo CD&#x27;s docs say that with automated sync, CI only has to push a commit and not call the Argo CD API.</p><div class="srcs"><a href="https://opengitops.dev/">Project</a><a href="https://github.com/open-gitops/documents">Repository</a></div></div></article><article class="take" id="argo-cd"><header><h2>Argo CD</h2><span class="grp">GitOps operators</span></header><dl class="marks"><div><dt>Analysed</dt><dd>v3.5.6</dd></div><div><dt>Released</dt><dd>2026-10-20</dd></div><div><dt>Checked</dt><dd>2026-10-26</dd></div><div><dt>Status</dt><dd>active</dd></div><div><dt>Licence</dt><dd>Apache-2.0</dd></div></dl><div class="win"><p class="sum">Declarative GitOps continuous delivery for Kubernetes, with a web UI, a CLI and multi-cluster support. The main subject of this topic.</p><ul><li>Argo CD is a Kubernetes controller for GitOps. You describe the applications you want in Git, and Argo CD keeps comparing that desired state with the live state in the cluster.</li><li>When the two differ the application shows as <code>OutOfSync</code>, and Argo CD can sync it back, manually or automatically.</li><li>It renders Kustomize, Helm, Jsonnet, plain YAML or JSON, and custom config management plugins, then applies the result.</li></ul><p class="gotcha"><b>Gotcha</b>Argo CD is one application with a UI and an API server, and drift correction is opt-in (<code>selfHeal</code>). Flux is a set of controllers with custom resources, and its Kustomization reverts drift by default. See the Compare tab.</p><div class="srcs"><a href="https://argoproj.github.io/cd/">Project</a><a href="https://argo-cd.readthedocs.io/en/stable/">Documentation</a><a href="https://argo-cd.readthedocs.io/en/stable/getting_started/">Getting started</a><a href="https://argo-cd.readthedocs.io/en/stable/operator-manual/installation/">Install (cluster)</a><a href="https://argo-cd.readthedocs.io/en/stable/cli_installation/">Install the CLI</a><a href="https://argo-cd.readthedocs.io/en/stable/user-guide/commands/argocd/">CLI reference</a><a href="https://argo-cd.readthedocs.io/en/stable/developer-guide/api-docs/">API docs</a><a href="https://argo-cd.readthedocs.io/en/stable/user-guide/application-specification/">Application specification</a><a href="https://github.com/argoproj/argo-helm/tree/main/charts/argo-cd">Helm chart (community)</a><a href="https://github.com/argoproj/argo-cd">Repository</a><a href="https://github.com/argoproj/argo-cd/releases">Releases</a></div></div></article><article class="take" id="flux"><header><h2>Flux</h2><span class="grp">GitOps operators</span></header><dl class="marks"><div><dt>Analysed</dt><dd>v2.10.0</dd></div><div><dt>Released</dt><dd>2026-10-26</dd></div><div><dt>Checked</dt><dd>2026-10-26</dd></div><div><dt>Status</dt><dd>active</dd></div><div><dt>Licence</dt><dd>Apache-2.0</dd></div></dl><div class="win"><p class="sum">A set of Kubernetes controllers (the GitOps Toolkit) that keep a cluster in line with Git, OCI, Helm or bucket sources. The closest competitor to Argo CD.</p><ul><li>Flux is a set of Kubernetes controllers (the GitOps Toolkit) that keep a cluster in line with Git, OCI, Helm or bucket sources. It is the closest competitor to Argo CD.</li><li>Each controller owns a few custom resources. A source controller fetches, and the kustomize and helm controllers apply what was fetched.</li></ul><p class="gotcha"><b>Gotcha</b>Argo CD is one application with a UI and an API server, and drift correction is opt-in (<code>selfHeal</code>). Flux is a set of controllers with custom resources, and its Kustomization reverts drift by default. See the Compare tab.</p><div class="srcs"><a href="https://fluxcd.io/">Project</a><a href="https://fluxcd.io/flux/">Documentation</a><a href="https://fluxcd.io/flux/get-started/">Get started</a><a href="https://fluxcd.io/flux/installation/">Install</a><a href="https://fluxcd.io/flux/cmd/">CLI reference</a><a href="https://fluxcd.io/flux/components/">API reference (components)</a><a href="https://github.com/fluxcd/flux2">Repository</a><a href="https://github.com/fluxcd/flux2/releases">Releases</a></div></div></article><section class="take" id="cmp"><h3>Argo CD and Flux</h3><div class="win"><table><thead><tr><th></th><th>Argo CD</th><th>Flux</th></tr></thead><tbody><tr><th scope="row">Shape</th><td>An application with an API server, repository server and application controller. UI and CLI.</td><td>A set of controllers (source, kustomize, helm, notification, image reflector, image automation), each with custom resources.</td></tr><tr><th scope="row">Sources</th><td>Git is described as the source of truth.</td><td>Git, OCI, Helm repository, bucket.</td></tr><tr><th scope="row">Drift</th><td>selfHeal is off by default, so drift is shown as OutOfSync.</td><td>Kustomization reverts manual changes on the next reconcile. HelmRelease driftDetection is warn or enabled.</td></tr><tr><th scope="row">Helm</th><td>helm template, Argo CD runs the lifecycle. Helm hooks are mapped.</td><td>HelmRelease performs the Helm release, with rollback or uninstall remediation and tests.</td></tr><tr><th scope="row">Kustomize</th><td>Detected by file. Fields under spec.source.kustomize.</td><td>Kustomization builds a path, with postBuild substitution and patches.</td></tr></tbody></table></div></section></main></div></body></html>
