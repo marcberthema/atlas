@@ -10,6 +10,7 @@ import model
 
 sys.path.insert(0, str(model.SITE / "shared"))
 import atlas  # noqa: E402
+import transit  # noqa: E402
 
 TEMPLATE = model.ROOT / "templates" / "index.html"
 DIST = atlas.DIST / "azure"
@@ -24,8 +25,11 @@ def main():
     marker = "/*__DATA__*/"
     assert page.count(marker) == 1, "template needs exactly one data marker"
     # "</" would end the script element early
-    page = atlas.apply(page.replace(marker, payload.replace("</", "<\\/")), "azure")
+    page = page.replace(marker, payload.replace("</", "<\\/"))
+    twin = transit.azure(page)
+    page = atlas.apply(page, "azure")
     (DIST / "index.html").write_text(page, encoding="utf-8")
+    transit.write("azure/index.html", twin)
     print(f"built dist/azure/index.html and dist/azure/services.resolved.json ({len(resolved['services'])} services)")
 
 

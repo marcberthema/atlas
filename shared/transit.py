@@ -185,3 +185,36 @@ def topic(page, topic_id, family):
     ids = {p.split("/")[0] for p in atlas.twins()}  # a link to a topic without a twin goes to its classic page
     page = re.sub(r"\]\(\.\./([a-z0-9-]+)/", lambda m: m[0] if m[1] in ids else f"](../../{m[1]}/", page)
     return fill(page, f"{topic_id}/index.html", topic_id, "../fonts/")
+
+
+AZURE_MAP = """body{--bg:var(--ground);--fg:var(--ink);--card:var(--soft);--ok:var(--dev);--acc:var(--ink);--fam:var(--fc);--famf:var(--fcf);
+--t0-bd:var(--cic);--t0-bg:color-mix(in srgb,var(--cic) 14%,var(--ground));--t1-bd:color-mix(in srgb,var(--cic) 55%,var(--ground));--t1-bg:color-mix(in srgb,var(--cic) 6%,var(--ground));
+--t2-bd:var(--ent);--t2-bg:color-mix(in srgb,var(--ent) 14%,var(--ground));--t3-bd:var(--mut);--t3-bg:var(--soft)}"""
+AZURE_CSS = """
+.top{align-items:center}
+.mode{border:3px solid var(--fg);border-radius:999px}
+.mode button{font-weight:900;background:var(--bg);color:var(--fg);padding:.3rem 1rem}
+.mode button[aria-pressed=true]{background:var(--fam);color:var(--famf)}
+.chip{border-width:3px;font-weight:900}
+.chip small{font-weight:700}
+button.svc,button.rel{border-width:2px;border-radius:12px;font-weight:500}
+button.svc:hover,button.rel:hover{border-color:var(--fg);box-shadow:none;transform:translateY(-2px)}
+.svc b,.rel b{font-weight:900;letter-spacing:-.01em}
+.col,.tf{border-width:2px;border-color:var(--fg);border-radius:12px}
+.col h3{color:var(--fg);font-weight:900}
+.crumbs a{color:var(--fg)}
+select{border:3px solid var(--fg);border-radius:999px;font-weight:700}
+.count{font-weight:700}
+"""
+
+
+def azure(page):
+    """The transit twin of the Azure page, from its template once the data is filled in."""
+    old = re.search(r":root\{\n  --bg:.*?\n\}\n@media\(prefers-color-scheme:dark\)\{:root\{\n.*?\n\}\}\n", page, re.S)
+    assert old, "topics/azure/templates/index.html: the variable blocks changed"
+    page = page.replace(old.group(0), "/*__TRANSIT_VARS__*/\n" + AZURE_MAP + "\n")
+    for marker, new in (("<body>", '<body data-fam="iac">'), (atlas.BANNER_MARK, atlas.BANNER_MARK + '<div class="tpage">'),
+                        (atlas.FOOTER_MARK, "</div>" + atlas.FOOTER_MARK), ("</style></head>", TOPIC_CSS + AZURE_CSS + "</style></head>")):
+        assert page.count(marker) == 1, f"topics/azure/templates/index.html needs exactly one {marker}"
+        page = page.replace(marker, new)
+    return fill(page, "azure/index.html", "azure", "../fonts/")

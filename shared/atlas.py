@@ -25,8 +25,8 @@ TRANSIT = "transit"
 
 
 def twins():
-    """The landing page and every topic built from the shared template (a topic with its own templates/index.html has no twin yet)."""
-    return {"index.html"} | {f"{t['id']}/index.html" for t in published() if not (SITE / "topics" / t["id"] / "templates" / "index.html").exists()}
+    """The pages built in both looks: the landing page and every published topic."""
+    return {"index.html"} | {f"{t['id']}/index.html" for t in published()}
 
 
 def twin(path, look="classic"):
