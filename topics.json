@@ -36,7 +36,7 @@
     {"id": "certificates", "family": "development", "label": "Certificates", "stages": ["deploy", "operate"], "description": "X.509 and TLS basics, ACME and Let's Encrypt, private CAs, cert-manager and Kubernetes, and OpenSSL commands to inspect and troubleshoot."},
     {"id": "identity", "family": "enterprise", "label": "Identity providers", "stages": ["deploy", "operate"], "description": "Single sign-on and the protocols behind it (OIDC, SAML, LDAP, Kerberos, SCIM), open source identity providers, and how Argo CD and Kubernetes use one."},
     {"id": "topologies", "family": "enterprise", "label": "Enterprise topologies", "stages": ["plan", "operate"], "description": "How systems talk to each other: hub-and-spoke, mesh, tree, bus and ring, where each shows up in networks, services, messaging and data, and the products that implement them."},
-    {"id": "workos", "family": "saas", "label": "WorkOS", "stages": ["code", "deploy"], "draft": true, "description": "Enterprise-ready auth for apps: SSO, Directory Sync, AuthKit, RBAC and audit logs, from the WorkOS documentation."},
+    {"id": "workos", "family": "saas", "label": "WorkOS", "stages": ["code", "deploy"], "description": "Enterprise-ready auth for apps: SSO, Directory Sync, AuthKit, RBAC and audit logs, from the WorkOS documentation."},
     {"id": "cloudflare", "family": "saas", "label": "Cloudflare", "stages": ["deploy", "operate"], "description": "Workers, Pages, DNS, CDN, Zero Trust and the other Cloudflare products, from the Cloudflare documentation."}
   ]
 }

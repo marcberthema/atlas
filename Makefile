@@ -61,3 +61,5 @@ claude-%:
 	$(MAKE) -C claude $*
 cloudflare-%:
 	$(MAKE) -C topics/cloudflare $*
+workos-%:
+	$(MAKE) -C topics/workos $*
