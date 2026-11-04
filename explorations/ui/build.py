@@ -2,7 +2,7 @@
 import sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent))
-import field, guidemap, bench
+import field, guidemap, bench, specimen, zine, transit
 from common import page, esc
 
 OUT = Path(__file__).parent
@@ -10,6 +10,9 @@ WORLDS = [
     ("field", field, "A · Field guide", "Entries are species accounts. Field marks (version, dates, licence) sit in a margin box, look-alikes get their own section, and the four families are colour-tabbed edge-index tabs on a cloth-green frame."),
     ("guidemap", guidemap, "B · Guide map", "A zoo-and-gardens map. Families are flat-colour lobes on pale water, topics are capsules with a round count chip, and entries are rounded white lobes."),
     ("bench", bench, "C · Cutting bench", "A film bench. Black ground, orange grain, perforated rails; every word of running copy sits in a white window, and dates and versions are numerals in black cells."),
+    ("specimen", specimen, "D · Type specimen", "A type specimen sheet. Giant grotesque names, mono metadata in a spec table, one blue, hairline rules, and a search field that works like a type tester."),
+    ("zine", zine, "E · Hand-drawn zine", "A friendly explainer. Wobbly marker borders, highlighter swipes, a globe mascot that warns on gotchas, and Lenses arrows drawn by a shaky hand."),
+    ("transit", transit, "F · Transit map", "A metro diagram. Each family is a coloured line, each topic a station, the views are interchanges, and entries are stops along a line with a route strip at the top."),
 ]
 for d, mod, _, _ in WORLDS:
     (OUT / d).mkdir(exist_ok=True)
