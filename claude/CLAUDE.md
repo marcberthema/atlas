@@ -23,7 +23,7 @@ Run commands from `claude/` (or `make claude-<target>` from the root).
 - Pro plan constraint: no paid API keys, no extra subscriptions. A tool that routes to other providers is a fallback to use on purpose,
   never the default (see "Later" in the README).
 - The scripts must stay idempotent (check, then act), never overwrite `settings.json` keys they do not own, and back up a file before the
-  first write. Plugin installs go through `claude plugin ...`; never edit `enabledPlugins` by hand.
+  first write (unless git tracks it: git is the backup). Plugin installs go through `claude plugin ...`; never edit `enabledPlugins` by hand.
 - The repository is public: the profile and the rules blocks hold no secrets, paths or private names.
 - Plugins are cloned over SSH by the Claude CLI; the account needs a GitHub key or the clone fails.
 

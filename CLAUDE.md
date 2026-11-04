@@ -93,3 +93,10 @@ make azure-check # run any target of a topic: make <topic>-<target>
 
 Be direct. If a claim, relationship or date is uncertain, say so plainly rather than guessing. Flag errors in existing entries
 when you notice them.
+
+<!-- atlas claude setup: ui-rules begin -->
+## UI work
+
+- Use `/impeccable` for UI: `critique` and `audit` to review a page, then `polish`, `typeset`, `layout` and its other commands to refine it. Run `/impeccable init` once per project (its README says to).
+- This project's own rules (dependencies, fonts, scripts, file layout) win over the skill.
+<!-- atlas claude setup: ui-rules end -->

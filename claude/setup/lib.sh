@@ -31,10 +31,22 @@ for c in sec.get("commands", []):
 PY
 }
 
-# install_plugin <id> <source> <plugin@marketplace> <scope>: skipped when already installed
+# plugin_present <plugin@marketplace> <scope>: installed and enabled at that scope. A project-scope plugin counts only for the current
+# folder (`claude plugin list` shows the plugins of every project, as disabled ones in the others).
+plugin_present() {
+  claude plugin list --json 2>/dev/null | python3 -I -c '
+import json, os, sys
+plug, scope, here = sys.argv[1], sys.argv[2], os.path.realpath(os.getcwd())
+for p in json.load(sys.stdin):
+    if p["id"] == plug and p["scope"] == scope and p.get("enabled") and (scope != "project" or os.path.realpath(p.get("projectPath", "")) == here):
+        sys.exit(0)
+sys.exit(1)' "$1" "$2"
+}
+
+# install_plugin <id> <source> <plugin@marketplace> <scope>: skipped when already installed at that scope (project scope: run from the project)
 install_plugin() {
   local id="$1" src="$2" plug="$3" scope="$4"
-  if claude plugin list 2>/dev/null | grep -qF "$plug"; then ok "$id (already installed)"; return; fi
+  if plugin_present "$plug" "$scope"; then ok "$id (already installed)"; return; fi
   say "  add  $id: $plug ($scope)"
   run claude plugin marketplace add --scope "$scope" "$src"
   run claude plugin install --scope "$scope" "$plug"
@@ -52,7 +64,7 @@ run_item() {
 merge_block() {
   local file="$1" block="$2" name="$3"
   python3 -I - "$file" "$block" "$name" "$DRY" <<'PY'
-import shutil, sys, time
+import shutil, subprocess, sys, time
 from pathlib import Path
 file, block, name, dry = Path(sys.argv[1]), Path(sys.argv[2]), sys.argv[3], sys.argv[4] == "1"
 begin, end = f"<!-- atlas claude setup: {name} begin -->", f"<!-- atlas claude setup: {name} end -->"
@@ -69,7 +81,9 @@ if out == old:
 elif dry:
     print(f"  would write the {name} block into {file}")
 else:
-    if old and begin not in old:
+    tracked = old and subprocess.run(["git", "-C", str(file.parent), "ls-files", "--error-unmatch", file.name],
+                                     capture_output=True).returncode == 0   # git is the backup of a tracked file
+    if old and begin not in old and not tracked:
         shutil.copy(file, f"{file}.bak-{time.strftime('%Y%m%d-%H%M%S')}")
         print(f"  previous {file} backed up next to it")
     file.parent.mkdir(parents=True, exist_ok=True)
