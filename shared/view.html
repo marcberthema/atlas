@@ -6,8 +6,8 @@
 @media(prefers-color-scheme:dark){:root{--bg:#14181d;--fg:#e8ecef;--mut:#9aa6b2;--acc:#7fb2e5;--rule:#2b333b;--card:#1c2229;--ok:#56d364}}
 *{box-sizing:border-box}
 body{font:16px/1.45 system-ui,sans-serif;background:var(--bg);color:var(--fg);margin:0;padding:16px;max-width:1100px;margin-inline:auto}
-h1{font-size:1.4rem;color:var(--acc);margin:0 0 2px}
-h2{font-size:1.05rem;color:var(--acc);margin:22px 0 4px;border-bottom:1px solid var(--rule);padding-bottom:3px}
+h1{font-size:clamp(1.5rem,3.5vw,1.9rem);line-height:1.15;letter-spacing:-.01em;text-wrap:balance;color:var(--acc);margin:0 0 4px}
+h2{font-size:1.2rem;color:var(--acc);margin:22px 0 4px;border-bottom:1px solid var(--rule);padding-bottom:3px}
 .sub{color:var(--mut);margin:0 0 12px;font-size:.95rem}
 .loop{width:100%;height:auto;display:block;margin:8px auto;max-width:940px}
 .loop .path{fill:none;stroke:var(--rule);stroke-width:14;stroke-linecap:round}
@@ -16,21 +16,23 @@ h2{font-size:1.05rem;color:var(--acc);margin:22px 0 4px;border-bottom:1px solid 
 .loop .n text{fill:var(--fg);font:600 13px system-ui,sans-serif;text-anchor:middle}
 .loop .n .c{fill:var(--mut);font:700 11px system-ui,sans-serif}
 .loop a:hover circle,.loop a:focus-visible circle{fill:var(--acc)}
+.loop a:focus-visible{outline:none}.loop a:focus-visible circle{stroke:var(--fg);stroke-width:4}
+@media(max-width:560px){.loop{display:none}}  /* the numbered cards below carry the same order */
 .loop a:hover text,.loop a:focus-visible text{fill:var(--bg)}
 .loop .lobe{fill:var(--mut);font:600 12px system-ui,sans-serif;letter-spacing:.08em;text-anchor:middle;text-transform:uppercase}
 .stages{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin-top:12px}
-.stage{border:1px solid var(--rule);border-top:4px solid var(--acc);border-radius:8px;background:var(--card);padding:10px 12px}
-.stage:target{box-shadow:0 0 0 2px var(--acc)}
+.stage{border:1px solid var(--rule);border-radius:8px;background:var(--card);padding:10px 12px;scroll-margin-top:calc(var(--atlash,0px) + 12px)}
+.stage:target{border-color:var(--acc);box-shadow:0 0 0 2px var(--acc);outline:2px solid transparent}
 .stage h3{margin:0;font-size:1rem}
-.stage h3 small{color:var(--mut);font-weight:400}
+.stage h3 small{color:var(--acc);font-weight:700;margin-right:6px;font-variant-numeric:tabular-nums}
 .stage p{margin:2px 0 8px;color:var(--mut);font-size:.9rem}
 .stage ul{list-style:none;margin:0;padding:0;display:grid;gap:6px}
 .stage a{display:block;color:inherit;text-decoration:none;border:1px solid var(--rule);border-radius:6px;padding:4px 8px;background:var(--bg)}
-.stage a:hover{box-shadow:0 0 0 2px var(--acc)}
+.stage a:hover{border-color:var(--acc);box-shadow:0 0 0 1px var(--acc)}
 .stage a:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
 .stage a b{display:block;font-size:.95rem}
-.stage a span{color:var(--mut);font-size:.82rem}
-.none{color:var(--mut);font-size:.9rem;font-style:italic}
+.stage a span{color:var(--mut);font-size:.85rem}
+.none{color:var(--mut);font-size:.9rem}
 .unplaced a{display:inline-block;margin:0 6px 6px 0;border:1px solid var(--rule);border-radius:999px;padding:2px 12px;color:inherit;text-decoration:none;background:var(--card)}
 .note{color:var(--mut);font-size:.88rem;margin-top:18px}
 /*__BANNER_CSS__*/

@@ -26,12 +26,12 @@ def loop_svg(stages):
         lobe, k = divmod(i, half)
         t = math.pi / 2 + math.pi * lobe + (k + 0.5) * math.pi / half  # left lobe first, then the right one
         x, y = lemniscate(t)
-        nodes.append('<a href="#stage-{id}"><g class="n"><circle cx="{x:.1f}" cy="{y:.1f}" r="27"/><text class="c" x="{x:.1f}" y="{cy:.1f}">{num}</text>'
+        nodes.append('<a href="#stage-{id}" aria-label="Stage {num}: {label}"><g class="n"><circle cx="{x:.1f}" cy="{y:.1f}" r="27"/><text class="c" x="{x:.1f}" y="{cy:.1f}">{num}</text>'
                      '<text x="{x:.1f}" y="{ty:.1f}">{label}</text></g></a>'.format(
                          id=html.escape(s["id"]), x=x, y=y, cy=y - 5, ty=y + 11, num=i + 1, label=html.escape(s["label"])))
     labels = ('<text class="lobe" x="{l}" y="{y}">Dev</text><text class="lobe" x="{r}" y="{y}">Ops</text>').format(l=W * 0.25, r=W * 0.75, y=H / 2 + 4)
-    return ('<svg class="loop" viewBox="0 0 {w} {h}" role="img" aria-label="The DevOps loop: {names}, then back to {first}">'
-            '<title>The DevOps loop</title><path class="path" d="{p}"/><path class="flow" d="{p}"/>{labels}{nodes}</svg>').format(
+    return ('<svg class="loop" viewBox="0 0 {w} {h}" role="group" aria-label="The DevOps loop: {names}, then back to {first}">'
+            '<path class="path" d="{p}"/><path class="flow" d="{p}"/>{labels}{nodes}</svg>').format(
         w=W, h=H, p=path, labels=labels, nodes="".join(nodes), first=html.escape(stages[0]["label"]),
         names=", ".join(html.escape(s["label"]) for s in stages))
 
@@ -41,14 +41,14 @@ def devops_loop(reg):
     topics = atlas.published()
     fam = {f["id"]: f["label"] for f in reg["families"]}
     cards = []
-    for s in stages:
+    for n, s in enumerate(stages, 1):
         mine = [t for t in topics if s["id"] in t.get("stages", [])]
         items = "".join(
             '<li><a href="../{id}/index.html"><b>{label}</b><span>{fam}</span></a></li>'.format(
                 id=t["id"], label=html.escape(t["label"]), fam=html.escape(fam.get(t["family"], "")))
-            for t in mine) or '<li class="none">No topic yet</li>'
-        cards.append('<section class="stage" id="stage-{id}"><h3>{label}</h3><p>{about}</p><ul>{items}</ul></section>'.format(
-            id=html.escape(s["id"]), label=html.escape(s["label"]), about=html.escape(s["about"]), items=items))
+            for t in mine) or '<li class="none">No Atlas topic covers this stage yet.</li>'
+        cards.append('<section class="stage" id="stage-{id}"><h3><small>{n}</small>{label}</h3><p>{about}</p><ul>{items}</ul></section>'.format(
+            n=n, id=html.escape(s["id"]), label=html.escape(s["label"]), about=html.escape(s["about"]), items=items))
     unplaced = [t for t in topics if not t.get("stages")]
     rest = ('<h2>Not on the loop</h2><p class="unplaced">{}</p>'.format("".join(
         '<a href="../{id}/index.html">{label}</a>'.format(id=t["id"], label=html.escape(t["label"])) for t in unplaced)) if unplaced else "")
