@@ -52,6 +52,9 @@ dialog.ai .cl{position:absolute;top:1rem;right:1rem}
 .srcs.xd{display:none}html[data-details] .srcs.xd,.stop.open .srcs.xd{display:flex}
 .more{font:700 .9rem var(--g);border:0;background:none;color:var(--mut);text-decoration:underline;cursor:pointer;padding:0 .3rem}
 .tw{overflow-x:auto}.tw table{min-width:560px}
+.inter-nav{display:flex;align-items:center;flex-wrap:wrap;gap:.2rem 1.2rem}.il{font-weight:700;font-size:.9rem;color:var(--mut)}
+.xl{display:inline-flex;align-items:center;gap:.45rem;font-weight:900}.xl i{width:18px;height:18px;border-radius:50%;border:5px solid var(--ink);background:var(--ground)}
+.xl:hover i,.xl[aria-current] i{background:var(--ink)}
 /* azure */
 .tools{display:flex;flex-wrap:wrap;align-items:center;gap:.8rem 1rem;margin:1.4rem 0 .4rem}
 .tools .plan{flex:1 1 320px;max-width:520px}
@@ -128,8 +131,9 @@ HEAD = THEME + gfont("family=Red+Hat+Display:wght@500;700;900")
 PIN = '<svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true"><circle cx="11" cy="11" r="8" stroke-width="4" style="fill:var(--ground);stroke:var(--ink)"/></svg>'
 
 
-def brand(sub="A reference you can ride"):
-    return ('<div class="brand"><a class="bar" href="index.html">ATLAS</a><span>' + sub + '</span><span class="acts">'
+def brand(cur=None):
+    xs = "".join(f'<a class="xl" href="{h}.html"{" aria-current=page" if h == cur else ""}><i></i>{n}</a>' for h, n in (("lenses", "Lenses"), ("loop", "DevOps loop")))
+    return ('<div class="brand"><a class="bar" href="index.html">ATLAS</a><nav class="inter-nav" aria-label="Interchanges"><span class="il">Interchanges</span>' + xs + '</nav><span class="acts">'
             '<button type="button" class="btn" id="abt" aria-haspopup="dialog">About</button>'
             '<button type="button" class="btn" id="thm" aria-pressed="false">Dark</button></span></div>')
 
@@ -162,12 +166,10 @@ def landing():
         c, cf = LINE[f["id"]]
         st = "".join(f'<li class="stn"><a href="{"azure" if t["id"] == "azure" else "topic"}.html"><i class="dot"></i><b>{esc(t["label"])}</b><small>{t["count"]} entries</small><span class="d">{esc(t["description"])}</span></a></li>' for t in f["topics"])
         lines += f'<section class="line" style="--c:{c};--cf:{cf}"><h2 class="lname">{esc(f["label"])}</h2><p>{esc(f["description"])}</p><ol class="route">{st}</ol></section>'
-    xs = "".join(f'<li><a class="xing" href="{ {"lenses": "lenses", "devops-loop": "loop"}.get(v["id"], "topic") }.html"><i></i><b>{esc(v["label"])}</b></a></li>' for v in T["views"])
     body = (f'<div class="wrap">{brand()}<h1>{esc(T["name"])}</h1><p class="tag">{esc(T["tagline"])}</p>'
             f'<label class="plan"><span class="sr">Search every entry</span>{PIN}<input id="q" type="search" placeholder="Where to? Search every entry" autocomplete="off"></label>'
             '<p class="hint">Press / to search, Esc to clear, the down arrow to reach the results.</p><p id="st" class="sr" role="status"></p>'
-            f'<main><div id="res" class="board" role="region" aria-label="Search results" hidden></div><div id="fams">{lines}'
-            f'<section class="inter" id="views"><h2>Interchanges</h2><p>Views that cut across the lines; they are not topics themselves.</p><ul>{xs}</ul></section></div></main></div>')
+            f'<main><div id="res" class="board" role="region" aria-label="Search results" hidden></div><div id="fams">{lines}</div></main></div>')
     return page("Atlas · transit", HEAD, body + chrome() + search_block(), CSS)
 
 
@@ -195,7 +197,7 @@ def topic():
 def lenses():
     markup, js = lenses_markup()
     legend = '<p class="legend"><span style="--k:var(--ent)">Edge</span><span style="--k:var(--iac)">Runs the app</span><span style="--k:var(--dev)">Data</span><span style="--k:var(--cic)">Operations</span></p>'
-    body = (f'<div class="wrap">{brand()}<nav class="crumb" aria-label="Breadcrumb"><a href="index.html">Atlas</a><span>›</span><a href="index.html#views">Interchanges</a><span>›</span><span>Lenses</span></nav>'
+    body = (f'<div class="wrap">{brand("lenses")}<nav class="crumb" aria-label="Breadcrumb"><a href="index.html">Atlas</a><span>›</span><span>Interchanges</span><span>›</span><span>Lenses</span></nav>'
             f'<h1>Lenses</h1><p class="tag">Where does a service go? One picture of an application, five lenses.</p>{legend}<main>{markup}</main></div>{chrome()}{js}')
     return page("Lenses · Atlas transit", HEAD, body, CSS)
 
@@ -281,7 +283,7 @@ def loop():
             pills = "".join(f'<li><a href="{"azure" if t["id"] == "azure" else "topic"}.html">{esc(t["label"])}</a></li>' for t in mine) or '<li class="none">No Atlas topic covers this stage yet.</li>'
             items += f'<article class="stop stage" id="stage-{sg["id"]}"><h3><small>{i + 1}</small>{esc(sg["label"])}</h3><p>{esc(sg["about"])}</p><ul class="pills">{pills}</ul></article>'
         groups += f'<section class="grp2" style="--c:{col[lobe]};--cf:{"var(--iacf)" if lobe == 0 else "var(--cicf)"}"><h2 class="lname">{name}</h2><div class="stops">{items}</div></section>'
-    body = (f'<div class="wrap">{brand()}<nav class="crumb" aria-label="Breadcrumb"><a href="index.html">Atlas</a><span>›</span><a href="index.html#views">Interchanges</a><span>›</span><span>DevOps loop</span></nav>'
+    body = (f'<div class="wrap">{brand("loop")}<nav class="crumb" aria-label="Breadcrumb"><a href="index.html">Atlas</a><span>›</span><span>Interchanges</span><span>›</span><span>DevOps loop</span></nav>'
             f'<h1>DevOps loop</h1><p class="tag">The eight stages, and where each topic fits. A topic can belong to several stages.</p>{svg}<main>{groups}'
             '<p class="hint">Which stages a topic belongs to is a judgement recorded in the topic\'s spec, not something a source states.</p></main></div>')
     return page("DevOps loop · Atlas transit", HEAD, body + chrome(), CSS)
