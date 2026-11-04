@@ -5,7 +5,7 @@
 :root{
   --bg:#fff;--fg:#111;--mut:#555;--acc:#1a3c5e;--rule:#d5dde5;--card:#f6f8fa;
   --t0-bg:#e1eefc;--t0-bd:#1f6feb;--t1-bg:#e3f3e6;--t1-bd:#2e7d32;--t2-bg:#fff4c7;--t2-bd:#b58900;--t3-bg:#eef1f4;--t3-bd:#8a96a3;
-  --ok:#2e7d32;--warn:#b58900;--bad:#c62828;
+  --ok:#2e7d32;--warn:#8a6700;--bad:#c62828;
 }
 @media(prefers-color-scheme:dark){:root{
   --bg:#14181d;--fg:#e8ecef;--mut:#9aa6b2;--acc:#7fb2e5;--rule:#2b333b;--card:#1c2229;
@@ -15,9 +15,9 @@
 *{box-sizing:border-box}
 /*__BANNER_CSS__*/
 body{font:16px/1.45 system-ui,sans-serif;background:var(--bg);color:var(--fg);margin:0;padding:16px;max-width:1100px;margin-inline:auto}
-h1{font-size:1.4rem;color:var(--acc);margin:0 0 2px}
+h1{font-size:clamp(1.5rem,3.5vw,1.9rem);line-height:1.15;letter-spacing:-.01em;text-wrap:balance;color:var(--acc);margin:0 0 4px}
 .sub{color:var(--mut);margin:0 0 12px;font-size:.95rem}
-.note{border-left:4px solid var(--acc);background:var(--card);padding:8px 12px;border-radius:4px;font-size:.92rem;margin-bottom:12px}
+.note{border:1px solid var(--acc);background:var(--card);padding:8px 12px;border-radius:8px;font-size:.92rem;margin-bottom:12px}
 .bar{position:sticky;top:var(--atlash,0px);background:var(--bg);padding:8px 0;border-bottom:1px solid var(--rule);z-index:2}
 .chips{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:8px}
 .chips .lbl{color:var(--mut);font-size:.9rem}
@@ -30,21 +30,22 @@ h1{font-size:1.4rem;color:var(--acc);margin:0 0 2px}
 .chip small{color:var(--mut)}
 input[type=search]{font:inherit;width:100%;padding:8px 10px;border:1px solid var(--rule);border-radius:8px;background:var(--card);color:var(--fg)}
 .count{color:var(--mut);font-size:.9rem;margin:6px 0 0}
-h2{font-size:1.05rem;color:var(--acc);margin:20px 0 6px;border-bottom:1px solid var(--rule);padding-bottom:3px}
+h2{font-size:1.2rem;color:var(--acc);margin:20px 0 6px;border-bottom:1px solid var(--rule);padding-bottom:3px}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:8px}
-button.svc,button.rel{font:inherit;color:inherit;text-align:left;cursor:pointer;border:1px solid;border-left-width:6px;border-radius:8px;padding:8px 10px;width:100%;display:block}
-button.svc:hover,button.rel:hover{filter:brightness(.97);box-shadow:0 0 0 2px var(--acc)}
-button:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+button.svc,button.rel{font:inherit;color:inherit;text-align:left;cursor:pointer;border:1px solid;border-radius:8px;padding:8px 10px;width:100%;display:block}
+button.svc:hover,button.rel:hover{border-color:var(--acc);box-shadow:0 0 0 1px var(--acc)}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .svc b,.rel b{display:block}
 .svc span,.rel small{color:var(--mut);font-size:.92rem;display:block}
 .svc,.rel{background:var(--card);border-color:var(--rule)}
-[data-t="0"].svc,[data-t="0"].rel{border-left-color:var(--t0-bd)}
-[data-t="1"].svc,[data-t="1"].rel{border-left-color:var(--t1-bd)}
-[data-t="2"].svc,[data-t="2"].rel{border-left-color:var(--t2-bd)}
-[data-t="3"].svc,[data-t="3"].rel{border-left-color:var(--t3-bd)}
-.tag{float:right;font-size:.75rem;color:var(--mut);margin-left:6px}
+[data-t="0"].svc,[data-t="0"].rel{background:var(--t0-bg);border-color:var(--t0-bd)}
+[data-t="1"].svc,[data-t="1"].rel{background:var(--t1-bg);border-color:var(--t1-bd)}
+[data-t="2"].svc,[data-t="2"].rel{background:var(--t2-bg);border-color:var(--t2-bd)}
+[data-t="3"].svc,[data-t="3"].rel{background:var(--t3-bg);border-color:var(--t3-bd)}
+.tag{float:right;font-size:.8rem;color:var(--mut);margin-left:6px}
 .badges{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
-.badge{font-size:.74rem;border:1px solid var(--rule);background:var(--bg);color:var(--mut);border-radius:999px;padding:0 8px;white-space:nowrap}
+.badge{font-size:.8rem;border:1px solid var(--rule);background:var(--bg);color:var(--mut);border-radius:999px;padding:0 8px;white-space:nowrap}
 .badge.ok{color:var(--ok);border-color:var(--ok)}
 .badge.warn{color:var(--warn);border-color:var(--warn)}
 .badge.bad{color:var(--bad);border-color:var(--bad)}
@@ -52,7 +53,7 @@ button:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
 .cost p{margin:4px 0 0}
 ul.src{margin:2px 0 8px;padding-left:20px}
 .tabs{display:flex;gap:8px;margin-bottom:8px}
-.tab{font:inherit;color:var(--fg);background:transparent;border:0;border-bottom:3px solid transparent;padding:4px 10px;cursor:pointer}
+.tab{font:inherit;color:var(--fg);background:transparent;border:0;border-bottom:3px solid transparent;padding:8px 12px;cursor:pointer}
 .tab[aria-selected=true]{border-bottom-color:var(--acc);color:var(--acc);font-weight:600}
 .tools{display:flex;gap:8px}
 select{font:inherit;padding:8px 10px;border:1px solid var(--rule);border-radius:8px;background:var(--card);color:var(--fg)}
@@ -61,7 +62,7 @@ select{font:inherit;padding:8px 10px;border:1px solid var(--rule);border-radius:
 .col h3{margin:0 0 6px;font-size:1rem;color:var(--acc)}
 .col p{margin:8px 0 0;font-size:.92rem}
 .col .rel{margin-top:6px}
-dialog{width:min(820px,calc(100vw - 24px));max-height:calc(100vh - 24px);border:1px solid var(--rule);border-radius:12px;background:var(--bg);color:var(--fg);padding:0}
+dialog{width:min(820px,calc(100vw - 24px));max-height:calc(100vh - 24px);max-height:calc(100dvh - 24px);border:1px solid var(--rule);border-radius:12px;background:var(--bg);color:var(--fg);padding:0}
 dialog::backdrop{background:rgba(0,0,0,.5)}
 .dh{position:sticky;top:0;background:var(--bg);border-bottom:1px solid var(--rule);padding:10px 14px;display:flex;gap:8px;align-items:center;flex-wrap:wrap;z-index:1}
 .dh button{font:inherit;color:var(--fg);background:var(--card);border:1px solid var(--rule);border-radius:8px;padding:4px 12px;cursor:pointer}
@@ -82,7 +83,7 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
 .warn{color:var(--mut);font-size:.85rem;margin-top:14px}
 .top{display:flex;gap:12px;align-items:flex-start;justify-content:space-between}
 .mode{display:inline-flex;border:1px solid var(--rule);border-radius:8px;overflow:hidden;flex:none}
-.mode button{font:inherit;color:var(--fg);background:var(--card);border:0;padding:4px 12px;cursor:pointer}
+.mode button{font:inherit;color:var(--fg);background:var(--card);border:0;padding:8px 14px;cursor:pointer}
 .mode button[aria-pressed=true]{background:var(--acc);color:var(--bg);font-weight:600}
 [data-mode=simple] .full{display:none!important}
 </style></head><body>
@@ -95,17 +96,17 @@ dialog::backdrop{background:rgba(0,0,0,.5)}
 <div class="note full" id="note"></div>
 
 <div class="bar">
-  <div class="tabs full" role="tablist"><button class="tab" role="tab" data-v="list" aria-selected="true">Services</button><button class="tab" role="tab" data-v="cmp" aria-selected="false">Compare</button></div>
+  <div class="tabs full" role="tablist"><button class="tab" role="tab" id="t-list" aria-controls="out" data-v="list" aria-selected="true">Services</button><button class="tab" role="tab" id="t-cmp" aria-controls="cmpview" tabindex="-1" data-v="cmp" aria-selected="false">Compare</button></div>
   <div id="filters">
     <div class="chips" id="chips" role="group" aria-label="Show or hide tiers"></div>
     <div class="tools">
-      <input type="search" id="q" placeholder="Filter by name, purpose or category (full view: also Terraform resources)" aria-label="Filter services">
+      <input type="search" id="q" placeholder="Filter services" aria-label="Filter services">
     </div>
     <p class="count" id="count" aria-live="polite"></p>
   </div>
 </div>
-<main id="out"></main>
-<section id="cmpview" hidden></section>
+<main id="out" role="tabpanel" aria-labelledby="t-list"></main>
+<section id="cmpview" role="tabpanel" aria-labelledby="t-cmp" hidden></section>
 
 <dialog id="dlg" aria-labelledby="dtitle">
   <div class="dh">
@@ -148,7 +149,7 @@ const on={};tiersShown.forEach(t=>on[t]=true);
 const subEl=document.getElementById('sub');
 const SUBSIMPLE=D.tiers.filter(t=>on[t.tier]).map(t=>t.label+': '+t.description).join(' ')+' Click a card for what it provides and what it needs.';
 const SUBFULL=SUBSIMPLE.replace(/ Click a card.*$/,'')+' Click a card for what it provides, what it needs, and how to build it with Terraform.';
-document.getElementById('note').textContent='Generated from data/services.json. Entries marked unconfirmed were imported from a hand-drafted page and not yet checked against Microsoft Learn. Third-party Marketplace services are deliberately left out.';
+document.getElementById('note').textContent='Entries marked unconfirmed were imported from a hand-drafted page and not yet checked against Microsoft Learn. Third-party Marketplace services are deliberately left out.';
 const chips=document.getElementById('chips');
 chips.innerHTML='<span class="lbl">Show:</span>'+tiersShown.map(t=>'<button class="chip" type="button" data-t="'+t+'" aria-pressed="true">'+esc(D.tiers.find(x=>x.tier===t).label)+' <small>('+D.services.filter(s=>s.tier===t).length+')</small></button>').join('');
 
@@ -176,7 +177,7 @@ function render(){
     html+='<h2>'+esc(cat)+'</h2><div class="grid">'+items.map(s=>
       '<button type="button" class="svc" data-t="'+s.tier+'" data-id="'+s.id+'"><b>'+esc(s.name)+'<span class="tag">'+TIER[s.tier]+'</span></b><span>'+esc(s.purpose)+'</span>'+badges(s)+'</button>').join('')+'</div>';
   }
-  out.innerHTML=html||'<p class="empty">No matches.</p>';
+  out.innerHTML=html||'<p class="empty">'+(f?'No service matches \u201c'+esc(q.value.trim())+'\u201d':'No service in the tiers shown')+'. <a href="#" id="clr">Clear the filter and show every tier</a>.</p>';
   count.textContent=shown+' of '+D.services.length+' services shown';
 }
 chips.addEventListener('click',e=>{
@@ -195,10 +196,21 @@ function renderCompare(){
       '<p>'+esc(m.choose_when)+'</p></div>').join('')+'</div>').join('')||'<p class="empty">No comparisons yet.</p>';
 }
 function setView(v){
-  document.querySelectorAll('.tab').forEach(b=>b.setAttribute('aria-selected',b.dataset.v===v));
+  document.querySelectorAll('.tab').forEach(b=>{b.setAttribute('aria-selected',b.dataset.v===v);b.tabIndex=b.dataset.v===v?0:-1});
   out.hidden=v!=='list';cmpView.hidden=v!=='cmp';document.getElementById('filters').hidden=v!=='list';
 }
 document.querySelector('.tabs').addEventListener('click',e=>{const b=e.target.closest('.tab');if(b)setView(b.dataset.v)});
+document.querySelector('.tabs').addEventListener('keydown',e=>{
+  const bs=[...document.querySelectorAll('.tab')],i=bs.indexOf(document.activeElement);
+  const j={ArrowRight:(i+1)%bs.length,ArrowLeft:(i-1+bs.length)%bs.length,Home:0,End:bs.length-1}[e.key];
+  if(i<0||j===undefined)return;
+  e.preventDefault();bs[j].focus();setView(bs[j].dataset.v);
+});
+// "/" focuses the filter when it is shown; Esc in the box clears it; the empty-state link clears it and shows every tier.
+function clearFilter(){q.value='';tiersShown.forEach(t=>{on[t]=true});chips.querySelectorAll('.chip').forEach(b=>b.setAttribute('aria-pressed','true'));render();q.focus()}
+addEventListener('keydown',e=>{if(e.key==='/'&&!document.getElementById('filters').hidden&&!e.ctrlKey&&!e.metaKey&&!e.altKey&&!(e.target.closest&&e.target.closest('input,textarea,select,dialog,[contenteditable]'))){e.preventDefault();q.focus()}});
+q.addEventListener('keydown',e=>{if(e.key==='Escape'){q.value='';render()}});
+out.addEventListener('click',e=>{if(e.target.id==='clr'){e.preventDefault();clearFilter()}});
 cmpView.addEventListener('click',e=>{const b=e.target.closest('.rel');if(b){trail=[];open(b.dataset.id)}});
 
 // Detail dialog with a navigation trail.
@@ -298,6 +310,7 @@ const modeBtns=document.querySelectorAll('#mode button');
 function setMode(m){
   MODE=m;document.documentElement.dataset.mode=m;
   subEl.textContent=m==='full'?SUBFULL:SUBSIMPLE;
+  q.placeholder=m==='full'?'Filter by name, purpose, category or Terraform resource':'Filter services';
   modeBtns.forEach(b=>b.setAttribute('aria-pressed',b.dataset.m===m));
   try{localStorage.setItem('view',m)}catch(e){}
   if(m==='simple')setView('list');
