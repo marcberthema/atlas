@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# Install and configure the Workstation setup baseline (../site/index.html) in WSL Ubuntu, from a JSON profile.
+# Install and configure the Workstation setup baseline (../site/index.html) in WSL Ubuntu or native Ubuntu, from a JSON profile.
+# Native Ubuntu: pass --profile profile-ubuntu.json (the same profile without wsl_conf).
 #
 #   setup.sh                      run every component the profile turns on
 #   setup.sh --profile my.json    another profile (copy profile.json and edit it)
@@ -472,7 +473,7 @@ fi
 
 [[ $EUID -ne 0 ]] || { echo "run as your normal user, not root: tools install into your home" >&2; exit 1; }
 grep -q '^ID=ubuntu' /etc/os-release || warn "not Ubuntu: the apt steps assume Ubuntu"
-in_wsl || warn "not running in WSL: wsl_conf is skipped"
+in_wsl || [[ "$ON_wsl_conf" == 0 ]] || warn "not running in WSL: wsl_conf is skipped"
 
 say "${B}profile:${N} $PROFILE"
 sudo -v

@@ -1,15 +1,16 @@
 # Workstation setup
 
-A new Windows PC to a working development setup, in two parts that can be used together:
+A new machine to a working development setup, for three targets:
 
 - **WSL (Ubuntu)**: the main place for development. Every CLI tool for day-to-day work.
 - **Windows (Git Bash)**: the same tools without admin rights, for repositories that need Windows apps, such as Claude in Chrome (it does
   not work from WSL).
+- **Ubuntu Linux (native)**: the same tools as WSL, on a PC or laptop that runs Ubuntu itself.
 
 Not published; see the [root README](../README.md). The full guide with sources and versions is `site/index.html` (`make build`, then open
 it). For VS Code, see [../vscode/README.md](../vscode/README.md).
 
-Both scripts read a JSON profile, are safe to run again (what is installed or cloned is skipped), and have `--dry-run` and `--list`.
+The scripts read a JSON profile, are safe to run again (what is installed or cloned is skipped), and have `--dry-run` and `--list`.
 To clone repositories, add them to `repos` in a profile; the committed profiles stay empty because this repo is public. Copy a profile to
 `setup/<name>.local.json` (git-ignored), edit it and pass `--profile`.
 
@@ -41,6 +42,22 @@ and its status line, your `~/.zshrc`, and the repos in `~/git`. Off by default: 
 
 After it: `gh auth login`, `az login`, sign in to Claude Code.
 
+## C. Ubuntu Linux (native)
+
+The WSL script, run on Ubuntu itself with `setup/profile-ubuntu.json`: the same components minus `wsl_conf`. Docker Engine needs systemd, which
+Ubuntu has. Not tested on a native Ubuntu machine: only `--list` and `--dry-run` were run, from WSL (the Ubuntu release you use is
+unconfirmed; the apt steps assume the latest LTS).
+
+```bash
+sudo apt-get update && sudo apt-get install -y git make
+git clone <this repo> ~/work/atlas && cd ~/work/atlas/workstation
+make ubuntu-list       # the components
+make ubuntu-dry-run    # what would happen
+make ubuntu-setup      # do it (ARGS="--only helm")
+```
+
+Run as your normal user; it asks for the sudo password once. Same installs, same repos in `~/git` and same steps after as in A.
+
 ## B. Windows (Git Bash, no admin)
 
 ### Before you run it
@@ -71,6 +88,9 @@ window after the run for the PATH.
 Scoop under `C:\work\tools\scoop` (user environment variable `SCOOP`), then: make, Python (the real python.org build: `python` and `python3` work in Git Bash, ahead of the Microsoft Store stub), GitHub CLI, jq, fzf, zoxide, starship, uv, fnm, pnpm, kubectl,
 kubectx, helm, k9s, kind, kubelogin, Terraform, tflint, Azure CLI, Claude Code. It then installs the Node LTS with fnm (set as default; `settings.node` in the profile; `settings.python` makes uv fetch a Python for projects that pin one; the Scoop `python` package is the one on the PATH). Off by default: OpenTofu. It also installs the Claude Code status line (`~/.claude/statusline.py`, run with uv, which also provides Python; turn off with `claude_statusline` in the profile), sets your git identity when
 empty, writes a managed block in `~/.bashrc` (backed up first; your own lines go in `~/.bashrc.local`), and clones `repos` into `C:\work\git`.
+
+The `tf` alias for `terraform` is in all three profiles (`settings.aliases`). On Windows, Visual Studio's Team Foundation client is also called
+`tf.exe`; the alias wins in an interactive Git Bash shell, but `tf` in a script or from PowerShell still means Team Foundation if that is installed.
 
 ### Not covered (needs admin)
 

@@ -38,7 +38,7 @@ in the guide's order. It must stay idempotent: each component has a `CHECK` and 
 
 ## Setup scripts
 
-- `setup/setup.sh` + `profile.json`: WSL Ubuntu. `repos` in the profile are cloned into `~/git` (a folder that exists is skipped).
+- `setup/setup.sh` + `profile.json`: WSL Ubuntu. `profile-ubuntu.json` is the same profile with `wsl_conf` off, for native Ubuntu (`make ubuntu-setup`); keep the two in step when a component changes. Native Ubuntu was only checked with `--list` and `--dry-run` from WSL. `repos` in the profile are cloned into `~/git` (a folder that exists is skipped).
 - `setup/setup-windows.sh` + `profile-windows.json`: Git Bash on Windows, no admin. Scoop installs the packages under `<root>/tools/scoop`
   (root is `C:/work`), `repos` are cloned into `<root>/git`. Docker and anything else that needs admin is out of scope. It also installs the Claude Code status line
   (`claude-statusline.py`, shared with WSL: `fcntl` or `msvcrt` locking, UTF-8 stdio) and runs it with `uv run --script`; the owner reported the script works, and the status line was not checked separately.

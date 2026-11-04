@@ -22,7 +22,7 @@ Each step says how to install, how to update and what to check. A setup script d
 Archetype: setup guide. Thirteen tabs: Start here, WSL and Ubuntu, Terminal, Shell, Python, Node, Kubernetes, Terraform, Azure CLI, Docker,
 Claude Code, Other tools, Compare. Groups: start here, Windows side, shell, Python and Node, Kubernetes, Terraform and cloud, containers, development.
 Comparisons: shells; Python and Node side by side; a Kubernetes cluster on the workstation. The setup scripts are in `setup/`: `setup.sh` with
-`profile.json` for WSL Ubuntu, and `setup-windows.sh` with `profile-windows.json` for Git Bash on Windows (Scoop, no admin).
+`profile.json` for WSL Ubuntu (and `profile-ubuntu.json` for native Ubuntu, same script), and `setup-windows.sh` with `profile-windows.json` for Git Bash on Windows (Scoop, no admin).
 
 ## Sources
 

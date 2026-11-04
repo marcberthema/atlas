@@ -1,6 +1,6 @@
 PY ?= python3
 
-.PHONY: help validate build check examples clean setup setup-dry-run win-setup win-dry-run win-list
+.PHONY: help validate build check examples clean setup setup-dry-run ubuntu-setup ubuntu-dry-run ubuntu-list win-setup win-dry-run win-list
 
 help:  ## List the targets
 	@grep -E '^[a-z-]+:.*## ' $(MAKEFILE_LIST) | awk -F':.*## ' '{printf "  make %-14s %s\n", $$1, $$2}'
@@ -23,6 +23,15 @@ setup-dry-run:  ## WSL: show what setup.sh would run (changes nothing)
 
 setup:  ## WSL: install and configure from setup/profile.json, then clone its repos into ~/git (ARGS="--only helm")
 	setup/setup.sh $(ARGS)
+
+ubuntu-list:  ## Native Ubuntu: list the components of setup/profile-ubuntu.json (changes nothing)
+	setup/setup.sh --profile setup/profile-ubuntu.json --list
+
+ubuntu-dry-run:  ## Native Ubuntu: show what setup.sh would run (changes nothing)
+	setup/setup.sh --profile setup/profile-ubuntu.json --dry-run
+
+ubuntu-setup:  ## Native Ubuntu: install and configure from setup/profile-ubuntu.json (ARGS="--only helm")
+	setup/setup.sh --profile setup/profile-ubuntu.json $(ARGS)
 
 win-list:  ## Git Bash on Windows: list the Windows profile (changes nothing)
 	setup/setup-windows.sh --list

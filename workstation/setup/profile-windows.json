@@ -38,7 +38,8 @@
       "ll": "ls -alFh --color=auto --group-directories-first",
       "la": "ls -A --color=auto",
       "grep": "grep --color=auto",
-      "k": "kubectl"
+      "k": "kubectl",
+      "tf": "terraform"
     }
   },
   "repos": []
