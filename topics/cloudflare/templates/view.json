@@ -1,0 +1,13 @@
+{
+  "title": "Cloudflare",
+  "tabs": [
+    {
+      "id": "others",
+      "label": "Ecosystem"
+    },
+    {
+      "id": "compare",
+      "label": "Compare"
+    }
+  ]
+}

@@ -5,7 +5,8 @@
     {"id": "iac", "label": "IaC", "description": "Infrastructure defined in code: Terraform, its Azure provider and GitOps."},
     {"id": "cicd", "label": "CI/CD", "description": "Pipelines that build, test and release software."},
     {"id": "development", "label": "Development", "description": "Designing and securing applications: architecture patterns and certificates."},
-    {"id": "enterprise", "label": "Enterprise", "description": "Identity providers and how large organizations are structured."}
+    {"id": "enterprise", "label": "Enterprise", "description": "Identity providers and how large organizations are structured."},
+    {"id": "saas", "label": "SaaS", "description": "Hosted platforms and services you build on: WorkOS and Cloudflare."}
   ],
   "stages": [
     {"id": "plan", "label": "Plan", "about": "Decide what to build: requirements, backlog, design."},
@@ -34,6 +35,8 @@
     {"id": "patterns", "family": "development", "label": "Architecture and design patterns", "stages": ["plan", "code"], "description": "How software is split by structure and responsibility: layered, MVC, hexagonal, microservices, event-driven, resilience patterns and the classic design patterns."},
     {"id": "certificates", "family": "development", "label": "Certificates", "stages": ["deploy", "operate"], "description": "X.509 and TLS basics, ACME and Let's Encrypt, private CAs, cert-manager and Kubernetes, and OpenSSL commands to inspect and troubleshoot."},
     {"id": "identity", "family": "enterprise", "label": "Identity providers", "stages": ["deploy", "operate"], "description": "Single sign-on and the protocols behind it (OIDC, SAML, LDAP, Kerberos, SCIM), open source identity providers, and how Argo CD and Kubernetes use one."},
-    {"id": "topologies", "family": "enterprise", "label": "Enterprise topologies", "stages": ["plan", "operate"], "description": "How systems talk to each other: hub-and-spoke, mesh, tree, bus and ring, where each shows up in networks, services, messaging and data, and the products that implement them."}
+    {"id": "topologies", "family": "enterprise", "label": "Enterprise topologies", "stages": ["plan", "operate"], "description": "How systems talk to each other: hub-and-spoke, mesh, tree, bus and ring, where each shows up in networks, services, messaging and data, and the products that implement them."},
+    {"id": "workos", "family": "saas", "label": "WorkOS", "stages": ["code", "deploy"], "draft": true, "description": "Enterprise-ready auth for apps: SSO, Directory Sync, AuthKit, RBAC and audit logs, from the WorkOS documentation."},
+    {"id": "cloudflare", "family": "saas", "label": "Cloudflare", "stages": ["deploy", "operate"], "draft": true, "description": "Workers, Pages, DNS, CDN, Zero Trust and the other Cloudflare products, from the Cloudflare documentation."}
   ]
 }
