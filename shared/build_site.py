@@ -1,6 +1,7 @@
 """Build the Atlas landing page, dist/index.html, from topics.json and shared/landing.html."""
 import html
 import json
+import sys
 
 import atlas
 import transit
@@ -45,3 +46,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+    sys.exit(transit.check())

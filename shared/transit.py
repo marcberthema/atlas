@@ -218,3 +218,141 @@ def azure(page):
         assert page.count(marker) == 1, f"topics/azure/templates/index.html needs exactly one {marker}"
         page = page.replace(marker, new)
     return fill(page, "azure/index.html", "azure", "../fonts/")
+
+
+LENSES_MAP = """body{--bg:var(--ground);--fg:var(--ink);--card:var(--soft);--lane:var(--soft);--accfg:var(--ground);--ok:var(--dev);--acc:var(--ink);--fam:var(--fc);--famf:var(--fcf)}"""
+LENSES_CSS = """
+body{font:500 1.0625rem/1.6 var(--g)}
+main{max-width:1280px}
+.atlas.two{padding-inline:max(1rem,calc(50vw - 624px))}
+h1{font:900 clamp(2.6rem,9vw,4.6rem)/.98 var(--g);letter-spacing:-.04em;color:var(--fg)}
+.sub{font-size:1.1rem;max-width:64ch}
+.grp>.l{font:900 .8rem var(--g)}
+.seg{border:3px solid var(--fg);border-radius:999px}
+.seg button{font-weight:900;border-right-width:3px;border-right-color:var(--fg)}
+.seg button[aria-selected=true],.seg button[aria-pressed=true]{background:var(--fg);color:var(--bg)}
+.find input{border:3px solid var(--fg);border-radius:999px;padding:.5rem 1.2rem;font-weight:700;background:var(--card)}
+.find ul{border:3px solid var(--fg);border-radius:14px}
+.blurb{border:3px solid var(--fg);border-radius:12px}
+.map,.panel,.org{border-width:3px;border-color:var(--fg);border-radius:14px}
+.lane{rx:12px}.lanel{font:900 12px var(--g)}
+.node rect{rx:10px;stroke:var(--cat,var(--fg));stroke-width:3.5;stroke-dasharray:none}
+.node[data-cat=edge]{--cat:var(--ent)}.node[data-cat=run]{--cat:var(--iac)}.node[data-cat=data]{--cat:var(--dev)}.node[data-cat=ops]{--cat:var(--cic)}
+.node text{font:900 14px var(--g)}.node .cap{font:700 12px var(--g)}
+.node.in .ic{stroke:var(--fg)}
+.node.out{opacity:.35}
+.node.sel rect{fill:var(--fg);stroke:var(--fg)}
+.node:hover rect{stroke:var(--fg)}
+.edge{stroke:var(--wire);stroke-width:2;opacity:.35}.edge.on{stroke:var(--wire);stroke-width:2.6;opacity:1}
+.elab{font:700 12.5px var(--g)}.framel{font:900 12px var(--g)}
+.legend,.cross{font-weight:700}
+.panel h2{font:900 1.3rem var(--g);color:var(--fg)}.panel h3{font:900 .8rem var(--g)}
+.chip{border-width:2px;border-color:var(--fg);font-weight:700}.chip:hover{border-color:var(--fg)}
+.prods li{border-width:2px;border-color:var(--fg);border-radius:10px}.prods li.hit{box-shadow:none;border-width:3px}
+.az section h2,.side h3{color:var(--fg);font-weight:900;border-bottom:3px solid var(--fg)}
+.az li button,.side>div,.rgbox,.go,.oc button{border-width:2px;border-color:var(--fg);border-radius:12px}
+.az li button:hover,.go:hover{border-color:var(--fg);transform:translateY(-2px)}
+.os{border-width:3px;border-color:var(--fg);border-radius:14px}.os.sel{box-shadow:none;border-color:var(--ent)}
+.oh button,.oc button .ic,.go .ic,.oh button .ic{color:var(--fg);stroke:var(--fg)}
+.oc button:hover,.oc button.sel{background:var(--fg);color:var(--bg)}
+.filed,.modtag{border-width:2px;border-color:var(--fg)}
+.badge circle{stroke:var(--fg)}.badge .ic{stroke:var(--fg)}
+"""
+
+
+def lenses(page):
+    """The transit twin of the Lenses page, from its template once the data is filled in. The same script draws it: only the look differs."""
+    old = re.search(r":root\{--bg:.*?\n@media\(prefers-color-scheme:dark\)\{:root\{.*?\}\}\n", page, re.S)
+    assert old, "shared/lenses.html: the variable blocks changed"
+    page = page.replace(old.group(0), "/*__TRANSIT_VARS__*/\n" + LENSES_MAP + "\n")
+    for marker, new in (("<body>", '<body data-fam="views">'), ("</style></head>", LENSES_CSS + "</style></head>")):
+        assert page.count(marker) == 1, f"shared/lenses.html needs exactly one {marker}"
+        page = page.replace(marker, new)
+    return fill(page, "lenses/index.html", "lenses", "../fonts/")
+
+
+# Dev stages blue, Ops stages red, except Plan orange, Test violet, Release and Deploy green.
+STAGE_COLOUR = {"plan": "ent", "test": "tst", "release": "dev", "deploy": "dev"}
+
+
+def loop_content(reg):
+    """The DevOps loop in the transit look: the same figure eight as the classic page, drawn as a line of stations."""
+    import math
+    W, H = 940, 330
+    lem = lambda t, a=330: (W / 2 + a * math.cos(t) / (1 + math.sin(t) ** 2), H / 2 - a * .95 * math.sin(t) * math.cos(t) / (1 + math.sin(t) ** 2))
+    stages = reg["stages"]
+    half = len(stages) // 2
+    key = lambda i: STAGE_COLOUR.get(stages[i]["id"], "iac" if i < half else "cic")
+    path = lambda t0, t1: "M" + " L".join("%.1f,%.1f" % lem(t0 + (t1 - t0) * i / 120) for i in range(121))
+    esc = html.escape
+    segs, nodes = "", ""
+    for i, sg in enumerate(stages):
+        lobe, k = divmod(i, half)
+        t0 = math.pi / 2 + math.pi * lobe + k * math.pi / half
+        segs += f'<path class="bg" d="{path(t0, t0 + math.pi / half)}" style="stroke:var(--{key(i)})"/>'
+        x, y = lem(t0 + math.pi / half / 2)
+        ly = y - 26 if y < H / 2 else y + 36
+        nodes += (f'<a href="#stage-{esc(sg["id"])}" aria-label="Stage {i + 1}: {esc(sg["label"])}"><g style="--sc:var(--{key(i)})"><circle class="st" cx="{x:.1f}" cy="{y:.1f}" r="15" style="stroke:var(--{key(i)})"/>'
+                  f'<text x="{x:.1f}" y="{ly:.1f}" text-anchor="middle">{i + 1} {esc(sg["label"])}</text></g></a>')
+    svg = (f'<svg class="loop" viewBox="0 0 {W} {H}" role="group" aria-label="The DevOps loop: {", ".join(esc(s["label"]) for s in stages)}, then back to {esc(stages[0]["label"])}">'
+           f'{segs}<text class="lobe" x="{W * .25}" y="{H / 2 + 6}">Dev</text><text class="lobe" x="{W * .75}" y="{H / 2 + 6}">Ops</text>{nodes}</svg>')
+    topics = atlas.published()
+    groups = ""
+    for lobe, name in ((0, "Dev"), (1, "Ops")):
+        items = ""
+        for i, sg in enumerate(stages):
+            if i // half != lobe:
+                continue
+            mine = [t for t in topics if sg["id"] in t.get("stages", [])]
+            pills = "".join(f'<li><a href="../{t["id"]}/index.html">{esc(t["label"])}</a></li>' for t in mine) or '<li class="none">No Atlas topic covers this stage yet.</li>'
+            items += (f'<article class="stage" id="stage-{esc(sg["id"])}" style="--c:var(--{key(i)});--cf:var(--{key(i)}f)"><h3><small>{i + 1}</small>{esc(sg["label"])}</h3>'
+                      f'<p>{esc(sg["about"])}</p><ul class="pills">{pills}</ul></article>')
+        groups += f'<section class="grp2"><h2 class="lname">{name}</h2><div class="stops">{items}</div></section>'
+    unplaced = [t for t in topics if not t.get("stages")]
+    rest = ('<section class="grp2"><h2 class="lname">Not on the loop</h2><p class="unplaced">{}</p></section>'.format("".join(
+        f'<a href="../{t["id"]}/index.html">{esc(t["label"])}</a>' for t in unplaced)) if unplaced else "")
+    return ('<h1>DevOps loop</h1><p class="sub">The eight stages, and where each topic fits. A topic can belong to several stages.</p>'
+            f'{svg}{groups}{rest}<p class="note">Which stages a topic belongs to is a judgement recorded in the topic\'s spec, not something a source states. '
+            'This page is generated from <code>topics.json</code>; see <code>docs/views.md</code>.</p>')
+
+
+def view(v, reg):
+    """dist/transit/<view>/index.html for a generated view (today only the DevOps loop)."""
+    page = (DIR / "view.html").read_text(encoding="utf-8")
+    page = (page.replace("__TITLE__", html.escape(v["label"])).replace("__NAME__", html.escape(reg["name"]))
+                .replace("<!--__CONTENT__-->", loop_content(reg)))
+    return fill(page, f"{v['id']}/index.html", v["id"], "../fonts/")
+
+
+def check():
+    """Exit 1 when the two looks disagree: a page without a twin, different data, a missing font, a load from outside, a broken link
+    or a Look switch that does not land on the other page. It reads the built dist/, so it runs at the end of the build."""
+    bad = []
+    data = lambda h: (re.search(r'<script id="data" type="application/json">(.*?)</script>', h, re.S) or [None, ""])[1]
+    norm = lambda s: re.sub(r"\]\(\.\./(?:\.\./)?", "](../", s)
+    pages = sorted(atlas.twins())
+    for p in pages:
+        classic, tr = atlas.DIST / p, OUT / p
+        if not classic.exists() or not tr.exists():
+            bad.append(f"{p}: needs a classic page and a transit twin")
+            continue
+        c, x = classic.read_text(encoding="utf-8"), tr.read_text(encoding="utf-8")
+        if norm(data(c)) != norm(data(x)):
+            bad.append(f"{p}: the two looks embed different data")
+        for label, page, here, other in (("classic", c, classic, tr), ("transit", x, tr, classic)):
+            m = re.search(r'class="tg lk" href="([^"]+)"', page)
+            if not m or not (here.parent / m[1]).resolve() == other.resolve():
+                bad.append(f"{label} {p}: the Look switch does not lead to the other look of the page")
+        for href in set(re.findall(r'(?:href|src)="([^"#:][^"]*)"', x)) | set(re.findall(r"url\(([^)'\"]+)\)", x)):
+            if href.startswith(("http", "mailto", "data:")) or "'+" in href or "+'" in href or "${" in href:
+                continue
+            if not (tr.parent / href.split("#")[0]).exists():
+                bad.append(f"transit {p}: broken link {href}")
+        if re.search(r'<(?:link|script|img|iframe)[^>]+(?:src|href)="https?:|url\(https?:|@import', x):
+            bad.append(f"transit {p}: loads something from outside the site")
+    if not list((OUT / "fonts").glob("*.woff2")) or not (OUT / "fonts" / "OFL.txt").exists():
+        bad.append("dist/transit/fonts needs the font files and their licence")
+    for line in bad:
+        print("bad:", line)
+    print(f"transit check: {len(pages)} pages, bad {len(bad)}")
+    return 1 if bad else 0

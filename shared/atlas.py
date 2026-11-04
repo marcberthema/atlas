@@ -25,8 +25,8 @@ TRANSIT = "transit"
 
 
 def twins():
-    """The pages built in both looks: the landing page and every published topic."""
-    return {"index.html"} | {f"{t['id']}/index.html" for t in published()}
+    """The pages built in both looks: the landing page, every published topic and the views."""
+    return {"index.html"} | {f"{t['id']}/index.html" for t in published() + views()}
 
 
 def twin(path, look="classic"):

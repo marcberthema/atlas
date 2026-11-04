@@ -253,7 +253,7 @@ function drawMap(){
   const fl=FLAB[st.lens];if(fl)o+=`<rect class="frame" x="${FR.x}" y="${FR.y}" width="${FR.w}" height="${FR.b-FR.y}" rx="10"/><text class="framel" x="${FR.x+FR.w-8}" y="${FR.y+14}" text-anchor="end">${esc(fl)}</text>`;
   E.forEach(e=>o+=drawEdge(e));
   R.filter(r=>r.c!==undefined).forEach(r=>{const inl=r.l.includes(st.lens),x=X(r.c),y=NY(r.r),cap=caption(r),s=st.sel===r.id;
-    o+=`<g class="node ${inl?'in':'out'} ${s?'sel':''}" data-id="${r.id}" tabindex="0" role="button" aria-pressed="${s}" aria-label="${esc(r.full)}${inl?'':' (not in this lens)'}"><rect x="${x}" y="${y}" width="${W}" height="${H}" rx="9"/>${icg(r.id,x+W/2-10,y+7,20)}<text x="${x+W/2}" y="${y+42}">${esc(r.n)}</text>${cap?`<text class="cap" x="${x+W/2}" y="${y+57}">${esc(cap)}</text>`:''}</g>`;});
+    o+=`<g class="node ${inl?'in':'out'} ${s?'sel':''}" data-id="${r.id}" data-cat="${r.cat}" tabindex="0" role="button" aria-pressed="${s}" aria-label="${esc(r.full)}${inl?'':' (not in this lens)'}"><rect x="${x}" y="${y}" width="${W}" height="${H}" rx="9"/>${icg(r.id,x+W/2-10,y+7,20)}<text x="${x+W/2}" y="${y+42}">${esc(r.n)}</text>${cap?`<text class="cap" x="${x+W/2}" y="${y+57}">${esc(cap)}</text>`:''}</g>`;});
   badged.forEach(e=>{const m=route(e[0],e[1]).mid;o+=drawBadge(e[5],m[0],m[1]);});
   $('#svg').innerHTML=o;$('#blurb').textContent=lens.blurb;$('#cross').textContent=lens.cross;
   $('#lg-f').innerHTML=badged.length?`${ico('filter',16)}Traffic filter rules on that hop`:'';}

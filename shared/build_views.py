@@ -6,6 +6,7 @@ import html
 import math
 
 import atlas
+import transit
 
 W, H = 940, 330
 
@@ -70,11 +71,12 @@ def main():
             continue
         body = VIEWS[v["id"]](reg)
         page = (atlas.themed(template).replace("__TITLE__", html.escape(v["label"])).replace("__NAME__", html.escape(reg["name"]))
-                .replace("<!--__CONTENT__-->", body).replace(atlas.BANNER_MARK, atlas.banner(v["id"], "../"))
+                .replace("<!--__CONTENT__-->", body).replace(atlas.BANNER_MARK, atlas.banner(v["id"], "../", atlas.twin(f"{v['id']}/index.html")))
                 .replace(atlas.CSS_MARK, atlas.CSS).replace(atlas.FOOTER_MARK, atlas.FOOTER))
         out = atlas.DIST / v["id"]
         out.mkdir(parents=True, exist_ok=True)
         (out / "index.html").write_text(page, encoding="utf-8")
+        transit.write(f"{v['id']}/index.html", transit.view(v, reg))
         print(f"built dist/{v['id']}/index.html")
 
 

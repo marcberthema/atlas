@@ -1,6 +1,6 @@
 # Two looks: classic and transit
 
-Spec for building every Atlas page in two looks from the same data, and letting a visitor pick. Status: proposed, not approved.
+Spec for building every Atlas page in two looks from the same data, and letting a visitor pick. Status: implemented (phases 1 to 6). Approved by the owner 2026-11-04.
 
 ## Decisions (from the owner, 2026-11-04)
 
@@ -53,3 +53,14 @@ The plan keeps one structure and one script per page and makes the look a layer:
 - `dist/` is committed, so the repo grows by roughly one more copy of the pages.
 - Transit is built to the mocks' three sample entries; real entries (tables, code, diagrams, learning layout) will show gaps in phase 2.
 - A feature added to one look only (for example the Lenses Organization view in transit before classic) is not allowed: both read the same data and must offer the same content.
+
+
+## As built
+
+- `shared/transit.py` holds the transit look: variables and base rules, the banner skin, one function per page type (`landing`, `topic`, `azure`, `lenses`, `view`) and `check()`.
+- The topic, Azure and Lenses twins are made from the same templates as classic: `transit.topic/azure/lenses` map the classic colour variables to the transit ones, wrap the page, and append a rules layer. They share markup and script, so a new kind of content shows in both looks. The landing page and the DevOps loop have their own small templates in `shared/transit/` (`landing.html`, `view.html`), because their structure differs (routes and stations, a drawn line).
+- The Lenses page keeps its own icons, spacing, Organization view, A to Z, stack filter and search: they are the classic page's, drawn by the same script. The transit mock's HTML grid was a study, not shipped.
+- Every page built in both looks is in `atlas.twins()` (the landing page, every published topic, the views). The Look switch and the redirect work for those pages.
+- `shared/build_site.py` runs `transit.check()` last, so `make build` fails when the looks disagree (missing twin, different data, missing font, a load from outside, a broken link, a Look switch that does not land on the twin).
+- A page added to the site needs a transit twin: add it to the build and the check tells you if it is missing.
+- To make transit the default for first-time visitors, change the redirect in `atlas.JS` (a first visit with no saved look goes to the twin).
