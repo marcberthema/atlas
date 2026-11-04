@@ -4,7 +4,8 @@ from common import *
 sys.path.insert(0, str(R / "shared"))
 from atlas import DISCLAIMER, repo_url, ref
 
-LINE = {"iac": ("var(--iac)", "var(--iacf)"), "cicd": ("var(--cic)", "var(--cicf)"), "development": ("var(--dev)", "var(--devf)"), "enterprise": ("var(--ent)", "var(--entf)")}
+# Same colours as the Lenses categories: Development blue, IaC red, CI/CD green, Enterprise orange.
+LINE = {"iac": ("var(--cic)", "var(--cicf)"), "cicd": ("var(--dev)", "var(--devf)"), "development": ("var(--iac)", "var(--iacf)"), "enterprise": ("var(--ent)", "var(--entf)")}
 
 CSS = """
 :root{color-scheme:light;--ink:#14181F;--ground:#FFFFFF;--soft:#F2F4F7;--mut:#4A5260;--rule:#D5DAE1;--iac:#0057B8;--iacf:#fff;--cic:#D6001C;--cicf:#fff;--dev:#00843D;--devf:#fff;--ent:#F28C00;--entf:#14181F;--wire:#5C6675;--boardline:#14181F;--d1:#3C8EE2;--d1f:#14181F;--d2:#1D6FCB;--d2f:#fff;--d3:#0057B8;--d3f:#fff;--d4:#003D87;--d4f:#fff;--o1:#E8505F;--o1f:#14181F;--o2:#D6001C;--o2f:#fff;--o3:#A60019;--o3f:#fff;--o4:#760012;--o4f:#fff;--g:'Red Hat Display','Helvetica Neue',Arial,sans-serif}
@@ -209,7 +210,7 @@ def azure():
     cost = {c["level"]: c["label"] for c in AZ["cost_scale"]}
     cn = {c["level"]: c["label"] for c in AZ["cloud_native_scale"]}
     tinfo = {t["tier"]: t for t in AZ["tiers"]}
-    tc = {0: ("var(--iac)", "var(--iacf)"), 1: ("var(--dev)", "var(--devf)")}
+    tc = {0: ("var(--o3)", "var(--o3f)"), 1: ("var(--o1)", "var(--o1f)")}  # Azure is IaC, so its tiers are shades of the IaC red
     zones = ""
     for tier in (0, 1):
         cats = ""
@@ -245,7 +246,7 @@ q.addEventListener('keydown',e=>{if(e.key==='Escape'){q.value='';run()}});
 document.getElementById('clr').addEventListener('click',()=>{q.value='';tiers.forEach(t=>t.setAttribute('aria-pressed','true'));run();q.focus()});
 addEventListener('keydown',e=>{if(e.key==='/'&&!/INPUT|TEXTAREA/.test(document.activeElement.tagName)&&!document.querySelector('dialog[open]')){e.preventDefault();q.focus()}});
 </script>"""
-    body = (f'<div class="wrap">{brand()}<nav class="crumb" aria-label="Breadcrumb"><a href="index.html">Atlas</a><span>›</span><span class="pill" style="--c:var(--iac);--cf:var(--iacf)">IaC line</span><span>›</span><span>Azure with Terraform</span></nav>'
+    body = (f'<div class="wrap">{brand()}<nav class="crumb" aria-label="Breadcrumb"><a href="index.html">Atlas</a><span>›</span><span class="pill" style="--c:var(--cic);--cf:var(--cicf)">IaC line</span><span>›</span><span>Azure with Terraform</span></nav>'
             '<h1>Azure</h1><p class="tag">What an Azure service provides, what it requires, how it relates to other services, and how to build it with Terraform. Tiers 0 and 1 for now.</p>'
             f'<div class="tools"><label class="plan"><span class="sr">Filter services</span>{PIN}<input id="q" type="search" placeholder="Filter the {len(AZ["services"])} services" autocomplete="off"></label><div class="tierbar" role="group" aria-label="Tiers">{chips}</div></div>'
             '<p id="st" class="sr" role="status"></p><main>'
