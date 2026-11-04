@@ -2,12 +2,46 @@
   "title": "Cloudflare",
   "tabs": [
     {
-      "id": "others",
-      "label": "Ecosystem"
+      "id": "platform",
+      "label": "Start"
     },
     {
-      "id": "compare",
-      "label": "Compare"
+      "id": "api",
+      "label": "API"
+    },
+    {
+      "id": "workers",
+      "label": "Workers"
+    },
+    {
+      "id": "data",
+      "label": "Data",
+      "group": "data",
+      "pick": "Product"
+    },
+    {
+      "id": "edge",
+      "label": "Edge",
+      "group": "edge",
+      "pick": "Product"
+    },
+    {
+      "id": "security",
+      "label": "Security",
+      "group": "security",
+      "pick": "Product"
+    },
+    {
+      "id": "zerotrust",
+      "label": "Zero Trust",
+      "group": "zerotrust",
+      "pick": "Product"
+    },
+    {
+      "id": "tooling",
+      "label": "Tooling",
+      "group": "tooling",
+      "pick": "Tool"
     }
   ]
 }

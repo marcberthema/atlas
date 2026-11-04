@@ -1,6 +1,6 @@
 # Cloudflare: spec
 
-Status: draft (not published). Data checked 2026-11-04. Format: `docs/topic-spec.md`. Proposed for approval: no entry is written yet.
+Status: published (SaaS family). Data checked 2026-11-04. Format: `docs/topic-spec.md`. The owner asked for a summary of what is available and the API, so the topic is kept lean.
 
 ## Purpose and audience
 
@@ -15,20 +15,7 @@ A reference for someone building on or putting a site behind Cloudflare: what ea
 
 ## Layout
 
-Archetype: product family. Eight tabs, concepts first.
-
-| Tab | Holds |
-|---|---|
-| Start (`platform`) | How the pieces fit: zone, proxy, account, Workers, bindings. Which product to look at for which need. |
-| Workers (`workers`) | Workers, the runtime and limits, bindings, Pages (status), deploy with Wrangler. |
-| Data (`data`, group with picker) | KV, R2, D1, Durable Objects, Queues, Hyperdrive, Workflows: what each is for and when to choose it. |
-| Edge (`edge`, group with picker) | DNS, Cache, SSL/TLS, Rules, Load Balancing. |
-| Security (`security`, group with picker) | WAF, DDoS, Bots, Turnstile, API Shield. |
-| Zero Trust (`zerotrust`, group with picker) | Cloudflare One, Access, Gateway, Tunnel, WARP. |
-| Tooling (`tooling`) | Wrangler, API and tokens, Terraform provider, Pulumi, `cloudflared`. |
-| Compare | Storage options, Workers vs Pages, Tunnel vs Access vs WARP. |
-
-Groups: platform, compute, data, edge, security, zero trust, tooling, other products. Comparisons: the three above.
+Archetype: product family, kept lean. Eight tabs: Start (`platform`), API (`api`), Workers (`workers`), and pickers for Data (KV, R2, D1, Durable Objects, Queues, Hyperdrive, Workflows), Edge (DNS, Cache, SSL/TLS), Security (WAF), Zero Trust (Tunnel, Cloudflare One) and Tooling (Wrangler, Terraform provider, cloudflared). Each product entry has a short description and a table of where to look in the docs. No comparisons. Reason: the owner wants a summary of what is available and the API, not guides.
 
 ## Sources
 
@@ -38,31 +25,37 @@ developers.cloudflare.com, read from each product's `llms.txt` index and its pag
 
 | Item | Status | Notes |
 |---|---|---|
-| `platform` | planned | concepts and a product map |
-| `workers` | planned | runtime, limits, bindings |
-| `wrangler` | planned | CLI and config file, tracked |
-| `kv` | planned | |
-| `r2` | planned | |
-| `d1` | planned | |
-| `durable-objects` | planned | |
-| `queues` | planned | |
-| `dns` | planned | |
-| `cache` | planned | |
-| `ssl-tls` | planned | |
-| `waf` | planned | |
-| `tunnel` | planned | tracked through `cloudflared` |
-| `cloudflare-one` | planned | Access, Gateway, WARP |
-| `terraform` | planned | provider, tracked |
+| `platform` | done | product map, objects |
+| `api` | partial | tokens and rate limits; endpoints not read |
+| `workers` | done | plan limits from the limits page |
+| `kv` | done |  |
+| `r2` | done |  |
+| `d1` | done |  |
+| `durable-objects` | done |  |
+| `queues` | done |  |
+| `hyperdrive` | done |  |
+| `workflows` | done |  |
+| `dns` | done |  |
+| `cache` | done |  |
+| `ssl-tls` | partial | modes page not read |
+| `waf` | partial | start page only |
+| `tunnel` | done |  |
+| `cloudflare-one` | partial | Access, Gateway and WARP not read separately |
+| `wrangler` | partial | tracked; commands not read |
+| `terraform` | done | v5 line tracked |
+| `cloudflared` | done | tracked |
 
 ## Known gaps
 
-- Nothing is written yet. Product limits and plan availability are not recorded on purpose (see Scope).
-- The Terraform provider release tags need checking before `track` is set: the release list shows v3, v4 and later lines side by side.
+- The API entry covers authentication and rate limits only. The base URL and endpoints were not read; the API reference is linked from the docs.
+- Product entries are summaries from the docs index, the product's front page and its page list, not from the full guides. Their "Where to look" tables name docs sections, not fields or commands.
+- Wrangler commands, Cloudflare One's Access, Gateway and WARP products, and the WAF rule types were not read.
+- Pages is not an entry and its current status was not checked.
+- Plans and prices are left out on purpose. Only the Workers plan limits are given, from the limits page.
 
 ## Decisions
 
 - Cloudflare is a paid service with free tiers. It is included as a SaaS family topic because the owner asked for it. The open source tools (Wrangler, `cloudflared`, workerd, the provider) are tracked; the services are references with the docs page date.
-- The Pages status is read from the docs when the entry is written (unconfirmed now: the docs may point new projects to Workers).
 - DevOps loop stages: deploy, operate. A judgement for the DevOps loop view, not a statement from a source.
 
 ## Updating
