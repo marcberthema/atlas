@@ -8,8 +8,8 @@ from atlas import DISCLAIMER, repo_url, ref
 LINE = {"iac": ("var(--cic)", "var(--cicf)"), "cicd": ("var(--dev)", "var(--devf)"), "development": ("var(--iac)", "var(--iacf)"), "enterprise": ("var(--ent)", "var(--entf)")}
 
 CSS = """
-:root{color-scheme:light;--ink:#14181F;--ground:#FFFFFF;--soft:#F2F4F7;--mut:#4A5260;--rule:#D5DAE1;--iac:#0057B8;--iacf:#fff;--cic:#D6001C;--cicf:#fff;--dev:#00843D;--devf:#fff;--ent:#F28C00;--entf:#14181F;--wire:#5C6675;--boardline:#14181F;--d1:#3C8EE2;--d1f:#14181F;--d2:#1D6FCB;--d2f:#fff;--d3:#0057B8;--d3f:#fff;--d4:#003D87;--d4f:#fff;--o1:#E8505F;--o1f:#14181F;--o2:#D6001C;--o2f:#fff;--o3:#A60019;--o3f:#fff;--o4:#760012;--o4f:#fff;--g:'Red Hat Display','Helvetica Neue',Arial,sans-serif}
-html[data-theme=dark]{color-scheme:dark;--ink:#EEF1F5;--ground:#0F131A;--soft:#1A202B;--mut:#A9B3C1;--rule:#2C3543;--iac:#4C9AFF;--iacf:#0F131A;--cic:#FF6B7A;--cicf:#0F131A;--dev:#3DC878;--devf:#0F131A;--ent:#F5A524;--entf:#0F131A;--wire:#8793A5;--boardline:#2C3543;--d1:#9CCBFF;--d2:#76B4FF;--d3:#4C9AFF;--d4:#2E80EC;--o1:#FFB0B8;--o2:#FF8E9B;--o3:#FF6B7A;--o4:#EA4A5D;--d1f:#0F131A;--d2f:#0F131A;--d3f:#0F131A;--d4f:#0F131A;--o1f:#0F131A;--o2f:#0F131A;--o3f:#0F131A;--o4f:#0F131A}
+:root{color-scheme:light;--ink:#14181F;--ground:#FFFFFF;--soft:#F2F4F7;--mut:#4A5260;--rule:#D5DAE1;--iac:#0057B8;--iacf:#fff;--cic:#D6001C;--cicf:#fff;--dev:#00843D;--devf:#fff;--ent:#F28C00;--entf:#14181F;--wire:#5C6675;--boardline:#14181F;--g:'Red Hat Display','Helvetica Neue',Arial,sans-serif}
+html[data-theme=dark]{color-scheme:dark;--ink:#EEF1F5;--ground:#0F131A;--soft:#1A202B;--mut:#A9B3C1;--rule:#2C3543;--iac:#4C9AFF;--iacf:#0F131A;--cic:#FF6B7A;--cicf:#0F131A;--dev:#3DC878;--devf:#0F131A;--ent:#F5A524;--entf:#0F131A;--wire:#8793A5;--boardline:#2C3543}
 body{background:var(--ground);color:var(--ink);font:500 1.0625rem/1.6 var(--g)}
 ::selection{background:var(--iac);color:var(--iacf)}
 :focus-visible{outline:3px solid var(--ink);outline-offset:3px}
@@ -263,7 +263,9 @@ def loop():
     def path(t0, t1):
         return "M" + " L".join(f"{x:.1f},{y:.1f}" for x, y in (lem(t0 + (t1 - t0) * i / 120) for i in range(121)))
     base = ("var(--iac)", "var(--cic)")
-    shade = lambda i: f"var(--{'do'[i // half]}{i % half + 1})"
+    # Dev stages blue, Ops stages red, except Plan orange and Release and Deploy green (the Lenses and family colours).
+    key = lambda i: {"plan": "ent", "release": "dev", "deploy": "dev"}.get(st[i]["id"], "iac" if i < half else "cic")
+    shade = lambda i: f"var(--{key(i)})"
     nodes = ""
     for i, sg in enumerate(st):
         lobe, k = divmod(i, half)
@@ -287,7 +289,7 @@ def loop():
                 continue
             mine = [t for t in T["topics"] if not t.get("draft") and sg["id"] in t.get("stages", [])]
             pills = "".join(f'<li><a href="{"azure" if t["id"] == "azure" else "topic"}.html">{esc(t["label"])}</a></li>' for t in mine) or '<li class="none">No Atlas topic covers this stage yet.</li>'
-            items += f'<article class="stop stage" id="stage-{sg["id"]}" style="--c:{shade(i)};--cf:var(--{"do"[lobe]}{i % half + 1}f)"><h3><small>{i + 1}</small>{esc(sg["label"])}</h3><p>{esc(sg["about"])}</p><ul class="pills">{pills}</ul></article>'
+            items += f'<article class="stop stage" id="stage-{sg["id"]}" style="--c:{shade(i)};--cf:var(--{key(i)}f)"><h3><small>{i + 1}</small>{esc(sg["label"])}</h3><p>{esc(sg["about"])}</p><ul class="pills">{pills}</ul></article>'
         groups += f'<section class="grp2" style="--c:{base[lobe]};--cf:{"var(--iacf)" if lobe == 0 else "var(--cicf)"}"><h2 class="lname">{name}</h2><div class="stops">{items}</div></section>'
     body = (f'<div class="wrap">{brand("loop")}<nav class="crumb" aria-label="Breadcrumb"><a href="index.html">Atlas</a><span>›</span><span>Interchanges</span><span>›</span><span>DevOps loop</span></nav>'
             f'<h1>DevOps loop</h1><p class="tag">The eight stages, and where each topic fits. A topic can belong to several stages.</p>{svg}<main>{groups}'
