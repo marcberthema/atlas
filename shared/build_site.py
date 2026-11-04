@@ -21,8 +21,9 @@ def main():
     found = {t["id"]: entries(t["id"]) for t in topics}
     index = [[t["id"], t["label"], *e] for t in topics for e in found[t["id"]]]
     cards = "".join(
-        '<section data-fam="{id}"><h2>{fam}</h2><div class="topics">{cards}</div></section>'.format(
+        '<section data-fam="{id}"><h2>{fam}</h2>{fdesc}<div class="topics">{cards}</div></section>'.format(
             id=f["id"], fam=html.escape(f["label"]),
+            fdesc='<p class="fdesc">' + html.escape(f["description"]) + "</p>" if f.get("description") else "",
             cards="".join(
                 '<a class="topic" href="{id}/index.html"><b>{label}</b><span>{desc}</span><small>{n}</small></a>'.format(
                     id=t["id"], label=html.escape(t["label"]), desc=html.escape(t["description"]),
