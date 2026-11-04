@@ -6,8 +6,8 @@ help:  ## List the targets
 list:  ## List the global items and whether the profile turns them on
 	setup/setup.sh --list
 
-setup-dry-run:  ## Show what the global setup would install and change (changes nothing)
-	setup/setup.sh --dry-run
+setup-dry-run:  ## Show what the global setup would install and change (changes nothing; ARGS="--only <id>")
+	setup/setup.sh --dry-run $(ARGS)
 
 setup:  ## Install the global setup for this account: status line, working rules, plugins (ARGS="--only superpowers")
 	setup/setup.sh $(ARGS)
@@ -15,8 +15,8 @@ setup:  ## Install the global setup for this account: status line, working rules
 project-list:  ## List the per-project items and whether the profile turns them on
 	setup/project.sh --list
 
-project-dry-run:  ## Show what would be installed in PROJECT=<path> (changes nothing)
-	setup/project.sh "$(PROJECT)" --dry-run
+project-dry-run:  ## Show what would be installed in PROJECT=<path> (changes nothing; ARGS="--only <id>")
+	setup/project.sh "$(PROJECT)" --dry-run $(ARGS)
 
 project:  ## Install the per-project plugins and rules into PROJECT=<path> (ARGS="--only playwright-skills")
 	setup/project.sh "$(PROJECT)" $(ARGS)

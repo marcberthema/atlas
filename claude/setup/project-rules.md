@@ -1,6 +1,4 @@
 ## UI work
 
-- New UI or page: use the taste-skill (`design-taste-frontend`) for the direction.
-- Existing UI to review or refine: use `/impeccable` (critique, audit, polish).
-- One at a time. Do not mix their advice in the same pass; if they disagree, taste decides the look and impeccable decides the fixes.
-- This project's own rules (dependencies, fonts, scripts, file layout) win over either skill.
+- Use `/impeccable` for UI: `critique` and `audit` to review a page, then `polish`, `typeset`, `layout` and its other commands to refine it. Run `/impeccable init` once per project (its README says to).
+- This project's own rules (dependencies, fonts, scripts, file layout) win over the skill.

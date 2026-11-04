@@ -13,7 +13,7 @@ money**. Pro limits are a usage window, so the cost that matters is the context 
 # 1. Global, for the account that runs it (status line, working rules, plugins). Needs claude and python3, and a GitHub ssh key.
 make setup-dry-run         # what would happen
 make setup                 # do it; ARGS="--only superpowers" turns on one more item
-# 2. One project: the UI skills (taste-skill, impeccable) and a UI rules block in its CLAUDE.md
+# 2. One project: the UI skill (Impeccable) and a UI rules block in its CLAUDE.md
 make project-dry-run PROJECT=~/work/my-app
 make project PROJECT=~/work/my-app
 ```
@@ -44,10 +44,10 @@ only when a skill runs.
 | superpowers | global | off | 7.0.1 (plugin.json 7.0.0) | ~710 | [obra/superpowers](https://github.com/obra/superpowers) |
 | graphify (CLI) | global | off | 0.9.101 | 0 until used | [Graphify-Labs/graphify](https://github.com/Graphify-Labs/graphify) |
 | playwright-cli (CLI) | global | off | not found | 0 until used | [microsoft/playwright-cli](https://github.com/microsoft/playwright-cli) |
-| **taste-skill** | project | on | 2.1.5 | ~250 | [Leonxlnx/taste-skill](https://github.com/Leonxlnx/taste-skill) |
+| taste-skill | project | off | 2.1.5 | ~250 | [Leonxlnx/taste-skill](https://github.com/Leonxlnx/taste-skill) |
 | **impeccable** | project | on | 4.8.0 | ~310 | [pbakaus/impeccable](https://github.com/pbakaus/impeccable) |
 
-Global total with the defaults: about 2.6k tokens at the start of a session, plus Context7's tool definitions (not measured) (Ponytail's start-of-session text is an estimate from reading its hook code, see its row; each subagent adds ~700 more). A project with both UI skills adds about 0.6k. Turn an item off in the profile,
+Global total with the defaults: about 2.6k tokens at the start of a session, plus Context7's tool definitions (not measured) (Ponytail's start-of-session text is an estimate from reading its hook code, see its row; each subagent adds ~700 more). A project with Impeccable adds about 0.3k. Turn an item off in the profile,
 or install it for one run with `--only <id>`. The plugin and marketplace names above were confirmed by installing them (in a throwaway home).
 
 ## The full list, by family
@@ -97,8 +97,8 @@ README or manifest was read on the check date; "unverified" means it comes from 
 
 | Tool | What it does | Verdict | Notes |
 |---|---|---|---|
-| **taste-skill** | Art direction for websites, product pages, dashboards and app screens, with a library of design directions, pictures from open collections and a browser inspector. MIT, v2.1.5 (2026-10-25). The one skill is `design-taste-frontend`. | **Every UI project** (project install) | Needs Node 22+ and Chrome, Edge or Chromium for its tools (the project script warns). Older variants live in a separate repo (`taste-skill-classics`) and run only when called by name. No dials in the current version. |
-| **Impeccable** | A design vocabulary for the agent: one skill, 24 commands (`/impeccable critique`, `audit`, `polish`, `bolder`, `quieter`, `typeset`, `colorize`, ...), plus checks that run on UI edits. Apache-2.0, v4.8.0 (2026-10-26), by Paul Bakaus. | **Every UI project** (project install) | Builds on Anthropic's `frontend-design`. The plugin runs hooks (session start, after edits, on stop): "scans every UI file your agent edits" per its README. Its README says the first edit can download its engine, and it fetches design directions from impeccable.style (disable: `npx impeccable telemetry off` or `DO_NOT_TRACK=1`). Whether the plugin route enables the edit-scan hook as the `npx impeccable install` route does is unconfirmed. |
+| taste-skill | Art direction for websites, product pages, dashboards and app screens, with a library of design directions, pictures from open collections and a browser inspector. MIT, v2.1.5 (2026-10-25). The one skill is `design-taste-frontend`. | **Optional** (off): for a fresh visual direction, `make project PROJECT=<path> ARGS="--only taste-skill"` | About 9.6k tokens each time it fires. Needs Node 22+ and Chrome, Edge or Chromium for its tools (the project script warns). Older variants live in a separate repo (`taste-skill-classics`) and run only when called by name. No dials in the current version. |
+| **Impeccable** | A design vocabulary for the agent: one skill, 24 commands (`/impeccable critique`, `audit`, `polish`, `bolder`, `quieter`, `typeset`, `colorize`, ...), plus checks that run on UI edits. Apache-2.0, v4.8.0 (2026-10-26), by Paul Bakaus. | **Every UI project** (project install, the default) | Builds on Anthropic's `frontend-design`. The plugin runs hooks (session start, after edits, on stop): "scans every UI file your agent edits" per its README. Its README says the first edit can download its engine, and it fetches design directions from impeccable.style (disable: `npx impeccable telemetry off` or `DO_NOT_TRACK=1`). Whether the plugin route enables the edit-scan hook as the `npx impeccable install` route does is unconfirmed. |
 | awesome-design-md | Turns a site's look into a reusable design file. | **Later** | Unverified (only a third-party mention). |
 | Apple design skill | A reviewer grounded in Apple's Human Interface Guidelines (123 pages). [dickwu/apple-design-skill](https://github.com/dickwu/apple-design-skill) | **Per project**, mobile or Apple-style UI only | **No license stated**; unofficial; the snapshot goes stale. `npx skills add dickwu/apple-design-skill -a claude-code` (third-party installer). |
 | lemo-opuscar | Writes code that renders short films (66 styles). | **Skip** | Not a UI skill. 30-60 minutes and many tokens per film; tuned for one model; needs ffmpeg 7+. |
@@ -127,7 +127,7 @@ Pick one when a real task would have used it; the "Overlap" column says what you
 | `incremental-implementation` | Build | Thin vertical slices: implement, test, verify, commit | ~100 / ~2.2k | Partly covered by the working rules |
 | `test-driven-development` | Build | Red, green, refactor; test pyramid; browser testing | ~120 / ~4k | Overlaps Superpowers (off) |
 | `context-engineering` | Build | Feed the agent the right information: rules files, context packing, MCP | ~60 / ~3.7k | Overlaps CLAUDE.md practice |
-| `frontend-ui-engineering` | Build | Component architecture, design systems, state, responsive design, WCAG 2.1 AA | ~90 / ~2.9k | Overlaps Impeccable and taste-skill |
+| `frontend-ui-engineering` | Build | Component architecture, design systems, state, responsive design, WCAG 2.1 AA | ~90 / ~2.9k | Overlaps Impeccable |
 | `api-and-interface-design` | Build | Contract-first design, Hyrum's Law, error semantics, boundary validation | ~70 / ~3.6k | Possible fit for the SaaS apps |
 | `browser-testing-with-devtools` | Verify | Chrome DevTools MCP: DOM, console, network, performance | ~90 / ~3.4k | Overlaps Playwright CLI and Claude in Chrome |
 | `debugging-and-error-recovery` | Verify | Five steps: reproduce, localize, reduce, fix, guard | ~90 / ~2.5k | Overlaps Superpowers' debugging (off) |
@@ -146,19 +146,18 @@ Also in the pack: nine slash commands that are skills too (`/spec`, `/plan`, `/b
 `/code-simplify`, `/ship`; ~20-30 always-on each) and four agents (`code-reviewer`, `test-engineer`, `security-auditor`,
 `web-performance-auditor`; ~50-60 each). Not read: the hook files and the evals.
 
-### taste-skill and Impeccable together: will they fight?
+### Impeccable or taste-skill: one per project
 
-No crash, but both give design direction, so do not let both steer the same pass. What the sources say:
+Decision: **Impeccable is the only UI skill installed by default.** It has commands to review (`critique`, `audit`) and to fix (`polish`,
+`typeset`, `layout`), which suits a review-first workflow, and it is cheaper when fired (~2.8k against ~9.6k). Add taste-skill to a project only
+when you want a fresh visual direction (`--only taste-skill`), and then do not let both steer the same pass. What the sources say:
 
 - taste-skill is a normal skill: Claude loads it when a design task matches its description (inferred; its `SKILL.md` header was not read). Its
   plugin is namespaced (`taste-skill:`), so names do not collide.
 - Impeccable is explicit: its commands run when you type `/impeccable <command>`, and its hooks check UI files after edits.
-- Neither README mentions the other, so the behaviour of the two together is **untested**. The convention in
-  [project-rules.md](setup/project-rules.md) is ours: **taste for building** a new page, **Impeccable for reviewing and fixing**
-  (`/impeccable critique`, then `polish`). If they disagree, taste decides the look and Impeccable the fixes.
-- A third UI skill is `frontend-design` (inside `example-skills`, off by default) and Impeccable started from it. Leave it off.
-- You do not have to say "use taste". Writing "build the pricing page with taste-skill" or "/impeccable critique the pricing cards" is
-  clearer, and costs nothing.
+- Neither README mentions the other, so the behaviour of the two together is **untested**.
+- A third UI skill is `frontend-design` (inside `example-skills`, off by default); Impeccable started from it. Leave it off.
+- Writing "/impeccable critique the pricing cards" is clearer than a general request, and costs nothing.
 
 ## Staying inside Pro
 

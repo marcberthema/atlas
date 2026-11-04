@@ -19,7 +19,7 @@
   "project": {
     "claude_md": true,
     "plugins": [
-      { "id": "taste-skill", "on": true, "source": "Leonxlnx/taste-skill", "plugin": "taste-skill@taste-skill" },
+      { "id": "taste-skill", "on": false, "source": "Leonxlnx/taste-skill", "plugin": "taste-skill@taste-skill" },
       { "id": "impeccable",  "on": true, "source": "pbakaus/impeccable",   "plugin": "impeccable@impeccable" }
     ],
     "commands": [

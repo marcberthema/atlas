@@ -58,7 +58,7 @@ lenses-check:  ## Check the lenses data and that its source links still answer (
 	$(PY) shared/lenses_check.py links
 # Same for the Claude Code setup: make claude-setup, claude-project PROJECT=<path>, ...
 claude-%:
-	$(MAKE) -C claude $*
+	$(MAKE) -C claude $* $(if $(PROJECT),PROJECT="$(abspath $(PROJECT))")
 cloudflare-%:
 	$(MAKE) -C topics/cloudflare $*
 workos-%:

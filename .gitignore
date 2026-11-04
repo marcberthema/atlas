@@ -16,3 +16,6 @@ topics/*/data/snapshots/
 
 # impeccable design tool state
 .impeccable/
+
+# personal Claude Code settings (the shared .claude/settings.json is committed)
+.claude/settings.local.json
