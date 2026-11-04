@@ -79,7 +79,7 @@ addEventListener('keydown',e=>{{if(e.key==='/'&&!e.ctrlKey&&!e.metaKey&&!/INPUT|
 def lenses_markup():
     """Shared lens diagram markup; each world styles .lensbar, .lane, .role, .dim, .panel."""
     lenses = "".join(f'<button type="button" class="lensbtn" data-l="{l["id"]}" aria-pressed="{"true" if i == 0 else "false"}">{esc(l["label"])}</button>'
-                     for i, l in enumerate(L["lenses"]))
+                     for i, l in enumerate([{"id": "all", "label": "All"}] + L["lenses"]))
     lanes = ""
     for ln in L["lanes"]:
         cells = ""
@@ -89,25 +89,25 @@ def lenses_markup():
                       if r else '<span class="gap"></span>')
         lanes += f'<div class="lane" role="group" aria-label="{esc(ln["label"])}"><h2>{esc(ln["label"])}</h2><div class="cells">{cells}</div></div>'
     roles = {r["id"]: {k: r.get(k, "") for k in ("name", "full", "what", "where", "why")} for r in L["roles"]}
-    about = {l["id"]: l["about"] for l in L["lenses"]}
+    about = {"all": "Every role and every connection in one picture. Pick a lens to keep only what it needs.", **{l["id"]: l["about"] for l in L["lenses"]}}
     edges = [e for e in L["edges"] if not e["to"].startswith("@") and not e["from"].startswith("@")]
     js = f"""<script>
 const R={json.dumps(roles)},A={json.dumps(about)},E={json.dumps(edges)};
 const btns=[...document.querySelectorAll('.lensbtn')],roles=[...document.querySelectorAll('.role')],panel=document.getElementById('panel'),live=document.getElementById('live');
 function lens(id){{btns.forEach(b=>b.setAttribute('aria-pressed',b.dataset.l===id));let n=0;
-  roles.forEach(r=>{{const on=r.dataset.lenses.split(' ').includes(id);r.classList.toggle('dim',!on);if(on)n++}});
+  roles.forEach(r=>{{const on=id==='all'||r.dataset.lenses.split(' ').includes(id);r.classList.toggle('dim',!on);if(on)n++}});
   document.getElementById('about').textContent=A[id];draw(id);live.textContent=btns.find(b=>b.dataset.l===id).textContent+' lens: '+n+' roles';}}
 btns.forEach(b=>b.addEventListener('click',()=>lens(b.dataset.l)));
 roles.forEach(r=>r.addEventListener('click',()=>{{const d=R[r.dataset.id];roles.forEach(x=>x.setAttribute('aria-pressed',x===r));
   panel.innerHTML='<h2>'+d.full+'</h2><p>'+d.what+'</p><p><b>Where</b> '+d.where+'</p><p><b>Why</b> '+d.why+'</p>';}}));
-const lanesEl=document.getElementById('lanes'),svg=document.getElementById('wires');let cur='app',hov=null;
+const lanesEl=document.getElementById('lanes'),svg=document.getElementById('wires');let cur='all',hov=null;
 function rp(p,r){{let d='M'+p[0][0]+' '+p[0][1];for(let i=1;i<p.length-1;i++){{const [x0,y0]=p[i-1],[x1,y1]=p[i],[x2,y2]=p[i+1],l1=Math.hypot(x1-x0,y1-y0),l2=Math.hypot(x2-x1,y2-y1),k=Math.min(r,l1/2,l2/2);
   d+='L'+(x1-(x1-x0)/l1*k)+' '+(y1-(y1-y0)/l1*k)+'Q'+x1+' '+y1+' '+(x1+(x2-x1)/l2*k)+' '+(y1+(y2-y1)/l2*k)}}
   return d+'L'+p[p.length-1][0]+' '+p[p.length-1][1]}}
 function draw(id){{cur=id||cur;const o=lanesEl.getBoundingClientRect();
   const sel=document.querySelector('.role[aria-pressed=true]'),act=hov||(sel&&sel.dataset.id)||null;
   const box=i=>{{const b=document.querySelector('.role[data-id="'+i+'"]');if(!b)return null;const r=b.getBoundingClientRect();return {{l:r.left-o.left,r:r.right-o.left,t:r.top-o.top,b:r.bottom-o.top,w:r.width,h:r.height,cx:(r.left+r.right)/2-o.left,cy:(r.top+r.bottom)/2-o.top}}}};
-  const ed=E.filter(e=>e.lenses.includes(cur)).map(e=>({{e,a:box(e.from),b:box(e.to)}})).filter(x=>x.a&&x.b);
+  const ed=E.filter(e=>cur==='all'||e.lenses.includes(cur)).map(e=>({{e,a:box(e.from),b:box(e.to)}})).filter(x=>x.a&&x.b);
   ed.forEach(x=>{{if(Math.abs(x.a.cy-x.b.cy)<4){{x.sa=x.a.cx<x.b.cx?'r':'l';x.sb=x.a.cx<x.b.cx?'l':'r'}}else{{const dn=x.b.cy>x.a.cy;x.sa=dn?'b':'t';x.sb=dn?'t':'b'}}}});
   const slots={{}};ed.forEach(x=>{{[['from','sa','b'],['to','sb','a']].forEach(([w,sd,oth])=>{{(slots[x.e[w]+x[sd]]=slots[x.e[w]+x[sd]]||[]).push([x,w,sd,oth])}})}});
   Object.values(slots).forEach(L=>{{const hz='lr'.includes(L[0][2]==='sa'?L[0][0].sa:L[0][0].sb);
@@ -119,11 +119,11 @@ function draw(id){{cur=id||cur;const o=lanesEl.getBoundingClientRect();
     const pts=hz?(Math.abs(ay-by)<2?[[ax,ay],[bx,by]]:[[ax,ay],[(ax+bx)/2,ay],[(ax+bx)/2,by],[bx,by]]):(Math.abs(ax-bx)<2?[[ax,ay],[bx,by]]:[[ax,ay],[ax,(ay+by)/2],[bx,(ay+by)/2],[bx,by]]);
     const cls='w'+(act?(on?' on':' off'):'');
     h+='<path class="'+cls+'" d="'+rp(pts,9)+'" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"'+(x.e.style==='dash'?' stroke-dasharray="6 5"':x.e.style==='dot'?' stroke-dasharray="1 5"':'')+'/>';
-    if(x.e.label&&(!act||on)){{const mx=hz?(ax+bx)/2:(ax+bx)/2,my=hz?ay-7:(ay+by)/2-6;h+='<text x="'+mx+'" y="'+my+'" text-anchor="middle" class="wl">'+x.e.label+'</text>'}}}});
+    if(x.e.label&&((!act&&cur!=='all')||on)){{const mx=hz?(ax+bx)/2:(ax+bx)/2,my=hz?ay-7:(ay+by)/2-6;h+='<text x="'+mx+'" y="'+my+'" text-anchor="middle" class="wl">'+x.e.label+'</text>'}}}});
   svg.setAttribute('viewBox','0 0 '+o.width+' '+o.height);svg.innerHTML=h;}}
 roles.forEach(r=>{{['mouseenter','focus'].forEach(ev=>r.addEventListener(ev,()=>{{hov=r.dataset.id;draw()}}));['mouseleave','blur'].forEach(ev=>r.addEventListener(ev,()=>{{hov=null;draw()}}));r.addEventListener('click',()=>draw())}});
 addEventListener('resize',()=>draw());if(document.fonts)document.fonts.ready.then(()=>draw());
-lens('app');
+lens('all');
 </script>"""
     return (f'<div class="lensbar" role="group" aria-label="Lens">{lenses}</div><p id="about" class="about"></p>'
             f'<div class="lanes" id="lanes" style="position:relative">{lanes}<svg class="wires" id="wires" aria-hidden="true"></svg></div><aside id="panel" class="panel" aria-live="polite"><h2>Pick a role</h2>'
