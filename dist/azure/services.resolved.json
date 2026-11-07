@@ -2171,8 +2171,8 @@
         },
         {
           "url": "https://learn.microsoft.com/azure/app-service/overview-hosting-plans",
-          "page_date": "2026-08-24",
-          "published": "2026-08-31"
+          "page_date": "2026-11-06",
+          "published": "2026-11-06"
         }
       ],
       "review": {
@@ -2180,8 +2180,8 @@
         "note": "Verified against Learn on 2026-10-24 (app-service/overview): purpose, facts, the VNet edge. Not verified: the Key Vault references, Application Insights, App Configuration, Application Gateway, Traffic Manager, Private Endpoint and API Management edges, and the delegated-subnet detail."
       },
       "freshness": {
-        "status": "current",
-        "changed_at": "2026-10-26"
+        "status": "stale",
+        "changed_at": "2026-11-07"
       },
       "terraform": {
         "status": "full",
@@ -3885,7 +3885,7 @@
         {
           "url": "https://learn.microsoft.com/azure/azure-sql/database/free-offer",
           "page_date": "2026-10-30",
-          "published": "2026-11-02"
+          "published": "2026-11-06"
         }
       ],
       "review": {
@@ -3894,7 +3894,7 @@
       },
       "freshness": {
         "status": "stale",
-        "changed_at": "2026-11-03"
+        "changed_at": "2026-11-07"
       },
       "terraform": {
         "status": "full",
