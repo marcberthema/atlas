@@ -63,3 +63,5 @@ cloudflare-%:
 	$(MAKE) -C topics/cloudflare $*
 workos-%:
 	$(MAKE) -C topics/workos $*
+azure-devops-%:
+	$(MAKE) -C topics/azure-devops $*
