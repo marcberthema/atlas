@@ -1,4 +1,9 @@
 {
+  "https://github.com/microsoft/terraform-provider-azuredevops | source = \"microsoft/azuredevops\"": {
+    "body": "# Make sure to set the following environment variables:\n#   AZDO_PERSONAL_ACCESS_TOKEN\n#   AZDO_ORG_SERVICE_URL\nterraform {\n  required_providers {\n    azuredevops = {\n      source = \"microsoft/azuredevops\"\n      version = \">=0.1.0\"\n    }\n  }\n}\n\nresource \"azuredevops_project\" \"project\" {\n  name = \"My Awesome Project\"\n  description  = \"All of my awesomee things\"\n}\n\nresource \"azuredevops_git_repository\" \"repository\" {\n  project_id = azuredevops_project.project.id\n  name       = \"My Awesome Repo\"\n  initialization {\n    init_type = \"Clean\"\n  }\n}\n\nresource \"azuredevops_build_definition\" \"build_definition\" {\n  project_id = azuredevops_project.project.id\n  name       = \"My Awesome Build Pipeline\"\n  path       = \"\\\\\"\n\n  repository {\n    repo_type   = \"TfsGit\"\n    repo_id     = azuredevops_git_repository.repository.id\n    branch_name = azuredevops_git_repository.repository.default_branch\n    yml_path    = \"azure-pipelines.yml\"\n  }\n}",
+    "fetched": "2026-11-08",
+    "checked": "2026-11-08"
+  },
   "https://learn.microsoft.com/en-us/azure/devops/artifacts/concepts/upstream-sources | <packageSources>": {
     "body": "<packageSources>\n  <clear />\n  <add key=\"FabrikamFiber\" value=\"https://pkgs.dev.azure.com/fabrikam/_packaging/FabrikamFiber/nuget/v3/index.json\" />\n</packageSources>",
     "fetched": "2026-11-08",

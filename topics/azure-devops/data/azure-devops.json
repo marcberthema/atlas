@@ -2800,6 +2800,10 @@
     {
      "label": "Get Started with Azure DevOps CLI - Azure DevOps",
      "url": "https://learn.microsoft.com/en-us/azure/devops/cli/"
+    },
+    {
+     "label": "Terraform provider for Azure DevOps",
+     "url": "https://registry.terraform.io/providers/microsoft/azuredevops/latest/docs"
     }
    ],
    "sections": [
@@ -2924,6 +2928,12 @@
        "match": "variables:"
       }
      ]
+    },
+    {
+     "title": "Terraform",
+     "items": [
+      "Projects, repositories, pipelines, service connections and permissions can be managed with the Terraform provider: [Terraform provider for Azure DevOps](#azure-devops-terraform)."
+     ]
     }
    ],
    "sources": [
@@ -2946,6 +2956,10 @@
      "label": "Azure DevOps CLI in Azure Pipeline YAML - Azure DevOps",
      "url": "https://learn.microsoft.com/en-us/azure/devops/cli/azure-devops-cli-in-yaml",
      "date": "2026-04-22"
+    },
+    {
+     "label": "Provider repository README on GitHub",
+     "url": "https://github.com/microsoft/terraform-provider-azuredevops"
     }
    ],
    "related": [
@@ -13543,6 +13557,139 @@
    "notes": [
     "The sources list is the repository and two Learn pages that mention AI assistance; the tool list of the server is not read here."
    ]
+  },
+  {
+   "id": "azure-devops-terraform",
+   "name": "Terraform provider for Azure DevOps",
+   "group": "tools",
+   "summary": "The microsoft/azuredevops provider: manages projects, repositories, pipelines, service connections, permissions and more as Terraform resources.",
+   "level": "overview",
+   "status": "active",
+   "started": {
+    "date": "unconfirmed",
+    "basis": "repository created 2020-06-18",
+    "confirmed": false
+   },
+   "cncf": {
+    "level": "none",
+    "text": "Not a CNCF project."
+   },
+   "license": "MIT",
+   "version": {
+    "name": "azuredevops provider",
+    "analysed": "v1.16.0",
+    "released": "2026-07-17",
+    "docs": "GitHub release, the repository README and the provider docs in sources",
+    "checked": "2026-11-08"
+   },
+   "links": [
+    {
+     "label": "Provider on the Terraform Registry",
+     "url": "https://registry.terraform.io/providers/microsoft/azuredevops/latest/docs"
+    },
+    {
+     "label": "Provider repository",
+     "url": "https://github.com/microsoft/terraform-provider-azuredevops"
+    },
+    {
+     "label": "Provider releases",
+     "url": "https://github.com/microsoft/terraform-provider-azuredevops/releases"
+    },
+    {
+     "label": "Provider docs in the repository",
+     "url": "https://github.com/microsoft/terraform-provider-azuredevops/blob/main/website/docs/index.html.markdown"
+    }
+   ],
+   "sections": [
+    {
+     "title": "What it is",
+     "items": [
+      "A Terraform provider, published by Microsoft, that calls the Azure DevOps REST API. Source is microsoft/azuredevops. The repository has 133 resource pages and 48 data source pages (counted from its website/docs folders at 1.16.0). The Terraform and Azure resources themselves are in the Terraform topic, not here."
+     ]
+    },
+    {
+     "title": "What it manages",
+     "items": [
+      {
+       "type": "table",
+       "columns": [
+        "Area",
+        "Resources (examples)"
+       ],
+       "rows": [
+        [
+         "Organization",
+         "azuredevops_project, azuredevops_team, azuredevops_group, azuredevops_group_membership, azuredevops_user_entitlement, azuredevops_service_principal_entitlement, azuredevops_extension"
+        ],
+        [
+         "Repos",
+         "azuredevops_git_repository, azuredevops_git_repository_branch, azuredevops_git_repository_file, azuredevops_branch_policy_min_reviewers, azuredevops_branch_policy_build_validation, azuredevops_repository_policy_*"
+        ],
+        [
+         "Pipelines",
+         "azuredevops_build_definition, azuredevops_build_folder, azuredevops_variable_group, azuredevops_environment, azuredevops_pipeline_authorization, azuredevops_check_approval, azuredevops_agent_pool, azuredevops_elastic_pool"
+        ],
+        [
+         "Service connections",
+         "azuredevops_serviceendpoint_azurerm, azuredevops_serviceendpoint_github, azuredevops_serviceendpoint_dockerregistry, azuredevops_serviceendpoint_kubernetes and about 40 more serviceendpoint types"
+        ],
+        [
+         "Boards",
+         "azuredevops_workitem, azuredevops_workitemquery, azuredevops_area, azuredevops_workitemtrackingprocess_process and the other workitemtrackingprocess resources"
+        ],
+        [
+         "Artifacts and wiki",
+         "azuredevops_feed, azuredevops_feed_permission, azuredevops_feed_retention_policy, azuredevops_wiki, azuredevops_wiki_page"
+        ],
+        [
+         "Permissions",
+         "azuredevops_project_permissions, azuredevops_git_permissions, azuredevops_build_definition_permissions, azuredevops_securityrole_assignment and other *_permissions"
+        ]
+       ]
+      }
+     ]
+    },
+    {
+     "title": "Authentication",
+     "items": [
+      "The provider tries a personal access token first, then OIDC (with use_oidc), a client certificate, a client secret, and a managed identity (with use_msi). Service principal methods need the organization connected to Entra ID. The organization URL is org_service_url or the AZDO_ORG_SERVICE_URL environment variable; the token is read from AZDO_PERSONAL_ACCESS_TOKEN. See the Security entry for tokens and service principals: [Security](#security)."
+     ]
+    },
+    {
+     "title": "Install and use",
+     "items": [
+      {
+       "type": "code",
+       "title": "Provider block and first resources",
+       "lang": "text",
+       "source": {
+        "label": "Provider repository README on GitHub",
+        "url": "https://github.com/microsoft/terraform-provider-azuredevops"
+       },
+       "match": "source = \"microsoft/azuredevops\""
+      }
+     ]
+    }
+   ],
+   "sources": [
+    {
+     "label": "Provider repository README on GitHub",
+     "url": "https://github.com/microsoft/terraform-provider-azuredevops"
+    },
+    {
+     "label": "Provider docs index (website/docs) on GitHub",
+     "url": "https://github.com/microsoft/terraform-provider-azuredevops/blob/main/website/docs/index.html.markdown"
+    },
+    {
+     "label": "Provider on the Terraform Registry",
+     "url": "https://registry.terraform.io/providers/microsoft/azuredevops/latest/docs"
+    }
+   ],
+   "track": {
+    "github": "microsoft/terraform-provider-azuredevops",
+    "tag": "^v\\d+\\.\\d+\\.\\d+$"
+   },
+   "notes": "Resource and data source counts are file counts of the docs folders at 1.16.0, not a list read page by page. Which Azure DevOps Server versions work is unconfirmed. The Registry page is rendered by script and was not read; its facts come from the repository."
   }
  ],
  "comparisons": [

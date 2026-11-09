@@ -10,7 +10,7 @@ with every keyword and many official snippets, so the exact syntax can be found 
 ## Scope
 
 - In: the five services (Boards, Repos, Pipelines, Test Plans, Artifacts), the things around them (organization and projects, security, agents, environments and
-  service connections, dashboards and analytics, extensions, CLI) and the complete YAML pipeline language: schema keys, template expressions, functions,
+  service connections, dashboards and analytics, extensions, CLI, Terraform provider) and the complete YAML pipeline language: schema keys, template expressions, functions,
   predefined variables, logging commands and conditions.
 - Out: classic (designer) pipelines and classic release pipelines beyond a mention, Azure DevOps Server installation and administration, the REST API reference,
   every individual task (the task reference is linked, not copied), extension development, and prices (the free tier is stated, paid access is linked).
@@ -26,7 +26,7 @@ Archetype: product family, with one very large lookup group. Five tabs (`templat
 | Start | `overview`: the services, how they fit together, organization and project, hosting options, free tier |
 | Services | A picker, one entry per service and per supporting area, in two rows: the five core services, then the areas around them. `services-index` first |
 | YAML pipelines | A picker with one entry per part of the language, in rows: Start, Triggers, Structure, Data, Reuse and logic, Run. `yaml-index` first lists every keyword and where it lives |
-| Ecosystem | The shared "others" list: agent, tasks, CLI, MCP server |
+| Ecosystem | The shared "others" list: agent, tasks, CLI, MCP server, Terraform provider |
 | Compare | Variable syntaxes, parameters against variables, trigger types |
 
 Service entries open with what the service is, then where things live and the limits worth knowing. The YAML pages open the same way: one sentence,
@@ -38,7 +38,7 @@ schema area so that every schema page is reachable from `yaml-index`.
 learn.microsoft.com/azure/devops (Azure DevOps Services; pages show "Azure DevOps Services | Server" and a last-updated date). The YAML schema is
 read from the YAML schema reference (`pipelines/yaml-schema/`, 75 pages from its table of contents), expressions, templates, variables, conditions, resources and
 logging commands from the Pipelines process pages. Repositories read for release tracking: microsoft/azure-pipelines-agent, microsoft/azure-pipelines-tasks,
-Azure/azure-devops-cli-extension, microsoft/azure-devops-mcp (all MIT). Azure DevOps Services itself is a hosted product with no version: each entry shows the
+Azure/azure-devops-cli-extension, microsoft/azure-devops-mcp, microsoft/terraform-provider-azuredevops (all MIT). Azure DevOps Services itself is a hosted product with no version: each entry shows the
 date of its page. Re-check: `make azure-devops-check` compares the tracked releases and `make azure-devops-examples` re-fetches every code block.
 
 ## Coverage
@@ -80,6 +80,7 @@ date of its page. Re-check: `make azure-devops-check` compares the tracked relea
 | `azure-pipelines-tasks` | done | tool |
 | `azure-devops-cli` | done | tool |
 | `azure-devops-mcp` | done | tool |
+| `azure-devops-terraform` | done | tool; resource areas by example, counts are file counts |
 
 ## Known gaps
 
@@ -88,6 +89,7 @@ date of its page. Re-check: `make azure-devops-check` compares the tracked relea
 - The code blocks of the process pages were chosen by hand (the schema pages are included whole); some long pages (variables, templates) are shown in part.
 - Descriptions of the predefined variables are written here from the variable names on the page and a spot check of the enumerated values; the page itself is the authority.
 - `yaml-tasks` lists the six task categories, not every task name.
+- The Terraform provider entry gives resource areas with examples, not all 133 resources; the Registry page is script-rendered and was not read.
 - The azure-devops-mcp entry does not list the tools of the server (not read).
 - Wiki, classic release pipelines and the REST API are not covered. The wiki page was not reachable when the topic was written.
 - Azure DevOps Server differences are noted only where a page states them.
