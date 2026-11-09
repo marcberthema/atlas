@@ -1,0 +1,91 @@
+{
+  "title": "Azure DevOps",
+  "tabs": [
+    {
+      "id": "overview",
+      "label": "Start"
+    },
+    {
+      "id": "services",
+      "label": "Services",
+      "group": "services",
+      "pick": "Service",
+      "sets": [
+        {
+          "label": "Core services",
+          "ids": [
+            "boards",
+            "repos",
+            "pipelines",
+            "test-plans",
+            "artifacts"
+          ]
+        },
+        {
+          "label": "Around them",
+          "ids": [
+            "organization",
+            "security",
+            "agents",
+            "connections",
+            "reporting",
+            "extend"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "yaml",
+      "label": "YAML pipelines",
+      "group": "yaml",
+      "pick": "Topic",
+      "sets": [
+        {
+          "label": "Structure",
+          "ids": [
+            "yaml-pipeline",
+            "yaml-trigger",
+            "yaml-stages",
+            "yaml-jobs",
+            "yaml-deployment",
+            "yaml-steps",
+            "yaml-tasks",
+            "yaml-pool"
+          ]
+        },
+        {
+          "label": "Data",
+          "ids": [
+            "yaml-variables",
+            "yaml-parameters",
+            "yaml-predefined",
+            "yaml-resources"
+          ]
+        },
+        {
+          "label": "Reuse and logic",
+          "ids": [
+            "yaml-templates",
+            "yaml-expressions",
+            "yaml-conditions"
+          ]
+        },
+        {
+          "label": "Run",
+          "ids": [
+            "yaml-artifacts",
+            "yaml-logging"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "others",
+      "label": "Ecosystem"
+    },
+    {
+      "id": "compare",
+      "label": "Compare"
+    }
+  ]
+}

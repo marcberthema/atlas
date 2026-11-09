@@ -2,7 +2,7 @@
 
 A personal knowledge base: a collection of references to look things up in, not Q&A. Each topic is a set of facts kept in
 JSON, generated into static HTML. Published as a Cloudflare Worker with static assets at atlas.marcberthelette.com; only `dist/` is exposed.
-Built with AI assistance. Topics now: Azure with Terraform, Terraform, GitOps, GitHub Actions, Identity providers, Certificates, Enterprise topologies, Architecture and design patterns.
+Built with AI assistance. Topics now: Azure with Terraform, Terraform, GitOps, GitHub Actions, Azure DevOps, Identity providers, Certificates, Enterprise topologies, Architecture and design patterns.
 Kept in git but not published: Workstation setup (`workstation/`), Visual Studio Code setup (`vscode/`) and Claude Code setup (`claude/`).
 
 ---

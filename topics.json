@@ -23,6 +23,7 @@
     {"id": "lenses", "label": "Lenses", "description": "Where does a service go? One picture of an application, five lenses, a stack filter and the organization level."}
   ],
   "topics": [
+    {"id": "azure-devops", "family": "cicd", "label": "Azure DevOps", "stages": ["plan", "code", "build", "test", "release", "deploy"], "description": "Azure DevOps services and the YAML pipeline reference: Boards, Repos, Pipelines, Test Plans, Artifacts, with every pipeline keyword."},
     {"id": "github-actions", "family": "cicd", "label": "GitHub Actions", "stages": ["build", "test", "release", "deploy"], "description": "Every workflow key, triggers, expressions and contexts, reuse, runners, security, limits and the gh CLI."},
     {"id": "gitlab-ci", "family": "cicd", "label": "GitLab CI/CD", "stages": ["build", "test", "release", "deploy"], "draft": true, "description": "Pipelines, runners, templates and environments in GitLab."},
     {"id": "jenkins", "family": "cicd", "label": "Jenkins", "stages": ["build", "test", "release", "deploy"], "draft": true, "description": "Pipelines as code, agents, plugins and operating a Jenkins controller."},
