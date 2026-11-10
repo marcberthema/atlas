@@ -2473,8 +2473,8 @@
         "note": "Verified against Learn on 2026-10-24 (azure-functions/functions-overview): purpose, facts. Not verified: all edges: the Storage requirement, Application Insights, Event Grid, Service Bus and API Management."
       },
       "freshness": {
-        "status": "current",
-        "changed_at": "2026-10-26",
+        "status": "stale",
+        "changed_at": "2026-11-10",
         "sources": {
           "https://learn.microsoft.com/azure/azure-functions/functions-overview": {
             "changed_at": "2026-10-24",
@@ -2486,10 +2486,10 @@
           },
           "https://learn.microsoft.com/azure/azure-functions/flex-consumption-plan": {
             "http_status": 200,
-            "ms_date": "2026-09-15T00:00:00Z",
-            "updated_at": "2026-09-30T11:34:00Z",
-            "latest_hash": "sha256:5f3807aa79654ceb1c540cc090baf146700afa81ff86b7dc3c9eb4dcd29c85bb",
-            "changed_at": "2026-10-26",
+            "ms_date": "2026-10-30T00:00:00Z",
+            "updated_at": "2026-11-09T23:13:00Z",
+            "latest_hash": "sha256:f41b7f1707a6c1dd636338cc76a83b4e18d2ce1853b338ce03f8091679e1e10b",
+            "changed_at": "2026-11-10",
             "reviewed_hash": "sha256:5f3807aa79654ceb1c540cc090baf146700afa81ff86b7dc3c9eb4dcd29c85bb"
           }
         }
