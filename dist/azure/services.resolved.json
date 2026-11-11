@@ -3885,7 +3885,7 @@
         {
           "url": "https://learn.microsoft.com/azure/azure-sql/database/free-offer",
           "page_date": "2026-10-30",
-          "published": "2026-11-06"
+          "published": "2026-11-10"
         }
       ],
       "review": {
@@ -3894,7 +3894,7 @@
       },
       "freshness": {
         "status": "stale",
-        "changed_at": "2026-11-07"
+        "changed_at": "2026-11-11"
       },
       "terraform": {
         "status": "full",
