@@ -6,6 +6,7 @@
     {"id": "cicd", "label": "CI/CD", "description": "Pipelines that build, test and release software."},
     {"id": "development", "label": "Development", "description": "Designing and securing applications: architecture patterns and certificates."},
     {"id": "enterprise", "label": "Enterprise", "description": "Identity providers and how large organizations are structured."},
+    {"id": "test", "label": "Test", "description": "Kinds of tests and how to run them: the test pyramid, for Python applications and for Terraform."},
     {"id": "saas", "label": "SaaS", "description": "Hosted platforms and services you build on: WorkOS and Cloudflare."}
   ],
   "stages": [
@@ -23,6 +24,7 @@
     {"id": "lenses", "label": "Lenses", "description": "Where does a service go? One picture of an application, five lenses, a stack filter and the organization level."}
   ],
   "topics": [
+    {"id": "test-types", "family": "test", "label": "Test types", "stages": ["test"], "description": "The test pyramid: unit, contract, integration and end-to-end tests, and the other kinds around it, with an example for a Python application and for Terraform."},
     {"id": "azure-devops", "family": "cicd", "label": "Azure DevOps", "stages": ["plan", "code", "build", "test", "release", "deploy"], "description": "Azure DevOps services and the YAML pipeline reference: Boards, Repos, Pipelines, Test Plans, Artifacts, with every pipeline keyword."},
     {"id": "github-actions", "family": "cicd", "label": "GitHub Actions", "stages": ["build", "test", "release", "deploy"], "description": "Every workflow key, triggers, expressions and contexts, reuse, runners, security, limits and the gh CLI."},
     {"id": "gitlab-ci", "family": "cicd", "label": "GitLab CI/CD", "stages": ["build", "test", "release", "deploy"], "draft": true, "description": "Pipelines, runners, templates and environments in GitLab."},

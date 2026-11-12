@@ -65,3 +65,5 @@ workos-%:
 	$(MAKE) -C topics/workos $*
 azure-devops-%:
 	$(MAKE) -C topics/azure-devops $*
+test-types-%:
+	$(MAKE) -C topics/test-types $*

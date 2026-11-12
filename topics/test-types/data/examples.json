@@ -1,0 +1,82 @@
+{
+  "https://developer.hashicorp.com/terraform/language/block/check | url = \"https://api.example.com/health\"": {
+    "body": "check \"health_check\" {\n data \"http\" \"endpoint\" {\n   url = \"https://api.example.com/health\"\n }\n\n assert {\n   condition     = data.http.endpoint.status_code == 200\n   error_message = \"Health check failed: ${data.http.endpoint.url} returned ${data.http.endpoint.status_code}\"\n }\n}",
+    "fetched": "2026-11-12",
+    "checked": "2026-11-12"
+  },
+  "https://developer.hashicorp.com/terraform/language/tests | # file_count.tftest.hcl": {
+    "body": "# file_count.tftest.hcl\n\nvariables {\n  bucket = \"my_test_bucket\"\n  files = {\n    \"file-one.txt\": \"data/files/file_one.txt\"\n    \"file-two.txt\": \"data/files/file_two.txt\"\n  }\n}\n\nprovider \"aws\" {\n  region = \"us-east-1\"\n}\n\nrun \"setup\" {\n  # Create the S3 bucket we will use later.\n\n  module {\n    source = \"./testing/setup\"\n  }\n}\n\nrun \"execute\" {\n  # This is empty, we just run the configuration under test using all the default settings.\n}\n\nrun \"verify\" {\n  # Load and count the objects created in the \"execute\" run block.\n\n  module {\n    source = \"./testing/loader\"\n  }\n\n  assert {\n    condition = length(data.aws_s3_objects.objects.keys) == 2\n    error_message = \"created the wrong number of s3 objects\"\n  }\n}",
+    "fetched": "2026-11-12",
+    "checked": "2026-11-12"
+  },
+  "https://developer.hashicorp.com/terraform/language/tests | # input_validation.tftest.hcl": {
+    "body": "# input_validation.tftest.hcl\n\nvariables {\n  input = 0\n}\n\nrun \"zero\" {\n  # The variable defined above is even, so we expect the validation to pass.\n\n  command = plan\n}\n\nrun \"one\" {\n  # This time we set the variable is odd, so we expect the validation to fail.\n\n  command = plan\n\n  variables {\n    input = 1\n  }\n\n  expect_failures = [\n    var.input,\n  ]\n}",
+    "fetched": "2026-11-12",
+    "checked": "2026-11-12"
+  },
+  "https://developer.hashicorp.com/terraform/language/tests | # valid_string_concat.tftest.hcl": {
+    "body": "# valid_string_concat.tftest.hcl\n\nvariables {\n  bucket_prefix = \"test\"\n}\n\nrun \"valid_string_concat\" {\n\n  command = plan\n\n  assert {\n    condition     = aws_s3_bucket.bucket.bucket == \"test-bucket\"\n    error_message = \"S3 bucket name did not match expected\"\n  }\n\n}",
+    "fetched": "2026-11-12",
+    "checked": "2026-11-12"
+  },
+  "https://developer.hashicorp.com/terraform/language/tests | error_message = \"must be even number\"": {
+    "body": "# main.tf\n\nvariable \"input\" {\n  type = number\n\n  validation {\n    condition = var.input % 2 == 0\n    error_message = \"must be even number\"\n  }\n}",
+    "fetched": "2026-11-12",
+    "checked": "2026-11-12"
+  },
+  "https://developer.hashicorp.com/terraform/language/tests/mocking | mock_provider \"aws\" {}": {
+    "body": "# bucket_name.tftest.hcl\n\nmock_provider \"aws\" {}\n\nrun \"sets_correct_name\" {\n  variables {\n    bucket_name = \"my-bucket-name\"\n  }\n\n  assert {\n    condition     = aws_s3_bucket.my_bucket.bucket == \"my-bucket-name\"\n    error_message = \"incorrect bucket name\"\n  }\n}",
+    "fetched": "2026-11-12",
+    "checked": "2026-11-12"
+  },
+  "https://docs.pytest.org/en/stable/getting-started.html | with pytest.raises(SystemExit):": {
+    "body": "# content of test_sysexit.py\nimport pytest\n\n\ndef f():\n    raise SystemExit(1)\n\n\ndef test_mytest():\n    with pytest.raises(SystemExit):\n        f()",
+    "fetched": "2026-11-12",
+    "checked": "2026-11-12"
+  },
+  "https://docs.python.org/3/library/unittest.mock.html | with patch.object(ProductionClass, 'method', return_value=None) as mock_method:": {
+    "body": ">>> with patch.object(ProductionClass, 'method', return_value=None) as mock_method:\n...     thing = ProductionClass()\n...     thing.method(1, 2, 3)\n...\n>>> mock_method.assert_called_once_with(1, 2, 3)",
+    "fetched": "2026-11-12",
+    "checked": "2026-11-12"
+  },
+  "https://hypothesis.readthedocs.io/en/latest/quickstart.html | @given(st.integers(0, 200))": {
+    "body": "# contents of example.py\nfrom hypothesis import given, strategies as st\n\n@given(st.integers(0, 200))\ndef test_integers(n):\n    assert n < 50",
+    "fetched": "2026-11-12",
+    "checked": "2026-11-12"
+  },
+  "https://locust.io/ | class WebsiteUser(HttpUser):": {
+    "body": "from locust import HttpUser, between, task\n\n\nclass WebsiteUser(HttpUser):\n    wait_time = between(5, 15)\n    \n    def on_start(self):\n        self.client.post(\"/login\", {\n            \"username\": \"test_user\",\n            \"password\": \"\"\n        })\n    \n    @task\n    def index(self):\n        self.client.get(\"/\")\n        self.client.get(\"/static/assets.js\")\n        \n    @task\n    def about(self):\n        self.client.get(\"/about/\")",
+    "fetched": "2026-11-12",
+    "checked": "2026-11-12"
+  },
+  "https://mypy.readthedocs.io/en/stable/getting_started.html | def greeting(name: str) -> str:": {
+    "body": "# The \"name: str\" annotation says that the \"name\" argument should be a string\n# The \"-> str\" annotation says that \"greeting\" will return a string\ndef greeting(name: str) -> str:\n    return 'Hello ' + name",
+    "fetched": "2026-11-12",
+    "checked": "2026-11-12"
+  },
+  "https://pact-foundation.github.io/pact-python/consumer/ | def test_get_user(pact: Pact)": {
+    "body": "from pathlib import Path\n\nimport pytest\nfrom pact import Pact, match\n\n\n@pytest.fixture\ndef pact() -> Generator[Pact, None, None]:  # (1)\n    \"\"\"Set up a Pact mock provider for consumer tests.\"\"\"\n    pact = Pact(\"user-consumer\", \"user-provider\").with_specification(\"V4\")  # (2)\n    yield pact\n    pact.write_file(Path(__file__).parent / \"pacts\")\n\n\ndef test_get_user(pact: Pact) -> None:\n    \"\"\"Test the GET request for a user.\"\"\"\n    response: dict[str, object] = {  # (3)\n        \"id\": match.int(123),\n        \"name\": match.str(\"Alice\"),\n        \"created_on\": match.datetime(),\n    }\n    (\n        pact\n        .upon_receiving(\"A user request\")  # (4)\n        .given(\"the user exists\", id=123, name=\"Alice\")  # (5)\n        .with_request(\"GET\", \"/users/123\")  # (6)\n        .will_respond_with(200)  # (7)\n        .with_body(response, content_type=\"application/json\")  # (8)\n    )\n\n    with pact.serve() as srv:  # (9)\n        client = UserClient(str(srv.url))  # (10)\n        user = client.get_user(123)\n        assert user.name == \"Alice\"",
+    "fetched": "2026-11-12",
+    "checked": "2026-11-12"
+  },
+  "https://pact-foundation.github.io/pact-python/provider/ | def test_provider():": {
+    "body": "from pact import Verifier\n\n\ndef test_provider():\n    \"\"\"Test the provider against the consumer contract.\"\"\"\n    verifier = (\n        Verifier(\"my-provider\")  # Provider name\n        .add_source(\"./pacts/\")  # Directory containing Pact files\n        .add_transport(url=\"http://localhost:8080\")  # Provider URL\n    )\n\n    verifier.verify()",
+    "fetched": "2026-11-12",
+    "checked": "2026-11-12"
+  },
+  "https://playwright.dev/python/docs/intro | def test_has_title(page: Page):": {
+    "body": "import re\nfrom playwright.sync_api import Page, expect\n\ndef test_has_title(page: Page):\n    page.goto(\"https://playwright.dev/\")\n\n    # Expect a title \"to contain\" a substring.\n    expect(page).to_have_title(re.compile(\"Playwright\"))\n\ndef test_get_started_link(page: Page):\n    page.goto(\"https://playwright.dev/\")\n\n    # Click the get started link.\n    page.get_by_role(\"link\", name=\"Get started\").click()\n\n    # Expects page to have a heading with the name of Installation.\n    expect(page.get_by_role(\"heading\", name=\"Installation\")).to_be_visible()",
+    "fetched": "2026-11-12",
+    "checked": "2026-11-12"
+  },
+  "https://testcontainers-python.readthedocs.io/en/latest/ | with PostgresContainer(\"postgres:16\", driver=None) as postgres:": {
+    "body": ">>> from testcontainers.postgres import PostgresContainer\n>>> import psycopg\n\n>>> with PostgresContainer(\"postgres:16\", driver=None) as postgres:\n...     psql_url = postgres.get_connection_url()\n...     with psycopg.connect(psql_url) as connection:\n...         with connection.cursor() as cursor:\n...             version, = cursor.execute(\"SELECT version()\").fetchone()\n>>> version\n'PostgreSQL 16...'",
+    "fetched": "2026-11-12",
+    "checked": "2026-11-12"
+  },
+  "https://www.checkov.io/1.Welcome/Quick%20Start.html | checkov -d /user/tf": {
+    "body": "checkov -d /user/tf",
+    "fetched": "2026-11-12",
+    "checked": "2026-11-12"
+  }
+}

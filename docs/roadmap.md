@@ -13,5 +13,6 @@ Order of work, agreed with the owner. Update the status when something lands.
 | 6 | CI/CD topics | partial | GitHub Actions done (23 entries, branch `topic-github-actions`, unreviewed). Azure DevOps done (36 entries, branch `topic-azure-devops`, unreviewed). Still drafts in `topics.json`: GitLab CI/CD, Jenkins, Nexus Repository, JFrog Xray, SonarQube |
 | 7 | The lenses view: roles, lenses, stacks and the organization level | done | `/lenses/`; spec `views/lenses/docs/spec.md` approved 2026-11-03, data read against Microsoft Learn and product sites (9 items partial: see the spec). Unreviewed by the owner: the data wording and where `siem` and `storage` sit. Next stacks: AWS, vSphere, Dynatrace |
 | 8 | A decisions log (`docs/decisions.md`) | planned | Reconstruct old decisions from git history, and mark reasons that are not recorded |
+| 9 | The Test family and its first topic, Test types | done | Branch `topic-test-types`, 13 entries, unreviewed. The family uses the purple of the Test stage. Next ideas for the family: SonarQube and JFrog Xray are drafts under CI/CD |
 
 Not scheduled: the Azure topic has its own page and does not use the details switch; the shared page could be extended to cover it.
