@@ -30,7 +30,7 @@ a{color:inherit;text-decoration:none}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
 [data-fam=iac]{--fc:var(--cic);--fcf:var(--cicf)}[data-fam=cicd]{--fc:var(--dev);--fcf:var(--devf)}
-[data-fam=development]{--fc:var(--iac);--fcf:var(--iacf)}[data-fam=enterprise]{--fc:var(--ent);--fcf:var(--entf)}[data-fam=saas]{--fc:var(--mut);--fcf:var(--ground)}[data-fam=views]{--fc:var(--ink);--fcf:var(--ground)}
+[data-fam=development]{--fc:var(--iac);--fcf:var(--iacf)}[data-fam=enterprise]{--fc:var(--ent);--fcf:var(--entf)}[data-fam=test]{--fc:var(--tst);--fcf:var(--tstf)}[data-fam=saas]{--fc:var(--mut);--fcf:var(--ground)}[data-fam=views]{--fc:var(--ink);--fcf:var(--ground)}
 """
 
 # The banner keeps the classic markup and script (shared/atlas.py); this is its skin.
@@ -66,7 +66,7 @@ dialog.ai .vr{font-size:.9rem;color:var(--mut);word-break:break-all}dialog.ai a{
 @media(max-width:560px){.atlas .fb{flex-basis:100%;order:3}}
 """
 
-LINE = {"iac": "iac", "cicd": "cicd", "development": "development", "enterprise": "enterprise", "views": "views"}
+LINE = {"iac": "iac", "cicd": "cicd", "development": "development", "enterprise": "enterprise", "test": "test", "views": "views"}
 
 
 def vars_css(fonts):

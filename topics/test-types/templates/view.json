@@ -1,0 +1,13 @@
+{
+  "title": "Test types",
+  "tabs": [
+    {
+      "id": "others",
+      "label": "Ecosystem"
+    },
+    {
+      "id": "compare",
+      "label": "Compare"
+    }
+  ]
+}
