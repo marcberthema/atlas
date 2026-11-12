@@ -1,9 +1,1782 @@
 {
   "title": "Test types",
-  "intro": "",
+  "intro": "The kinds of automated test and where each sits in the test pyramid: unit, contract, integration and end-to-end, and the kinds beside it, each with an example for a Python application and for Terraform.",
   "checked": "2026-11-12",
-  "scope": "",
-  "groups": [],
-  "entries": [],
-  "comparisons": []
+  "scope": "Reference cards. Concepts are read from public articles and glossaries, tools from their own documentation. Code examples are fetched from those pages and shown unchanged. Free and open source tools only.",
+  "groups": [
+    {
+      "id": "layers",
+      "label": "The pyramid",
+      "about": "The layers of the test pyramid and how to choose between them."
+    },
+    {
+      "id": "beside",
+      "label": "Beside the pyramid",
+      "about": "Kinds of test defined by purpose or quality rather than by layer."
+    },
+    {
+      "id": "shapes",
+      "label": "Other shapes",
+      "about": "The testing trophy, the honeycomb and why teams pick a different shape."
+    }
+  ],
+  "entries": [
+    {
+      "id": "pyramid",
+      "name": "The test pyramid",
+      "group": "layers",
+      "level": "deep",
+      "summary": "Many fast tests at the bottom, few slow ones at the top. The shape tells you how much testing to do at each layer.",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "Cohn's book is named on the pages read, with no year; Fowler's note on it is dated 2012-05-01",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "A testing practice, not a CNCF project."
+      },
+      "license": "n/a",
+      "version": {
+        "name": "Fowler: The Practical Test Pyramid",
+        "analysed": "article, last installment 26 February 2018",
+        "released": "2018-02-26",
+        "docs": "martinfowler.com/articles/practical-test-pyramid.html (26 February 2018). Tools: pytest 9.2.0, Pact Python 4.2.0, Testcontainers for Python 4.15.0, Playwright for Python 1.65.1, Terraform 1.17.2, Terratest 1.0.1",
+        "checked": "2026-11-12"
+      },
+      "links": [
+        {
+          "label": "Fowler: The Practical Test Pyramid",
+          "url": "https://martinfowler.com/articles/practical-test-pyramid.html"
+        },
+        {
+          "label": "Fowler: Test Pyramid",
+          "url": "https://martinfowler.com/bliki/TestPyramid.html"
+        },
+        {
+          "label": "Terraform: Tests",
+          "url": "https://developer.hashicorp.com/terraform/language/tests"
+        }
+      ],
+      "related": [
+        "unit",
+        "contract",
+        "integration",
+        "e2e",
+        "acceptance",
+        "shapes"
+      ],
+      "notes": [
+        "The year of Mike Cohn's book is not stated on the pages read (unconfirmed).",
+        "The diagram uses four layers, as the rest of this topic does. Cohn's original has three: unit, service and user interface."
+      ],
+      "sections": [
+        {
+          "title": "In one minute",
+          "part": "overview",
+          "icon": "eye",
+          "items": [
+            "Mike Cohn's test pyramid has three layers: unit, service and user interface tests. The higher the layer, the slower and more fragile the test, so you write fewer of them.",
+            {
+              "type": "diagram",
+              "alt": "A pyramid in four layers. From the bottom: unit tests, integration tests, contract tests, end-to-end tests. The bottom layer is the widest and the top the narrowest.",
+              "caption": "More tests at the bottom, fewer at the top.",
+              "w": 720,
+              "h": 300,
+              "nodes": [
+                {
+                  "id": "e2e",
+                  "x": 360,
+                  "y": 40,
+                  "w": 160,
+                  "h": 44,
+                  "label": "End-to-end",
+                  "sub": "few, slow",
+                  "kind": "ext"
+                },
+                {
+                  "id": "contract",
+                  "x": 360,
+                  "y": 100,
+                  "w": 260,
+                  "h": 44,
+                  "label": "Contract",
+                  "sub": "at service borders",
+                  "kind": "ext"
+                },
+                {
+                  "id": "integration",
+                  "x": 360,
+                  "y": 160,
+                  "w": 360,
+                  "h": 44,
+                  "label": "Integration",
+                  "sub": "with the real parts",
+                  "kind": "ext"
+                },
+                {
+                  "id": "unit",
+                  "x": 360,
+                  "y": 220,
+                  "w": 460,
+                  "h": 44,
+                  "label": "Unit",
+                  "sub": "many, fast",
+                  "kind": "hub"
+                }
+              ],
+              "links": []
+            },
+            "Fowler says not to be too attached to the layer names: they are easy to misread. What matters is the idea of layers, with more of the cheap ones."
+          ]
+        },
+        {
+          "title": "The layers side by side",
+          "part": "overview",
+          "icon": "list",
+          "items": [
+            {
+              "type": "table",
+              "caption": "What each layer is for. The last two columns are the examples in this topic.",
+              "columns": [
+                "Layer",
+                "Checks",
+                "Needs",
+                "How many",
+                "Python",
+                "Terraform"
+              ],
+              "rows": [
+                [
+                  "[Unit](#unit)",
+                  "One function or class, on its own",
+                  "Nothing outside the code",
+                  "Many",
+                  "pytest, unittest.mock",
+                  "terraform test, command = plan"
+                ],
+                [
+                  "[Contract](#contract)",
+                  "That two sides agree on an interface",
+                  "The interface, no real partner",
+                  "One per interface",
+                  "Pact",
+                  "Variable validation and outputs"
+                ],
+                [
+                  "[Integration](#integration)",
+                  "Your code with a database, a file system or a service",
+                  "A real or faked dependency",
+                  "Some",
+                  "pytest with Testcontainers",
+                  "terraform test, command = apply; Terratest"
+                ],
+                [
+                  "[End-to-end](#e2e)",
+                  "The whole running system, as a user would use it",
+                  "A deployed system",
+                  "Very few",
+                  "Playwright",
+                  "Apply in a sandbox, then probe"
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Start at the bottom",
+          "part": "use",
+          "step": 1,
+          "icon": "layers",
+          "items": [
+            "Write many small, fast unit tests. They tell you within seconds that a change broke something.",
+            "Add integration tests for the code that talks to things outside the application, such as a database.",
+            "Add contract tests where two services or teams meet, so each side can change without surprising the other.",
+            "Keep a few end-to-end tests for the most important paths. They give the most confidence but are slow and often flaky.",
+            "Push a test down to a lower layer when it can be checked there. Fowler: if a higher-level test finds an error and no lower-level test does, write a lower-level one."
+          ]
+        },
+        {
+          "title": "Do the same for Terraform",
+          "part": "use",
+          "step": 2,
+          "icon": "box",
+          "items": [
+            "Terraform's own documentation uses the words too: a test that creates real infrastructure is described as analogous to an integration test, and a test run with command = plan as analogous to a unit test.",
+            "Fast checks come first: formatting, validation, a linter and a scanner. See [static analysis](#static-analysis)."
+          ]
+        },
+        {
+          "title": "Common mistakes",
+          "part": "run",
+          "icon": "shield",
+          "items": [
+            "The ice-cream cone: many slow high-level tests and few unit tests. Fowler warns it is a nightmare to maintain and takes way too long to run.",
+            "End-to-end tests that fail for no good reason. Fowler calls them notoriously flaky: browser quirks, timing issues, animations and pop-up dialogs.",
+            "Treating the layer names as law. People define unit, service and integration differently, so say what a test touches instead.",
+            "Mixing up acceptance tests with a layer. Fowler says they are orthogonal to the pyramid: you can write them at any layer."
+          ]
+        },
+        {
+          "title": "Other shapes",
+          "part": "reference",
+          "icon": "list",
+          "items": [
+            "The pyramid is not the only shape. The testing trophy and the honeycomb put more weight on integration tests. See [Pyramid, trophy and honeycomb](#shapes)."
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "Fowler: The Practical Test Pyramid",
+          "url": "https://martinfowler.com/articles/practical-test-pyramid.html",
+          "date": "2018-02-26"
+        },
+        {
+          "label": "Fowler: Test Pyramid",
+          "url": "https://martinfowler.com/bliki/TestPyramid.html",
+          "date": "2012-05-01"
+        },
+        {
+          "label": "Terraform: Tests",
+          "url": "https://developer.hashicorp.com/terraform/language/tests"
+        }
+      ]
+    },
+    {
+      "id": "unit",
+      "name": "Unit tests",
+      "group": "layers",
+      "level": "deep",
+      "summary": "Check one small piece of code on its own, in milliseconds. They are the base of the pyramid.",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "the pages read do not give a date of origin",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "A testing practice, not a CNCF project."
+      },
+      "license": "n/a",
+      "version": {
+        "name": "Fowler: The Practical Test Pyramid",
+        "analysed": "article, last installment 26 February 2018",
+        "released": "2018-02-26",
+        "docs": "martinfowler.com/articles/practical-test-pyramid.html (26 February 2018). Tools: pytest 9.2.0, Pact Python 4.2.0, Testcontainers for Python 4.15.0, Playwright for Python 1.65.1, Terraform 1.17.2, Terratest 1.0.1",
+        "checked": "2026-11-12"
+      },
+      "links": [
+        {
+          "label": "Fowler: The Practical Test Pyramid",
+          "url": "https://martinfowler.com/articles/practical-test-pyramid.html"
+        },
+        {
+          "label": "pytest: Get started",
+          "url": "https://docs.pytest.org/en/stable/getting-started.html"
+        },
+        {
+          "label": "Python: unittest.mock",
+          "url": "https://docs.python.org/3/library/unittest.mock.html"
+        },
+        {
+          "label": "Terraform: Tests",
+          "url": "https://developer.hashicorp.com/terraform/language/tests"
+        },
+        {
+          "label": "Terraform: Mocking",
+          "url": "https://developer.hashicorp.com/terraform/language/tests/mocking"
+        },
+        {
+          "label": "terraform test",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/test"
+        }
+      ],
+      "related": [
+        "pyramid",
+        "integration",
+        "property-based"
+      ],
+      "notes": [
+        "The Python mock example on the page is written as an interactive session (>>>), shown as it is.",
+        "Whether a mocked provider still needs the provider plugin installed was not checked (unconfirmed)."
+      ],
+      "sections": [
+        {
+          "title": "In one minute",
+          "part": "overview",
+          "icon": "eye",
+          "items": [
+            "A unit test calls a function or a class with chosen inputs and checks the result. It needs no database, network or deployed system, so it is fast and points at the code that broke.",
+            {
+              "type": "table",
+              "columns": [
+                "It checks",
+                "It does not check"
+              ],
+              "rows": [
+                [
+                  "The logic of one function or class",
+                  "That two parts work together"
+                ],
+                [
+                  "Edge cases and errors, cheaply",
+                  "That the real database or service behaves as you assume"
+                ],
+                [
+                  "A Terraform module's logic with command = plan",
+                  "That the cloud accepts the resources"
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "title": "What counts as a unit",
+          "part": "overview",
+          "icon": "bulb",
+          "items": [
+            "Fowler: ask three people and you get four answers, and that is fine. In a functional language a unit is usually a function. In an object-oriented language it ranges from a method to a class.",
+            "Solitary tests replace every collaborator with a mock or stub. Sociable tests replace only the slow ones, such as code that calls a database or the network. See [Compare](#doubles)."
+          ]
+        },
+        {
+          "title": "Python: pytest and unittest.mock",
+          "part": "use",
+          "step": 1,
+          "icon": "play",
+          "items": [
+            "pytest finds functions named test_ and treats a plain assert as the check. pytest.raises checks that code raises an error.",
+            {
+              "type": "code",
+              "title": "A pytest test",
+              "lang": "text",
+              "source": {
+                "label": "pytest: Get started",
+                "url": "https://docs.pytest.org/en/stable/getting-started.html"
+              },
+              "match": "with pytest.raises(SystemExit):"
+            },
+            "unittest.mock, in the standard library, replaces a collaborator with a mock and checks how it was called.",
+            {
+              "type": "code",
+              "title": "Replace a method with a mock",
+              "lang": "text",
+              "source": {
+                "label": "Python: unittest.mock",
+                "url": "https://docs.python.org/3/library/unittest.mock.html"
+              },
+              "match": "with patch.object(ProductionClass, 'method', return_value=None) as mock_method:"
+            }
+          ]
+        },
+        {
+          "title": "Terraform: terraform test with a plan",
+          "part": "use",
+          "step": 2,
+          "icon": "box",
+          "items": [
+            "A run block in a .tftest.hcl file runs the module. With command = plan Terraform does not create new infrastructure, so the assertions check logic: names, counts, conditions. The documentation describes this as analogous to unit testing.",
+            {
+              "type": "code",
+              "title": "A test that only plans",
+              "lang": "text",
+              "source": {
+                "label": "Terraform: Tests",
+                "url": "https://developer.hashicorp.com/terraform/language/tests"
+              },
+              "match": "# valid_string_concat.tftest.hcl"
+            },
+            "From Terraform 1.7.0 the data a provider returns can be mocked, so the test needs no cloud account.",
+            {
+              "type": "code",
+              "title": "A mocked provider",
+              "lang": "text",
+              "source": {
+                "label": "Terraform: Mocking",
+                "url": "https://developer.hashicorp.com/terraform/language/tests/mocking"
+              },
+              "match": "mock_provider \"aws\" {}"
+            }
+          ]
+        },
+        {
+          "title": "Habits and mistakes",
+          "part": "run",
+          "icon": "wrench",
+          "items": [
+            "Keep them fast. Fowler's advice is to write lots of small and fast unit tests.",
+            "Do not rely on mocks alone. They pass while the real parts do not fit together: that is what [integration tests](#integration) catch."
+          ]
+        },
+        {
+          "title": "Tools",
+          "part": "reference",
+          "icon": "list",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Tool",
+                "Language",
+                "Used here for",
+                "Version checked"
+              ],
+              "rows": [
+                [
+                  "pytest",
+                  "Python",
+                  "Test runner and assertions",
+                  "9.2.0"
+                ],
+                [
+                  "unittest.mock",
+                  "Python",
+                  "Mocks, in the standard library",
+                  "Python 3.15 docs"
+                ],
+                [
+                  "terraform test",
+                  "Terraform",
+                  "Test files, run blocks, mock_provider",
+                  "1.17.2 (mocks since 1.7.0)"
+                ]
+              ]
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "Fowler: The Practical Test Pyramid",
+          "url": "https://martinfowler.com/articles/practical-test-pyramid.html",
+          "date": "2018-02-26"
+        },
+        {
+          "label": "pytest: Get started",
+          "url": "https://docs.pytest.org/en/stable/getting-started.html"
+        },
+        {
+          "label": "Python: unittest.mock",
+          "url": "https://docs.python.org/3/library/unittest.mock.html"
+        },
+        {
+          "label": "Terraform: Tests",
+          "url": "https://developer.hashicorp.com/terraform/language/tests"
+        },
+        {
+          "label": "Terraform: Mocking",
+          "url": "https://developer.hashicorp.com/terraform/language/tests/mocking"
+        }
+      ]
+    },
+    {
+      "id": "contract",
+      "name": "Contract tests",
+      "group": "layers",
+      "level": "deep",
+      "summary": "Check that a consumer and a provider agree on an interface, without running both together.",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "the pages read do not give a date of origin",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "A testing practice, not a CNCF project."
+      },
+      "license": "n/a",
+      "version": {
+        "name": "Fowler: The Practical Test Pyramid",
+        "analysed": "article, last installment 26 February 2018",
+        "released": "2018-02-26",
+        "docs": "martinfowler.com/articles/practical-test-pyramid.html (26 February 2018). Tools: pytest 9.2.0, Pact Python 4.2.0, Testcontainers for Python 4.15.0, Playwright for Python 1.65.1, Terraform 1.17.2, Terratest 1.0.1",
+        "checked": "2026-11-12"
+      },
+      "links": [
+        {
+          "label": "Fowler: The Practical Test Pyramid",
+          "url": "https://martinfowler.com/articles/practical-test-pyramid.html"
+        },
+        {
+          "label": "Pact Python: Consumer",
+          "url": "https://pact-foundation.github.io/pact-python/consumer/"
+        },
+        {
+          "label": "Pact Python: Provider",
+          "url": "https://pact-foundation.github.io/pact-python/provider/"
+        },
+        {
+          "label": "Terraform: Tests",
+          "url": "https://developer.hashicorp.com/terraform/language/tests"
+        },
+        {
+          "label": "Pact documentation",
+          "url": "https://docs.pact.io/"
+        }
+      ],
+      "related": [
+        "pyramid",
+        "integration"
+      ],
+      "notes": [
+        "Contract test is not a Terraform term. Applying it to a module's variables and outputs is this topic's mapping (unconfirmed as an established practice).",
+        "Pact's main documentation site (docs.pact.io) had an expired certificate for some clients when checked, so the examples are read from the Pact Python site."
+      ],
+      "sections": [
+        {
+          "title": "In one minute",
+          "part": "overview",
+          "icon": "eye",
+          "items": [
+            "When one team builds a service and another calls it, the interface between them is a contract. A contract test checks that both sides keep to it.",
+            "In consumer-driven contract testing the consumer writes down what it needs. The provider runs those tests, and when they pass it knows it still serves its consumers (Fowler).",
+            {
+              "type": "table",
+              "columns": [
+                "It checks",
+                "It does not check"
+              ],
+              "rows": [
+                [
+                  "The shape of requests and responses between two parties",
+                  "That the provider's business logic is right"
+                ],
+                [
+                  "That a change on one side will not break the other",
+                  "That the whole system works end to end"
+                ],
+                [
+                  "A module's inputs and outputs, in Terraform",
+                  "That the resources it creates work"
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Python: Pact",
+          "part": "use",
+          "step": 1,
+          "icon": "users",
+          "items": [
+            "Pact is a tool for consumer-driven contracts. The consumer test runs against a Pact mock service and writes a pact file.",
+            {
+              "type": "code",
+              "title": "The consumer side",
+              "lang": "text",
+              "source": {
+                "label": "Pact Python: Consumer",
+                "url": "https://pact-foundation.github.io/pact-python/consumer/"
+              },
+              "match": "def test_get_user(pact: Pact)"
+            },
+            "The provider test verifies the provider against the pact files and fails if a response no longer matches.",
+            {
+              "type": "code",
+              "title": "The provider side",
+              "lang": "text",
+              "source": {
+                "label": "Pact Python: Provider",
+                "url": "https://pact-foundation.github.io/pact-python/provider/"
+              },
+              "match": "def test_provider():"
+            },
+            "The Pact Python documentation also shows a Pact Broker, so pacts can be shared between teams without sharing a repository."
+          ]
+        },
+        {
+          "title": "Terraform: the module interface",
+          "part": "use",
+          "step": 2,
+          "icon": "box",
+          "items": [
+            "A Terraform module's contract is its variables and outputs. A variable's validation block states what the module accepts.",
+            {
+              "type": "code",
+              "title": "A variable that rejects odd numbers",
+              "lang": "text",
+              "source": {
+                "label": "Terraform: Tests",
+                "url": "https://developer.hashicorp.com/terraform/language/tests"
+              },
+              "match": "error_message = \"must be even number\""
+            },
+            "A test then checks both sides of the contract: a valid input is accepted and an invalid one fails. The expect_failures attribute lists the checkable objects that should fail.",
+            {
+              "type": "code",
+              "title": "A test that expects the validation to fail",
+              "lang": "text",
+              "source": {
+                "label": "Terraform: Tests",
+                "url": "https://developer.hashicorp.com/terraform/language/tests"
+              },
+              "match": "# input_validation.tftest.hcl"
+            },
+            {
+              "type": "callout",
+              "kind": "tip",
+              "title": "This is a mapping",
+              "text": "The Terraform documentation does not call this a contract test. It is the same idea applied to a module: its interface is tested without creating anything."
+            }
+          ]
+        },
+        {
+          "title": "Habits and mistakes",
+          "part": "run",
+          "icon": "shield",
+          "items": [
+            "Use contract tests where teams meet. Fowler also uses them to keep the fakes in [integration tests](#integration) honest, by running contract tests against the fake and the real server.",
+            "A contract test says nothing about behaviour behind the interface. It does not replace the other layers."
+          ]
+        },
+        {
+          "title": "Tools",
+          "part": "reference",
+          "icon": "list",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Tool",
+                "Language",
+                "Used here for",
+                "Version checked"
+              ],
+              "rows": [
+                [
+                  "Pact Python",
+                  "Python",
+                  "Consumer and provider contract tests",
+                  "4.2.0"
+                ],
+                [
+                  "terraform test",
+                  "Terraform",
+                  "Variable validation, expect_failures",
+                  "1.17.2"
+                ]
+              ]
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "Fowler: The Practical Test Pyramid",
+          "url": "https://martinfowler.com/articles/practical-test-pyramid.html",
+          "date": "2018-02-26"
+        },
+        {
+          "label": "Pact Python: Consumer",
+          "url": "https://pact-foundation.github.io/pact-python/consumer/"
+        },
+        {
+          "label": "Pact Python: Provider",
+          "url": "https://pact-foundation.github.io/pact-python/provider/"
+        },
+        {
+          "label": "Terraform: Tests",
+          "url": "https://developer.hashicorp.com/terraform/language/tests"
+        }
+      ]
+    },
+    {
+      "id": "integration",
+      "name": "Integration tests",
+      "group": "layers",
+      "level": "deep",
+      "summary": "Check your code working with the parts outside it: a database, a file system, another service, a cloud.",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "the pages read do not give a date of origin",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "A testing practice, not a CNCF project."
+      },
+      "license": "n/a",
+      "version": {
+        "name": "Fowler: The Practical Test Pyramid",
+        "analysed": "article, last installment 26 February 2018",
+        "released": "2018-02-26",
+        "docs": "martinfowler.com/articles/practical-test-pyramid.html (26 February 2018). Tools: pytest 9.2.0, Pact Python 4.2.0, Testcontainers for Python 4.15.0, Playwright for Python 1.65.1, Terraform 1.17.2, Terratest 1.0.1",
+        "checked": "2026-11-12"
+      },
+      "links": [
+        {
+          "label": "Fowler: The Practical Test Pyramid",
+          "url": "https://martinfowler.com/articles/practical-test-pyramid.html"
+        },
+        {
+          "label": "Testcontainers for Python",
+          "url": "https://testcontainers-python.readthedocs.io/en/latest/"
+        },
+        {
+          "label": "Terraform: Tests",
+          "url": "https://developer.hashicorp.com/terraform/language/tests"
+        },
+        {
+          "label": "terraform test",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/test"
+        },
+        {
+          "label": "Terratest: Documentation",
+          "url": "https://terratest.gruntwork.io/docs/"
+        },
+        {
+          "label": "Terratest: Quick start",
+          "url": "https://terratest.gruntwork.io/docs/getting-started/quick-start/"
+        }
+      ],
+      "related": [
+        "pyramid",
+        "unit",
+        "e2e"
+      ],
+      "notes": [
+        "Terratest: the latest release found was v1.0.1. The repository also publishes tags for its modules (core v2.0.0). Which one the docs describe is unconfirmed.",
+        "That a Terratest test destroys what it created is from the quick start's sample output, which shows a destroy at the end."
+      ],
+      "sections": [
+        {
+          "title": "In one minute",
+          "part": "overview",
+          "icon": "eye",
+          "items": [
+            "Fowler: integration tests test the integration of your application with all the parts that live outside of it. To run them you need your own code and the component you integrate with.",
+            {
+              "type": "table",
+              "columns": [
+                "It checks",
+                "It does not check"
+              ],
+              "rows": [
+                [
+                  "Real queries against a real database",
+                  "The whole system through its user interface"
+                ],
+                [
+                  "That a client and a server really talk to each other",
+                  "Logic that a unit test already covers"
+                ],
+                [
+                  "That Terraform really creates the resource",
+                  "Whether users can use what was built"
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Python: pytest with Testcontainers",
+          "part": "use",
+          "step": 1,
+          "icon": "server",
+          "items": [
+            "Run the real dependency in a throwaway container for the length of the test. Testcontainers starts it, gives you the connection details and removes it afterwards.",
+            {
+              "type": "code",
+              "title": "A PostgreSQL container",
+              "lang": "text",
+              "source": {
+                "label": "Testcontainers for Python",
+                "url": "https://testcontainers-python.readthedocs.io/en/latest/"
+              },
+              "match": "with PostgresContainer(\"postgres:16\", driver=None) as postgres:"
+            },
+            "The page shows it as a doctest. In a pytest suite the container is usually started in a fixture."
+          ]
+        },
+        {
+          "title": "Terraform: terraform test with an apply",
+          "part": "use",
+          "step": 2,
+          "icon": "box",
+          "items": [
+            "By default each run block does a full apply, so the test creates real infrastructure and checks it. The documentation describes this as analogous to integration testing.",
+            "The example below chains three runs: one creates a bucket, one runs the configuration, one loads the result and counts it.",
+            {
+              "type": "code",
+              "title": "Setup, execute, verify",
+              "lang": "text",
+              "source": {
+                "label": "Terraform: Tests",
+                "url": "https://developer.hashicorp.com/terraform/language/tests"
+              },
+              "match": "# file_count.tftest.hcl"
+            },
+            {
+              "type": "callout",
+              "kind": "gotcha",
+              "title": "Real resources, real cost",
+              "text": "Use a dedicated test account that can be purged. If a destroy fails, clean up by hand."
+            },
+            "Terratest is the other common route: a Go test applies the configuration, checks the result and destroys it. Its code samples are loaded by script and cannot be fetched, so none is shown here: see its quick start."
+          ]
+        },
+        {
+          "title": "Habits and mistakes",
+          "part": "run",
+          "icon": "wrench",
+          "items": [
+            "Keep them to the code that touches the outside. They are slower than unit tests, so test the logic in unit tests.",
+            "Fowler: a fake of a dependency is only as good as its fidelity. [Contract tests](#contract) check it against the real one."
+          ]
+        },
+        {
+          "title": "Tools",
+          "part": "reference",
+          "icon": "list",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Tool",
+                "Language",
+                "Used here for",
+                "Version checked"
+              ],
+              "rows": [
+                [
+                  "Testcontainers for Python",
+                  "Python",
+                  "Disposable real dependencies",
+                  "4.15.0"
+                ],
+                [
+                  "terraform test",
+                  "Terraform",
+                  "run blocks with the default apply",
+                  "1.17.2"
+                ],
+                [
+                  "Terratest",
+                  "Go (tests Terraform and OpenTofu)",
+                  "Apply, check, destroy from Go",
+                  "1.0.1"
+                ]
+              ]
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "Fowler: The Practical Test Pyramid",
+          "url": "https://martinfowler.com/articles/practical-test-pyramid.html",
+          "date": "2018-02-26"
+        },
+        {
+          "label": "Testcontainers for Python",
+          "url": "https://testcontainers-python.readthedocs.io/en/latest/"
+        },
+        {
+          "label": "Terraform: Tests",
+          "url": "https://developer.hashicorp.com/terraform/language/tests"
+        },
+        {
+          "label": "Terratest: Documentation",
+          "url": "https://terratest.gruntwork.io/docs/"
+        }
+      ]
+    },
+    {
+      "id": "e2e",
+      "name": "End-to-end tests",
+      "group": "layers",
+      "level": "deep",
+      "summary": "Check the whole deployed system from the outside, the way a user uses it. The most confidence and the most cost.",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "the pages read do not give a date of origin",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "A testing practice, not a CNCF project."
+      },
+      "license": "n/a",
+      "version": {
+        "name": "Fowler: The Practical Test Pyramid",
+        "analysed": "article, last installment 26 February 2018",
+        "released": "2018-02-26",
+        "docs": "martinfowler.com/articles/practical-test-pyramid.html (26 February 2018). Tools: pytest 9.2.0, Pact Python 4.2.0, Testcontainers for Python 4.15.0, Playwright for Python 1.65.1, Terraform 1.17.2, Terratest 1.0.1",
+        "checked": "2026-11-12"
+      },
+      "links": [
+        {
+          "label": "Fowler: The Practical Test Pyramid",
+          "url": "https://martinfowler.com/articles/practical-test-pyramid.html"
+        },
+        {
+          "label": "Playwright for Python: Installation",
+          "url": "https://playwright.dev/python/docs/intro"
+        },
+        {
+          "label": "Terraform: check block",
+          "url": "https://developer.hashicorp.com/terraform/language/block/check"
+        },
+        {
+          "label": "Terratest: Documentation",
+          "url": "https://terratest.gruntwork.io/docs/"
+        }
+      ],
+      "related": [
+        "pyramid",
+        "integration",
+        "smoke"
+      ],
+      "notes": [
+        "Using a check block as an end-to-end probe is this topic's mapping. The page read shows it as an example of validating infrastructure with a data source and an assertion.",
+        "How a failed check block is reported (error or warning) was not read on the page (unconfirmed)."
+      ],
+      "sections": [
+        {
+          "title": "In one minute",
+          "part": "overview",
+          "icon": "eye",
+          "items": [
+            "End-to-end tests, also called broad stack tests, run against the completely integrated system. They give the biggest confidence that the software works (Fowler).",
+            "They are also notoriously flaky, so keep them to the few paths that must never break.",
+            {
+              "type": "table",
+              "columns": [
+                "It checks",
+                "It does not check"
+              ],
+              "rows": [
+                [
+                  "A real user journey through every layer",
+                  "Every edge case: lower layers do that"
+                ],
+                [
+                  "That the deployed parts are wired together",
+                  "Which layer caused a failure"
+                ],
+                [
+                  "That a deployed Terraform configuration serves traffic",
+                  "Code quality or style"
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Python: Playwright",
+          "part": "use",
+          "step": 1,
+          "icon": "globe",
+          "items": [
+            "Playwright drives a real browser. The pytest plugin gives each test a page, and expect checks what the page shows.",
+            {
+              "type": "code",
+              "title": "Two end-to-end tests",
+              "lang": "text",
+              "source": {
+                "label": "Playwright for Python: Installation",
+                "url": "https://playwright.dev/python/docs/intro"
+              },
+              "match": "def test_has_title(page: Page):"
+            },
+            "Point it at a deployed test environment, not at a mocked backend, or it is an integration test."
+          ]
+        },
+        {
+          "title": "Terraform: apply, then probe",
+          "part": "use",
+          "step": 2,
+          "icon": "server",
+          "items": [
+            "An end-to-end test of infrastructure applies the whole root configuration in a sandbox and then checks that the result works, not only that resources exist.",
+            "A check block can run a data source after the apply and assert on it. Here it calls a health endpoint.",
+            {
+              "type": "code",
+              "title": "A health check",
+              "lang": "text",
+              "source": {
+                "label": "Terraform: check block",
+                "url": "https://developer.hashicorp.com/terraform/language/block/check"
+              },
+              "match": "url = \"https://api.example.com/health\""
+            },
+            "In a pipeline: apply in a throwaway environment, probe, then destroy. Terratest or a script can do the probing from outside Terraform."
+          ]
+        },
+        {
+          "title": "Habits and mistakes",
+          "part": "run",
+          "icon": "shield",
+          "items": [
+            "Keep the number small. A wide top of the pyramid is the ice-cream cone.",
+            "When one fails, reproduce it at a lower layer and add a test there (Fowler's advice on where to put a test)."
+          ]
+        },
+        {
+          "title": "Tools",
+          "part": "reference",
+          "icon": "list",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Tool",
+                "Language",
+                "Used here for",
+                "Version checked"
+              ],
+              "rows": [
+                [
+                  "Playwright for Python",
+                  "Python",
+                  "Browser end-to-end tests",
+                  "1.65.1"
+                ],
+                [
+                  "check block",
+                  "Terraform",
+                  "Assertions against a live endpoint",
+                  "1.17.2"
+                ],
+                [
+                  "Terratest",
+                  "Go",
+                  "Apply, probe and destroy",
+                  "1.0.1"
+                ]
+              ]
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "Fowler: The Practical Test Pyramid",
+          "url": "https://martinfowler.com/articles/practical-test-pyramid.html",
+          "date": "2018-02-26"
+        },
+        {
+          "label": "Playwright for Python: Installation",
+          "url": "https://playwright.dev/python/docs/intro"
+        },
+        {
+          "label": "Terraform: check block",
+          "url": "https://developer.hashicorp.com/terraform/language/block/check"
+        }
+      ]
+    },
+    {
+      "id": "static-analysis",
+      "name": "Static analysis",
+      "group": "beside",
+      "level": "overview",
+      "summary": "Checks code without running it: types, style, security rules. The cheapest check there is.",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "the pages read do not give a date of origin",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "A testing practice, not a CNCF project."
+      },
+      "license": "n/a",
+      "version": {
+        "name": "ISTQB glossary: Static Analysis",
+        "analysed": "glossary entry, no date on page",
+        "released": "2026-11-12",
+        "docs": "istqb-glossary.page/static-analysis/ (no date on page)",
+        "checked": "2026-11-12"
+      },
+      "links": [
+        {
+          "label": "ISTQB glossary: Static Analysis",
+          "url": "https://istqb-glossary.page/static-analysis/"
+        },
+        {
+          "label": "mypy: Getting started",
+          "url": "https://mypy.readthedocs.io/en/stable/getting_started.html"
+        },
+        {
+          "label": "terraform validate",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/validate"
+        },
+        {
+          "label": "TFLint",
+          "url": "https://github.com/terraform-linters/tflint"
+        },
+        {
+          "label": "Checkov: Quick start",
+          "url": "https://www.checkov.io/1.Welcome/Quick%20Start.html"
+        }
+      ],
+      "related": [
+        "unit",
+        "security"
+      ],
+      "notes": [
+        "That a function without annotations is not checked is from mypy's getting started page. It is not checked by default."
+      ],
+      "sections": [
+        {
+          "title": "What it is",
+          "items": [
+            "ISTQB: analysis of software development artifacts, such as requirements or code, carried out without executing them, usually with a tool.",
+            "Python: mypy checks type annotations without running the program. A function without annotations is not checked.",
+            {
+              "type": "code",
+              "title": "An annotated function",
+              "lang": "text",
+              "source": {
+                "label": "mypy: Getting started",
+                "url": "https://mypy.readthedocs.io/en/stable/getting_started.html"
+              },
+              "match": "def greeting(name: str) -> str:"
+            },
+            "Terraform: terraform fmt checks formatting, terraform validate checks syntax and consistency, a linter such as TFLint adds rules, and a scanner such as Checkov checks the configuration against policies.",
+            {
+              "type": "code",
+              "title": "Scan a directory",
+              "lang": "text",
+              "source": {
+                "label": "Checkov: Quick start",
+                "url": "https://www.checkov.io/1.Welcome/Quick%20Start.html"
+              },
+              "match": "checkov -d /user/tf"
+            },
+            "Run these first in a pipeline: they need no cloud. Versions checked: mypy 2.4.1, Checkov 3.4.4, TFLint 0.66.0."
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "ISTQB glossary: Static Analysis",
+          "url": "https://istqb-glossary.page/static-analysis/"
+        },
+        {
+          "label": "mypy: Getting started",
+          "url": "https://mypy.readthedocs.io/en/stable/getting_started.html"
+        },
+        {
+          "label": "terraform validate",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/validate"
+        },
+        {
+          "label": "TFLint",
+          "url": "https://github.com/terraform-linters/tflint"
+        },
+        {
+          "label": "Checkov: Quick start",
+          "url": "https://www.checkov.io/1.Welcome/Quick%20Start.html"
+        }
+      ]
+    },
+    {
+      "id": "smoke",
+      "name": "Smoke tests",
+      "group": "beside",
+      "level": "overview",
+      "summary": "A small suite of the main functions, run first to see whether the system is worth testing further.",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "the pages read do not give a date of origin",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "A testing practice, not a CNCF project."
+      },
+      "license": "n/a",
+      "version": {
+        "name": "ISTQB glossary: Smoke Test",
+        "analysed": "glossary entry, no date on page",
+        "released": "2026-11-12",
+        "docs": "istqb-glossary.page/smoke-test/ (no date on page)",
+        "checked": "2026-11-12"
+      },
+      "links": [
+        {
+          "label": "ISTQB glossary: Smoke Test",
+          "url": "https://istqb-glossary.page/smoke-test/"
+        },
+        {
+          "label": "Terraform: check block",
+          "url": "https://developer.hashicorp.com/terraform/language/block/check"
+        }
+      ],
+      "related": [
+        "e2e",
+        "regression"
+      ],
+      "notes": [
+        "Using a few end-to-end tests as the smoke suite is a common practice, not stated on the pages read (unconfirmed)."
+      ],
+      "sections": [
+        {
+          "title": "What it is",
+          "items": [
+            "ISTQB: a test suite that covers the main functionality of a component or system to determine whether it works properly before planned testing begins.",
+            "Python: a handful of end-to-end tests, such as the page loads and login works, run right after a deploy.",
+            "Terraform: after an apply, a check block that calls the service's health endpoint. See [end-to-end tests](#e2e).",
+            "A smoke test is defined by its purpose, not by a layer: it is a fast gate, usually made of a few tests from the layers above."
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "ISTQB glossary: Smoke Test",
+          "url": "https://istqb-glossary.page/smoke-test/"
+        },
+        {
+          "label": "Terraform: check block",
+          "url": "https://developer.hashicorp.com/terraform/language/block/check"
+        }
+      ]
+    },
+    {
+      "id": "regression",
+      "name": "Regression tests",
+      "group": "beside",
+      "level": "overview",
+      "summary": "Tests that run again after a change to catch what the change broke.",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "the pages read do not give a date of origin",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "A testing practice, not a CNCF project."
+      },
+      "license": "n/a",
+      "version": {
+        "name": "ISTQB glossary: Regression Testing",
+        "analysed": "glossary entry, no date on page",
+        "released": "2026-11-12",
+        "docs": "istqb-glossary.page/regression-testing/ (no date on page)",
+        "checked": "2026-11-12"
+      },
+      "links": [
+        {
+          "label": "ISTQB glossary: Regression Testing",
+          "url": "https://istqb-glossary.page/regression-testing/"
+        },
+        {
+          "label": "pytest: Get started",
+          "url": "https://docs.pytest.org/en/stable/getting-started.html"
+        },
+        {
+          "label": "terraform test",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/test"
+        }
+      ],
+      "related": [
+        "smoke",
+        "unit"
+      ],
+      "notes": [
+        "Running the suite on each pull request is how the examples are usually used; the pages read describe the commands, not that workflow (unconfirmed)."
+      ],
+      "sections": [
+        {
+          "title": "What it is",
+          "items": [
+            "ISTQB: testing of a previously tested program following a modification, to ensure that defects have not been introduced or uncovered in unchanged areas as a result of the change. It is performed when the software or its environment is changed.",
+            "A regression suite is not a layer. It is the existing unit, integration and end-to-end tests, run again on each change.",
+            "Python: pytest run on each pull request. Terraform: terraform test run on each change to a module."
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "ISTQB glossary: Regression Testing",
+          "url": "https://istqb-glossary.page/regression-testing/"
+        },
+        {
+          "label": "pytest: Get started",
+          "url": "https://docs.pytest.org/en/stable/getting-started.html"
+        },
+        {
+          "label": "terraform test",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/test"
+        }
+      ]
+    },
+    {
+      "id": "acceptance",
+      "name": "Acceptance tests",
+      "group": "beside",
+      "level": "overview",
+      "summary": "Check that a feature works from the user's point of view. They are about the purpose of a test, not its layer.",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "the pages read do not give a date of origin",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "A testing practice, not a CNCF project."
+      },
+      "license": "n/a",
+      "version": {
+        "name": "Fowler: The Practical Test Pyramid",
+        "analysed": "article, last installment 26 February 2018",
+        "released": "2018-02-26",
+        "docs": "martinfowler.com/articles/practical-test-pyramid.html (26 February 2018)",
+        "checked": "2026-11-12"
+      },
+      "links": [
+        {
+          "label": "Fowler: The Practical Test Pyramid",
+          "url": "https://martinfowler.com/articles/practical-test-pyramid.html"
+        },
+        {
+          "label": "ISTQB glossary: Acceptance Testing",
+          "url": "https://istqb-glossary.page/acceptance-testing/"
+        }
+      ],
+      "related": [
+        "e2e",
+        "pyramid"
+      ],
+      "notes": [
+        "The Python and Terraform lines are suggestions drawn from the definitions, not examples from the pages read."
+      ],
+      "sections": [
+        {
+          "title": "What it is",
+          "items": [
+            "Fowler: the higher you go in the pyramid, the more you test whether the features work correctly from a user's perspective. Treat the application as a black box: given a logged-in user and an article, when the user opens the article, then the article is shown.",
+            "He calls acceptance tests orthogonal to the pyramid: they can be written at any layer, and a lower layer is better when it is enough.",
+            "ISTQB defines acceptance testing as formal testing with respect to user needs, requirements and business processes, to decide whether to accept the system.",
+            "Python: a behaviour test in pytest, or a browser test with Playwright. Terraform: a test that asserts the outcome a requirement asks for."
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "Fowler: The Practical Test Pyramid",
+          "url": "https://martinfowler.com/articles/practical-test-pyramid.html",
+          "date": "2018-02-26"
+        },
+        {
+          "label": "ISTQB glossary: Acceptance Testing",
+          "url": "https://istqb-glossary.page/acceptance-testing/"
+        }
+      ]
+    },
+    {
+      "id": "performance",
+      "name": "Performance tests",
+      "group": "beside",
+      "level": "overview",
+      "summary": "Check speed and behaviour under load.",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "the pages read do not give a date of origin",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "A testing practice, not a CNCF project."
+      },
+      "license": "n/a",
+      "version": {
+        "name": "ISTQB glossary: Performance Testing",
+        "analysed": "glossary entry, no date on page",
+        "released": "2026-11-12",
+        "docs": "istqb-glossary.page/performance-testing/ (no date on page); locust.io",
+        "checked": "2026-11-12"
+      },
+      "links": [
+        {
+          "label": "ISTQB glossary: Performance Testing",
+          "url": "https://istqb-glossary.page/performance-testing/"
+        },
+        {
+          "label": "Locust",
+          "url": "https://locust.io/"
+        }
+      ],
+      "related": [
+        "e2e"
+      ],
+      "sections": [
+        {
+          "title": "What it is",
+          "items": [
+            "ISTQB: testing to determine the performance of a software product. It is about a quality, not a layer, and runs against a deployed system.",
+            "Python: Locust describes users in Python and runs many of them against a host.",
+            {
+              "type": "code",
+              "title": "A Locust user",
+              "lang": "text",
+              "source": {
+                "label": "Locust",
+                "url": "https://locust.io/"
+              },
+              "match": "class WebsiteUser(HttpUser):"
+            },
+            "Terraform: there is nothing to load test in the configuration itself. Run the test against what Terraform deployed. Locust 2.47.0 was the version checked."
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "ISTQB glossary: Performance Testing",
+          "url": "https://istqb-glossary.page/performance-testing/"
+        },
+        {
+          "label": "Locust",
+          "url": "https://locust.io/"
+        }
+      ]
+    },
+    {
+      "id": "security",
+      "name": "Security tests",
+      "group": "beside",
+      "level": "overview",
+      "summary": "Look for weaknesses: scans in the pipeline and deliberate testing of the running system.",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "the pages read do not give a date of origin",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "A testing practice, not a CNCF project."
+      },
+      "license": "n/a",
+      "version": {
+        "name": "OWASP Web Security Testing Guide",
+        "analysed": "v4.2 (latest release found)",
+        "released": "2020-12-03",
+        "docs": "owasp.org/www-project-web-security-testing-guide/",
+        "checked": "2026-11-12"
+      },
+      "links": [
+        {
+          "label": "OWASP Web Security Testing Guide",
+          "url": "https://owasp.org/www-project-web-security-testing-guide/"
+        },
+        {
+          "label": "Checkov: Quick start",
+          "url": "https://www.checkov.io/1.Welcome/Quick%20Start.html"
+        }
+      ],
+      "related": [
+        "static-analysis"
+      ],
+      "notes": [
+        "The guide's current version is unconfirmed: v4.2 is the latest GitHub release found, and the site may describe a newer one."
+      ],
+      "sections": [
+        {
+          "title": "What it is",
+          "items": [
+            "OWASP's Web Security Testing Guide is a testing resource for web application developers and security professionals.",
+            "Some checks are static and belong early in a pipeline: scan the Terraform configuration with Checkov (see [static analysis](#static-analysis)).",
+            "Others run against a deployed system and are closer to end-to-end tests. OWASP's guide is the place to look for what to test: this topic does not list the tests."
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "OWASP Web Security Testing Guide",
+          "url": "https://owasp.org/www-project-web-security-testing-guide/"
+        },
+        {
+          "label": "Checkov: Quick start",
+          "url": "https://www.checkov.io/1.Welcome/Quick%20Start.html"
+        }
+      ]
+    },
+    {
+      "id": "property-based",
+      "name": "Property-based tests",
+      "group": "beside",
+      "level": "overview",
+      "summary": "State a rule that must always hold and let the tool try many generated inputs.",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "the pages read do not give a date of origin",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "A testing practice, not a CNCF project."
+      },
+      "license": "n/a",
+      "version": {
+        "name": "Hypothesis: Quickstart",
+        "analysed": "Hypothesis 6.170.15 docs",
+        "released": "2026-11-06",
+        "docs": "hypothesis.readthedocs.io, 6.170.15",
+        "checked": "2026-11-12"
+      },
+      "links": [
+        {
+          "label": "Hypothesis: Quickstart",
+          "url": "https://hypothesis.readthedocs.io/en/latest/quickstart.html"
+        }
+      ],
+      "related": [
+        "unit"
+      ],
+      "notes": [
+        "That no property-based tool exists for Terraform is unconfirmed: none was found in the sources read."
+      ],
+      "sections": [
+        {
+          "title": "What it is",
+          "items": [
+            "Instead of one example input, you describe the kind of input and a property of the result. Hypothesis generates cases, and when one fails it reports the failing case.",
+            {
+              "type": "code",
+              "title": "A property on integers",
+              "lang": "text",
+              "source": {
+                "label": "Hypothesis: Quickstart",
+                "url": "https://hypothesis.readthedocs.io/en/latest/quickstart.html"
+              },
+              "match": "@given(st.integers(0, 200))"
+            },
+            "It is a way of writing unit tests, so it sits at the bottom of the pyramid and runs under pytest.",
+            "Terraform: no property-based tool for it was found in the sources read."
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "Hypothesis: Quickstart",
+          "url": "https://hypothesis.readthedocs.io/en/latest/quickstart.html"
+        }
+      ]
+    },
+    {
+      "id": "shapes",
+      "name": "Pyramid, trophy and honeycomb",
+      "group": "shapes",
+      "level": "overview",
+      "summary": "Other shapes for the same idea: where to put most of your tests.",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "the pages read do not give a date of origin",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "A testing practice, not a CNCF project."
+      },
+      "license": "n/a",
+      "version": {
+        "name": "Dodds and Spotify articles",
+        "analysed": "Dodds article dated 3 June 2021; Spotify article, no date on the page (URL 2018/01)",
+        "released": "2021-06-03",
+        "docs": "kentcdodds.com and engineering.atspotify.com",
+        "checked": "2026-11-12"
+      },
+      "links": [
+        {
+          "label": "Dodds: The Testing Trophy and Testing Classifications",
+          "url": "https://kentcdodds.com/blog/the-testing-trophy-and-testing-classifications"
+        },
+        {
+          "label": "Spotify Engineering: Testing of Microservices",
+          "url": "https://engineering.atspotify.com/2018/01/testing-of-microservices"
+        },
+        {
+          "label": "Fowler: Test Pyramid",
+          "url": "https://martinfowler.com/bliki/TestPyramid.html"
+        }
+      ],
+      "related": [
+        "pyramid"
+      ],
+      "notes": [
+        "Spotify's article has no date on the page. The year is from its URL (unconfirmed)."
+      ],
+      "sections": [
+        {
+          "title": "The three shapes",
+          "items": [
+            "The pyramid puts most tests at the bottom, as unit tests. The trophy and the honeycomb put most of them in the middle, as integration tests.",
+            "Dodds says he never considered whether the trophy applied to microservices or backend services. He drew it for his own front-end code, and he says definitions of unit and integration differ from person to person.",
+            "Spotify says the pyramid can be harmful for microservices, because the complexity is in how services interact. Their honeycomb has mostly integration tests, a few implementation detail tests and ideally no integrated tests.",
+            "Fowler's warning about the ice-cream cone is the opposite mistake: too many tests at the top."
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "Dodds: The Testing Trophy and Testing Classifications",
+          "url": "https://kentcdodds.com/blog/the-testing-trophy-and-testing-classifications",
+          "date": "2021-06-03"
+        },
+        {
+          "label": "Spotify Engineering: Testing of Microservices",
+          "url": "https://engineering.atspotify.com/2018/01/testing-of-microservices"
+        },
+        {
+          "label": "Fowler: Test Pyramid",
+          "url": "https://martinfowler.com/bliki/TestPyramid.html",
+          "date": "2012-05-01"
+        }
+      ]
+    }
+  ],
+  "comparisons": [
+    {
+      "id": "mapping",
+      "title": "The layers in Python and in Terraform",
+      "about": "The same layer in the two worlds. The Terraform row for contract tests is this topic's mapping.",
+      "columns": [
+        "Python application",
+        "Terraform"
+      ],
+      "rows": [
+        {
+          "entry": "unit",
+          "cells": [
+            "pytest and unittest.mock. No dependencies, milliseconds.",
+            "terraform test with command = plan, optionally with mock_provider. No cloud."
+          ]
+        },
+        {
+          "entry": "contract",
+          "cells": [
+            "Pact: the consumer writes the pact, the provider verifies it.",
+            "Variable validation and outputs, tested with expect_failures."
+          ]
+        },
+        {
+          "entry": "integration",
+          "cells": [
+            "pytest with Testcontainers: a real database in a container.",
+            "terraform test with the default apply, or Terratest: real resources in a test account."
+          ]
+        },
+        {
+          "entry": "e2e",
+          "cells": [
+            "Playwright against a deployed environment.",
+            "Apply the root configuration in a sandbox, then probe it with a check block or a script."
+          ]
+        },
+        {
+          "entry": "static-analysis",
+          "cells": [
+            "mypy for types.",
+            "terraform fmt and validate, TFLint, Checkov."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "shape-compare",
+      "title": "Pyramid, trophy and honeycomb",
+      "about": "What each source says to write most of. They come from different kinds of software.",
+      "columns": [
+        "Pyramid",
+        "Trophy",
+        "Honeycomb"
+      ],
+      "rows": [
+        {
+          "label": "From",
+          "cells": [
+            "Mike Cohn, as described by Fowler",
+            "Kent C. Dodds: a tweet of 2018, an article of 2021",
+            "Spotify Engineering, 2018 (year from the URL)"
+          ]
+        },
+        {
+          "label": "Most tests",
+          "cells": [
+            "Unit tests",
+            "Integration tests",
+            "Integration tests"
+          ]
+        },
+        {
+          "label": "Few tests",
+          "cells": [
+            "Service and user interface tests",
+            "End-to-end tests",
+            "Implementation detail tests, and ideally no integrated tests"
+          ]
+        },
+        {
+          "label": "Static analysis",
+          "cells": [
+            "Not part of the shape",
+            "The base of the trophy",
+            "Not part of the shape"
+          ]
+        },
+        {
+          "label": "Written for",
+          "cells": [
+            "Applications in general",
+            "JavaScript front-end code, in his own words",
+            "Microservices"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "doubles",
+      "title": "Mocks or real collaborators",
+      "about": "Fowler's two schools of unit testing.",
+      "columns": [
+        "Solitary",
+        "Sociable"
+      ],
+      "rows": [
+        {
+          "label": "Collaborators",
+          "cells": [
+            "All replaced with mocks or stubs",
+            "Only the slow ones or those with bigger side effects are replaced"
+          ]
+        },
+        {
+          "label": "Why",
+          "cells": [
+            "Perfect isolation, no side effects, no complicated setup",
+            "Fewer test doubles to keep in line with the real code (not stated on the page: unconfirmed)"
+          ]
+        },
+        {
+          "label": "Python",
+          "cells": [
+            "unittest.mock on every collaborator",
+            "Real classes, mocks only for the network and the database"
+          ]
+        },
+        {
+          "label": "Terraform",
+          "cells": [
+            "mock_provider for every provider",
+            "Real providers with command = plan (this topic's reading)"
+          ]
+        }
+      ]
+    }
+  ]
 }

@@ -1,13 +1,12 @@
 {
   "title": "Test types",
   "tabs": [
-    {
-      "id": "others",
-      "label": "Ecosystem"
-    },
-    {
-      "id": "compare",
-      "label": "Compare"
-    }
+    {"id": "pyramid", "label": "Pyramid"},
+    {"id": "unit", "label": "Unit"},
+    {"id": "contract", "label": "Contract"},
+    {"id": "integration", "label": "Integration"},
+    {"id": "e2e", "label": "End-to-end"},
+    {"id": "others", "label": "Other kinds"},
+    {"id": "compare", "label": "Compare"}
   ]
 }

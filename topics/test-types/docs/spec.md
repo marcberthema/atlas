@@ -1,6 +1,6 @@
 # Test types: spec
 
-Status: draft (not published). Data checked 2026-11-12. Format: `docs/topic-spec.md`.
+Status: published (Test family). 13 entries. Data checked 2026-11-12. Format: `docs/topic-spec.md`.
 
 ## Purpose and audience
 
@@ -29,8 +29,8 @@ Archetype: concepts. Seven tabs (`templates/view.json`):
 | Contract | `contract` |
 | Integration | `integration` |
 | End-to-end | `e2e` |
-| Others | A picker of the kinds beside the pyramid: static analysis, smoke, regression, acceptance, performance, security, property-based |
-| Compare | Pyramid, trophy and honeycomb; unit or integration first; mocks or real dependencies |
+| Other kinds | The shared entry list, opened in a window: the kinds beside the pyramid (static analysis, smoke, regression, acceptance, performance, security, property-based) and `shapes` (pyramid, trophy, honeycomb) |
+| Compare | Three tables: the layers in Python and in Terraform, pyramid, trophy and honeycomb, solitary or sociable unit tests |
 
 Each layer entry opens the same way: one sentence, what it checks and what it does not, then two parts, Python and Terraform, each with a
 short explanation, a fetched code example and the tool it uses. Terraform has no unit tests in the strict sense (a plan needs the
@@ -48,23 +48,32 @@ written from. Re-check: `track` fields compare the latest GitHub releases with `
 
 | Item | Status | Notes |
 |---|---|---|
-| `pyramid` | planned | Pyramid tab: the shape, the layers compared, how to pick |
-| `unit` | planned | pytest and unittest.mock; Terraform `terraform test` with `command = plan` and mocked providers |
-| `contract` | planned | Pact consumer and provider; Terraform: the module interface (variable validation, outputs) tested with `expect_failures` |
-| `integration` | planned | pytest with Testcontainers; Terraform: `terraform test` with `command = apply`, Terratest |
-| `e2e` | planned | Playwright for Python; Terraform: apply the root configuration in a sandbox and probe the result |
-| `others` | planned | Static analysis, smoke, regression, acceptance, performance, security, property-based |
-| `compare` | planned | Pyramid or trophy or honeycomb; mocks or real dependencies |
+| `pyramid` | done | Pyramid tab: the shape, the layers compared, how to start, mistakes |
+| `unit` | done | pytest and unittest.mock; `terraform test` with `command = plan` and `mock_provider` |
+| `contract` | done | Pact consumer and provider; Terraform: variable validation and `expect_failures` (this topic's mapping) |
+| `integration` | done | Testcontainers; `terraform test` with the default apply; Terratest as prose |
+| `e2e` | done | Playwright for Python; Terraform: a `check` block probing a deployed endpoint |
+| `static-analysis` | done | mypy; `terraform fmt`, `validate`, TFLint, Checkov |
+| `smoke` | done | one source (ISTQB glossary) |
+| `regression` | done | one source (ISTQB glossary) |
+| `acceptance` | done | Fowler and the ISTQB glossary; the examples are suggestions |
+| `performance` | done | Locust |
+| `security` | done | OWASP WSTG only points to the guide |
+| `property-based` | done | Hypothesis; no Terraform tool found |
+| `shapes` | done | Dodds and Spotify; the year of the Spotify article is from its URL |
+| `kind:compare` | done | three tables: `mapping`, `shape-compare`, `doubles` |
 
 ## Known gaps
 
-- Nothing is written yet. This spec is the plan.
-- "Contract test" for Terraform is not an established term in the Terraform documentation. The part will say that it is this topic's mapping
-  (a module's variables and outputs are its interface), marked unconfirmed in `notes`.
-- Terraform "unit" and "integration" both use `terraform test`; the documentation separates them by the `command` (`plan` or `apply`), not by those names.
-  The part will say so.
-- Python examples fetched from documentation are small. A complete pyramid for one application is not available from a single official page,
-  so the examples are separate snippets and are not stitched together.
+- "Contract test" for Terraform is not an established term in the Terraform documentation. The entry says it is this topic's mapping, and `notes` marks it unconfirmed. The same applies to using a `check` block as an end-to-end probe.
+- The Terraform documentation does separate integration and unit testing by the `command` of a run block (apply or plan), so those two entries rest on its own words.
+- Terratest has no fetched example: its code samples are loaded by script, not present in the page. The entries describe it in prose and link its quick start.
+- Tool versions (pytest, Pact Python, Testcontainers, Playwright, Terraform, Terratest, mypy, Checkov, TFLint, Locust, Hypothesis) are recorded in the text and in `version.docs`, but no entry has a `track`, because each entry is a concept, not a tool. `make test-types-check` checks the code examples only.
+- `smoke`, `regression`, `static-analysis`, `performance` and `acceptance` rest on the ISTQB glossary's one-line definitions (no date on the pages) plus one tool each. `security` is only a pointer to OWASP's guide.
+- Dodds's article gives the trophy's history; the Spotify page has no date (year from its URL, unconfirmed).
+- The Python snippets from the unittest.mock and Testcontainers pages are doctests (`>>>`), shown as on the page.
+- Pact's own site (docs.pact.io) had an expired certificate for some clients when checked, so the Pact Python site is the source.
+- Not covered: exploratory and manual testing, mutation testing, snapshot tests, test data management.
 
 ## Decisions
 
@@ -73,8 +82,8 @@ written from. Re-check: `track` fields compare the latest GitHub releases with `
 - Code examples are fetched unchanged from official pages; where a layer has no official snippet, the part is prose with a link.
 - Archetype is concepts, with one tab per layer of the pyramid because those are what people look up; the rest go in a picker.
 - The Terraform version analysed is the latest release found at the check (v1.17.2 on 2026-11-11); the `terraform` topic is at v1.17.1 and is not changed here.
-- Tool versions at the check: pytest 9.2.0, Playwright for Python v1.65.1, Testcontainers for Python 4.15.0, Checkov 3.4.4, TFLint v0.66.0, Terratest
-  (modules/core v2.0.0). Pact for Python and Hypothesis: release tags not read yet, to confirm before the entries.
+- Tool versions at the check (2026-11-12): pytest 9.2.0, Pact Python 4.2.0, Testcontainers for Python 4.15.0, Playwright for Python 1.65.1, Terratest 1.0.1, Checkov 3.4.4, TFLint 0.66.0, Locust 2.47.0, Hypothesis 6.170.15, mypy 2.4.1 (from its docs page).
+- The Terraform tab uses the shared "others" list rather than a picker, so the kinds beside the pyramid open in a window, as in the patterns topic.
 - DevOps loop stages: test. A judgement made for the DevOps loop view (`docs/views.md`), not a statement from a source.
 
 ## Updating
