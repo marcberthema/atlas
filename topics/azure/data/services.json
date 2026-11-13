@@ -258,8 +258,8 @@
         "note": "Verified against Learn on 2026-10-24 (find-tenant-id, how-subscriptions-associated-directory): purpose, trust relationship, facts, three edges. Not verified: the Entra ID edge ('every object lives in a tenant')."
       },
       "freshness": {
-        "status": "current",
-        "changed_at": "2026-10-26",
+        "status": "stale",
+        "changed_at": "2026-11-13",
         "sources": {
           "https://learn.microsoft.com/entra/fundamentals/how-to-find-tenant": {
             "changed_at": "2026-10-24",
@@ -281,8 +281,8 @@
             "http_status": 200,
             "ms_date": "2026-06-18T00:00:00Z",
             "updated_at": "2026-07-28T07:37:00Z",
-            "latest_hash": "sha256:e762247b342233d6707e4583038cfa85ff116f463784ec880918dc1888d75400",
-            "changed_at": "2026-10-26",
+            "latest_hash": "sha256:1ebea0776c07083847b96763f502259d9f5925b8ac0ad6491417b1ec0422df40",
+            "changed_at": "2026-11-13",
             "reviewed_hash": "sha256:e762247b342233d6707e4583038cfa85ff116f463784ec880918dc1888d75400"
           }
         }
@@ -738,8 +738,8 @@
         "note": "Verified against Learn on 2026-10-24 (entra/fundamentals/whatis): purpose, facts, the tenant edge. Not verified: the diagnostic-logs, Conditional Access, PIM, Azure SQL and Azure DevOps edges, and 'every object lives in a tenant'."
       },
       "freshness": {
-        "status": "current",
-        "changed_at": "2026-10-26",
+        "status": "stale",
+        "changed_at": "2026-11-13",
         "sources": {
           "https://learn.microsoft.com/entra/fundamentals/whatis": {
             "changed_at": "2026-10-24",
@@ -753,8 +753,8 @@
             "http_status": 200,
             "ms_date": "2026-06-18T00:00:00Z",
             "updated_at": "2026-07-28T07:37:00Z",
-            "latest_hash": "sha256:e762247b342233d6707e4583038cfa85ff116f463784ec880918dc1888d75400",
-            "changed_at": "2026-10-26",
+            "latest_hash": "sha256:1ebea0776c07083847b96763f502259d9f5925b8ac0ad6491417b1ec0422df40",
+            "changed_at": "2026-11-13",
             "reviewed_hash": "sha256:e762247b342233d6707e4583038cfa85ff116f463784ec880918dc1888d75400"
           }
         }
@@ -849,8 +849,8 @@
         "note": "Verified against Learn on 2026-10-24 (role-based-access-control/overview, arm/overview, key-vault rbac pages): purpose, three-part model, scopes and inheritance, role assignment as an ARM resource, additive evaluation, the Key Vault edge. Not verified: 'full access does not bypass policy', the Entra ID edge, and the Storage, ACR, Service Bus, AKS and PIM edges."
       },
       "freshness": {
-        "status": "current",
-        "changed_at": "2026-10-26",
+        "status": "stale",
+        "changed_at": "2026-11-13",
         "sources": {
           "https://learn.microsoft.com/azure/role-based-access-control/overview": {
             "changed_at": "2026-10-24",
@@ -864,8 +864,8 @@
             "http_status": 200,
             "ms_date": "2026-06-18T00:00:00Z",
             "updated_at": "2026-07-28T07:37:00Z",
-            "latest_hash": "sha256:e762247b342233d6707e4583038cfa85ff116f463784ec880918dc1888d75400",
-            "changed_at": "2026-10-26",
+            "latest_hash": "sha256:1ebea0776c07083847b96763f502259d9f5925b8ac0ad6491417b1ec0422df40",
+            "changed_at": "2026-11-13",
             "reviewed_hash": "sha256:e762247b342233d6707e4583038cfa85ff116f463784ec880918dc1888d75400"
           }
         }
@@ -953,8 +953,8 @@
         "note": "Verified against Learn on 2026-10-24 (managed-identities-azure-resources/overview, key-vault rbac pages): purpose (reworded: 'rotated by Azure' is not stated), facts, the Entra ID and Key Vault edges. Not verified: the Storage, ACR, Service Bus, SQL, AKS, Automation, Logic Apps, Data Factory and Azure DevOps edges."
       },
       "freshness": {
-        "status": "current",
-        "changed_at": "2026-10-26",
+        "status": "stale",
+        "changed_at": "2026-11-13",
         "sources": {
           "https://learn.microsoft.com/entra/identity/managed-identities-azure-resources/overview": {
             "changed_at": "2026-10-24",
@@ -968,8 +968,8 @@
             "http_status": 200,
             "ms_date": "2026-06-18T00:00:00Z",
             "updated_at": "2026-07-28T07:37:00Z",
-            "latest_hash": "sha256:e762247b342233d6707e4583038cfa85ff116f463784ec880918dc1888d75400",
-            "changed_at": "2026-10-26",
+            "latest_hash": "sha256:1ebea0776c07083847b96763f502259d9f5925b8ac0ad6491417b1ec0422df40",
+            "changed_at": "2026-11-13",
             "reviewed_hash": "sha256:e762247b342233d6707e4583038cfa85ff116f463784ec880918dc1888d75400"
           }
         }
