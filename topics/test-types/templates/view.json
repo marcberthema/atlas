@@ -6,6 +6,7 @@
     {"id": "contract", "label": "Contract"},
     {"id": "integration", "label": "Integration"},
     {"id": "e2e", "label": "End-to-end"},
+    {"id": "languages", "label": "Languages", "group": "languages", "pick": "Language"},
     {"id": "others", "label": "Other kinds"},
     {"id": "compare", "label": "Compare"}
   ]

@@ -1,13 +1,18 @@
 {
   "title": "Test types",
-  "intro": "The kinds of automated test and where each sits in the test pyramid: unit, contract, integration and end-to-end, and the kinds beside it, each with an example for a Python application and for Terraform.",
-  "checked": "2026-11-12",
-  "scope": "Reference cards. Concepts are read from public articles and glossaries, tools from their own documentation. Code examples are fetched from those pages and shown unchanged. Free and open source tools only.",
+  "intro": "The kinds of automated test and where each sits in the test pyramid: unit, contract, integration and end-to-end, and the kinds beside it, each with an example for a Python application and for Terraform. The Languages tab lists the tools for the other main languages.",
+  "checked": "2026-11-13",
+  "scope": "Reference cards. Concepts are read from public articles and glossaries, tools from their own documentation. Code examples are fetched from those pages and shown unchanged. Free and open source tools only, and what ships with a language's own toolchain.",
   "groups": [
     {
       "id": "layers",
       "label": "The pyramid",
       "about": "The layers of the test pyramid and how to choose between them."
+    },
+    {
+      "id": "languages",
+      "label": "Languages",
+      "about": "The tools that fill each layer, one page per language: unit tests, test doubles, coverage, integration and end-to-end tests."
     },
     {
       "id": "beside",
@@ -1638,9 +1643,2499 @@
           "date": "2012-05-01"
         }
       ]
+    },
+    {
+      "id": "coverage",
+      "name": "Code coverage",
+      "group": "beside",
+      "level": "overview",
+      "summary": "Measures which code the tests ran. It finds untested code. It does not say the tests are good.",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "the pages read do not give a date of origin",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "A testing practice, not a CNCF project."
+      },
+      "license": "n/a",
+      "version": {
+        "name": "Fowler: Test Coverage",
+        "analysed": "article, 17 April 2012",
+        "released": "2012-04-17",
+        "docs": "martinfowler.com/bliki/TestCoverage.html (17 April 2012); istqb-glossary.page (no date on page); coverage.py 7.17.3 documentation; JaCoCo documentation (trunk, 0.8.17 snapshot)",
+        "checked": "2026-11-13"
+      },
+      "links": [
+        {
+          "label": "Fowler: Test Coverage",
+          "url": "https://martinfowler.com/bliki/TestCoverage.html"
+        },
+        {
+          "label": "ISTQB glossary: Coverage",
+          "url": "https://istqb-glossary.page/coverage/"
+        },
+        {
+          "label": "ISTQB glossary: Code Coverage",
+          "url": "https://istqb-glossary.page/code-coverage/"
+        },
+        {
+          "label": "coverage.py",
+          "url": "https://coverage.readthedocs.io/en/latest/"
+        },
+        {
+          "label": "coverage.py: Branch coverage measurement",
+          "url": "https://coverage.readthedocs.io/en/latest/branch.html"
+        },
+        {
+          "label": "pytest-cov",
+          "url": "https://pytest-cov.readthedocs.io/en/latest/readme.html"
+        },
+        {
+          "label": "JaCoCo: Coverage counters",
+          "url": "https://www.jacoco.org/jacoco/trunk/doc/counters.html"
+        }
+      ],
+      "related": [
+        "unit",
+        "static-analysis",
+        "lang-python",
+        "lang-terraform"
+      ],
+      "notes": [
+        "No coverage tool for Terraform was found: the Terraform pages on tests and on the test command do not mention coverage. Other sites were not searched (unconfirmed)."
+      ],
+      "sections": [
+        {
+          "title": "What it is",
+          "items": [
+            "ISTQB: coverage is the degree, expressed as a percentage, to which a specified coverage item has been exercised by a test suite. Code coverage determines which parts of the software the test suite executed and which it did not.",
+            "It is a measure of the tests, not a kind of test, so it sits beside the pyramid. It is usually collected while the [unit tests](#unit) run.",
+            {
+              "type": "callout",
+              "kind": "gotcha",
+              "title": "A number, not a proof",
+              "text": "Fowler: test coverage is a useful tool for finding untested parts of a codebase. It is of little use as a numeric statement of how good your tests are."
+            }
+          ]
+        },
+        {
+          "title": "What is counted",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Counter",
+                "What it counts",
+                "Read in"
+              ],
+              "rows": [
+                [
+                  "Statement or line",
+                  "The statements that ran at least once",
+                  "coverage.py calls it the usual statement coverage"
+                ],
+                [
+                  "Branch",
+                  "For a line that can jump to more than one next line, which destinations were visited",
+                  "coverage.py: branch coverage measurement"
+                ],
+                [
+                  "Instruction (C0)",
+                  "Single Java byte code instructions, the smallest unit JaCoCo counts",
+                  "JaCoCo: coverage counters"
+                ],
+                [
+                  "Branch (C1)",
+                  "The branches of every if and switch statement",
+                  "JaCoCo: coverage counters"
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Python and Terraform",
+          "items": [
+            "Python: coverage.py runs the program, notes which parts of the code were executed, then reports the code that could have run but did not. pytest-cov provides the same as a pytest plugin. Versions checked: coverage.py 7.17.3, pytest-cov 7.1.0.",
+            {
+              "type": "code",
+              "title": "Run the tests under coverage.py",
+              "lang": "text",
+              "source": {
+                "label": "coverage.py",
+                "url": "https://coverage.readthedocs.io/en/latest/"
+              },
+              "match": "$ coverage run -m pytest arg1 arg2 arg3"
+            },
+            {
+              "text": "Terraform: no coverage tool found.",
+              "unconfirmed": "the Terraform documentation on tests does not mention coverage; other sites were not searched"
+            },
+            "For the other languages, the coverage tool is in each page of the Languages tab."
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "Fowler: Test Coverage",
+          "url": "https://martinfowler.com/bliki/TestCoverage.html",
+          "date": "2012-04-17"
+        },
+        {
+          "label": "ISTQB glossary: Coverage",
+          "url": "https://istqb-glossary.page/coverage/"
+        },
+        {
+          "label": "ISTQB glossary: Code Coverage",
+          "url": "https://istqb-glossary.page/code-coverage/"
+        },
+        {
+          "label": "coverage.py",
+          "url": "https://coverage.readthedocs.io/en/latest/"
+        },
+        {
+          "label": "coverage.py: Branch coverage measurement",
+          "url": "https://coverage.readthedocs.io/en/latest/branch.html"
+        },
+        {
+          "label": "pytest-cov",
+          "url": "https://pytest-cov.readthedocs.io/en/latest/readme.html"
+        },
+        {
+          "label": "JaCoCo: Coverage counters",
+          "url": "https://www.jacoco.org/jacoco/trunk/doc/counters.html"
+        }
+      ]
+    },
+    {
+      "id": "lang-java",
+      "name": "Java and Kotlin",
+      "group": "languages",
+      "level": "overview",
+      "summary": "JUnit runs the tests, and Maven or Gradle decides when: unit tests in one step, integration tests in another.",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "an entry about several tools: there is no single start date",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "A set of tools for one language, not a CNCF project."
+      },
+      "license": "EPL-2.0",
+      "version": {
+        "name": "JUnit",
+        "analysed": "r6.1.3",
+        "released": "2026-08-07",
+        "docs": "docs.junit.org (6.1.3); Maven Surefire and Failsafe 3.6.1; Gradle 9.9.1 user manual; JaCoCo documentation (trunk, 0.8.17 snapshot); the other tools' sites, latest",
+        "checked": "2026-11-13"
+      },
+      "track": {
+        "github": "junit-team/junit-framework"
+      },
+      "links": [
+        {
+          "label": "JUnit: overview",
+          "url": "https://docs.junit.org/current/overview.html"
+        },
+        {
+          "label": "Kotlin: Test Java code using Kotlin and JUnit",
+          "url": "https://kotlinlang.org/docs/jvm-test-using-junit.html"
+        },
+        {
+          "label": "Maven: standard directory layout",
+          "url": "https://maven.apache.org/guides/introduction/introduction-to-the-standard-directory-layout.html"
+        },
+        {
+          "label": "Maven Surefire Plugin",
+          "url": "https://maven.apache.org/surefire/maven-surefire-plugin/"
+        },
+        {
+          "label": "Surefire: inclusions and exclusions of tests",
+          "url": "https://maven.apache.org/surefire/maven-surefire-plugin/examples/inclusion-exclusion.html"
+        },
+        {
+          "label": "Maven Failsafe Plugin",
+          "url": "https://maven.apache.org/surefire/maven-failsafe-plugin/"
+        },
+        {
+          "label": "Failsafe: usage",
+          "url": "https://maven.apache.org/surefire/maven-failsafe-plugin/usage.html"
+        },
+        {
+          "label": "Failsafe: inclusions and exclusions of tests",
+          "url": "https://maven.apache.org/surefire/maven-failsafe-plugin/examples/inclusion-exclusion.html"
+        },
+        {
+          "label": "JaCoCo: Maven plug-in",
+          "url": "https://www.jacoco.org/jacoco/trunk/doc/maven.html"
+        },
+        {
+          "label": "JaCoCo: coverage counters",
+          "url": "https://www.jacoco.org/jacoco/trunk/doc/counters.html"
+        },
+        {
+          "label": "Gradle: Testing in Java and JVM projects",
+          "url": "https://docs.gradle.org/current/userguide/java_testing.html"
+        },
+        {
+          "label": "Gradle: The JaCoCo Plugin",
+          "url": "https://docs.gradle.org/current/userguide/jacoco_plugin.html"
+        },
+        {
+          "label": "Gradle: The JVM Test Suite Plugin",
+          "url": "https://docs.gradle.org/current/userguide/jvm_test_suite_plugin.html"
+        },
+        {
+          "label": "Mockito",
+          "url": "https://site.mockito.org/"
+        },
+        {
+          "label": "Testcontainers for Java",
+          "url": "https://java.testcontainers.org/"
+        },
+        {
+          "label": "Testcontainers: JUnit 5 Quickstart",
+          "url": "https://java.testcontainers.org/quickstart/junit_5_quickstart/"
+        },
+        {
+          "label": "Selenium WebDriver",
+          "url": "https://www.selenium.dev/documentation/webdriver/"
+        },
+        {
+          "label": "Playwright for Java",
+          "url": "https://playwright.dev/java/docs/intro"
+        }
+      ],
+      "related": [
+        "unit",
+        "integration",
+        "e2e",
+        "coverage"
+      ],
+      "notes": [
+        "The JaCoCo documentation read is the trunk version (0.8.17 snapshot); the latest release is 0.8.16.",
+        "The Kotlin version was not recorded: the Kotlin page read shows none.",
+        "The Testcontainers quickstart page is titled for JUnit 5; whether it is current for JUnit 6 was not checked (unconfirmed)."
+      ],
+      "sections": [
+        {
+          "title": "How testing is organised",
+          "items": [
+            "Tests are classes in `src/test/java`, the test source directory of the Maven standard layout. The build tool compiles and runs them: `mvn test` or `gradle test`.",
+            "Kotlin uses the same tools. The Kotlin documentation says tests written in Kotlin run together with existing Java tests in the same project, and that Kotlin/JVM supports JUnit 6. The `kotlin.test` library adds Kotlin's test utilities on top of JUnit."
+          ]
+        },
+        {
+          "title": "Tools",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Job",
+                "Tool",
+                "What it is",
+                "Version checked"
+              ],
+              "rows": [
+                [
+                  "Unit",
+                  "[JUnit](https://docs.junit.org/current/overview.html)",
+                  "The test framework: annotations such as @Test, assertions, and the JUnit Platform that build tools launch",
+                  "6.1.3"
+                ],
+                [
+                  "Test doubles",
+                  "[Mockito](https://site.mockito.org/)",
+                  "Mocking framework for unit tests in Java",
+                  "5.24.0"
+                ],
+                [
+                  "Coverage",
+                  "[JaCoCo](https://www.jacoco.org/jacoco/trunk/doc/)",
+                  "Counts instructions, branches and lines. Has a Maven plug-in, and Gradle ships a plugin for it",
+                  "0.8.16"
+                ],
+                [
+                  "Integration",
+                  "[Testcontainers for Java](https://java.testcontainers.org/)",
+                  "Throwaway databases, browsers or anything else that runs in a Docker container, started from a JUnit test",
+                  "2.0.5"
+                ],
+                [
+                  "End-to-end",
+                  "[Selenium WebDriver](https://www.selenium.dev/documentation/webdriver/)",
+                  "Drives a browser natively, as a user would",
+                  "4.52.0"
+                ],
+                [
+                  "End-to-end",
+                  "[Playwright for Java](https://playwright.dev/java/docs/intro)",
+                  "Browser automation, same engine as the other Playwright languages",
+                  "1.65.0"
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Maven",
+          "items": [
+            "Surefire runs the unit tests in the `test` phase. By default it picks the classes named `Test*.java`, `*Test.java` and `*Tests.java` (the page lists the full set).",
+            "Failsafe runs the integration tests in the `integration-test` phase and checks the result in `verify`, so the environment can be torn down in between. By default it picks `IT*.java`, `*IT.java` and `*ITCase.java`. Run it with `mvn verify`.",
+            {
+              "type": "code",
+              "title": "Failsafe bound to integration-test and verify",
+              "lang": "text",
+              "source": {
+                "label": "Failsafe: usage",
+                "url": "https://maven.apache.org/surefire/maven-failsafe-plugin/usage.html"
+              },
+              "match": "<goal>integration-test</goal>"
+            },
+            "Coverage: the JaCoCo Maven plug-in. Its goals include `prepare-agent`, `report` and `check`. Versions checked: Surefire and Failsafe 3.6.1."
+          ]
+        },
+        {
+          "title": "Gradle",
+          "items": [
+            "All JVM testing goes through one task type, `Test`. The `test` task runs JUnit, JUnit Platform or TestNG tests. `useJUnitPlatform()` selects the JUnit Platform.",
+            {
+              "type": "code",
+              "title": "Select the JUnit Platform",
+              "lang": "text",
+              "source": {
+                "label": "Gradle: Testing in Java and JVM projects",
+                "url": "https://docs.gradle.org/current/userguide/java_testing.html"
+              },
+              "match": "tasks.named<Test>(\"test\") {"
+            },
+            "Integration tests: the JVM Test Suite plugin (marked incubating) declares another suite, such as `integrationTest`, next to the built-in `test` suite.",
+            "Coverage: apply the `jacoco` plugin. With the Java plugin it adds a `jacocoTestReport` task, which writes an HTML report under `reports/jacoco/test/html` in the build directory. That task does not depend on `test`: run the tests first. Version checked: Gradle 9.9.1."
+          ]
+        },
+        {
+          "title": "Examples",
+          "items": [
+            "The JUnit user guide has the reference example of a test class. It is linked, not shown: its site could not be fetched by the script that collects the examples.",
+            {
+              "type": "code",
+              "title": "A JUnit test that starts Redis in a container",
+              "lang": "text",
+              "source": {
+                "label": "Testcontainers: JUnit 5 Quickstart",
+                "url": "https://java.testcontainers.org/quickstart/junit_5_quickstart/"
+              },
+              "match": "public class RedisBackedCacheIntTest {"
+            },
+            {
+              "type": "code",
+              "title": "A Mockito mock",
+              "lang": "text",
+              "source": {
+                "label": "Mockito",
+                "url": "https://site.mockito.org/"
+              },
+              "match": "List mockedList = mock(List.class);"
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "JUnit: overview",
+          "url": "https://docs.junit.org/current/overview.html"
+        },
+        {
+          "label": "Kotlin: Test Java code using Kotlin and JUnit",
+          "url": "https://kotlinlang.org/docs/jvm-test-using-junit.html"
+        },
+        {
+          "label": "Maven: standard directory layout",
+          "url": "https://maven.apache.org/guides/introduction/introduction-to-the-standard-directory-layout.html"
+        },
+        {
+          "label": "Maven Surefire Plugin",
+          "url": "https://maven.apache.org/surefire/maven-surefire-plugin/"
+        },
+        {
+          "label": "Surefire: inclusions and exclusions of tests",
+          "url": "https://maven.apache.org/surefire/maven-surefire-plugin/examples/inclusion-exclusion.html"
+        },
+        {
+          "label": "Maven Failsafe Plugin",
+          "url": "https://maven.apache.org/surefire/maven-failsafe-plugin/"
+        },
+        {
+          "label": "Failsafe: usage",
+          "url": "https://maven.apache.org/surefire/maven-failsafe-plugin/usage.html"
+        },
+        {
+          "label": "Failsafe: inclusions and exclusions of tests",
+          "url": "https://maven.apache.org/surefire/maven-failsafe-plugin/examples/inclusion-exclusion.html"
+        },
+        {
+          "label": "JaCoCo: Maven plug-in",
+          "url": "https://www.jacoco.org/jacoco/trunk/doc/maven.html"
+        },
+        {
+          "label": "JaCoCo: coverage counters",
+          "url": "https://www.jacoco.org/jacoco/trunk/doc/counters.html"
+        },
+        {
+          "label": "Gradle: Testing in Java and JVM projects",
+          "url": "https://docs.gradle.org/current/userguide/java_testing.html"
+        },
+        {
+          "label": "Gradle: The JaCoCo Plugin",
+          "url": "https://docs.gradle.org/current/userguide/jacoco_plugin.html"
+        },
+        {
+          "label": "Gradle: The JVM Test Suite Plugin",
+          "url": "https://docs.gradle.org/current/userguide/jvm_test_suite_plugin.html"
+        },
+        {
+          "label": "Mockito",
+          "url": "https://site.mockito.org/"
+        },
+        {
+          "label": "Testcontainers for Java",
+          "url": "https://java.testcontainers.org/"
+        },
+        {
+          "label": "Testcontainers: JUnit 5 Quickstart",
+          "url": "https://java.testcontainers.org/quickstart/junit_5_quickstart/"
+        },
+        {
+          "label": "Selenium WebDriver",
+          "url": "https://www.selenium.dev/documentation/webdriver/"
+        },
+        {
+          "label": "Playwright for Java",
+          "url": "https://playwright.dev/java/docs/intro"
+        }
+      ]
+    },
+    {
+      "id": "lang-javascript",
+      "name": "JavaScript and TypeScript (Node.js)",
+      "group": "languages",
+      "level": "overview",
+      "summary": "Node.js has a built-in test runner. Jest and Vitest are full frameworks, and Playwright or Cypress drive the browser.",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "an entry about several tools: there is no single start date",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "A set of tools for one language, not a CNCF project."
+      },
+      "license": "MIT",
+      "version": {
+        "name": "Node.js",
+        "analysed": "v26.13.1",
+        "released": "2026-11-11",
+        "docs": "nodejs.org/api/test.html (Node.js v26.13.1); jestjs.io (30.5); vitest.dev (5.x); the other tools' sites and READMEs, latest",
+        "checked": "2026-11-13"
+      },
+      "track": {
+        "github": "nodejs/node"
+      },
+      "links": [
+        {
+          "label": "Node.js: Test runner",
+          "url": "https://nodejs.org/api/test.html"
+        },
+        {
+          "label": "Jest: Getting Started",
+          "url": "https://jestjs.io/docs/getting-started"
+        },
+        {
+          "label": "Jest: CLI options",
+          "url": "https://jestjs.io/docs/cli"
+        },
+        {
+          "label": "Jest: Mock Functions",
+          "url": "https://jestjs.io/docs/mock-functions"
+        },
+        {
+          "label": "Vitest: Getting Started",
+          "url": "https://vitest.dev/guide/"
+        },
+        {
+          "label": "Vitest: Coverage",
+          "url": "https://vitest.dev/guide/coverage"
+        },
+        {
+          "label": "Vitest: Mocking",
+          "url": "https://vitest.dev/guide/mocking"
+        },
+        {
+          "label": "c8",
+          "url": "https://github.com/bcoe/c8"
+        },
+        {
+          "label": "nyc",
+          "url": "https://github.com/istanbuljs/nyc"
+        },
+        {
+          "label": "Testcontainers for Node.js",
+          "url": "https://node.testcontainers.org/"
+        },
+        {
+          "label": "Playwright: Installation",
+          "url": "https://playwright.dev/docs/intro"
+        },
+        {
+          "label": "Cypress: Why Cypress",
+          "url": "https://docs.cypress.io/app/get-started/why-cypress"
+        }
+      ],
+      "related": [
+        "unit",
+        "integration",
+        "e2e",
+        "coverage"
+      ],
+      "notes": [
+        "v26.13.1 is the newest Node.js release and the version of the documentation read. Which release line is the long-term support one was not checked.",
+        "The Vitest site could not be fetched by the script that collects the examples, so Vitest has no example here."
+      ],
+      "sections": [
+        {
+          "title": "How testing is organised",
+          "items": [
+            "The `node:test` module is part of Node.js and stable since v20.0.0. `node --test` finds and runs the test files. It has a top-level `mock` object for mocking.",
+            "Jest and Vitest bring their own runner, assertions, mocks and coverage. Vitest is powered by Vite.",
+            "TypeScript uses the same tools. How each one runs `.ts` files is in its own documentation and was not checked here."
+          ]
+        },
+        {
+          "title": "Tools",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Job",
+                "Tool",
+                "What it is",
+                "Version checked"
+              ],
+              "rows": [
+                [
+                  "Unit",
+                  "[Node.js test runner](https://nodejs.org/api/test.html)",
+                  "Built in: `node:test` and `node --test`",
+                  "26.13.1"
+                ],
+                [
+                  "Unit",
+                  "[Jest](https://jestjs.io/docs/getting-started)",
+                  "Test framework with assertions and mock functions",
+                  "30.5.2"
+                ],
+                [
+                  "Unit",
+                  "[Vitest](https://vitest.dev/guide/)",
+                  "Testing framework powered by Vite",
+                  "5.1.0"
+                ],
+                [
+                  "Test doubles",
+                  "Built into each",
+                  "`mock` in node:test, [mock functions](https://jestjs.io/docs/mock-functions) in Jest, [vi.fn, vi.spyOn and vi.mock](https://vitest.dev/guide/mocking) in Vitest",
+                  "as above"
+                ],
+                [
+                  "Coverage",
+                  "`node --test --experimental-test-coverage`",
+                  "Built in, marked experimental",
+                  "26.13.1"
+                ],
+                [
+                  "Coverage",
+                  "[c8](https://github.com/bcoe/c8)",
+                  "Reports using the native V8 coverage of Node.js",
+                  "12.0.0"
+                ],
+                [
+                  "Coverage",
+                  "[nyc](https://github.com/istanbuljs/nyc)",
+                  "The command line of Istanbul, which instruments the code",
+                  "18.0.0"
+                ],
+                [
+                  "Integration",
+                  "[Testcontainers for Node.js](https://node.testcontainers.org/)",
+                  "Real dependencies in containers, started from the tests",
+                  "12.2.1"
+                ],
+                [
+                  "End-to-end",
+                  "[Playwright](https://playwright.dev/docs/intro)",
+                  "End-to-end test framework for web apps: Chromium, WebKit and Firefox",
+                  "1.65.0"
+                ],
+                [
+                  "End-to-end",
+                  "[Cypress](https://docs.cypress.io/app/get-started/why-cypress)",
+                  "End-to-end and component testing in the browser",
+                  "16.3.0"
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Examples",
+          "items": [
+            "Jest collects coverage with `jest --coverage`. Vitest collects it with V8 (the default) or Istanbul.",
+            {
+              "type": "code",
+              "title": "Tests with the Node.js test runner",
+              "lang": "text",
+              "source": {
+                "label": "Node.js: Test runner",
+                "url": "https://nodejs.org/api/test.html"
+              },
+              "match": "test('synchronous passing test', (t) => {"
+            },
+            {
+              "type": "code",
+              "title": "A Jest test",
+              "lang": "text",
+              "source": {
+                "label": "Jest: Getting Started",
+                "url": "https://jestjs.io/docs/getting-started"
+              },
+              "match": "test('adds 1 + 2 to equal 3', () => {"
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "Node.js: Test runner",
+          "url": "https://nodejs.org/api/test.html"
+        },
+        {
+          "label": "Jest: Getting Started",
+          "url": "https://jestjs.io/docs/getting-started"
+        },
+        {
+          "label": "Jest: CLI options",
+          "url": "https://jestjs.io/docs/cli"
+        },
+        {
+          "label": "Jest: Mock Functions",
+          "url": "https://jestjs.io/docs/mock-functions"
+        },
+        {
+          "label": "Vitest: Getting Started",
+          "url": "https://vitest.dev/guide/"
+        },
+        {
+          "label": "Vitest: Coverage",
+          "url": "https://vitest.dev/guide/coverage"
+        },
+        {
+          "label": "Vitest: Mocking",
+          "url": "https://vitest.dev/guide/mocking"
+        },
+        {
+          "label": "c8",
+          "url": "https://github.com/bcoe/c8"
+        },
+        {
+          "label": "nyc",
+          "url": "https://github.com/istanbuljs/nyc"
+        },
+        {
+          "label": "Testcontainers for Node.js",
+          "url": "https://node.testcontainers.org/"
+        },
+        {
+          "label": "Playwright: Installation",
+          "url": "https://playwright.dev/docs/intro"
+        },
+        {
+          "label": "Cypress: Why Cypress",
+          "url": "https://docs.cypress.io/app/get-started/why-cypress"
+        }
+      ]
+    },
+    {
+      "id": "lang-csharp",
+      "name": "C# and .NET",
+      "group": "languages",
+      "level": "overview",
+      "summary": "`dotnet test` runs any of the test frameworks. Microsoft's documentation names MSTest, NUnit, TUnit and xUnit.net.",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "an entry about several tools: there is no single start date",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "A set of tools for one language, not a CNCF project."
+      },
+      "license": "Apache-2.0",
+      "version": {
+        "name": "xUnit.net v3",
+        "analysed": "v3-4.0.3",
+        "released": "2026-11-11",
+        "docs": "learn.microsoft.com .NET testing pages (current); xunit.net; the other tools' sites, latest",
+        "checked": "2026-11-13"
+      },
+      "track": {
+        "github": "xunit/xunit"
+      },
+      "links": [
+        {
+          "label": "Microsoft Learn: Testing in .NET",
+          "url": "https://learn.microsoft.com/en-us/dotnet/core/testing/"
+        },
+        {
+          "label": "Microsoft Learn: Unit testing C# with xUnit",
+          "url": "https://learn.microsoft.com/en-us/dotnet/core/testing/unit-testing-csharp-with-xunit"
+        },
+        {
+          "label": "Microsoft Learn: Use code coverage for unit testing",
+          "url": "https://learn.microsoft.com/en-us/dotnet/core/testing/unit-testing-code-coverage"
+        },
+        {
+          "label": "Microsoft Learn: Integration tests in ASP.NET Core",
+          "url": "https://learn.microsoft.com/en-us/aspnet/core/test/integration-tests"
+        },
+        {
+          "label": "xUnit.net",
+          "url": "https://xunit.net/"
+        },
+        {
+          "label": "NUnit",
+          "url": "https://nunit.org/"
+        },
+        {
+          "label": "NSubstitute",
+          "url": "https://nsubstitute.github.io/"
+        },
+        {
+          "label": "Testcontainers for .NET",
+          "url": "https://dotnet.testcontainers.org/"
+        },
+        {
+          "label": "Playwright for .NET",
+          "url": "https://playwright.dev/dotnet/docs/intro"
+        }
+      ],
+      "related": [
+        "unit",
+        "integration",
+        "e2e",
+        "coverage"
+      ],
+      "notes": [
+        "The licence is read from the LICENSE file of the xUnit.net repository (Apache License 2.0); GitHub does not detect it.",
+        "Microsoft Learn also names the built-in .NET code coverage collector as an alternative to Coverlet.",
+        "The xUnit.net release tag is v3-4.0.3: v3 is the product generation, 4.0.3 the package version."
+      ],
+      "sections": [
+        {
+          "title": "How testing is organised",
+          "items": [
+            "Tests live in a separate test project that references the code. `dotnet test` builds it and runs the tests.",
+            "Microsoft Learn: the popular test frameworks are MSTest, NUnit, TUnit and xUnit.net. MSTest is Microsoft's own. The table keeps three of them."
+          ]
+        },
+        {
+          "title": "Tools",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Job",
+                "Tool",
+                "What it is",
+                "Version checked"
+              ],
+              "rows": [
+                [
+                  "Unit",
+                  "[xUnit.net](https://xunit.net/)",
+                  "Free, open source unit testing tool for C#, F# and Visual Basic",
+                  "v3 4.0.3"
+                ],
+                [
+                  "Unit",
+                  "[NUnit](https://nunit.org/)",
+                  "Unit-testing framework for all .NET languages",
+                  "5.0.0"
+                ],
+                [
+                  "Unit",
+                  "[MSTest](https://learn.microsoft.com/en-us/dotnet/core/testing/)",
+                  "The Microsoft test framework for all .NET languages",
+                  "4.5.3"
+                ],
+                [
+                  "Test doubles",
+                  "[NSubstitute](https://nsubstitute.github.io/)",
+                  "A substitute for .NET mocking libraries",
+                  "6.2.0"
+                ],
+                [
+                  "Coverage",
+                  "[Coverlet](https://learn.microsoft.com/en-us/dotnet/core/testing/unit-testing-code-coverage)",
+                  "Cross-platform code coverage framework for C#, part of the .NET Foundation. The xUnit project template already includes its collector",
+                  "10.1.0"
+                ],
+                [
+                  "Integration",
+                  "[Microsoft.AspNetCore.Mvc.Testing](https://learn.microsoft.com/en-us/aspnet/core/test/integration-tests)",
+                  "Runs an ASP.NET Core app on an in-memory test server (TestServer) for the tests",
+                  "ASP.NET Core 10.0.15"
+                ],
+                [
+                  "Integration",
+                  "[Testcontainers for .NET](https://dotnet.testcontainers.org/)",
+                  "Throwaway Docker containers for tests",
+                  "4.16.0"
+                ],
+                [
+                  "End-to-end",
+                  "[Playwright for .NET](https://playwright.dev/dotnet/docs/intro)",
+                  "Browser tests, with base classes for MSTest, NUnit and xUnit",
+                  "1.65.0"
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Examples",
+          "items": [
+            {
+              "type": "code",
+              "title": "An xUnit.net test",
+              "lang": "text",
+              "source": {
+                "label": "Microsoft Learn: Unit testing C# with xUnit",
+                "url": "https://learn.microsoft.com/en-us/dotnet/core/testing/unit-testing-csharp-with-xunit"
+              },
+              "match": "public void IsPrime_InputIs1_ReturnFalse()"
+            },
+            {
+              "type": "code",
+              "title": "Collect coverage with Coverlet",
+              "lang": "text",
+              "source": {
+                "label": "Microsoft Learn: Use code coverage for unit testing",
+                "url": "https://learn.microsoft.com/en-us/dotnet/core/testing/unit-testing-code-coverage"
+              },
+              "match": "dotnet test --collect:\"XPlat Code Coverage\""
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "Microsoft Learn: Testing in .NET",
+          "url": "https://learn.microsoft.com/en-us/dotnet/core/testing/"
+        },
+        {
+          "label": "Microsoft Learn: Unit testing C# with xUnit",
+          "url": "https://learn.microsoft.com/en-us/dotnet/core/testing/unit-testing-csharp-with-xunit"
+        },
+        {
+          "label": "Microsoft Learn: Use code coverage for unit testing",
+          "url": "https://learn.microsoft.com/en-us/dotnet/core/testing/unit-testing-code-coverage"
+        },
+        {
+          "label": "Microsoft Learn: Integration tests in ASP.NET Core",
+          "url": "https://learn.microsoft.com/en-us/aspnet/core/test/integration-tests"
+        },
+        {
+          "label": "xUnit.net",
+          "url": "https://xunit.net/"
+        },
+        {
+          "label": "NUnit",
+          "url": "https://nunit.org/"
+        },
+        {
+          "label": "NSubstitute",
+          "url": "https://nsubstitute.github.io/"
+        },
+        {
+          "label": "Testcontainers for .NET",
+          "url": "https://dotnet.testcontainers.org/"
+        },
+        {
+          "label": "Playwright for .NET",
+          "url": "https://playwright.dev/dotnet/docs/intro"
+        }
+      ]
+    },
+    {
+      "id": "lang-go",
+      "name": "Go",
+      "group": "languages",
+      "level": "overview",
+      "summary": "Testing is in the standard toolchain: the `testing` package, `go test`, and coverage with a flag.",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "an entry about several tools: there is no single start date",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "A set of tools for one language, not a CNCF project."
+      },
+      "license": "BSD-3-Clause",
+      "version": {
+        "name": "Go",
+        "analysed": "go1.27.4",
+        "released": "2026-11-10",
+        "docs": "pkg.go.dev/testing (go1.27.4); go.dev/doc/build-cover; go.dev/blog/cover (2013); the other tools' sites, latest",
+        "checked": "2026-11-13"
+      },
+      "links": [
+        {
+          "label": "Go: package testing",
+          "url": "https://pkg.go.dev/testing"
+        },
+        {
+          "label": "Go: Coverage profiling support for integration tests",
+          "url": "https://go.dev/doc/build-cover"
+        },
+        {
+          "label": "The Go Blog: The cover story",
+          "url": "https://go.dev/blog/cover"
+        },
+        {
+          "label": "Go: package httptest",
+          "url": "https://pkg.go.dev/net/http/httptest"
+        },
+        {
+          "label": "Go: release history",
+          "url": "https://go.dev/doc/devel/release"
+        },
+        {
+          "label": "Testify",
+          "url": "https://github.com/stretchr/testify"
+        },
+        {
+          "label": "Testcontainers for Go",
+          "url": "https://golang.testcontainers.org/"
+        }
+      ],
+      "related": [
+        "unit",
+        "integration",
+        "e2e",
+        "coverage"
+      ],
+      "notes": [
+        "No `track`: Go publishes no GitHub releases, so `make check` skips this entry. The version is read from go.dev/doc/devel/release."
+      ],
+      "sections": [
+        {
+          "title": "How testing is organised",
+          "items": [
+            "A test is a function `TestXxx(*testing.T)` in a file whose name ends in `_test.go`. `go test` runs them. The file is left out of regular builds.",
+            "Nothing else is needed for unit tests or coverage."
+          ]
+        },
+        {
+          "title": "Tools",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Job",
+                "Tool",
+                "What it is",
+                "Version checked"
+              ],
+              "rows": [
+                [
+                  "Unit",
+                  "[testing](https://pkg.go.dev/testing) and `go test`",
+                  "Standard library package and command",
+                  "1.27.4"
+                ],
+                [
+                  "Test doubles",
+                  "[Testify](https://github.com/stretchr/testify)",
+                  "A toolkit with common assertions and mocks that works with the standard library. Not part of Go",
+                  "1.12.1"
+                ],
+                [
+                  "Coverage",
+                  "`go test -cover`",
+                  "Built in. `-coverprofile` writes the profile",
+                  "1.27.4"
+                ],
+                [
+                  "Coverage",
+                  "[go build -cover](https://go.dev/doc/build-cover)",
+                  "Coverage of a built binary, for integration tests. Since Go 1.20",
+                  "1.27.4"
+                ],
+                [
+                  "Integration",
+                  "[net/http/httptest](https://pkg.go.dev/net/http/httptest)",
+                  "Standard library utilities for HTTP testing",
+                  "1.27.4"
+                ],
+                [
+                  "Integration",
+                  "[Testcontainers for Go](https://golang.testcontainers.org/)",
+                  "Creates and cleans up container-based dependencies for tests",
+                  "0.45.0"
+                ],
+                [
+                  "End-to-end",
+                  "None named",
+                  "The Go documentation read names no end-to-end tool",
+                  "n/a"
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Examples",
+          "items": [
+            {
+              "type": "code",
+              "title": "A Go test",
+              "lang": "text",
+              "source": {
+                "label": "Go: package testing",
+                "url": "https://pkg.go.dev/testing"
+              },
+              "match": "func TestAbs(t *testing.T) {"
+            },
+            {
+              "type": "code",
+              "title": "Coverage of a package",
+              "lang": "text",
+              "source": {
+                "label": "The Go Blog: The cover story",
+                "url": "https://go.dev/blog/cover"
+              },
+              "match": "% go test -cover"
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "Go: package testing",
+          "url": "https://pkg.go.dev/testing"
+        },
+        {
+          "label": "Go: Coverage profiling support for integration tests",
+          "url": "https://go.dev/doc/build-cover"
+        },
+        {
+          "label": "The Go Blog: The cover story",
+          "url": "https://go.dev/blog/cover",
+          "date": "2013-12-02"
+        },
+        {
+          "label": "Go: package httptest",
+          "url": "https://pkg.go.dev/net/http/httptest"
+        },
+        {
+          "label": "Go: release history",
+          "url": "https://go.dev/doc/devel/release"
+        },
+        {
+          "label": "Testify",
+          "url": "https://github.com/stretchr/testify"
+        },
+        {
+          "label": "Testcontainers for Go",
+          "url": "https://golang.testcontainers.org/"
+        }
+      ]
+    },
+    {
+      "id": "lang-cpp",
+      "name": "C++",
+      "group": "languages",
+      "level": "overview",
+      "summary": "No test tool comes with the language. GoogleTest or Catch2 write the tests, CTest runs them, the compiler measures coverage.",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "an entry about several tools: there is no single start date",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "A set of tools for one language, not a CNCF project."
+      },
+      "license": "BSD-3-Clause",
+      "version": {
+        "name": "GoogleTest",
+        "analysed": "v1.18.0",
+        "released": "2026-08-10",
+        "docs": "google.github.io/googletest (latest); Catch2 repository (devel branch); CMake latest documentation (4.5); GCC online manual (development version 17.0.0); clang.llvm.org documentation (latest)",
+        "checked": "2026-11-13"
+      },
+      "track": {
+        "github": "google/googletest"
+      },
+      "links": [
+        {
+          "label": "GoogleTest: User's Guide",
+          "url": "https://google.github.io/googletest/"
+        },
+        {
+          "label": "GoogleTest: Quickstart with CMake",
+          "url": "https://google.github.io/googletest/quickstart-cmake.html"
+        },
+        {
+          "label": "gMock for Dummies",
+          "url": "https://google.github.io/googletest/gmock_for_dummies.html"
+        },
+        {
+          "label": "Catch2",
+          "url": "https://github.com/catchorg/Catch2"
+        },
+        {
+          "label": "Catch2: Tutorial",
+          "url": "https://github.com/catchorg/Catch2/blob/devel/docs/tutorial.md"
+        },
+        {
+          "label": "CMake: ctest(1)",
+          "url": "https://cmake.org/cmake/help/latest/manual/ctest.1.html"
+        },
+        {
+          "label": "GCC: Introduction to gcov",
+          "url": "https://gcc.gnu.org/onlinedocs/gcc/Gcov-Intro.html"
+        },
+        {
+          "label": "GCC: Invoking gcov",
+          "url": "https://gcc.gnu.org/onlinedocs/gcc/Invoking-Gcov.html"
+        },
+        {
+          "label": "LCOV",
+          "url": "https://github.com/linux-test-project/lcov"
+        },
+        {
+          "label": "Clang: Source-based Code Coverage",
+          "url": "https://clang.llvm.org/docs/SourceBasedCodeCoverage.html"
+        }
+      ],
+      "related": [
+        "unit",
+        "integration",
+        "e2e",
+        "coverage"
+      ],
+      "notes": [
+        "The GCC manual online is the development version (17.0.0), not a release.",
+        "Whether GoogleTest and Catch2 are the most used is not claimed: no public source ranks them."
+      ],
+      "sections": [
+        {
+          "title": "How testing is organised",
+          "items": [
+            "The tests are compiled into an executable. CTest, the test driver of CMake, runs the tests that a project registers with `enable_testing()` and `add_test()` and reports the results.",
+            "Coverage comes from the compiler: GCC with gcov, or Clang with llvm-cov."
+          ]
+        },
+        {
+          "title": "Tools",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Job",
+                "Tool",
+                "What it is",
+                "Version checked"
+              ],
+              "rows": [
+                [
+                  "Unit",
+                  "[GoogleTest](https://google.github.io/googletest/)",
+                  "Google's C++ test framework",
+                  "1.18.0"
+                ],
+                [
+                  "Unit",
+                  "[Catch2](https://github.com/catchorg/Catch2)",
+                  "Mainly a unit testing framework for C++, with micro-benchmarks and simple BDD macros",
+                  "3.16.1"
+                ],
+                [
+                  "Run",
+                  "[CTest](https://cmake.org/cmake/help/latest/manual/ctest.1.html)",
+                  "The CMake test driver program",
+                  "CMake 4.5.0"
+                ],
+                [
+                  "Test doubles",
+                  "[gMock](https://google.github.io/googletest/gmock_for_dummies.html)",
+                  "Library for creating mock classes. Part of GoogleTest",
+                  "1.18.0"
+                ],
+                [
+                  "Coverage",
+                  "[gcov](https://gcc.gnu.org/onlinedocs/gcc/Gcov-Intro.html)",
+                  "Test coverage program of GCC. Compile with `--coverage` first",
+                  "GCC manual 17.0.0 (development)"
+                ],
+                [
+                  "Coverage",
+                  "[LCOV](https://github.com/linux-test-project/lcov)",
+                  "Perl scripts that turn the output of gcov or llvm-cov into reports",
+                  "2.6"
+                ],
+                [
+                  "Coverage",
+                  "[llvm-cov](https://clang.llvm.org/docs/SourceBasedCodeCoverage.html)",
+                  "Clang's source-based code coverage",
+                  "LLVM 23.1.5"
+                ],
+                [
+                  "Integration and end-to-end",
+                  "None specific",
+                  "No C++ tool found for these layers. CTest runs whatever a project registers as a test",
+                  "n/a"
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Examples",
+          "items": [
+            {
+              "type": "code",
+              "title": "A GoogleTest test",
+              "lang": "text",
+              "source": {
+                "label": "GoogleTest: Quickstart with CMake",
+                "url": "https://google.github.io/googletest/quickstart-cmake.html"
+              },
+              "match": "TEST(HelloTest, BasicAssertions) {"
+            },
+            {
+              "type": "code",
+              "title": "A Catch2 test",
+              "lang": "text",
+              "source": {
+                "label": "Catch2: Tutorial",
+                "url": "https://github.com/catchorg/Catch2/blob/devel/docs/tutorial.md"
+              },
+              "match": "TEST_CASE( \"Factorials are computed\", \"[factorial]\" ) {"
+            },
+            {
+              "type": "code",
+              "title": "Compile with Clang coverage",
+              "lang": "text",
+              "source": {
+                "label": "Clang: Source-based Code Coverage",
+                "url": "https://clang.llvm.org/docs/SourceBasedCodeCoverage.html"
+              },
+              "match": "# Step 1: Compile with coverage enabled."
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "GoogleTest: User's Guide",
+          "url": "https://google.github.io/googletest/"
+        },
+        {
+          "label": "GoogleTest: Quickstart with CMake",
+          "url": "https://google.github.io/googletest/quickstart-cmake.html"
+        },
+        {
+          "label": "gMock for Dummies",
+          "url": "https://google.github.io/googletest/gmock_for_dummies.html"
+        },
+        {
+          "label": "Catch2",
+          "url": "https://github.com/catchorg/Catch2"
+        },
+        {
+          "label": "Catch2: Tutorial",
+          "url": "https://github.com/catchorg/Catch2/blob/devel/docs/tutorial.md"
+        },
+        {
+          "label": "CMake: ctest(1)",
+          "url": "https://cmake.org/cmake/help/latest/manual/ctest.1.html"
+        },
+        {
+          "label": "GCC: Introduction to gcov",
+          "url": "https://gcc.gnu.org/onlinedocs/gcc/Gcov-Intro.html"
+        },
+        {
+          "label": "GCC: Invoking gcov",
+          "url": "https://gcc.gnu.org/onlinedocs/gcc/Invoking-Gcov.html"
+        },
+        {
+          "label": "LCOV",
+          "url": "https://github.com/linux-test-project/lcov"
+        },
+        {
+          "label": "Clang: Source-based Code Coverage",
+          "url": "https://clang.llvm.org/docs/SourceBasedCodeCoverage.html"
+        }
+      ]
+    },
+    {
+      "id": "lang-rust",
+      "name": "Rust",
+      "group": "languages",
+      "level": "overview",
+      "summary": "`cargo test` runs unit tests written next to the code, integration tests in `tests/` and the examples in the documentation.",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "an entry about several tools: there is no single start date",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "A set of tools for one language, not a CNCF project."
+      },
+      "license": "MIT OR Apache-2.0",
+      "version": {
+        "name": "Rust",
+        "analysed": "1.100.0",
+        "released": "2026-11-12",
+        "docs": "doc.rust-lang.org/book chapter 11 (current); doc.rust-lang.org/rustc; cargo-llvm-cov README",
+        "checked": "2026-11-13"
+      },
+      "track": {
+        "github": "rust-lang/rust"
+      },
+      "links": [
+        {
+          "label": "The Rust Programming Language: How to Write Tests",
+          "url": "https://doc.rust-lang.org/book/ch11-01-writing-tests.html"
+        },
+        {
+          "label": "The Rust Programming Language: Test Organization",
+          "url": "https://doc.rust-lang.org/book/ch11-03-test-organization.html"
+        },
+        {
+          "label": "The rustc book: Instrumentation-based Code Coverage",
+          "url": "https://doc.rust-lang.org/rustc/instrument-coverage.html"
+        },
+        {
+          "label": "cargo-llvm-cov",
+          "url": "https://github.com/taiki-e/cargo-llvm-cov"
+        }
+      ],
+      "related": [
+        "unit",
+        "integration",
+        "e2e",
+        "coverage"
+      ],
+      "notes": [
+        "Rust is dual licensed: its repository carries LICENSE-APACHE and LICENSE-MIT."
+      ],
+      "sections": [
+        {
+          "title": "How testing is organised",
+          "items": [
+            "Unit tests sit in the same file as the code, in a module marked `#[cfg(test)]`, and can test private interfaces.",
+            "Integration tests are files in the `tests/` directory. They use the library as any other external code would, through its public interface only.",
+            "`cargo test` runs both, and the documentation tests (the `Doc-tests` part of its output)."
+          ]
+        },
+        {
+          "title": "Tools",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Job",
+                "Tool",
+                "What it is",
+                "Version checked"
+              ],
+              "rows": [
+                [
+                  "Unit",
+                  "[cargo test](https://doc.rust-lang.org/book/ch11-01-writing-tests.html)",
+                  "Built in: `#[test]` functions and assert macros",
+                  "1.100.0"
+                ],
+                [
+                  "Test doubles",
+                  "None in the toolchain",
+                  "The pages read name no mocking tool",
+                  "n/a"
+                ],
+                [
+                  "Coverage",
+                  "[-C instrument-coverage](https://doc.rust-lang.org/rustc/instrument-coverage.html)",
+                  "The compiler's source-based code coverage",
+                  "1.100.0"
+                ],
+                [
+                  "Coverage",
+                  "[cargo-llvm-cov](https://github.com/taiki-e/cargo-llvm-cov)",
+                  "Cargo subcommand to use that coverage easily",
+                  "0.9.1"
+                ],
+                [
+                  "Integration",
+                  "[tests/ directory](https://doc.rust-lang.org/book/ch11-03-test-organization.html)",
+                  "Built in",
+                  "1.100.0"
+                ],
+                [
+                  "End-to-end",
+                  "None named",
+                  "The pages read name no end-to-end tool",
+                  "n/a"
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Examples",
+          "items": [
+            {
+              "type": "code",
+              "title": "A unit test next to the code",
+              "lang": "text",
+              "source": {
+                "label": "The Rust Programming Language: How to Write Tests",
+                "url": "https://doc.rust-lang.org/book/ch11-01-writing-tests.html"
+              },
+              "match": "fn it_works() {"
+            },
+            {
+              "type": "code",
+              "title": "An integration test in tests/",
+              "lang": "text",
+              "source": {
+                "label": "The Rust Programming Language: Test Organization",
+                "url": "https://doc.rust-lang.org/book/ch11-03-test-organization.html"
+              },
+              "match": "use adder::add_two;"
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "The Rust Programming Language: How to Write Tests",
+          "url": "https://doc.rust-lang.org/book/ch11-01-writing-tests.html"
+        },
+        {
+          "label": "The Rust Programming Language: Test Organization",
+          "url": "https://doc.rust-lang.org/book/ch11-03-test-organization.html"
+        },
+        {
+          "label": "The rustc book: Instrumentation-based Code Coverage",
+          "url": "https://doc.rust-lang.org/rustc/instrument-coverage.html"
+        },
+        {
+          "label": "cargo-llvm-cov",
+          "url": "https://github.com/taiki-e/cargo-llvm-cov"
+        }
+      ]
+    },
+    {
+      "id": "lang-php",
+      "name": "PHP",
+      "group": "languages",
+      "level": "overview",
+      "summary": "PHPUnit is the base. Coverage needs a PHP extension, PCOV or Xdebug.",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "an entry about several tools: there is no single start date",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "A set of tools for one language, not a CNCF project."
+      },
+      "license": "BSD-3-Clause",
+      "version": {
+        "name": "PHPUnit",
+        "analysed": "13.4.7",
+        "released": "2026-11-13",
+        "docs": "docs.phpunit.de (13.4); pestphp.com (Pest 5); laravel.com/docs/dusk; codeception.com (latest)",
+        "checked": "2026-11-13"
+      },
+      "track": {
+        "github": "sebastianbergmann/phpunit"
+      },
+      "links": [
+        {
+          "label": "PHPUnit: Getting Started with PHPUnit 13",
+          "url": "https://phpunit.de/getting-started/phpunit-13.html"
+        },
+        {
+          "label": "PHPUnit manual: Writing Tests for PHPUnit",
+          "url": "https://docs.phpunit.de/en/13.4/writing-tests-for-phpunit.html"
+        },
+        {
+          "label": "PHPUnit manual: Test Doubles",
+          "url": "https://docs.phpunit.de/en/13.4/test-doubles.html"
+        },
+        {
+          "label": "PHPUnit manual: Code Coverage",
+          "url": "https://docs.phpunit.de/en/13.4/code-coverage.html"
+        },
+        {
+          "label": "Pest: Writing Tests",
+          "url": "https://pestphp.com/docs/writing-tests"
+        },
+        {
+          "label": "Pest: Test Coverage",
+          "url": "https://pestphp.com/docs/test-coverage"
+        },
+        {
+          "label": "Pest: Browser Testing",
+          "url": "https://pestphp.com/docs/browser-testing"
+        },
+        {
+          "label": "Laravel: Dusk",
+          "url": "https://laravel.com/docs/dusk"
+        },
+        {
+          "label": "Codeception: Acceptance Tests",
+          "url": "https://codeception.com/docs/AcceptanceTests"
+        }
+      ],
+      "related": [
+        "unit",
+        "integration",
+        "e2e",
+        "coverage"
+      ],
+      "notes": [
+        "Laravel Dusk is specific to the Laravel framework.",
+        "Codeception is placed on the integration row because its documentation has separate guides for unit, functional and acceptance tests; its acceptance tests are end-to-end tests too."
+      ],
+      "sections": [
+        {
+          "title": "How testing is organised",
+          "items": [
+            "A PHPUnit test is a class that extends `TestCase`, with methods that call assertions. It is installed with Composer and run with `./vendor/bin/phpunit`.",
+            "Pest is another framework with a shorter syntax: `test('sum', function () { ... })`."
+          ]
+        },
+        {
+          "title": "Tools",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Job",
+                "Tool",
+                "What it is",
+                "Version checked"
+              ],
+              "rows": [
+                [
+                  "Unit",
+                  "[PHPUnit](https://docs.phpunit.de/en/13.4/)",
+                  "Test framework",
+                  "13.4.7"
+                ],
+                [
+                  "Unit",
+                  "[Pest](https://pestphp.com/docs/writing-tests)",
+                  "\"The elegant PHP testing framework\"",
+                  "5.3.5"
+                ],
+                [
+                  "Test doubles",
+                  "[PHPUnit test doubles](https://docs.phpunit.de/en/13.4/test-doubles.html)",
+                  "Built in: `createStub()` and `createMock()`",
+                  "13.4.7"
+                ],
+                [
+                  "Coverage",
+                  "[PHPUnit code coverage](https://docs.phpunit.de/en/13.4/code-coverage.html)",
+                  "Built in, through the php-code-coverage library. It needs the PCOV or the Xdebug extension",
+                  "13.4.7; PCOV 1.0.12, Xdebug 3.5.3"
+                ],
+                [
+                  "Integration",
+                  "[Codeception](https://codeception.com/docs/AcceptanceTests)",
+                  "Separates unit, functional and acceptance tests",
+                  "5.3.7"
+                ],
+                [
+                  "End-to-end",
+                  "[Pest browser testing](https://pestphp.com/docs/browser-testing)",
+                  "Browser tests written in Pest",
+                  "5.3.5"
+                ],
+                [
+                  "End-to-end",
+                  "[Laravel Dusk](https://laravel.com/docs/dusk)",
+                  "Browser automation and testing API for Laravel, using ChromeDriver",
+                  "8.8.0"
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Examples",
+          "items": [
+            {
+              "type": "callout",
+              "kind": "tip",
+              "text": "The Laravel documentation now recommends Pest for browser testing in new projects, over Laravel Dusk."
+            },
+            {
+              "type": "code",
+              "title": "A PHPUnit test",
+              "lang": "text",
+              "source": {
+                "label": "PHPUnit: Getting Started with PHPUnit 13",
+                "url": "https://phpunit.de/getting-started/phpunit-13.html"
+              },
+              "match": "final class EmailTest extends TestCase"
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "PHPUnit: Getting Started with PHPUnit 13",
+          "url": "https://phpunit.de/getting-started/phpunit-13.html"
+        },
+        {
+          "label": "PHPUnit manual: Writing Tests for PHPUnit",
+          "url": "https://docs.phpunit.de/en/13.4/writing-tests-for-phpunit.html"
+        },
+        {
+          "label": "PHPUnit manual: Test Doubles",
+          "url": "https://docs.phpunit.de/en/13.4/test-doubles.html"
+        },
+        {
+          "label": "PHPUnit manual: Code Coverage",
+          "url": "https://docs.phpunit.de/en/13.4/code-coverage.html"
+        },
+        {
+          "label": "Pest: Writing Tests",
+          "url": "https://pestphp.com/docs/writing-tests"
+        },
+        {
+          "label": "Pest: Test Coverage",
+          "url": "https://pestphp.com/docs/test-coverage"
+        },
+        {
+          "label": "Pest: Browser Testing",
+          "url": "https://pestphp.com/docs/browser-testing"
+        },
+        {
+          "label": "Laravel: Dusk",
+          "url": "https://laravel.com/docs/dusk"
+        },
+        {
+          "label": "Codeception: Acceptance Tests",
+          "url": "https://codeception.com/docs/AcceptanceTests"
+        }
+      ]
+    },
+    {
+      "id": "lang-ruby",
+      "name": "Ruby",
+      "group": "languages",
+      "level": "overview",
+      "summary": "Minitest or RSpec for the tests, SimpleCov for coverage, Capybara to drive the application as a user.",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "an entry about several tools: there is no single start date",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "A set of tools for one language, not a CNCF project."
+      },
+      "license": "MIT",
+      "version": {
+        "name": "Minitest",
+        "analysed": "6.1.0",
+        "released": "2026-11-06",
+        "docs": "docs.seattlerb.org/minitest (latest); rspec.info (3.13); SimpleCov and Capybara READMEs; guides.rubyonrails.org/testing.html (current)",
+        "checked": "2026-11-13"
+      },
+      "links": [
+        {
+          "label": "Minitest",
+          "url": "https://docs.seattlerb.org/minitest/"
+        },
+        {
+          "label": "RSpec",
+          "url": "https://rspec.info/"
+        },
+        {
+          "label": "RSpec Core 3.13",
+          "url": "https://rspec.info/features/3-13/rspec-core/"
+        },
+        {
+          "label": "RSpec Mocks 3.13",
+          "url": "https://rspec.info/features/3-13/rspec-mocks/"
+        },
+        {
+          "label": "SimpleCov",
+          "url": "https://github.com/simplecov-ruby/simplecov"
+        },
+        {
+          "label": "Capybara",
+          "url": "https://github.com/teamcapybara/capybara"
+        },
+        {
+          "label": "Rails Guides: Testing Rails Applications",
+          "url": "https://guides.rubyonrails.org/testing.html"
+        },
+        {
+          "label": "RubyGems: minitest",
+          "url": "https://rubygems.org/gems/minitest"
+        }
+      ],
+      "related": [
+        "unit",
+        "integration",
+        "e2e",
+        "coverage"
+      ],
+      "notes": [
+        "No `track`: Minitest and RSpec publish no GitHub releases, so `make check` skips this entry. Minitest's version and date are from RubyGems.",
+        "RSpec 3.13.2 is the latest stable release on RubyGems; 4.0.0.beta1 exists and was not analysed.",
+        "The Rails version of the guide was not recorded: the page read shows none."
+      ],
+      "sections": [
+        {
+          "title": "How testing is organised",
+          "items": [
+            "Minitest: a test is a class that inherits from `Minitest::Test`, with methods that start with `test_`. Rails tests are built on it: `ActiveSupport::TestCase` inherits from `Minitest::Test`.",
+            "RSpec describes behaviour with `describe` and `it` blocks. Its test doubles are in rspec-mocks.",
+            "Rails system tests run the application in a real or headless browser and use Capybara."
+          ]
+        },
+        {
+          "title": "Tools",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Job",
+                "Tool",
+                "What it is",
+                "Version checked"
+              ],
+              "rows": [
+                [
+                  "Unit",
+                  "[Minitest](https://docs.seattlerb.org/minitest/)",
+                  "Testing facilities supporting TDD, BDD and benchmarking",
+                  "6.1.0"
+                ],
+                [
+                  "Unit",
+                  "[RSpec](https://rspec.info/)",
+                  "Behaviour Driven Development for Ruby",
+                  "3.13.2"
+                ],
+                [
+                  "Test doubles",
+                  "[rspec-mocks](https://rspec.info/features/3-13/rspec-mocks/)",
+                  "Test doubles for RSpec",
+                  "3.13"
+                ],
+                [
+                  "Coverage",
+                  "[SimpleCov](https://github.com/simplecov-ruby/simplecov)",
+                  "Code coverage analysis for Ruby, on top of Ruby's built-in Coverage library",
+                  "1.3.2"
+                ],
+                [
+                  "Integration and end-to-end",
+                  "[Capybara](https://github.com/teamcapybara/capybara)",
+                  "Simulates how a real user interacts with a web application. Rack::Test and Selenium support built in",
+                  "3.40.0"
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Examples",
+          "items": [
+            {
+              "type": "code",
+              "title": "A Minitest test",
+              "lang": "text",
+              "source": {
+                "label": "Minitest",
+                "url": "https://docs.seattlerb.org/minitest/"
+              },
+              "match": "class TestMeme < Minitest::Test"
+            },
+            {
+              "type": "code",
+              "title": "An RSpec example",
+              "lang": "text",
+              "source": {
+                "label": "RSpec Core 3.13",
+                "url": "https://rspec.info/features/3-13/rspec-core/"
+              },
+              "match": "RSpec.describe Account do"
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "Minitest",
+          "url": "https://docs.seattlerb.org/minitest/"
+        },
+        {
+          "label": "RSpec",
+          "url": "https://rspec.info/"
+        },
+        {
+          "label": "RSpec Core 3.13",
+          "url": "https://rspec.info/features/3-13/rspec-core/"
+        },
+        {
+          "label": "RSpec Mocks 3.13",
+          "url": "https://rspec.info/features/3-13/rspec-mocks/"
+        },
+        {
+          "label": "SimpleCov",
+          "url": "https://github.com/simplecov-ruby/simplecov"
+        },
+        {
+          "label": "Capybara",
+          "url": "https://github.com/teamcapybara/capybara"
+        },
+        {
+          "label": "Rails Guides: Testing Rails Applications",
+          "url": "https://guides.rubyonrails.org/testing.html"
+        },
+        {
+          "label": "RubyGems: minitest",
+          "url": "https://rubygems.org/gems/minitest"
+        }
+      ]
+    },
+    {
+      "id": "lang-swift",
+      "name": "Swift",
+      "group": "languages",
+      "level": "overview",
+      "summary": "Swift Testing and XCTest come with the toolchain. `swift test` runs both.",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "an entry about several tools: there is no single start date",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "A set of tools for one language, not a CNCF project."
+      },
+      "license": "Apache-2.0",
+      "version": {
+        "name": "Swift Testing",
+        "analysed": "swift-6.4.2-RELEASE",
+        "released": "2026-10-30",
+        "docs": "swift.org getting started guide (its sample output shows testing library 6.1); swift-testing and swift-corelibs-xctest READMEs; Swift Package Manager documentation source (main branch); developer.apple.com (no version on page)",
+        "checked": "2026-11-13"
+      },
+      "track": {
+        "github": "swiftlang/swift-testing"
+      },
+      "links": [
+        {
+          "label": "Swift.org: Build a library with SwiftPM",
+          "url": "https://www.swift.org/getting-started/library-swiftpm/"
+        },
+        {
+          "label": "Swift Testing",
+          "url": "https://github.com/swiftlang/swift-testing"
+        },
+        {
+          "label": "swift-corelibs-xctest",
+          "url": "https://github.com/swiftlang/swift-corelibs-xctest"
+        },
+        {
+          "label": "Swift Package Manager: swift test",
+          "url": "https://github.com/swiftlang/swift-package-manager/blob/main/Sources/PackageManagerDocs/Documentation.docc/SwiftTest.md"
+        },
+        {
+          "label": "Apple: XCUIAutomation",
+          "url": "https://developer.apple.com/documentation/xcuiautomation"
+        },
+        {
+          "label": "Apple: Swift Testing",
+          "url": "https://developer.apple.com/documentation/testing"
+        }
+      ],
+      "related": [
+        "unit",
+        "integration",
+        "e2e",
+        "coverage"
+      ],
+      "notes": [
+        "The `--enable-code-coverage` flag was read from the documentation source on the main branch of the Swift Package Manager, not from a released version.",
+        "XCUIAutomation is the one tool here that is not open source: it ships with Xcode. The Apple pages were read through their data files because the pages need JavaScript."
+      ],
+      "sections": [
+        {
+          "title": "How testing is organised",
+          "items": [
+            "Swift Testing declares a test with the `@Test` macro and checks with `#expect`. XCTest is the older core library for unit tests.",
+            "In a package the tests live in the test target, and `swift test` runs them."
+          ]
+        },
+        {
+          "title": "Tools",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Job",
+                "Tool",
+                "What it is",
+                "Version checked"
+              ],
+              "rows": [
+                [
+                  "Unit",
+                  "[Swift Testing](https://github.com/swiftlang/swift-testing)",
+                  "Package with macro-based APIs for testing Swift code",
+                  "6.4.2"
+                ],
+                [
+                  "Unit",
+                  "[XCTest](https://github.com/swiftlang/swift-corelibs-xctest)",
+                  "Swift core library for unit test support",
+                  "6.4.2"
+                ],
+                [
+                  "Test doubles",
+                  "None in the toolchain",
+                  "The pages read name no mocking tool",
+                  "n/a"
+                ],
+                [
+                  "Coverage",
+                  "`swift test --enable-code-coverage`",
+                  "Built into the Swift Package Manager",
+                  "main branch"
+                ],
+                [
+                  "Integration",
+                  "None specific",
+                  "The same two libraries",
+                  "n/a"
+                ],
+                [
+                  "End-to-end",
+                  "[XCUIAutomation](https://developer.apple.com/documentation/xcuiautomation)",
+                  "Apple: replicate sequences of interactions and check that the app's user interface behaves as intended. Part of Xcode, not open source",
+                  "no version on page"
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Examples",
+          "items": [
+            {
+              "type": "code",
+              "title": "A Swift Testing test",
+              "lang": "text",
+              "source": {
+                "label": "Swift.org: Build a library with SwiftPM",
+                "url": "https://www.swift.org/getting-started/library-swiftpm/"
+              },
+              "match": "struct MyLibraryTests {"
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "Swift.org: Build a library with SwiftPM",
+          "url": "https://www.swift.org/getting-started/library-swiftpm/"
+        },
+        {
+          "label": "Swift Testing",
+          "url": "https://github.com/swiftlang/swift-testing"
+        },
+        {
+          "label": "swift-corelibs-xctest",
+          "url": "https://github.com/swiftlang/swift-corelibs-xctest"
+        },
+        {
+          "label": "Swift Package Manager: swift test",
+          "url": "https://github.com/swiftlang/swift-package-manager/blob/main/Sources/PackageManagerDocs/Documentation.docc/SwiftTest.md"
+        },
+        {
+          "label": "Apple: XCUIAutomation",
+          "url": "https://developer.apple.com/documentation/xcuiautomation"
+        },
+        {
+          "label": "Apple: Swift Testing",
+          "url": "https://developer.apple.com/documentation/testing"
+        }
+      ]
+    },
+    {
+      "id": "lang-python",
+      "name": "Python",
+      "group": "languages",
+      "level": "overview",
+      "summary": "pytest for the tests, coverage.py for coverage. The worked examples are in the layer tabs.",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "an entry about several tools: there is no single start date",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "A set of tools for one language, not a CNCF project."
+      },
+      "license": "MIT",
+      "version": {
+        "name": "pytest",
+        "analysed": "9.2.0",
+        "released": "2026-10-27",
+        "docs": "docs.pytest.org (stable); coverage.py 7.17.3 documentation; pytest-cov 7.1.0 documentation; see the layer entries for the other tools",
+        "checked": "2026-11-13"
+      },
+      "track": {
+        "github": "pytest-dev/pytest"
+      },
+      "links": [
+        {
+          "label": "pytest: Get started",
+          "url": "https://docs.pytest.org/en/stable/getting-started.html"
+        },
+        {
+          "label": "Python: unittest.mock",
+          "url": "https://docs.python.org/3/library/unittest.mock.html"
+        },
+        {
+          "label": "coverage.py",
+          "url": "https://coverage.readthedocs.io/en/latest/"
+        },
+        {
+          "label": "pytest-cov",
+          "url": "https://pytest-cov.readthedocs.io/en/latest/readme.html"
+        },
+        {
+          "label": "Testcontainers for Python",
+          "url": "https://testcontainers-python.readthedocs.io/en/latest/"
+        },
+        {
+          "label": "Playwright for Python",
+          "url": "https://playwright.dev/python/docs/intro"
+        }
+      ],
+      "related": [
+        "unit",
+        "integration",
+        "e2e",
+        "coverage"
+      ],
+      "notes": [
+        "The versions of unittest.mock, Testcontainers and Playwright are the ones recorded by the layer entries on 2026-11-12, not re-read."
+      ],
+      "sections": [
+        {
+          "title": "How testing is organised",
+          "items": [
+            "pytest finds functions named `test_` and treats a plain `assert` as the check. `unittest` and `unittest.mock` are in the standard library.",
+            "This page is a summary. Each layer tab shows the Python example in full: [unit](#unit), [contract](#contract), [integration](#integration), [end-to-end](#e2e)."
+          ]
+        },
+        {
+          "title": "Tools",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Job",
+                "Tool",
+                "What it is",
+                "Version checked"
+              ],
+              "rows": [
+                [
+                  "Unit",
+                  "[pytest](https://docs.pytest.org/en/stable/getting-started.html)",
+                  "Test runner and assertions",
+                  "9.2.0"
+                ],
+                [
+                  "Test doubles",
+                  "[unittest.mock](https://docs.python.org/3/library/unittest.mock.html)",
+                  "Mocks, in the standard library",
+                  "Python 3.15 docs"
+                ],
+                [
+                  "Coverage",
+                  "[coverage.py](https://coverage.readthedocs.io/en/latest/)",
+                  "Measures code coverage of Python programs",
+                  "7.17.3"
+                ],
+                [
+                  "Coverage",
+                  "[pytest-cov](https://pytest-cov.readthedocs.io/en/latest/readme.html)",
+                  "coverage.py as a pytest plugin",
+                  "7.1.0"
+                ],
+                [
+                  "Integration",
+                  "[Testcontainers for Python](https://testcontainers-python.readthedocs.io/en/latest/)",
+                  "Real dependencies in containers",
+                  "4.15.0"
+                ],
+                [
+                  "End-to-end",
+                  "[Playwright for Python](https://playwright.dev/python/docs/intro)",
+                  "Browser tests",
+                  "1.65.1"
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Examples",
+          "items": [
+            {
+              "type": "code",
+              "title": "pytest with coverage",
+              "lang": "text",
+              "source": {
+                "label": "pytest-cov",
+                "url": "https://pytest-cov.readthedocs.io/en/latest/readme.html"
+              },
+              "match": "pytest --cov=myproj tests/"
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "pytest: Get started",
+          "url": "https://docs.pytest.org/en/stable/getting-started.html"
+        },
+        {
+          "label": "Python: unittest.mock",
+          "url": "https://docs.python.org/3/library/unittest.mock.html"
+        },
+        {
+          "label": "coverage.py",
+          "url": "https://coverage.readthedocs.io/en/latest/"
+        },
+        {
+          "label": "pytest-cov",
+          "url": "https://pytest-cov.readthedocs.io/en/latest/readme.html"
+        },
+        {
+          "label": "Testcontainers for Python",
+          "url": "https://testcontainers-python.readthedocs.io/en/latest/"
+        },
+        {
+          "label": "Playwright for Python",
+          "url": "https://playwright.dev/python/docs/intro"
+        }
+      ]
+    },
+    {
+      "id": "lang-terraform",
+      "name": "Terraform",
+      "group": "languages",
+      "level": "overview",
+      "summary": "`terraform test` covers the layers: a plan for unit tests, an apply for integration tests. The worked examples are in the layer tabs.",
+      "status": "active",
+      "started": {
+        "date": "unconfirmed",
+        "basis": "an entry about several tools: there is no single start date",
+        "confirmed": false
+      },
+      "cncf": {
+        "level": "none",
+        "text": "A set of tools for one language, not a CNCF project."
+      },
+      "license": "BUSL-1.1",
+      "version": {
+        "name": "Terraform",
+        "analysed": "v1.17.2",
+        "released": "2026-11-11",
+        "docs": "developer.hashicorp.com/terraform (v1.17.x); see the layer entries for the other tools",
+        "checked": "2026-11-13"
+      },
+      "track": {
+        "github": "hashicorp/terraform"
+      },
+      "links": [
+        {
+          "label": "Terraform: Tests",
+          "url": "https://developer.hashicorp.com/terraform/language/tests"
+        },
+        {
+          "label": "Terraform: Mocking",
+          "url": "https://developer.hashicorp.com/terraform/language/tests/mocking"
+        },
+        {
+          "label": "terraform test",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/test"
+        },
+        {
+          "label": "Terraform: check block",
+          "url": "https://developer.hashicorp.com/terraform/language/block/check"
+        },
+        {
+          "label": "Terratest",
+          "url": "https://terratest.gruntwork.io/"
+        }
+      ],
+      "related": [
+        "unit",
+        "contract",
+        "integration",
+        "e2e",
+        "coverage"
+      ],
+      "notes": [
+        "Coverage: no tool found on the Terraform pages; other sites were not searched (unconfirmed).",
+        "Terratest 1.0.1 is the version recorded by the layer entries on 2026-11-12. Its repository now also carries a release tagged modules/core/v2.0.0 (2026-09-23), which was not analysed.",
+        "The licence is the Business Source License 1.1, read from the LICENSE file of the Terraform repository; GitHub does not detect it."
+      ],
+      "sections": [
+        {
+          "title": "How testing is organised",
+          "items": [
+            "Tests are `.tftest.hcl` files with `run` blocks. `terraform test` runs them.",
+            "This page is a summary. Each layer tab shows the Terraform example in full: [unit](#unit), [contract](#contract), [integration](#integration), [end-to-end](#e2e)."
+          ]
+        },
+        {
+          "title": "Tools",
+          "items": [
+            {
+              "type": "table",
+              "columns": [
+                "Job",
+                "Tool",
+                "What it is",
+                "Version checked"
+              ],
+              "rows": [
+                [
+                  "Unit",
+                  "[terraform test](https://developer.hashicorp.com/terraform/language/tests) with `command = plan`",
+                  "Checks the module's logic without creating infrastructure",
+                  "1.17.2"
+                ],
+                [
+                  "Test doubles",
+                  "[mock_provider](https://developer.hashicorp.com/terraform/language/tests/mocking)",
+                  "Mocks the data a provider returns. Since Terraform 1.7.0",
+                  "1.17.2"
+                ],
+                [
+                  "Coverage",
+                  "None found",
+                  "The Terraform pages on tests do not mention coverage",
+                  "n/a"
+                ],
+                [
+                  "Integration",
+                  "terraform test with the default apply",
+                  "Creates real resources, then destroys them",
+                  "1.17.2"
+                ],
+                [
+                  "Integration",
+                  "[Terratest](https://terratest.gruntwork.io/)",
+                  "Go library that applies the code and checks the result",
+                  "1.0.1"
+                ],
+                [
+                  "End-to-end",
+                  "[check block](https://developer.hashicorp.com/terraform/language/block/check)",
+                  "Probes a deployed endpoint. This topic's mapping, not a term of the Terraform documentation",
+                  "1.17.2"
+                ]
+              ]
+            }
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "Terraform: Tests",
+          "url": "https://developer.hashicorp.com/terraform/language/tests"
+        },
+        {
+          "label": "Terraform: Mocking",
+          "url": "https://developer.hashicorp.com/terraform/language/tests/mocking"
+        },
+        {
+          "label": "terraform test",
+          "url": "https://developer.hashicorp.com/terraform/cli/commands/test"
+        },
+        {
+          "label": "Terraform: check block",
+          "url": "https://developer.hashicorp.com/terraform/language/block/check"
+        },
+        {
+          "label": "Terratest",
+          "url": "https://terratest.gruntwork.io/"
+        }
+      ]
     }
   ],
   "comparisons": [
+    {
+      "id": "languages",
+      "title": "The tools per language",
+      "about": "One row per language. Each name is explained, with the version checked, in the Languages tab. No ranking is implied.",
+      "columns": [
+        "Unit",
+        "Coverage",
+        "Integration",
+        "End-to-end"
+      ],
+      "rows": [
+        {
+          "entry": "lang-java",
+          "cells": [
+            "JUnit, with Mockito",
+            "JaCoCo",
+            "Testcontainers; Maven Failsafe or a Gradle test suite to run them",
+            "Selenium WebDriver, Playwright for Java"
+          ]
+        },
+        {
+          "entry": "lang-javascript",
+          "cells": [
+            "Node.js test runner, Jest, Vitest",
+            "Built into each; c8, nyc",
+            "Testcontainers for Node.js",
+            "Playwright, Cypress"
+          ]
+        },
+        {
+          "entry": "lang-csharp",
+          "cells": [
+            "xUnit.net, NUnit, MSTest, with NSubstitute",
+            "Coverlet",
+            "Microsoft.AspNetCore.Mvc.Testing, Testcontainers for .NET",
+            "Playwright for .NET"
+          ]
+        },
+        {
+          "entry": "lang-go",
+          "cells": [
+            "testing and go test",
+            "go test -cover",
+            "httptest, Testcontainers for Go",
+            "None named"
+          ]
+        },
+        {
+          "entry": "lang-cpp",
+          "cells": [
+            "GoogleTest, Catch2, run by CTest",
+            "gcov with LCOV, llvm-cov",
+            "None specific",
+            "None specific"
+          ]
+        },
+        {
+          "entry": "lang-rust",
+          "cells": [
+            "cargo test",
+            "cargo-llvm-cov",
+            "tests/ directory",
+            "None named"
+          ]
+        },
+        {
+          "entry": "lang-php",
+          "cells": [
+            "PHPUnit, Pest",
+            "PHPUnit with PCOV or Xdebug",
+            "Codeception",
+            "Pest browser testing, Laravel Dusk"
+          ]
+        },
+        {
+          "entry": "lang-ruby",
+          "cells": [
+            "Minitest, RSpec",
+            "SimpleCov",
+            "Capybara",
+            "Capybara"
+          ]
+        },
+        {
+          "entry": "lang-swift",
+          "cells": [
+            "Swift Testing, XCTest",
+            "swift test --enable-code-coverage",
+            "None specific",
+            "XCUIAutomation (Xcode)"
+          ]
+        },
+        {
+          "entry": "lang-python",
+          "cells": [
+            "pytest, unittest.mock",
+            "coverage.py, pytest-cov",
+            "Testcontainers for Python",
+            "Playwright for Python"
+          ]
+        },
+        {
+          "entry": "lang-terraform",
+          "cells": [
+            "terraform test with command = plan",
+            "None found",
+            "terraform test with apply, Terratest",
+            "check block"
+          ]
+        }
+      ]
+    },
     {
       "id": "mapping",
       "title": "The layers in Python and in Terraform",
