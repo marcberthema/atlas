@@ -163,8 +163,8 @@
     "azurerm": {
       "namespace": "hashicorp",
       "name": "azurerm",
-      "latest_version": "5.13.0",
-      "changed_at": "2026-11-06",
+      "latest_version": "5.14.0",
+      "changed_at": "2026-11-14",
       "docs_url": "https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs"
     },
     "azuread": {
